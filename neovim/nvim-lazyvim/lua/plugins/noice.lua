@@ -1,4 +1,4 @@
--- Filename: /home/krishna/github/dotfiles-public/nvim-lazyvim/lua/plugins/noice.lua
+-- Filename: /home/krishna/github/dotfiles-latest/nvim-lazyvim/lua/plugins/noice.lua
 -- I want to change the default notifications to be less obtrussive (if that's even a word)
 -- https://github.com/folke/noice.nvim
 

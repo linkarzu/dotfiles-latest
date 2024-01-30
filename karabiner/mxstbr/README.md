@@ -1,7 +1,7 @@
 # @mxstbr's Karabiner Elements configuration
 
 - `https://github.com/mxstbr/karabiner`
-- `/Users/krishna/github/dotfiles-public/karabiner/mxstbr/mxstbr/README.md`
+- `/Users/krishna/github/dotfiles-latest/karabiner/mxstbr/mxstbr/README.md`
 
 If you like TypeScript and want your Karabiner configuration maintainable & type-safe, you probably want to use the custom configuration DSL / generator I created in `rules.ts` and `utils.ts`!
 

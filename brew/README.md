@@ -85,7 +85,7 @@ brew bundle
 ## Caveats
 
 The caveats for each one of the apps I use, are already taken care of by the
-`dotfiles-public/zshrc/zshrc-file.sh` file, but in case you need to see
+`dotfiles-latest/zshrc/zshrc-file.sh` file, but in case you need to see
 the caveats of a single app
 
 ```bash

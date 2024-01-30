@@ -1,4 +1,4 @@
-# Filename: ~/github/dotfiles-public/yabai/scripting-addition.sh
+# Filename: ~/github/dotfiles-latest/yabai/scripting-addition.sh
 
 echo
 echo -e "${boldPurple}>>>>>>>>>>>>>>>>>>>>>>>>>>${noColor}"

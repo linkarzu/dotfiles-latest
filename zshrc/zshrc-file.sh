@@ -1,4 +1,4 @@
-# Filename: /Users/krishna/github/dotfiles-public/zshrc/zshrc-file.sh
+# Filename: /Users/krishna/github/dotfiles-latest/zshrc/zshrc-file.sh
 
 # #############################################################################
 # Do not delete the `UNIQUE_ID` line below, I use it to backup original files
@@ -76,17 +76,17 @@ create_symlink() {
 }
 
 # Creating symlinks for files and directories
-create_symlink ~/github/dotfiles-public/vimrc/vimrc-file ~/.vimrc
-create_symlink ~/github/dotfiles-public/vimrc/vimrc-file ~/github/obsidian_main/.obsidian.vimrc
-create_symlink ~/github/dotfiles-public/zshrc/zshrc-file.sh ~/.zshrc
-create_symlink ~/github/dotfiles-public/tmux/tmux.conf.sh ~/.tmux.conf
-create_symlink ~/github/dotfiles-public/alacritty/alacritty.toml ~/.config/alacritty/alacritty.toml
-create_symlink ~/github/dotfiles-public/yabai/yabairc ~/.yabairc
+create_symlink ~/github/dotfiles-latest/vimrc/vimrc-file ~/.vimrc
+create_symlink ~/github/dotfiles-latest/vimrc/vimrc-file ~/github/obsidian_main/.obsidian.vimrc
+create_symlink ~/github/dotfiles-latest/zshrc/zshrc-file.sh ~/.zshrc
+create_symlink ~/github/dotfiles-latest/tmux/tmux.conf.sh ~/.tmux.conf
+create_symlink ~/github/dotfiles-latest/alacritty/alacritty.toml ~/.config/alacritty/alacritty.toml
+create_symlink ~/github/dotfiles-latest/yabai/yabairc ~/.yabairc
 
 # Creating symlinks for directories
-create_symlink ~/github/dotfiles-public/neovim/nvim-lazyvim ~/.config/nvim
-create_symlink ~/github/dotfiles-public/hammerspoon ~/.hammerspoon
-create_symlink ~/github/dotfiles-public/karabiner/mxstbr ~/.config/karabiner
+create_symlink ~/github/dotfiles-latest/neovim/nvim-lazyvim ~/.config/nvim
+create_symlink ~/github/dotfiles-latest/hammerspoon ~/.hammerspoon
+create_symlink ~/github/dotfiles-latest/karabiner/mxstbr ~/.config/karabiner
 # echo "finished 1"
 
 # # This is on the other repo where I keep my ssh config files
@@ -94,17 +94,17 @@ create_symlink ~/github/dotfiles-public/karabiner/mxstbr ~/.config/karabiner
 # ln -snf ~/github/dotfiles/sshconfig-pers ~/.ssh/config 2>&1 >/dev/null
 
 # I'm keeping the old manual commands here
-# ln -snf ~/github/dotfiles-public/zshrc/zshrc-file.sh ~/.zshrc >/dev/null 2>&1
-# ln -snf ~/github/dotfiles-public/vimrc/vimrc-file ~/.vimrc >/dev/null 2>&1
-# ln -snf ~/github/dotfiles-public/vimrc/vimrc-file ~/github/obsidian_main/.obsidian.vimrc >/dev/null 2>&1
-# ln -snf ~/github/dotfiles-public/tmux/tmux.conf.sh ~/.tmux.conf >/dev/null 2>&1
-# ln -snf ~/github/dotfiles-public/alacritty/alacritty.toml ~/.config/alacritty/alacritty.toml >/dev/null 2>&1
-# ln -snf ~/github/dotfiles-public/yabai/yabairc ~/.yabairc >/dev/null 2>&1
+# ln -snf ~/github/dotfiles-latest/zshrc/zshrc-file.sh ~/.zshrc >/dev/null 2>&1
+# ln -snf ~/github/dotfiles-latest/vimrc/vimrc-file ~/.vimrc >/dev/null 2>&1
+# ln -snf ~/github/dotfiles-latest/vimrc/vimrc-file ~/github/obsidian_main/.obsidian.vimrc >/dev/null 2>&1
+# ln -snf ~/github/dotfiles-latest/tmux/tmux.conf.sh ~/.tmux.conf >/dev/null 2>&1
+# ln -snf ~/github/dotfiles-latest/alacritty/alacritty.toml ~/.config/alacritty/alacritty.toml >/dev/null 2>&1
+# ln -snf ~/github/dotfiles-latest/yabai/yabairc ~/.yabairc >/dev/null 2>&1
 #
 # # Below are symlinks that point to directories
-# ln -snf ~/github/dotfiles-public/neovim/nvim-lazyvim ~/.config/nvim >/dev/null 2>&1
-# ln -snf ~/github/dotfiles-public/hammerspoon ~/.hammerspoon >/dev/null 2>&1
-# ln -snf ~/github/dotfiles-public/karabiner/mxstbr ~/.config/karabiner >/dev/null 2>&1
+# ln -snf ~/github/dotfiles-latest/neovim/nvim-lazyvim ~/.config/nvim >/dev/null 2>&1
+# ln -snf ~/github/dotfiles-latest/hammerspoon ~/.hammerspoon >/dev/null 2>&1
+# ln -snf ~/github/dotfiles-latest/karabiner/mxstbr ~/.config/karabiner >/dev/null 2>&1
 
 # Autocompletion settings
 # https://github.com/Phantas0s/.dotfiles/blob/master/zsh/completion.zsh
@@ -195,7 +195,7 @@ alias kgpo='kubectl get pods -o wide'
 # my latest changes, otherwise your changes will be overriden by my updates
 echo
 echo "Pulling latest changes, please wait..."
-(cd ~/github/dotfiles-public && git pull >/dev/null 2>&1) || echo "Failed to pull dotfiles"
+(cd ~/github/dotfiles-latest && git pull >/dev/null 2>&1) || echo "Failed to pull dotfiles"
 # Every time I log into a host I want to pull my github repos, but not cd to that dir
 # So running the command above in a subshell
 #
@@ -221,7 +221,7 @@ if [ "$OS" = 'Mac' ]; then
 	# Starship
 	# https://starship.rs/config/#prompt
 	if command -v starship &>/dev/null; then
-		export STARSHIP_CONFIG=$HOME/github/dotfiles-public/starship-config/starship.toml
+		export STARSHIP_CONFIG=$HOME/github/dotfiles-latest/starship-config/starship.toml
 		eval "$(starship init zsh)" >/dev/null 2>&1
 	fi
 
@@ -395,7 +395,7 @@ if [ "$OS" = 'Linux' ]; then
 	esac
 	if command -v starship &>/dev/null; then
 		# This is what applies the specific profile
-		export STARSHIP_CONFIG=$HOME/github/dotfiles-public/starship-config/$starship_file >/dev/null 2>&1
+		export STARSHIP_CONFIG=$HOME/github/dotfiles-latest/starship-config/$starship_file >/dev/null 2>&1
 		eval "$(starship init zsh)" >/dev/null 2>&1
 	else
 		echo
@@ -410,7 +410,7 @@ if [ "$OS" = 'Linux' ]; then
 			# After installing, initialize it
 			eval "$(starship init zsh)"
 			# This is what applies the specific profile
-			export STARSHIP_CONFIG=$HOME/github/dotfiles-public/starship-config/$starship_file
+			export STARSHIP_CONFIG=$HOME/github/dotfiles-latest/starship-config/$starship_file
 			echo "Starship installed successfully."
 		fi
 	fi

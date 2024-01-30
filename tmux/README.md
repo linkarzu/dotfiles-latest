@@ -20,15 +20,15 @@ git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 echo
 echo ">>>>>>>>>>>>>>>>>>>>>>>"
 echo
-echo "running a git pull on my dotfiles-public repo to get latest changes"
-cd ~/github/dotfiles-public
+echo "running a git pull on my dotfiles-latest repo to get latest changes"
+cd ~/github/dotfiles-latest
 git pull
 
 echo
 echo ">>>>>>>>>>>>>>>>>>>>>>>"
 echo
 echo "Applying my own tmux config"
-ln -snf ~/github/dotfiles-public/tmux/tmux.conf.sh ~/.tmux.conf
+ln -snf ~/github/dotfiles-latest/tmux/tmux.conf.sh ~/.tmux.conf
 
 echo
 echo ">>>>>>>>>>>>>>>>>>>>>>>"

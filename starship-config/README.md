@@ -42,10 +42,10 @@ echo $SHELL
 
 If you're using `~/.bashrc`
 ```bash
-echo "export STARSHIP_CONFIG=~/github/dotfiles-public/starship-config/starship.toml" >> ~/.bashrc
+echo "export STARSHIP_CONFIG=~/github/dotfiles-latest/starship-config/starship.toml" >> ~/.bashrc
 ```
 
 If you're using `~/.zshrc`
 ```bash
-echo "export STARSHIP_CONFIG=~/github/dotfiles-public/starship-config/starship.toml" >> ~/.zshrc
+echo "export STARSHIP_CONFIG=~/github/dotfiles-latest/starship-config/starship.toml" >> ~/.zshrc
 ```

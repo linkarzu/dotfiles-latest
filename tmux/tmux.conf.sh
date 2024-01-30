@@ -1,4 +1,4 @@
-# Filename: /Users/krishna/github/dotfiles-public/tmux.conf
+# Filename: /Users/krishna/github/dotfiles-latest/tmux.conf
 
 # #############################################################################
 # Do not delete the `UNIQUE_ID` line below, I use it to backup original files

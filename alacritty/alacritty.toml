@@ -4,11 +4,11 @@
 # UNIQUE_ID=do_not_delete_this_line
 # #############################################################################
 
-# import = ["~/github/dotfiles-public/alacritty/themes/dracula/dracula.toml"]
-import = ["~/github/dotfiles-public/alacritty/themes/catppuccin/catppuccin-mocha.toml"]
-# import = ["~/github/dotfiles-public/alacritty/themes/catppuccin/catppuccin-macchiato.toml"]
-# import = ["~/github/dotfiles-public/alacritty/themes/catppuccin/catppuccin-frappe.toml"]
-# import = ["~/github/dotfiles-public/alacritty/themes/catppuccin/catppuccin-latte.toml"]
+# import = ["~/github/dotfiles-latest/alacritty/themes/dracula/dracula.toml"]
+import = ["~/github/dotfiles-latest/alacritty/themes/catppuccin/catppuccin-mocha.toml"]
+# import = ["~/github/dotfiles-latest/alacritty/themes/catppuccin/catppuccin-macchiato.toml"]
+# import = ["~/github/dotfiles-latest/alacritty/themes/catppuccin/catppuccin-frappe.toml"]
+# import = ["~/github/dotfiles-latest/alacritty/themes/catppuccin/catppuccin-latte.toml"]
 
 [colors]
 # If `true`, bold text is drawn using the bright color variants.

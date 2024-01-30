@@ -45,11 +45,11 @@ draw_bold_text_with_bright_colors: true
 
 # This imports the dracula theme colors from my github repo
 import:
-  - ~/github/dotfiles-public/alacritty/themes/dracula.yml
-  # - ~/github/dotfiles-public/alacritty/themes/catppuccin/catppuccin-mocha.yml
-  # - ~/github/dotfiles-public/alacritty/themes/catppuccin/catppuccin-macchiato.yml
-  # - ~/github/dotfiles-public/alacritty/themes/catppuccin/catppuccin-frappe.yml
-  # - ~/github/dotfiles-public/alacritty/themes/catppuccin/catppuccin-latte.yml
+  - ~/github/dotfiles-latest/alacritty/themes/dracula.yml
+  # - ~/github/dotfiles-latest/alacritty/themes/catppuccin/catppuccin-mocha.yml
+  # - ~/github/dotfiles-latest/alacritty/themes/catppuccin/catppuccin-macchiato.yml
+  # - ~/github/dotfiles-latest/alacritty/themes/catppuccin/catppuccin-frappe.yml
+  # - ~/github/dotfiles-latest/alacritty/themes/catppuccin/catppuccin-latte.yml
 
 # # I don't need to enable this, as I normally select in visual mode and yank
 # # But apparently it allows you to copy to clipboard by just selecting the text

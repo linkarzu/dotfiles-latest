@@ -15,16 +15,19 @@
   symlink to a directory
 - `-f` "force" overwrites without warning if it already exists
 
+## Point your zshrc file to the desired repo
+
 ```bash
-# Point your zshrc file to the desired repo
-ln -snf ~/github/dotfiles-latest/zshrc/zshrc-file.sh ~/.zshrc >/dev/null 2>&1
-
-ln -snf ~/github/dotfiles-latest/zshrc/zshrc-file.sh ~/.zshrc >/dev/null 2>&1
-
+ln -snf ~/github/dotfiles-public/zshrc/zshrc-file.sh ~/.zshrc >/dev/null 2>&1
 source ~/.zshrc
+```
 
-# # This is on the other repo where I keep my ssh config files
-# I commented this as I don't have give access to this repo to all the hosts
-# ln -snf ~/github/dotfiles/sshconfig-pers ~/.ssh/config >/dev/null 2>&1
+```bash
+ln -snf ~/github/dotfiles-latest/zshrc/zshrc-file.sh ~/.zshrc >/dev/null 2>&1
+source ~/.zshrc
+```
 
+```bash
+# This is on the other repo where I keep my ssh config files
+ln -snf ~/github/dotfiles/sshconfig-pers ~/.ssh/config >/dev/null 2>&1
 ```

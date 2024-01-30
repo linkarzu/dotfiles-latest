@@ -1,0 +1,45 @@
+# /Users/krishna/github/dotfiles-public/brew/10-essential/Brewfile
+# https://github.com/linkarzu/dotfiles-public/blob/main/brew/10-essential/Brewfile
+
+# Best editor of all times Neovim
+
+# Adding taps (repos) on top
+tap "homebrew/bundle"
+tap "homebrew/services"
+tap "jesseduffield/lazygit"
+tap "homebrew/cask-fonts"
+
+# I'll install the following fonts from neovim script
+cask "font-meslo-lg-nerd-font"
+
+brew "neovim"
+brew "gnu-sed"
+# brew "jesseduffield/lazygit/lazygit" errored out
+# So adding the tap on the top to see if it makes a difference
+# Otherwise, its installed by the neovim script
+brew "jesseduffield/lazygit/lazygit"
+brew "ripgrep"
+brew "fd"
+# Used to check if specific font packages are installed
+brew "fontconfig"
+
+###############################################################################
+
+brew "bind"
+brew "helm"
+brew "kubernetes-cli"
+brew "mysql-client"
+cask "raindropio"
+cask "cursorcerer"
+
+# Not essentials, but added them here, as I install them all the time ;)
+cask "google-chrome"
+cask "obsidian"
+cask "spotify"
+cask "hammerspoon"
+cask "hot"
+cask "iterm2"
+brew "htop"
+brew "neofetch"
+
+

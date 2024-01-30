@@ -1,0 +1,69 @@
+# Filename: alacritty.yml
+
+env:
+  # https://copyprogramming.com/howto/why-would-i-set-term-to-xterm-256color-when-using-alacritty
+  TERM: alacritty
+  # TERM: xterm-256color
+  # TERM: screen-256color
+
+window:
+  dimensions:
+    columns: 200
+    lines: 55
+  position:
+    x: 2750
+    y: 1100
+  padding:
+    x: 10
+    y: 10
+  class:
+    instance: Alacritty
+    general: Alacritty
+  opacity: 1
+  # Make `Option` key behave as `Alt` (macOS only):
+  #   - OnlyLeft
+  #   - OnlyRight
+  #   - Both
+  #   - None (default)
+  # I left this option commented out, it worked when I tried to use the
+  # option key as the Meta key in tmux to switch layouts (ctrl+b option+1)
+  # But it messed up my hyper key, so if I enable it, I cant do hyper+b
+  # which is what I use for tmux commands instead of ctrl+b
+  # option_as_alt: Both
+
+scrolling:
+  history: 10000
+  multiplier: 3
+
+font:
+  normal:
+    family: MesloLGM Nerd Font Mono
+    style: Regular
+  size: 14
+
+draw_bold_text_with_bright_colors: true
+
+# This imports the dracula theme colors from my github repo
+import:
+  - ~/github/dotfiles-public/alacritty/themes/dracula.yml
+  # - ~/github/dotfiles-public/alacritty/themes/catppuccin/catppuccin-mocha.yml
+  # - ~/github/dotfiles-public/alacritty/themes/catppuccin/catppuccin-macchiato.yml
+  # - ~/github/dotfiles-public/alacritty/themes/catppuccin/catppuccin-frappe.yml
+  # - ~/github/dotfiles-public/alacritty/themes/catppuccin/catppuccin-latte.yml
+
+# # I don't need to enable this, as I normally select in visual mode and yank
+# # But apparently it allows you to copy to clipboard by just selecting the text
+# selection:
+#   save_to_clipboard: true
+
+shell:
+  program: /bin/zsh
+  args:
+    - --login
+    # The 2 commands below are needed to automatically attach to an existing tmux session
+    # If no session exists, a new one is created
+    - -c
+    - /opt/homebrew/bin/tmux attach || //opt/homebrew/bin/tmux
+# key_bindings:
+#   - { key: Return, mods: Super|Shift, action: SpawnNewInstance }
+

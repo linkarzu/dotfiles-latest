@@ -1,0 +1,120 @@
+# #############################################################################
+# Do not delete the `UNIQUE_ID` line below, I use it to backup original files
+# so they're not lost when my symlinks are applied
+# UNIQUE_ID=do_not_delete_this_line
+# #############################################################################
+
+# import = ["~/github/dotfiles-public/alacritty/themes/dracula/dracula.toml"]
+import = ["~/github/dotfiles-public/alacritty/themes/catppuccin/catppuccin-mocha.toml"]
+# import = ["~/github/dotfiles-public/alacritty/themes/catppuccin/catppuccin-macchiato.toml"]
+# import = ["~/github/dotfiles-public/alacritty/themes/catppuccin/catppuccin-frappe.toml"]
+# import = ["~/github/dotfiles-public/alacritty/themes/catppuccin/catppuccin-latte.toml"]
+
+[colors]
+# If `true`, bold text is drawn using the bright color variants.
+draw_bold_text_with_bright_colors = true
+
+[env]
+# TERM variable
+#
+# This value is used to set the `$TERM` environment variable for
+# each instance of Alacritty. If it is not present, alacritty will
+# check the local terminfo database and use `alacritty` if it is
+# available, otherwise `xterm-256color` is used.
+# You can check the TERM variable with echo $TERM outside of tmux
+# https://copyprogramming.com/howto/why-would-i-set-term-to-xterm-256color-when-using-alacritty
+TERM = "alacritty"
+# TERM = "xterm-256color"
+# TERM: screen-256color
+
+[font]
+size = 14
+
+[font.normal]
+# fc-list | grep -i "Meslo"
+# family = "MesloLGL Nerd Font"
+# family = "MesloLGL Nerd Font Mono"
+# family = "MesloLGL Nerd Font Propo"
+# family = "MesloLGLDZ Nerd Font"
+# family = "MesloLGLDZ Nerd Font Mono"
+# family = "MesloLGLDZ Nerd Font Propo"
+# family = "MesloLGMDZ Nerd Font"
+# family = "MesloLGMDZ Nerd Font Mono"
+# family = "MesloLGMDZ Nerd Font Propo"
+family = "MesloLGM Nerd Font" # >>>>>>>>>>>>>>>>>>> Top personal pick
+# family = "MesloLGM Nerd Font Mono"
+# family = "MesloLGM Nerd Font Propo"
+# family = "MesloLGS Nerd Font"
+# family = "MesloLGS Nerd Font Mono"
+# family = "MesloLGS Nerd Font Propo"
+# family = "MesloLGSDZ Nerd Font"
+# family = "MesloLGSDZ Nerd Font Mono"
+# family = "MesloLGSDZ Nerd Font Propo"
+style = "Regular"
+# style = "Bold Italic"
+# style = "Bold"
+# style = "Italic"
+
+
+[scrolling]
+# Maximum number of lines in the scrollback buffer.
+# Specifying '0' will disable scrolling.
+history = 10000
+# Scrolling distance multiplier.
+multiplier = 3
+
+# Shell
+#
+# You can set `shell.program` to the path of your favorite shell, e.g.
+# `/bin/fish`. Entries in `shell.args` are passed unmodified as arguments to the
+# shell.
+#
+# Default:
+#   - (Linux/BSD/macOS) `$SHELL` or the user's login shell, if `$SHELL` is unset
+#   - (Windows) powershell
+#shell:
+#  program: /bin/bash
+#  args:
+#    - --login
+[shell]
+program = "/bin/zsh"
+# The 2 commands after login are needed to automatically attach to an existing tmux session
+# If no session exists, a new one is created
+args = ["--login", "-c", "/opt/homebrew/bin/tmux attach || //opt/homebrew/bin/tmux"]
+
+[window]
+opacity = 1
+
+# Make `Option` key behave as `Alt` (macOS only):
+#   - OnlyLeft
+#   - OnlyRight
+#   - Both
+#   - None (default)
+# I left this option commented out, it worked when I tried to use the
+# option key as the Meta key in tmux to switch layouts (ctrl+b option+1)
+# But it messed up my hyper key, so if I enable it, I cant do hyper+b
+# which is what I use for tmux commands instead of ctrl+b
+# option_as_alt = "Both"
+
+[window.class]
+general = "Alacritty"
+instance = "Alacritty"
+
+[window.dimensions]
+columns = 200
+lines = 55
+
+[window.padding]
+x = 10
+y = 10
+
+[window.position]
+x = 2750
+y = 1100
+
+# I don't need to enable this, as I normally select in visual mode and yank
+# But apparently it allows you to copy to clipboard by just selecting the text
+# When set to `true`, selected text will be copied to the primary clipboard.
+[selection]
+save_to_clipboard = true
+

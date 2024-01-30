@@ -1,0 +1,33 @@
+# Filename: ~/github/dotfiles-public/brew/00-base/Brewfile
+# https://github.com/linkarzu/dotfiles-public/blob/main/brew/00-base/Brewfile
+
+# Adding taps (repos) on top as I was getting errors
+tap "homebrew/bundle"
+tap "homebrew/services"
+tap "jesseduffield/lazygit"
+tap "homebrew/cask-fonts"
+
+brew "wget"
+# coreutils includes ls with colors, not needed since I now use eza
+# brew "coreutils"
+brew "fzf"
+brew "git"
+# yarn requires node
+brew "node"
+brew "starship"
+brew "tmux"
+brew "tree"
+brew "watch"
+# karabiner uses yarn to install depencencies
+brew "yarn"
+# Switched from z.lua to zoxide as its more maintaned
+# brew "z.lua"
+brew "zoxide"
+# Cat with wings
+brew "bat"
+# Replacement for ls
+brew "eza"
+brew "zsh-autosuggestions"
+brew "zsh-vi-mode"
+cask "alacritty"
+brew "jq"

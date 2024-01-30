@@ -1,0 +1,13 @@
+{
+  "extras": [
+    "lazyvim.plugins.extras.lang.docker",
+    "lazyvim.plugins.extras.lang.markdown",
+    "lazyvim.plugins.extras.lang.python",
+    "lazyvim.plugins.extras.lang.terraform",
+    "lazyvim.plugins.extras.lang.yaml"
+  ],
+  "news": {
+    "NEWS.md": "2123"
+  },
+  "version": 2
+}

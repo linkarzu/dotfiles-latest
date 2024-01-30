@@ -1,0 +1,755 @@
+{
+    :profiles {
+        :goku {
+            :default true
+            :sim      200 ; keys need to be pressed within this threshold to be considered simultaneous
+            :simlayer-threshold 250 ; ???????
+            :alone    250 ; hold for 495ms and single tap registered; hold for 505ms and seen as modifier
+            :delay    300 ; time after which the key press is count delayed
+            :held     450 ; key is fired twice when 1000 ms is elapsed (otherwise seen as a hold command)
+        }
+    }
+
+    :devices {
+        :velocifire [{:vendor_id 1452 :product_id 591}]
+    }
+
+    :templates {
+        :open_social "/Users/grn/bin/open_social %s"
+        :open "osascript -e 'tell application \"%s\" to activate'"
+        :showhide "osascript -e '
+                global isVisible
+                set isVisible to visible of process \"%s\"
+                set isVisible to not isVisible
+                set visible of process \"%s\" to isVisible
+              '"
+        :go_to_url "osascript -e 'open location \"%s\"'"
+        :zcode "/Users/grn/bin/gui.py &"
+        ; send keystrokes
+        :type "osascript -e 'tell application \"System Events\" to keystroke \"%s\"'"
+        ; send keystrokes and press enter
+        :type_cr "
+            osascript -e 'tell application \"System Events\" to keystroke \"%s\"';
+            osascript -e 'tell application \"System Events\" to keystroke return';"
+        :paste "osascript -e '
+              global storedClipboard
+              set storedClipboard to the clipboard
+              set the clipboard to \"%s\"
+              set the clipboard to the clipboard + \"%s\"
+              tell application \"System Events\"
+                      keystroke \"v\" using command down
+              end tell
+              delay 0.1
+              set the clipboard to storedClipboard
+              '"
+        :is_in_gdoc "osascript -e '
+            global frontApp, window_name, theURL
+            tell application \"System Events\"
+                set frontApp to name of first application process whose frontmost is true
+            end tell
+            if frontApp equals \"Safari\" then
+                tell application \"Safari\"
+                    set theURL to URL of current tab of window 1
+                end tell
+                if theURL contains \"https://docs.google.com/spreadsheets\" then
+                    do shell script \"/Users/grn/bin/in-gdoc.sh\"
+                end if
+            end if'"
+        :sleep "sleep %s" ; sample placeholder
+    }
+
+    :applications {
+        ; extract from /Applications/$APP/Contents/Info.plist from 'CFBundleIdentifier' key
+        :arc [ "^company.thebrowser.Browser" ]
+        :chrome [ "^com.google.Chrome$" ]
+        :discord [ "^com.hnc.Discord" ]
+        :drafts [ "^com.agiletortoise.Drafts-OSX$" ]
+        :emacs [ "^org.gnu.Emacs$" ]
+        :evernote [ "^com.evernote.Evernote$" ]
+        :finder [ "^com.apple.finder" ]
+        :firefox [ "^org.mozilla.firefox$" ]
+        :goodnotes [ "^com.goodnotesapp.x$" ]
+        :kitty [ "net.kovidgoyal.kitty" ]
+        :mailmate [ "^com.freron.MailMate$"]
+        :messages [ "^com.apple.MobileSMS" ]
+        :obsidian [ "^md.obsidian" ]
+        :opera [ "^com.operasoftware.Opera$" ]
+        :safari [ "^com.apple.Safari$" ]
+        :slack [ "^com.tinyspeck.slackmacgap" ]
+        :stickies [ "^com.apple.Stickies" ]
+        :teams [ "^com.microsoft.teams" ]
+        :telegram [ "^ru.keepcoder.Telegram" ]
+        :vscode [ "^com.microsoft.VSCode$" ]
+        :vivaldi [ "^com.vivaldi.Vivaldi$" ]
+        :workflowy [ "^com.workflowy.desktop" ]
+        :zoom [ "^us.zoom.xos$" ]
+    }
+
+    :froms {
+        :any_key {:any :key_code}
+        :any_consumer {:any :consumer_key_code }
+        :any_button {:any :pointing_button}
+
+        ;alias
+        :delete {:key :delete_or_backspace}
+        :return {:key :return_or_enter}
+        :btick {:key :grave_accent_and_tilde}
+        :tilde {:key :grave_accent_and_tilde}
+        :bslash {:key :backslash}
+        :ls {:key :left_shift}
+        :rs {:key :right_shift}
+
+        ;colemak froms (for easier mnemonics)
+        :-q {:key :q}
+        :-w {:key :w}
+        :-f {:key :e}
+        :-p {:key :r}
+        :-g {:key :t}
+        :-j {:key :y}
+        :-l {:key :u}
+        :-u {:key :i}
+        :-y {:key :o}
+        :-semicolon {:key :p}
+
+        :-a {:key :a}
+        :-r {:key :s}
+        :-s {:key :d}
+        :-t {:key :f}
+        :-d {:key :g}
+        :-h {:key :h}
+        :-n {:key :j}
+        :-e {:key :k}
+        :-i {:key :l}
+        :-o {:key :semicolon}
+
+        :-z {:key :grave_accent_and_tilde}
+        :-x {:key :z}
+        :-c {:key :x}
+        :-v {:key :c}
+        :-b {:key :v}
+        :-k {:key :n}
+        :-m {:key :m}
+    }
+
+    :tos {
+        ;colemak tos (for easier string sending)
+        :-q {:key :q}
+        :-w {:key :w}
+        :-f {:key :e}
+        :-p {:key :r}
+        :-g {:key :t}
+        :-j {:key :y}
+        :-l {:key :u}
+        :-u {:key :i}
+        :-y {:key :o}
+        :-semicolon {:key :semicolon}
+
+        :-a {:key :a}
+        :-r {:key :s}
+        :-s {:key :d}
+        :-t {:key :f}
+        :-d {:key :g}
+        :-h {:key :h}
+        :-n {:key :j}
+        :-e {:key :k}
+        :-i {:key :l}
+        :-o {:key :semicolon}
+
+        :-z {:key :grave_accent_and_tilde}
+        :-x {:key :z}
+        :-c {:key :x}
+        :-v {:key :c}
+        :-b {:key :v}
+        :-k {:key :n}
+        :-m {:key :m}
+    
+        ;named symbols
+        :exclaim {:key :1 :modi :shift}
+        :at {:key :2 :modi :shift}
+        :hash {:key :3 :modi :shift}
+        :dollar {:key :4 :modi :shift}
+        :percent {:key :5 :modi :shift}
+        :caret {:key :6 :modi :shift}
+        :ampersand {:key :7 :modi :shift}
+        :bullet {:key :8 :modi :shift}
+        :open_paren {:key :9 :modi :shift}
+        :close_paren {:key :0 :modi :shift}
+        :hyphen {:key :hyphen}
+        :underscore {:key :hyphen :modi :shift}
+        :equal {:key :equal_sign}
+        :plus {:key :equal_sign :modi :shift}
+        :semicolon {:key :semicolon}
+        :colon {:key :semicolon :modi :shift}
+        :open_bracket {:key :open_bracket}
+        :close_bracket {:key :close_bracket}
+        :open_brace {:key :open_bracket :modi :shift}
+        :close_brace {:key :close_bracket :modi :shift}
+        :less_than {:key :comma :modi :shift}
+        :greater_than {:key :period :modi :shift}
+        :backquote {:key :grave_accent_and_tilde}
+        :tilde {:key :grave_accent_and_tilde :modi :shift}
+        :dquote {:key :quote :modi :shift}
+        :pipe {:key :backslash :modi :shift}
+        :question {:key :slash :modi :shift}
+        :ls {:key :left_shift}
+        :rs {:key :right_shift}
+
+        ; system-wide shortcuts
+        :command_tab {:key :!Ctab}
+        :left_desktop {:key :!!left_arrow}
+        :right_desktop {:key :!!right_arrow} 
+        :mission_control {:key :!!up_arrow}
+        :internet_query {:key :!!t}
+        :show_application_windows {:key :!!down_arrow}
+        :show_desktop {:key :f12}
+        :activate_spotlight {:key :!!spacebar}
+        :fullscreen_snapshot {:key :!CS3}
+        :window_snapshot {:key :!CS4}
+        :selection_snapshot {:key :!CS5}
+        :emoji_picker {:key :spacebar :modi [:control :command]} ;!CTspacebar
+        :system-new_tab {:key :!Ct}
+        :system-close_tab {:key :!Cw}
+        :system-force_quit_apps {:key :!COescape}
+
+        ; 1password
+        :activate_1password {:key :!COTspacebar}
+        ; chrome
+        :chrome-prev_tab {:key :!TStab}
+        :chrome-next_tab {:key :!Ttab}
+        :chrome-toggle_reader {:key :!CSr}
+        ; drafts
+        :drafts-toggle_onoff {:key :!!return_or_enter}
+        :drafts-beginning_of_line {:key :!Cleft_arrow}
+        :drafts-end_of_line {:key :!Cright_arrow}
+        :drafts-toggle_draft_list {:key :!C1}
+        ; emacs
+        ; evernote
+        :evernote-beginning_of_line {:key :!Cleft_arrow}
+        :evernote-end_of_line {:key :!Cright_arrow}
+        ; hazeover - focus on one window
+        :activate_hazeover {:key :!!f6}
+        ; kitty
+        :kitty-prev_tab {:key :!Cleft_arrow}
+        :kitty-next_tab {:key :!Cright_arrow}
+        :kitty-move_tab_left {:key :!COleft_arrow}
+        :kitty-move_tab_right {:key :!COright_arrow}
+        :kitty-word_left {:key :!Tleft_arrow}
+        :kitty-word_right {:key :!Tright_arrow}
+        :kitty-beginning_of_line {:key :!Ta}
+        :kitty-end_of_line {:key :!Te}
+        :kitty-tmux_prefix {:key :!Ta}
+        ; opera
+        :opera-prev_tab {:key :!COleft_arrow}
+        :opera-next_tab {:key :!COright_arrow}
+        ; rectangle - window positioning
+        :window_resize_and_left {:key :!!j}
+        :window_resize_and_right {:key :!!l}
+        :window_resize_and_center {:key :!!k}
+        :window_full_size {:key :!!i}
+        :window_center {:key :!!semicolon}
+        ; safari
+        :safari-prev_tab {:key :!TStab}
+        :safari-next_tab {:key :!Ttab}
+        :safari-hist_back {:key :!Copen_bracket}
+        :safari-hist_frwd {:key :!Cclose_bracket}
+        :safari-toggle_reader {:key :!CSr}
+        :safari-toggle_darkmode {:key :!COk}
+        :safari-close_tab {:key :!Cw}
+        ; vscode
+        :toggle_terminal_or_editor {:key :!Tgrave_accent_and_tilde}
+        :toggle_terminal {:key :!COspacebar}
+        :focus_group_or_terminal_left {:key :!CTOup_arrow}
+        :focus_group_or_terminal_right {:key :!CTOdown_arrow}
+        :focus_editor_left {:key :!COleft_arrow}
+        :focus_editor_right {:key :!COright_arrow}
+        :focus_file_or_new_tab {:key :!Cp}
+    }
+
+    ;; :simlayers {
+    ;;     :apprun {:key :grave_accent_and_tilde}
+    ;; }
+
+    :main [
+        {
+            :des "Cmd+Option+Shift+Esc to Reset All Layers (when/if something goes horribly wrong)"
+            :rules [
+                [:!COTescape [
+                    ["blocked" 0] ["extend" 0], ["wm" 0], ["apprun" 0],
+                    ["qwerty" 0], ["capslock" 0], ["games" 0], ["layer" 0]
+                ]]
+            ]
+        }
+        {
+            :des "Toggle CapsLock w/ FN+CapsLock"
+            :rules [
+                [:!F#Pcaps_lock [:caps_lock [:noti :caps "Caps Lock"]["capslock" 1]] [["capslock" 0]["blocked" 0]]]
+                [:!F#Pcaps_lock [:caps_lock [:noti :caps ""]["capslock" 0]] [["capslock" 1]["blocked" 0]]]
+            ]
+        }
+        {
+            :des "Rotate between Game Layer, QWERTY w/ layers and Karabiner Toggle w/ FN+LeftShift"
+            :rules [
+                [:!F#Pleft_shift [["blocked" 0]["qwerty" 1]["layer" 1]["wm_off" 0][:noti :layers "QWERTY w/ layers [Fn+LCtrl]"]]["layer" 0]]
+                [:!F#Pleft_shift [["blocked" 1]["qwerty" 1]["layer" 2]["wm_off" 1][:noti :layers "QWERTY w/ IJKL locked to arrows [Fn+LCtrl]"]]["layer" 1]]
+                [:!F#Pleft_shift [["blocked" 1]["qwerty" 1]["layer" 3]["wm_off" 1][:noti :layers "Karabiner Disabled [Fn+LCtrl]"]]["layer" 2]]
+                [:!F#Pleft_shift [["blocked" 0]["qwerty" 0]["layer" 0]["wm_off" 0][:noti :layers ""]]["layer" 3]]
+            ]
+        }
+        {
+            :des "Games Layer"
+            :rules [
+                [:condi ["layer" 2]]
+                    [:##i :up_arrow]
+                    [:##k :down_arrow]
+                    [:##j :left_arrow]
+                    [:##l :right_arrow]
+            ]
+        }
+        {
+            :des "AppRun Layer - press LCmd and release to trigger"
+            :rules [
+                [:left_command :left_command :!apprun {:alone ["apprun" 1] :delayed {:invoked ["apprun" 0] :cancelled ["apprun" 0]}}]
+                :apprun
+                    [:tab :!Ctab :apprun {:afterup ["apprun" 0]}]
+                    ;; [:caps_lock [:open "Drafts"] :apprun {:afterup ["apprun" 0]}]
+                    [:left_command [:open "Visual Studio Code"] :apprun {:afterup ["apprun" 0]}]
+                    [:spacebar [:open "Vivaldi"] :apprun {:afterup ["apprun" 0]}]               ; ???
+                    [:right_command [:open "Safari"] :apprun {:afterup ["apprun" 0]}]
+                    [:-d [:open "Drafts"] :apprun {:afterup ["apprun" 0]}]
+                    [:-k [:open "Kitty"] :apprun {:afterup ["apprun" 0]}]
+                    [:-m [:open "Mailmate"] :apprun {:afterup ["apprun" 0]}]
+                    [:any_key :vk_none nil {:afterup ["apprun" 0]}]
+                    [:any_consumer :vk_none nil {:afterup ["apprun" 0]}]
+            ]
+        }
+        {
+          :des "Yabai Layers (uses Fn as base trigger)"
+          :rules [
+            [:fn ["fn_base" 1] nil {:afterup ["fn_base" 0] :alone :!Freturn_or_enter}]
+            [:condi :fn_base :!fn_ctrl :!fn_optn :!fn_cmnd]
+                [:spacebar :activate_1password]
+                [:caps_lock [:caps_lock [:noti :caps "Caps Lock"]["capslock" 1]] [["capslock" 0]["blocked" 0]]]
+                [:!Pcaps_lock [:caps_lock [:noti :caps ""]["capslock" 0]] [["capslock" 1]["blocked" 0]]]
+                [:left_shift [["blocked" 0]["qwerty" 1]["layer" 1]["wm_off" 0][:noti :layers "QWERTY w/ layers [Fn+LCtrl]"]]["layer" 0]]
+                [:left_shift [["blocked" 1]["qwerty" 1]["layer" 2]["wm_off" 1][:noti :layers "QWERTY w/ IJKL locked to arrows [Fn+LCtrl]"]]["layer" 1]]
+                [:left_shift [["blocked" 1]["qwerty" 1]["layer" 3]["wm_off" 1][:noti :layers "Karabiner Disabled [Fn+LCtrl]"]]["layer" 2]]
+                [:left_shift [["blocked" 0]["qwerty" 0]["layer" 0]["wm_off" 0][:noti :layers ""]]["layer" 3]]
+                [:left_control ["fn_ctrl" 1] nil {:afterup ["fn_ctrl" 0]}]
+                [:left_option  ["fn_optn" 1] nil {:afterup ["fn_optn" 0]}]
+                [:left_command ["fn_cmnd" 1] nil {:afterup ["fn_cmnd" 0]}]
+            [:condi :fn_base :!fn_ctrl :!fn_optn :!fn_cmnd]
+                ; shortcuts used by other things than Yabai
+                [:right_shift :!FSe]
+                ;
+                [:w ["fn_cmnd" 1] nil {:afterup ["fn_cmnd" 0]}]
+                [:e ["fn_optn" 1] nil {:afterup ["fn_optn" 0]}]
+                [:7 :!F7]
+                [:8 :!F8]
+                [:9 :!F9]
+                [:z :!Fz]
+                [:x :!Fx]
+                [:u :!Fu]
+                [:o :!Fo]
+                [:i :!Fi]
+                [:j :!Fj]
+                [:k :!Fk]
+                [:l :!Fl]
+                [:r :!Fr]
+                [:p :!Fp]
+                [:f :!Ff]
+                [:g :!Fg]
+                [:n :!Fm]
+                [:comma :!Fcomma]
+                [:period :!Fperiod]
+                [:hyphen :!Fhyphen]
+                [:backslash :!Fbackslash]
+                [:equal_sign :!Fequal_sign]
+                [:return_or_enter :!Freturn_or_enter]
+                [:any_key :vk_none]
+            [:condi :fn_ctrl]
+                [:i :!FTi]
+                [:j :!FTj]
+                [:k :!FTk]
+                [:l :!FTl]
+                [:any_key :vk_none]
+            [:condi :fn_optn]
+                [:i :!FOi]
+                [:j :!FOj]
+                [:k :!FOk]
+                [:l :!FOl]
+                [:any_key :vk_none]
+            [:condi :fn_cmnd]
+                [:i :!FCi]
+                [:j :!FCj]
+                [:k :!FCk]
+                [:l :!FCl]
+                [:any_key :vk_none]
+        ]
+        }
+        {
+          :des "Kitty Layers"
+          :rules [
+            [:condi :fn_tmux]
+                [:i [:!Ta :up_arrow]]
+                [:j [:!Ta :left_arrow]]
+                [:k [:!Ta :down_arrow]]
+                [:l [:!Ta :right_arrow]]
+                [:any_key :vk_none]
+            [:condi :fn_nvim]
+                [:u :!Sb]
+                [:o :!Sw]
+                [:semicolon [:!Tw :o]]
+                [:i [:!Tw :up_arrow]]
+                [:j [:!Tw :left_arrow]]
+                [:k [:!Tw :down_arrow]]
+                [:l [:!Tw :right_arrow]]
+                [:comma [:type_cr ":bp"]]
+                [:period [:type_cr ":bn"]]
+                [:any_key :vk_none]
+            ]
+        }
+        {
+            :des "Power Combos"
+            :rules [
+                [:condi :!blocked :!extend :!apprun]
+                    [:return_or_enter nil nil {:alone :return_or_enter :held :!CTf}]
+                    [:left_shift :left_shift nil {:alone :!Fj}]
+                    [:right_shift :right_shift nil {:alone :!Fl}]
+                    ;; [:left_command :left_command nil {:alone :!Ctab}]
+                    ; global
+                    [:##caps_lock :left_control nil {:alone :escape}]
+                    [:f5 :!Fh]                                                 ; toggle show desktop
+                    [:f6 :activate_hazeover]                                   ; activate hazeover
+                    [:!Th :delete_or_backspace]
+                    [:!Sspacebar :spacebar]
+                    ; chrome
+                    [:!Qleft_command [:!Ql :!Qv :return_or_enter] :chrome]
+                    [:!Cright_command [:button2 :c :return_or_enter] :chrome]
+                    [:right_command :right_command :chrome {:alone :chrome-toggle_reader}]
+                    ; discord
+                    [:right_command :right_command :discord {:alone :!Cu}] ; toggle user list
+                    ; drafts
+                    [:right_command :right_command :drafts {:alone :drafts-toggle_draft_list}]
+                    [:!Cdelete_or_backspace :!CSOdelete_or_backspace :drafts]
+                    [:right_option :right_option :drafts {:alone :!C0}]             ; toggle actions bar
+                    ; finder
+                    [:right_command :right_command :finder {:alone :!CTs}]
+                    ; kitty
+                    [:right_command :right_command [:kitty ["tmux_prefix" 0]] {:alone :!Ta}]
+                    [:right_command :right_command [:kitty ["tmux_prefix" 1]] {:alone :!Tb}]
+                    [:right_command :right_command [:vscode ["vscode_terminal" 0]] {:alone :toggle_terminal_or_editor}]
+                    [:right_option :right_option [:kitty :!tmux_sync_panes] {:alone [:!Ta :!Ssemicolon [:type_cr "setw synchronize-panes on"] ["tmux_sync_panes" 1]]}]
+                    [:right_option :right_option [:kitty :tmux_sync_panes] {:alone [:!Ta :!Ssemicolon [:type_cr "setw synchronize-panes off"] ["tmux_sync_panes" 0]]}]
+                    ; rotate between ctrl+a & ctrl+b as a tmux prefix
+                    [:!Qspacebar ["tmux_prefix" 1] [:kitty ["tmux_prefix" 0]]]
+                    [:!Qspacebar ["tmux_prefix" 0] [:kitty ["tmux_prefix" 1]]]
+                    [:!Cf [:!Ta :c] :kitty]           ; Cmd+T on Colemak
+                    [:!Cw [:!Ta :k] :kitty]
+                    [:!C0 [:!Ta :0] :kitty]
+                    [:!C1 [:!Ta :1] :kitty]
+                    [:!C2 [:!Ta :2] :kitty]
+                    [:!C3 [:!Ta :3] :kitty]
+                    [:!C4 [:!Ta :4] :kitty]
+                    [:!C5 [:!Ta :5] :kitty]
+                    [:!C6 [:!Ta :6] :kitty]
+                    [:!C7 [:!Ta :7] :kitty]
+                    [:!C8 [:!Ta :8] :kitty]
+                    [:!C9 [:!Ta :9] :kitty]
+                    [:!CSf :vk_none :kitty]
+                    [:!Qf :!QSt :kitty]
+                    [:!Q0 :!C0 :kitty]
+                    [:!Q1 :!C1 :kitty]
+                    [:!Q2 :!C2 :kitty]
+                    [:!Q3 :!C3 :kitty]
+                    [:!Q4 :!C4 :kitty]
+                    [:!Q5 :!C5 :kitty]
+                    [:!Q6 :!C6 :kitty]
+                    [:!Q7 :!C7 :kitty]
+                    [:!Q8 :!C8 :kitty]
+                    [:!Q9 :!C9 :kitty]
+                    ; mailmate
+                    [:right_command :right_command :mailmate {:alone :!COTd}]
+                    [:right_option :right_option :mailmate {:alone :!COu}]
+                    ; obsidian
+                    [:right_command :right_command :obsidian {:alone :!Ct}]
+                    ; opera
+                    [:!Qspacebar :!COi :opera]
+                    ; safari
+                    [:!CSf :vk_none :safari]
+                    [:!Qf :!QSt :safari]
+                    [:!Qleft_command [:!Cl :!Cv :return_or_enter] :safari]
+                    [:!Cright_command [:button2 :c :return_or_enter] :safari]
+                    [:left_control :left_control :safari {:alone :!CSbackslash}]
+                    [:left_option :left_option :safari {:alone :!COk}]        ; toggle dark mode
+                    [:right_command :right_command :safari {:alone :!CT1}]
+                    [:right_option :left_option :safari {:alone :!CSr}]
+                    [:!Sright_command :safari-toggle_reader :safari]
+                    [:!Qspacebar :!COi :safari]
+                    ; slack
+                    [:right_command :right_command :slack {:alone :!CSd}]
+                    ; teams
+                    [:left_option :left_option :teams {:alone :!CSm}]        ; toggle microphone
+                    ; vivaldi
+                    [:!CSf :vk_none :vivaldi]
+                    [:!Qf :!QSt :vivaldi]
+                    [:right_command :right_command :vivaldi {:alone :!COb}]
+                    [:right_option :right_option :vivaldi {:alone :!COTslash}]
+                    ;; [:right_option :left_option :vivaldi {:alone :!CSr}]
+                    [:!Qspacebar :!COi :vivaldi]
+                    ; vscode
+                    ; rotate between showing/hiding terminal, switching between them visible and maximized terminal
+                    [:!Qspacebar ["vscode_terminal" 1] [:vscode ["vscode_terminal" 0]]]
+                    [:!Qspacebar ["vscode_terminal" 2] [:vscode ["vscode_terminal" 1]]]
+                    [:!Qspacebar ["vscode_terminal" 0] [:vscode ["vscode_terminal" 2]]]
+                    ; based on the variable above, work with terminal based on preference
+                    [:right_command :right_command [:vscode ["vscode_terminal" 0]] {:alone :toggle_terminal_or_editor}]
+                    [:right_command :right_command [:vscode ["vscode_terminal" 1]] {:alone :toggle_terminal}]
+                    [:right_command :right_command [:vscode ["vscode_terminal" 2]] {:alone [:!COm :toggle_terminal]}]
+                    [:!Creturn_or_enter :!TOn :vscode]                       ; run code
+                    [:right_option :right_option :vscode {:alone :!Cb}]      ; toggle side bar
+                    [:left_option :left_option :vscode {:alone :!Tw}]        ; switch to window
+                    ; workflowy
+                    [:right_command :right_command :workflowy {:alone :!Cup_arrow}]
+                    [:!Sright_command :!Sright_command :workflowy {:alone :!Cdown_arrow}]
+                    [:right_option :right_option :workflowy {:alone :!Cslash}]
+                    ; zoom
+                    [:right_option :right_option :zoom {:alone :!Oy}]           ; toggle raised hand
+                    [:right_command :right_command :zoom {:alone [:!Cu :!CSh]}] ; toggle participant list & chat
+                    [:left_option :left_option :zoom {:alone :!CSa}]            ; toggle microphone
+                    [:!Cleft_option :!CSv :zoom]                                ; toggle video
+                    [:!Qleft_option :!CSv :zoom]                                ; toggle video
+                    [:!Qleft_command :!CSs :zoom]                               ; toggle sharing
+            ]
+        }
+        {
+            :des "Extended Layer - Spacebar"
+            :rules [
+                [:##spacebar [["extend" 1][:is_in_gdoc]] :!blocked {:afterup [["extend" 0]["in-gdoc" 0]] :alone :spacebar}]
+                :extend
+                    ;~ system wide shortcuts for top utilities
+                    [:escape            nil nil {:alone :escape :held :system-force_quit_apps}]
+                    [:non_us_backslash  nil nil {:alone :!Fh    :held :activate_hazeover}]
+                    [:tab :!!left_arrow]
+                    [:return_or_enter :!!right_arrow]
+                    ;~ power apps & window positioning - 1 hand switching
+                    [:q   ["fn_base" 1] nil {:alone :!!1 :afterup ["fn_base" 0]}]
+                    [:w   ["fn_ctrl" 1] nil {:alone :!!2 :afterup ["fn_ctrl" 0]}]
+                    [:e   ["fn_nvim" 1] nil {:alone :!!3 :afterup ["fn_nvim" 0]}]
+                    [:r   ["fn_tmux" 1] nil {:alone :!!4 :afterup ["fn_tmux" 0]}]
+                    [:t   ["fn_tmux" 1] nil {:alone :!!5 :afterup ["fn_tmux" 0]}]
+                    [:y   ["fn_tmux" 1] nil {:alone :!!6 :afterup ["fn_tmux" 0]}]
+                    ;~ switch between apps in the same stack
+                    [:left_shift :left_shift nil {:alone :!Fcomma}]
+                    [:right_shift :right_shift nil {:alone :!Fperiod}]
+                    ;~* function keys & social apps
+                    [:##1          nil nil {:alone :f1  :held [:open "Transmission"]}]
+                    [:##2          nil nil {:alone :f2  :held [:open "Google Chrome"]}]
+                    [:##3          nil nil {:alone :f3  :held [:open "Messages"]}]
+                    [:##4          nil nil {:alone :f4  :held :!CS4}]
+                    [:##5          nil nil {:alone :f5  :held :!CS5}]
+                    [:##6          nil nil {:alone :f6  :held [:open_social "Discord"]}]
+                    [:##7          nil nil {:alone :f7  :held [:open_social "Telegram"]}]
+                    [:##8          nil nil {:alone :f8  :held [:open_social "WhatsApp"]}]
+                    [:##9          nil nil {:alone :f9  :held [:open_social "Slack"]}]
+                    [:##0          nil nil {:alone :f10 :held [:open_social "Messages"]}]
+                    [:##hyphen     nil nil {:alone :f11 :held [:open_social "Skype"]}]
+                    [:##equal_sign nil nil {:alone :f12 :held [:open_social "zoom.us"]}]
+                    ; per-app key definitions
+                    ; arc
+                    [:u :!Cleft_arrow :arc]
+                    [:o :!Cright_arrow :arc]
+                    [:comma :!CSopen_bracket :arc]
+                    [:period :!CSclose_bracket :arc]
+                    [:!Tcomma :!Oup_arrow :arc]
+                    [:!Tperiod :!Odown_arrow :arc]
+                    ; chrome
+                    [:u :!Cleft_arrow :chrome]
+                    [:o :!Cright_arrow :chrome]
+                    [:comma :safari-prev_tab :chrome]
+                    [:period :safari-next_tab :chrome]
+                    ; evernote
+                    [:u :evernote-beginning_of_line :evernote]
+                    [:o :evernote-end_of_line :evernote]
+                    ; drafts
+                    [:u :drafts-beginning_of_line :drafts]
+                    [:o :drafts-end_of_line :drafts]
+                    [:comma :!TStab :drafts]
+                    [:period :!Ttab :drafts]
+                    ; emacs
+                    [:u :!Cleft_arrow :emacs]
+                    [:o :!Cright_arrow :emacs]
+                    ; goodnotes
+                    [:g :e :goodnotes]
+                    [:v :p :goodnotes]
+                    [:d :l :goodnotes]
+                    [:h :h :goodnotes]
+                    [:caps_lock :s :goodnotes]
+                    [:a :!Chyphen :goodnotes]
+                    [:s  :!Cequal_sign :goodnotes]
+                    [:f {:pkey :button1} :goodnotes]
+                    ; firefox
+                    [:right_command :!Tperiod :firefox]
+                    ; kitty
+                    [:!Tcomma :kitty-prev_tab :kitty]
+                    [:!Tperiod :kitty-next_tab :kitty]
+                    [:u [:!Ta :a] :kitty]
+                    [:o :!Te :kitty]
+                    [:!Cj [:!Ta :left_arrow] :kitty]
+                    [:!Ck [:!Ta :down_arrow] :kitty]
+                    [:!Ci [:!Ta :up_arrow] :kitty]
+                    [:!Cl [:!Ta :right_arrow] :kitty]
+                    [:!Oj :!Ob :kitty]
+                    [:!Ol :!Of :kitty]
+                    [:!Tj [:!Tw :left_arrow] :kitty]
+                    [:!Tk [:!Tw :down_arrow] :kitty]
+                    [:!Ti [:!Tw :up_arrow] :kitty]
+                    [:!Tl [:!Tw :right_arrow] :kitty]
+                    [:comma [:!Ta :p] :kitty]
+                    [:period [:!Ta :n] :kitty]
+                    ; mailmate
+                    [:u :!Cleft_arrow :mailmate]
+                    [:o :!Cright_arrow :mailmate]
+                    ; messages
+                    [:!Ti :!TStab :messages]
+                    [:!Tk :!Ttab :messages]
+                    [:comma :!TStab :messages]
+                    [:period :!Ttab :messages]
+                    ; opera
+                    [:comma :opera-prev_tab :opera]
+                    [:period :opera-next_tab :opera]
+                    ; safari
+                    [:u :!Cleft_arrow :safari]
+                    [:o :!Cright_arrow :safari]
+                    [:right_command :!COk :safari]
+                    [:comma :safari-prev_tab :safari]
+                    [:period :safari-next_tab :safari]
+                    [:!Tcomma :!Oup_arrow [:safari ["in-gdoc" 1]]]
+                    [:!Tperiod :!Odown_arrow [:safari ["in-gdoc" 1]]]
+                    ; stickies
+                    [:u :!Cleft_arrow :stickies]
+                    [:o :!Cright_arrow :stickies]
+                    [:!Oi [:!Cleft_arrow :!CSright_arrow :!Cx :delete_forward :up_arrow :!Cleft_arrow :!COSv :return_or_enter :up_arrow] :stickies]
+                    [:!Ok [:!Cleft_arrow :!CSright_arrow :!Cx :delete_forward :down_arrow :!Cleft_arrow :!COSv :return_or_enter :up_arrow] :stickies]
+                    ; telegram
+                    [:comma :!COup_arrow :telegram]
+                    [:period :!COdown_arrow :telegram]
+                    ; vivaldi
+                    [:u :!Cleft_arrow :vivaldi]
+                    [:o :!Cright_arrow :vivaldi]
+                    [:comma :!CSopen_bracket :vivaldi]
+                    [:period :!CSclose_bracket :vivaldi]
+                    [:!Tcomma :!Oup_arrow :vivaldi]
+                    [:!Tperiod :!Odown_arrow :vivaldi]
+                    ; vscode
+                    [:comma :focus_editor_left :vscode]
+                    [:period :focus_editor_right :vscode]
+                    [:##right_command :!COm :vscode]       ; maximize panel
+                    [:!Tcomma :!COTleft_arrow :vscode]
+                    [:!Tperiod :!COTright_arrow :vscode]
+                    ; workflowy
+                    [:!Ok :!CSdown_arrow :workflowy]
+                    [:!Oi :!CSup_arrow :workflowy]
+                    [:comma :!Ccomma :workflowy]
+                    [:period :!Cperiod :workflowy]
+                    [:!Ti :!CS9 :workflowy]
+                    [:!Tk :!CS0 :workflowy]
+                    [:return_or_enter :!Creturn_or_enter :workflowy]
+                    ; zoom
+                    [:comma :!Tp :zoom]
+                    [:period :!Tn :zoom]
+                    ; global settings
+                    [:!Tj :home]
+                    [:!Tl :end]
+                    [:!TSj :!Shome]
+                    [:!TSl :!Send]
+                    [:!Ti :page_up]
+                    [:!Tk :page_down]
+                    [:!TSi :!Spage_up]
+                    [:!TSk :!Spage_down]
+                    ; reposition some keys closer
+                    [:##f :return_or_enter]
+                    [:##g :delete_or_backspace]
+                    ; modifiers
+                    [:##caps_lock :left_control nil {:alone :escape}]
+                    [:##a :left_shift]
+                    [:##s :left_option]
+                    [:##d :left_command]
+                    ; arrows
+                    [:##j :left_arrow]
+                    [:##k :down_arrow]
+                    [:##i :up_arrow]
+                    [:##l :right_arrow]
+                    ; shortcuts
+                    [:!!u :page_up]
+                    [:!!o :page_down]
+                    [:##u :home]
+                    [:##o :end]
+                    ; undo, cut, copy, paste on mod-wide on colemak
+                    [:##grave_accent_and_tilde :!Cz][:##z :!Cx][:##x :!Cc][:##c :!Cv]
+                    ; edit/organize text properly
+                    [:##quote :insert]
+                    [:##h :delete_or_backspace]
+                    [:##semicolon :delete_forward]
+                    ; spaces navigation
+                    [:n :!!left_arrow]
+                    [:m :!!left_arrow]
+                    [:slash :!!right_arrow]
+            ]
+        }
+        {
+            :des "Colemak Layout"
+            :rules [
+                ; colemak
+                [:condi :!qwerty]
+                    ; mod-wide colemak on the apple keyboard (full layout below; some keys are the same as QWERTY)
+                    [:##non_us_backslash :grave_accent_and_tilde]
+                    [:##q :q][:##w :w][:##e :f][:##r :p][:##t :g][:##y :j][:##u :l][:##i :u][:##o :y][:##p :semicolon]
+                    [:##a :a][:##s :r][:##d :s][:##f :t][:##g :d][:##h :h][:##j :n][:##k :e][:##l :i][:##semicolon :o]
+                    [:##grave_accent_and_tilde :z][:##z :x][:##x :c][:##c :v][:##v :b][:##b :spacebar][:##n :k][:##m :m]
+                ]
+        }
+    ]
+}
+
+;; rule [:period ["media-mode" 1] nil {:afterup ["media-mode" 0] :alone :period}]
+;;       |_____| |_______________| |_| |_________________________________________|
+;;        <from>    <to>      <conditions>         <other options>
+;;
+;; !  | means mandatory -   modifier(s) alone when pressend change behavior
+;; #  | means optional  -   modifiers are optional (but atleast one necessary)
+;;
+;; :!Ca is keycode :a and prefix a with !C
+;;
+;; C  | left_command
+;; T  | left_control
+;; O  | left_option
+;; S  | left_shift
+;; F  | fn
+;; Q  | right_command
+;; W  | right_control
+;; E  | right_option
+;; R  | right_shift
+;; P  | caps_lock
+;;
+;; ## | optional any (this has no effect when used on the RHS; only LHS)
+;; !! | command + control + option + shift (hyper)
+;;
+;; to understand better how modifiers work in karabiner
+;; karabiner definition of mandatory and optional
+;; https://karabiner-elements.pqrs.org/docs/json/complex-modifications-manipulator-definition/from/modifiers/
+;;
+;; need to prefix C T O S F P with ! or #
+;;
+;; code for all this:
+;; https://github.com/yqrashawn/GokuRakuJoudo/blob/b9b334a187379f9bc8182ad59e2cca2a1789e9c0/src/karabiner_configurator/keys.clj#L68 
+;;
+;;
+;; list of keys usable in Karabiner
+;; https://github.com/pqrs-org/Karabiner-Elements/issues/925#issuecomment-323984568
+;;
+;; Sample mouse event remapping
+;; Could be used in a layer. Intercepting events from mice interferes with the scrollwheel.
+;; [{:pkey :button2} :delete_forward]
+;;
+;;
+;; URL of extend layer - https://forum.colemak.com/topic/2014-extend-extra-extreme/

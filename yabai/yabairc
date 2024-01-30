@@ -1,0 +1,110 @@
+#!/usr/bin/env sh
+
+# #############################################################################
+# Do not delete the `UNIQUE_ID` line below, I use it to backup original files
+# so they're not lost when my symlinks are applied
+# UNIQUE_ID=do_not_delete_this_line
+# #############################################################################
+
+# This command is the one that loads the scripting addition
+# Configure your user to execute `yabai --load-sa` as the root user without having to enter a password.
+#  https://github.com/koekeishiya/yabai/wiki/Installing-yabai-(latest-release)#configure-scripting-addition
+yabai -m signal --add event=dock_did_restart action="sudo yabai --load-sa"
+sudo yabai --load-sa
+
+# # Check the display size (e.g., grab the resolution here)
+# display_info=$(system_profiler SPDisplaysDataType | grep Resolution)
+#
+# # If the resolution is 6016 x 3384 I want to apply bigger paddings
+# # This means I'm connected to my 55 inch tv
+# # The * are used as wildcards
+# if [[ "$display_info" == *"6016 x 3384"* ]]; then
+# 	yabai -m config top_padding 400
+# 	yabai -m config bottom_padding 300
+# 	yabai -m config left_padding 1500
+# 	yabai -m config right_padding 12
+# else
+# 	# settings for other machines
+# 	yabai -m config top_padding 0
+# 	yabai -m config bottom_padding 0
+# 	yabai -m config left_padding 0
+# 	yabai -m config right_padding 0
+# fi
+
+# yabai -m config top_padding 20
+# yabai -m config bottom_padding 20
+# yabai -m config left_padding 20
+# yabai -m config right_padding 20
+
+# Yabai signal to detect focus change for any application and move the cursor
+# yabai -m signal --add event=window_focused action="cliclick m:0,0"
+# yabai -m signal --add event=window_focused app="Google Chrome" action="cliclick m:0,0"
+
+# Make the below apps transparent
+APP_LIST="(Spotify|Alacritty)"
+# When my list of apps gains focus, make all background windows completely transparent
+yabai -m signal --add event=window_focused app="^${APP_LIST}$" action="yabai -m config active_window_opacity 0.85"
+yabai -m signal --add event=window_focused app="^${APP_LIST}$" action="yabai -m config normal_window_opacity 0.00001"
+# yabai -m signal --add event=window_focused app="$MGMT_EXCLUDED_APPS" action="yabai -m config normal_window_opacity 1.0"
+
+# When any other app gains focus, reset both active and background window opacity to fully visible
+yabai -m signal --add event=window_focused app!="^${APP_LIST}$" action="yabai -m config active_window_opacity 1.0"
+yabai -m signal --add event=window_focused app!="^${APP_LIST}$" action="yabai -m config normal_window_opacity 1.0"
+
+# make the apps below fully opaque (not transparent)
+# This makes the following windows always appear on top
+# IF THE APP WAS CLOSED, OPEN IT, AND RESTART YABAI FOR THIS TO TAKE EFFECT, otherwise can't get it's ID
+# All the options can be seen using 'man yabai'
+ALWAYS_SHOWN_APPS="(Notes)"
+# Query yabai for windows and filter with jq using the regex pattern
+WINDOW_IDS=$(yabai -m query --windows | jq -r --arg APP_REGEX "$ALWAYS_SHOWN_APPS" '.[] | select(.app | test($APP_REGEX)) | .id')
+# Set the opacity for each window ID
+for id in $WINDOW_IDS; do
+	yabai -m window "$id" --opacity 1.0
+done
+
+# Apps excluded from window management, so you can resize them and move them around
+MGMT_EXCLUDED_APPS=$ALWAYS_SHOWN_APPS
+# Uncomment the line below if you want to use different excluded apps
+MGMT_EXCLUDED_APPS="(iStat Menus|CleanShot X|Calculator|Hammerspoon|BetterDisplay|GIMP|Notes)"
+# MGMT_EXCLUDED_APPS="(Notes|iStat Menus|CleanShot X|Udemy Business)"
+yabai -m rule --add app="^${MGMT_EXCLUDED_APPS}$" manage=off
+
+# In case you want to debug and see the contents of the variable
+# echo "MGMT_EXCLUDED_APPS: $MGMT_EXCLUDED_APPS" >> /tmp/yabai_debug.log
+
+# global settings
+# When I leave youtube or chrome, hammerspoon will move the mouse to the corner
+#
+# "mouse_follows_focus on" will move the mouse back to the center, but DISABLE it or it will
+# be a nightmare to use iStat Menus
+
+yabai -m config \
+	mouse_follows_focus off \
+	focus_follows_mouse off \
+	window_origin_display default \
+	window_placement second_child \
+	window_zoom_persist on \
+	window_topmost off \
+	window_shadow off \
+	window_animation_duration 2 \
+	window_animation_frame_rate 120 \
+	window_opacity_duration 0.0 \
+	window_opacity on \
+	insert_feedback_color 0xffd75f5f \
+	active_window_border_color 0xff775759 \
+	normal_window_border_color 0xff555555 \
+	window_border_width 4 \
+	window_border_radius 12 \
+	window_border_blur off \
+	window_border_hidpi on \
+	window_border off \
+	split_ratio 0.50 \
+	split_type auto \
+	auto_balance off \
+	window_gap 06 \
+	layout stack \
+	mouse_modifier fn \
+	mouse_action1 move \
+	mouse_action2 resize \
+	mouse_drop_action swap

@@ -1,0 +1,67 @@
+# vim ~/.config/starship2.toml
+# https://starship.rs/config/#git-branch
+
+# # In case you want to modify the order of the items you can do this
+# format = """
+# $username\
+# $hostname\
+# $directory\
+# $git_branch\
+# $git_status\
+# $git_commit\
+# $git_state\
+# $all\
+# $time\
+# $character
+# """
+
+# This will show the time on a 2nd line
+# Add a "\" at the end of an item, if you want the next item to show on the same line
+format = """
+$all\
+$kubernetes
+$character
+"""
+
+[battery]
+disabled = true
+
+[gcloud]
+disabled = true
+
+[time]
+style = '#FF6200 bold'
+disabled = false
+format = '[\[$time\]]($style) '
+# https://docs.rs/chrono/0.4.7/chrono/format/strftime/index.html
+# %T	00:34:60	Hour-minute-second format. Same to %H:%M:%S.
+time_format = '%y/%m/%d %T'
+
+# For this to show up correcly, you need to have cluster access
+# So your ~/.kube/config needs to be configured on the local machine
+[kubernetes]
+# context = user@cluster
+format = '[$user@$cluster \($namespace\)](dimmed green) '
+# format = 'on [⛵ ($user on )($cluster in )$context \($namespace\)](dimmed green) '
+disabled = false
+# Only dirs that have this file inside will show the kubernetes prompt
+detect_files = ['900-detectkubernetes.sh']
+# contexts = [
+#   { context_pattern = "dev.local.cluster.k8s", style = "green", symbol = "💔 " },
+# ]
+
+[username]
+style_user = '#FF6200 bold'
+style_root = 'white bold'
+format = '[$user]($style)'
+show_always = true
+
+[hostname]
+ssh_only = false
+format = '[.@.](white bold)[$hostname](#F2CEAE bold)'
+
+[directory]
+style = '#BFA004 bold'
+truncation_length = 0
+truncate_to_repo = false
+

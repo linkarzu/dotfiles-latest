@@ -1,0 +1,20 @@
+-- Disabled this plugin as dashboard.nvim is the new starter plugin
+-- That's why I renamed it to .old
+
+return {
+  "goolord/alpha-nvim",
+  opts = function(_, opts)
+    local logo = [[
+    
+ ███╗   ██╗███████╗ ██████╗ ██╗   ██╗██╗███╗   ███╗ 
+ ████╗  ██║██╔════╝██╔═══██╗██║   ██║██║████╗ ████║ 
+ ██╔██╗ ██║█████╗  ██║   ██║██║   ██║██║██╔████╔██║ 
+ ██║╚██╗██║██╔══╝  ██║   ██║╚██╗ ██╔╝██║██║╚██╔╝██║ 
+ ██║ ╚████║███████╗╚██████╔╝ ╚████╔╝ ██║██║ ╚═╝ ██║ 
+ ╚═╝  ╚═══╝╚══════╝ ╚═════╝   ╚═══╝  ╚═╝╚═╝     ╚═╝ 
+
+                     [linkarzu]
+  ]]
+    opts.section.header.val = vim.split(logo, "\n", { trimempty = true })
+  end,
+}

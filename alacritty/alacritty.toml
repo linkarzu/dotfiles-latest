@@ -85,6 +85,21 @@ args = ["--login", "-c", "/opt/homebrew/bin/tmux attach || //opt/homebrew/bin/tm
 [window]
 opacity = 1
 
+# Remove the title bar on the top, it's nice, but sometimes I use multiple
+# instances of alacritty with cmd+n and I cmd+` between them, without the top
+# bar, that's not possible
+# Square corners
+# decorations = "none"
+# Round corners
+# decorations = "buttonless"
+
+# Window padding (changes require restart)
+# Blank space added around the window in pixels. This padding is scaled
+# by DPI and the specified value is always added at both opposing sides.
+[window.padding]
+x = 2
+y = 6
+
 # Make `Option` key behave as `Alt` (macOS only):
 #   - OnlyLeft
 #   - OnlyRight
@@ -103,10 +118,6 @@ instance = "Alacritty"
 [window.dimensions]
 columns = 200
 lines = 55
-
-[window.padding]
-x = 10
-y = 10
 
 [window.position]
 x = 2750

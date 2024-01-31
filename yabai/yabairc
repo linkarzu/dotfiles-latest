@@ -31,10 +31,10 @@ sudo yabai --load-sa
 # 	yabai -m config right_padding 0
 # fi
 
-# yabai -m config top_padding 20
-# yabai -m config bottom_padding 20
-# yabai -m config left_padding 20
-# yabai -m config right_padding 20
+yabai -m config top_padding 04
+yabai -m config bottom_padding 05
+# yabai -m config left_padding 05
+# yabai -m config right_padding 05
 
 # Yabai signal to detect focus change for any application and move the cursor
 # yabai -m signal --add event=window_focused action="cliclick m:0,0"

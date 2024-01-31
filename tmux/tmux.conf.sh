@@ -14,7 +14,6 @@
 # I couldn't use backspace, but working fine since changed alacritty TERM to alacritty
 # https://copyprogramming.com/howto/why-would-i-set-term-to-xterm-256color-when-using-alacritty
 set -g default-terminal "tmux-256color"
-
 # I was getting this warning in neovim
 # Neither Tc nor RGB capability set. True colors are disabled
 # Confirm your $TERM value outside of tmux first, mine returned "screen-256color"
@@ -64,11 +63,16 @@ bind 0 switch-client -t 4
 unbind J
 unbind K
 unbind L
+unbind C-j
+unbind C-k
+unbind C-l
 bind J select-layout even-horizontal
 bind K select-layout even-vertical
-bind L select-layout tiled
+# bind L select-layout tiled
+bind L run-shell ~/github/dotfiles-latest/tmux/layouts/7030/apply_layout.sh
 bind C-j select-layout main-horizontal
 bind C-k select-layout main-vertical
+bind C-l run-shell ~/github/dotfiles-latest/tmux/layouts/2x3/apply_layout.sh
 
 # Reload the tmux configuration, display a 2 second message
 unbind r
@@ -159,6 +163,8 @@ set-option -sg escape-time 100
 # window gains or looses focus
 set-option -g focus-events on
 
+set -g status-position bottom
+
 ##############################################################################
 ##############################################################################
 #
@@ -203,6 +209,8 @@ set -g @resurrect-capture-pane-contents 'on'
 set -g @plugin 'tmux-plugins/tmux-continuum'
 # enable tmux-continuum functionality
 set -g @continuum-restore 'on'
+# Set the save interval in minutes, default is 15
+set -g @continuum-save-interval '5'
 
 # Initialize TMUX plugin manager
 # (keep this line at the very bottom of tmux.conf)

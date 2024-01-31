@@ -9,6 +9,7 @@ return {
       local bg_color
       local fg_color = "#36454F" -- default dark gray
 
+      -- My colors match my starship colors that are also host dependent
       if last_char == "1" then
         bg_color = "#0DFFAE"
         -- fg_color = "#000080"  -- dark blue
@@ -19,7 +20,7 @@ return {
         bg_color = "#DBF227"
         -- fg_color = "#000080"  -- dark blue
       else
-        bg_color = "#FF69B4" -- default pink
+        bg_color = "#A6AAF1" -- default pink
       end
 
       return bg_color, fg_color

@@ -6,7 +6,7 @@
 
 -- This add the bar that shows the file path on the top right
 -- vim.opt.winbar = "%=%m %f"
--- Modified version of the bar that shows the hostname
+-- Modified version of the bar that also shows the hostname
 vim.opt.winbar = "%=" .. vim.fn.systemlist("hostname")[1] .. "            %m %f"
 
 -- Shows colorcolumn that helps me with markdown guidelines

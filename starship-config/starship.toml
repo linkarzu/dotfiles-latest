@@ -30,7 +30,7 @@ disabled = true
 disabled = true
 
 [time]
-style = '#a6aaf1 bold'
+style = '#A6AAF1 bold'
 disabled = false
 format = '[\[$time\]]($style) '
 # https://docs.rs/chrono/0.4.7/chrono/format/strftime/index.html

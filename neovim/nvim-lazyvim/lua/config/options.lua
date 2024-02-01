@@ -12,6 +12,10 @@ vim.opt.winbar = "%=" .. vim.fn.systemlist("hostname")[1] .. "            %m %f"
 -- Shows colorcolumn that helps me with markdown guidelines
 vim.opt.colorcolumn = "80"
 
+-- Enable autochdir to automatically change the working directory to the current file's directory
+-- If you go inside a subdir, neotree will open that dir as the root
+-- vim.opt.autochdir = true
+
 -- Keeps my cursor in the middle whenever possible
 -- This didn't work as expected, but the `stay-centered.lua` plugin did the trick
 -- vim.opt.scrolloff = 999

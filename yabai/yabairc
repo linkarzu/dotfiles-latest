@@ -55,7 +55,7 @@ yabai -m signal --add event=window_focused app!="^${APP_LIST}$" action="yabai -m
 # This makes the following windows always appear on top
 # IF THE APP WAS CLOSED, OPEN IT, AND RESTART YABAI FOR THIS TO TAKE EFFECT, otherwise can't get it's ID
 # All the options can be seen using 'man yabai'
-ALWAYS_SHOWN_APPS="(Notes)"
+ALWAYS_SHOWN_APPS="(CleanShot X)"
 # Query yabai for windows and filter with jq using the regex pattern
 WINDOW_IDS=$(yabai -m query --windows | jq -r --arg APP_REGEX "$ALWAYS_SHOWN_APPS" '.[] | select(.app | test($APP_REGEX)) | .id')
 # Set the opacity for each window ID

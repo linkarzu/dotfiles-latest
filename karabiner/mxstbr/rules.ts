@@ -107,6 +107,7 @@ const rules: KarabinerRules[] = [
       v: app("zoom.us"),
     },
 
+
     // r = "Raycast"
     r: {
       j: open("raycast://extensions/lardissone/raindrop-io/search"),
@@ -114,6 +115,9 @@ const rules: KarabinerRules[] = [
       l: open("raycast://extensions/KevinBatdorf/obsidian/searchNoteCommand"),
       semicolon: open("raycast://extensions/vishaltelangre/google-drive/index"),
       quote: open("raycast://extensions/mathieudutour/wolfram-alpha/index"),
+      y: open(
+        "raycast://extensions/tonka3000/youtube/search-videos?arguments=%7B%22query%22%3A%22%22%7D"
+      ),
       u: open("raycast://extensions/raycast/reminders/create-reminder"),
       i: open("raycast://extensions/raycast/reminders/my-reminders"),
       o: open("raycast://extensions/raycast/github/search-repositories"),

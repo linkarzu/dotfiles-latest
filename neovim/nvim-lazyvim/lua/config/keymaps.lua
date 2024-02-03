@@ -47,14 +47,20 @@ vim.keymap.set(
 )
 
 -- Make the file you run the command on, executable, so you don't have to go out to the command line
-vim.keymap.set("n", "<leader>fx", "<cmd>!chmod +x %<CR>", { silent = true, desc = "Make file executable" })
-vim.keymap.set("n", "<leader>fX", "<cmd>!chmod -x %<CR>", { silent = true, desc = "Remove executable flag" })
+-- Had to include quotes around "%" because there are some apple dirs that contain spaces, like iCloud
+vim.keymap.set("n", "<leader>fx", '<cmd>!chmod +x "%"<CR>', { silent = true, desc = "Make file executable" })
+-- vim.keymap.set("n", "<leader>fx", "<cmd>!chmod +x %<CR>", { silent = true, desc = "Make file executable" })
+vim.keymap.set("n", "<leader>fX", '<cmd>!chmod -x "%"<CR>', { silent = true, desc = "Remove executable flag" })
+-- vim.keymap.set("n", "<leader>fX", "<cmd>!chmod -x %<CR>", { silent = true, desc = "Remove executable flag" })
 
 -- If this is a script, make it executable, and execute it in a split pane on the right
+-- Had to include quotes around "%" because there are some apple dirs that contain spaces, like iCloud
 vim.keymap.set("n", "<leader>f.", function()
-  vim.cmd("!chmod +x %") -- Make the file executable
+  local file = vim.fn.expand("%") -- Get the current file name
+  local escaped_file = vim.fn.shellescape(file) -- Properly escape the file name for shell commands
+  vim.cmd("!chmod +x " .. escaped_file) -- Make the file executable
   vim.cmd("vsplit") -- Split the window vertically
-  vim.cmd("terminal " .. vim.fn.expand("%")) -- Open terminal and execute the file
+  vim.cmd("terminal " .. escaped_file) -- Open terminal and execute the file
   vim.api.nvim_feedkeys("i", "n", false) -- Enter insert mode, moves to end of prompt if there's one
 end, { desc = "Execute current file in terminal" })
 

@@ -74,6 +74,33 @@ bind C-j select-layout main-horizontal
 bind C-k select-layout main-vertical
 bind C-l run-shell ~/github/dotfiles-latest/tmux/layouts/2x3/apply_layout.sh
 
+# ThePrimeagen's tmux-sessionizer script, got 'em
+unbind f
+bind-key -r f run-shell "tmux neww ~/github/dotfiles-latest/tmux/tools/tmux-sessionizer.sh"
+
+# I don't really care what these mappings are, pressing ctrl+* doesn't make any
+# sense whatsoever, because it's not ergonomic, but I call them from
+# bettertouchtool, and BTT is called from karabiner-elements
+unbind C-u
+unbind C-i
+unbind C-o
+unbind C-p
+unbind C-y
+unbind C-t
+unbind C-h
+unbind C-g
+# Don't use C-r because it's used by tmux-resurrect
+# Don't use C-e because I'm already using it for sending command to all panes/windows in current session
+bind-key -r C-u run-shell "~/github/dotfiles-latest/tmux/tools/tmux-sessionizer.sh ~/github/dotfiles-latest"
+bind-key -r C-i run-shell "~/github/dotfiles-latest/tmux/tools/tmux-sessionizer.sh ~/github/dotfiles-public"
+bind-key -r C-o run-shell "~/github/dotfiles-latest/tmux/tools/tmux-sessionizer.sh ~/github/linkarzu.github.io"
+bind-key -r C-p run-shell "~/github/dotfiles-latest/tmux/tools/tmux-sessionizer.sh ~/github/scripts"
+bind-key -r C-y run-shell "~/github/dotfiles-latest/tmux/tools/tmux-sessionizer.sh ~/github/containerdata"
+bind-key -r C-t run-shell "~/github/dotfiles-latest/tmux/tools/tmux-sessionizer.sh ~/github/obsidian_main"
+bind-key -r C-h run-shell "~/github/dotfiles-latest/tmux/tools/tmux-sessionizer.sh ~"
+# Leaving this in quotes because iCloud dir has a white space
+bind-key -r C-g run-shell '~/github/dotfiles-latest/tmux/tools/tmux-sessionizer.sh "~/Library/Mobile Documents/com~apple~CloudDocs/Scripts"'
+
 # Reload the tmux configuration, display a 2 second message
 unbind r
 bind r source-file ~/.tmux.conf \; display-message -d 2000 "Configuration reloaded!"
@@ -202,10 +229,12 @@ set -g @dracula-tmux-ram-usage-colors "dark_purple white"
 set -g @dracula-border-contrast true
 
 # persist tmux sessions after computer restart
+# https://github.com/tmux-plugins/tmux-resurrect
 set -g @plugin 'tmux-plugins/tmux-resurrect'
 # allow tmux-ressurect to capture pane contents
 set -g @resurrect-capture-pane-contents 'on'
 # automatically saves sessions for you every 15 minutes (this must be the last plugin)
+# https://github.com/tmux-plugins/tmux-continuum
 set -g @plugin 'tmux-plugins/tmux-continuum'
 # enable tmux-continuum functionality
 set -g @continuum-restore 'on'

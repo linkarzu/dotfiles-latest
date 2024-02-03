@@ -19,6 +19,7 @@ return {
     end
 
     -- Decide background color based on hostname's last character
+    -- These colors match my starship profile
     local function decide_color()
       local hostname = vim.fn.systemlist("hostname")[1]
       local last_char = hostname:sub(-1)
@@ -42,12 +43,12 @@ return {
     table.insert(opts.sections.lualine_x, 1, {
       "hostname",
       color = { fg = fg_color, bg = bg_color, gui = "bold" },
-      separator = { left = "", right = "" },
+      separator = { left = "█", right = "" },
       -- separator = { left = "", right = "" },
       -- separator = { left = "", right = "" },
       -- separator = { left = "", right = "" },
       -- separator = { left = "", right = "" },
-      padding = 1,
+      padding = 0,
     })
 
     -- File permissions component with dynamic background color
@@ -63,12 +64,13 @@ return {
       end,
       -- separator = { left = "", right = "" },
       -- separator = { left = "", right = "" },
-      separator = { left = "", right = "" },
+      -- separator = { left = "", right = "" },
+      separator = { left = "", right = "█ " },
       -- separator = { left = "", right = "" },
       -- separator = { left = "", right = "" },
       -- separator = { left = "", right = "" },
       -- separator = { left = "", right = "" },
-      padding = 1,
+      padding = 0,
     })
   end,
 }

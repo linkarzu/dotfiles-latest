@@ -107,6 +107,41 @@ const rules: KarabinerRules[] = [
       v: app("zoom.us"),
     },
 
+    // t = "tmux"
+    t: {
+      // home
+      h: open(
+        "btt://execute_assigned_actions_for_trigger/?uuid=F431526A-E836-451C-BD36-67AB7DF7CAC2"
+      ),
+      // dotfiles-latest
+      j: open(
+        "btt://execute_assigned_actions_for_trigger/?uuid=E2BEB425-38A3-46D8-AAF8-067CA979D4FB"
+      ),
+      // dotfiles-public
+      k: open(
+        "btt://execute_assigned_actions_for_trigger/?uuid=96E9BDEC-F0C5-4E77-AF1F-1EF5914BFDDF"
+      ),
+      // linkarzu.github.io
+      l: open(
+        "btt://execute_assigned_actions_for_trigger/?uuid=1893BEBE-DC99-41CC-9BE6-74B66E3BBB2C"
+      ),
+      // scripts
+      semicolon: open(
+        "btt://execute_assigned_actions_for_trigger/?uuid=9E98F83C-C4C4-4B9B-AFF7-03AAAF2939A5"
+      ),
+      // containerdata
+      quote: open(
+        "btt://execute_assigned_actions_for_trigger/?uuid=55A10BEE-B776-4D93-B5ED-024A58595D93"
+      ),
+      // obsidian_main
+      u: open(
+        "btt://execute_assigned_actions_for_trigger/?uuid=6AACE82D-F9C7-403D-9B27-B758CD1B9E1B"
+      ),
+      // iCloud scripts
+      i: open(
+        "btt://execute_assigned_actions_for_trigger/?uuid=03F1E256-FF80-43BA-873C-195628FA5996"
+      ),
+    },
 
     // r = "Raycast"
     r: {

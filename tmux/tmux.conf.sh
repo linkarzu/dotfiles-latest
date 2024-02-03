@@ -244,7 +244,8 @@ set -g @plugin 'tmux-plugins/tpm'
 # Cons:
 # - Doesn't have a synch panes like dracula
 # Pros:
-# - I feel my terminal smoother/faster, not completely sure about this
+# - I feel my terminal waaaaay smoother/faster, not completely sure about this
+#   But could be due to all the refreshing and polling of data Dracula had to do
 
 set -g @plugin 'catppuccin/tmux'
 set -g @catppuccin_flavour 'mocha' # or frappe, macchiato, mocha
@@ -261,7 +262,9 @@ set -g @catppuccin_window_current_fill "number"
 set -g @catppuccin_window_current_text "#W"
 
 set -g @catppuccin_status_modules_left "session"
-set -g @catppuccin_status_modules_right "directory user host"
+set -g @catppuccin_status_modules_right "directory"
+# `user` and `host` are kind of useless, dont change when you ssh to devices
+# set -g @catppuccin_status_modules_right "directory user host"
 set -g @catppuccin_status_left_separator " "
 set -g @catppuccin_status_right_separator ""
 set -g @catppuccin_status_right_separator_inverse "no"

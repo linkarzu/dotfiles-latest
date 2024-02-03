@@ -1,0 +1,66 @@
+return {
+  "nvim-lualine/lualine.nvim",
+  event = "VeryLazy",
+  opts = function(_, opts)
+    -- Function to get current file permissions
+    local function file_permissions()
+      local file = vim.fn.expand("%:p") -- Get the full path of the current file
+      if file == "" or file == nil then
+        return "No File"
+      else
+        local permissions = vim.fn.getfperm(file)
+        return permissions
+      end
+    end
+
+    -- Function to decide color based on hostname
+    local function decide_color()
+      local hostname = vim.fn.systemlist("hostname")[1]
+      local last_char = string.sub(hostname, -1)
+      local bg_color
+      local fg_color = "#36454F" -- default dark gray
+
+      -- My colors match my starship colors that are also host dependent
+      if last_char == "1" then
+        bg_color = "#0DFFAE"
+        -- fg_color = "#000080"  -- dark blue
+      elseif last_char == "2" then
+        bg_color = "#FF6200"
+        -- fg_color = "#000080"  -- dark blue
+      elseif last_char == "3" then
+        bg_color = "#DBF227"
+        -- fg_color = "#000080"  -- da#A6AAF1rk blue
+      else
+        bg_color = "#A6AAF1" -- default pink
+      end
+
+      return bg_color, fg_color
+    end
+
+    local bg_color, fg_color = decide_color()
+
+    -- Adding hostname to lualine_x
+    table.insert(opts.sections.lualine_x, 1, {
+      "hostname",
+      color = { fg = fg_color, bg = bg_color, gui = "bold" },
+      separator = { left = "", right = "" },
+      -- separator = { left = "", right = "" },
+      -- separator = { left = "", right = "" },
+      -- separator = { left = "", right = "" },
+      -- separator = { left = "", right = "" },
+      padding = 1,
+    })
+
+    -- Adding file permissions to lualine_x
+    table.insert(opts.sections.lualine_x, 1, {
+      file_permissions,
+      color = { fg = fg_color, bg = "#0099ff", gui = "bold" },
+      -- separator = { left = "", right = "" },
+      -- separator = { left = "", right = "" },
+      separator = { left = "", right = "" },
+      -- separator = { left = "", right = "" },
+      -- separator = { left = "", right = "" },
+      padding = 1,
+    })
+  end,
+}

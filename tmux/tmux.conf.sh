@@ -99,7 +99,7 @@ bind-key -r C-y run-shell "~/github/dotfiles-latest/tmux/tools/tmux-sessionizer.
 bind-key -r C-t run-shell "~/github/dotfiles-latest/tmux/tools/tmux-sessionizer.sh ~/github/obsidian_main"
 bind-key -r C-h run-shell "~/github/dotfiles-latest/tmux/tools/tmux-sessionizer.sh ~"
 # Leaving this in quotes because iCloud dir has a white space
-bind-key -r C-g run-shell '~/github/dotfiles-latest/tmux/tools/tmux-sessionizer.sh "~/Library/Mobile Documents/com~apple~CloudDocs/Scripts"'
+bind-key -r C-g run-shell '~/github/dotfiles-latest/tmux/tools/tmux-sessionizer.sh "~/Library/Mobile Documents/com~apple~CloudDocs/icloud"'
 
 # Reload the tmux configuration, display a 2 second message
 unbind r

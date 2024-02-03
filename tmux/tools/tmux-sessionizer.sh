@@ -11,7 +11,7 @@ if [[ $# -eq 1 ]]; then
 else
 	# If no argument is provided, use 'find' to list directories in specified paths and 'fzf' for interactive selection
 	# selected=$(find ~/github -mindepth 1 -maxdepth 1 -type d | fzf)
-	selected=$(find ~/github "$HOME/Library/Mobile Documents/com~apple~CloudDocs/Scripts" -mindepth 1 -maxdepth 1 -type d | fzf)
+	selected=$(find ~/github "$HOME/Library/Mobile Documents/com~apple~CloudDocs/icloud" -mindepth 1 -maxdepth 1 -type d | fzf)
 	# selected=$(find ~/work/builds ~/projects ~/ ~/work ~/personal ~/personal/yt -mindepth 1 -maxdepth 1 -type d | fzf)
 
 	# Debugging

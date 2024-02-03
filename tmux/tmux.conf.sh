@@ -208,25 +208,78 @@ set -g @plugin 'tmux-plugins/tpm'
 # for navigating panes and vim/nvim with Ctrl-hjkl
 # set -g @plugin 'christoomey/vim-tmux-navigator'
 
-# Powerline theme
-# set -g @plugin 'jimeh/tmux-themepack'
-# set -g @themepack 'powerline/default/cyan'
+##############################################################################
+# Themes section, only enable 1
+
+# >>>>>>>>>>>>>>>>>>>>>>>> VERY IMPORTANT NOTE <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+# To change the theme, delete the `~/.tmux/plugins/tmux` dir first
+# rm -rf ~/.tmux/plugins/tmux
+# Enable the desired theme in this tmux.conf file, just enable 1
+# Then install plugins ctrl+b shift+i
+# - If you don't follow these steps, the old theme won't be replaced by the new
+# one
+##############################################################################
 
 # Dracula theme
 # https://draculatheme.com/tmux
 # available plugins: battery, cpu-usage, git, gpu-usage, ram-usage,
 # tmux-ram-usage, network, network-bandwidth, network-ping, attached-clients,
 # network-vpn, weather, time, spotify-tui, kubernetes-context, synchronize-panes
-set -g @plugin 'dracula/tmux'
-set -g @dracula-plugins "synchronize-panes git time network-ping tmux-ram-usage"
-set -g @dracula-synchronize-panes-label "Synchronize:"
-# available colors: white, gray, dark_gray, light_purple, dark_purple, cyan, green, orange, red, pink, yellow
-set -g @dracula-synchronize-panes-colors "orange gray"
-set -g @dracula-show-powerline true
-set -g @dracula-show-left-icon session
-set -g @dracula-tmux-ram-usage-label "tmuxRam:"
-set -g @dracula-tmux-ram-usage-colors "dark_purple white"
-set -g @dracula-border-contrast true
+
+# set -g @plugin 'dracula/tmux'
+# set -g @dracula-plugins "synchronize-panes git time network-ping tmux-ram-usage"
+# set -g @dracula-synchronize-panes-label "Sync:"
+# # available colors: white, gray, dark_gray, light_purple, dark_purple, cyan, green, orange, red, pink, yellow
+# set -g @dracula-synchronize-panes-colors "orange gray"
+# set -g @dracula-show-powerline true
+# set -g @dracula-show-left-icon session
+# set -g @dracula-tmux-ram-usage-label "tmuxRam:"
+# set -g @dracula-tmux-ram-usage-colors "dark_purple white"
+# set -g @dracula-border-contrast true
+
+# ----------------------------------------------------------------------------
+
+# Catppuccin theme
+# https://github.com/catppuccin/tmux
+# Cons:
+# - Doesn't have a synch panes like dracula
+# Pros:
+# - I feel my terminal smoother/faster, not completely sure about this
+
+set -g @plugin 'catppuccin/tmux'
+set -g @catppuccin_flavour 'mocha' # or frappe, macchiato, mocha
+
+set -g @catppuccin_window_left_separator ""
+set -g @catppuccin_window_right_separator " "
+set -g @catppuccin_window_middle_separator " █"
+set -g @catppuccin_window_number_position "right"
+
+set -g @catppuccin_window_default_fill "number"
+set -g @catppuccin_window_default_text "#W"
+
+set -g @catppuccin_window_current_fill "number"
+set -g @catppuccin_window_current_text "#W"
+
+set -g @catppuccin_status_modules_left "session"
+set -g @catppuccin_status_modules_right "directory user host"
+set -g @catppuccin_status_left_separator " "
+set -g @catppuccin_status_right_separator ""
+set -g @catppuccin_status_right_separator_inverse "no"
+set -g @catppuccin_status_fill "icon"
+set -g @catppuccin_status_connect_separator "no"
+
+set -g @catppuccin_directory_text "#{pane_current_path}"
+
+# ----------------------------------------------------------------------------
+
+# Powerline theme
+# https://github.com/jimeh/tmux-themepack
+# set -g @plugin 'jimeh/tmux-themepack'
+# set -g @themepack 'powerline/default/cyan'
+
+##############################################################################
+# Other plugins
+##############################################################################
 
 # persist tmux sessions after computer restart
 # https://github.com/tmux-plugins/tmux-resurrect

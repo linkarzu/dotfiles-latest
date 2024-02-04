@@ -1,0 +1,7 @@
+xocli3 (h)
+docker3 (j)
+storage3 (k)
+prodkubecp3 (l)
+prodkubew3 (;)
+dns3 (')
+lb3 (u)

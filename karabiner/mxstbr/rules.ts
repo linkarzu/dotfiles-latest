@@ -141,6 +141,46 @@ const rules: KarabinerRules[] = [
       i: open(
         "btt://execute_assigned_actions_for_trigger/?uuid=03F1E256-FF80-43BA-873C-195628FA5996"
       ),
+      // Find
+      n: open(
+        "btt://execute_assigned_actions_for_trigger/?uuid=92398D5C-B95F-4E31-9CB9-1E3E732AF1C0"
+      ),
+    },
+
+    // e = "etmux"
+    e: {
+      // xocli3
+      h: open(
+        "btt://execute_assigned_actions_for_trigger/?uuid=96CE1FAA-A4BF-417B-A84F-E9F3F2001A8D"
+      ),
+      // docker3
+      j: open(
+        "btt://execute_assigned_actions_for_trigger/?uuid=665FFAF0-6D73-4AB4-BFC3-B04E898EC780"
+      ),
+      // storage3
+      k: open(
+        "btt://execute_assigned_actions_for_trigger/?uuid=540F20B2-E003-4614-B3EE-8E5B4A350AF9"
+      ),
+      // prodkubecp3
+      l: open(
+        "btt://execute_assigned_actions_for_trigger/?uuid=DD15014A-15E2-40BF-995D-7B620B96029C"
+      ),
+      // prodkubew3
+      semicolon: open(
+        "btt://execute_assigned_actions_for_trigger/?uuid=445A9DDB-7484-45D5-AD9D-9933FAFD5BAC"
+      ),
+      // dns3
+      quote: open(
+        "btt://execute_assigned_actions_for_trigger/?uuid=8F06BCEE-5333-4D3E-8E8F-7863C5346C75"
+      ),
+      // lb3
+      u: open(
+        "btt://execute_assigned_actions_for_trigger/?uuid=37BA1985-1C6B-43E3-BB2C-ADBA3B581929"
+      ),
+      // Find
+      n: open(
+        "btt://execute_assigned_actions_for_trigger/?uuid=6C578F42-B350-46B1-A7BE-D1869A081B86"
+      ),
     },
 
     // r = "Raycast"
@@ -377,33 +417,33 @@ const rules: KarabinerRules[] = [
       },
     },
 
-    // 'e' for extra tools
-    e: {
-      // To edit the contents of an excel cell
-      u: {
-        to: [{ key_code: "f2" }],
-      },
-      // Focus outline in obsidian
-      o: {
-        to: [{ key_code: "x", modifiers: ["left_command", "left_shift"] }],
-      },
-      // Increase LG TV volume
-      k: {
-        to: [
-          {
-            shell_command: `~/opt/lgtv/bin/python3 ~/opt/lgtv/bin/lgtv MyTV volumeUp ssl`,
-          },
-        ],
-      },
-      // Decrease LG TV volume
-      j: {
-        to: [
-          {
-            shell_command: `~/opt/lgtv/bin/python3 ~/opt/lgtv/bin/lgtv MyTV volumeDown ssl`,
-          },
-        ],
-      },
-    },
+    // // 'e' for extra tools
+    // e: {
+    //   // To edit the contents of an excel cell
+    //   u: {
+    //     to: [{ key_code: "f2" }],
+    //   },
+    //   // Focus outline in obsidian
+    //   o: {
+    //     to: [{ key_code: "x", modifiers: ["left_command", "left_shift"] }],
+    //   },
+    //   // Increase LG TV volume
+    //   k: {
+    //     to: [
+    //       {
+    //         shell_command: `~/opt/lgtv/bin/python3 ~/opt/lgtv/bin/lgtv MyTV volumeUp ssl`,
+    //       },
+    //     ],
+    //   },
+    //   // Decrease LG TV volume
+    //   j: {
+    //     to: [
+    //       {
+    //         shell_command: `~/opt/lgtv/bin/python3 ~/opt/lgtv/bin/lgtv MyTV volumeDown ssl`,
+    //       },
+    //     ],
+    //   },
+    // },
 
     // Vim nagivation
     // ALWAYS LEAVE THE ONES WITHOUT ANY SUBLAYERS AT THE BOTTOM

@@ -74,10 +74,11 @@ bind C-j select-layout main-horizontal
 bind C-k select-layout main-vertical
 bind C-l run-shell ~/github/dotfiles-latest/tmux/layouts/2x3/apply_layout.sh
 
+###############################################################################
 # ThePrimeagen's tmux-sessionizer script, got 'em
-unbind f
-bind-key -r f run-shell "tmux neww ~/github/dotfiles-latest/tmux/tools/tmux-sessionizer.sh"
+###############################################################################
 
+# ThePrimeagen's tmux-sessionizer script, got 'em
 # I don't really care what these mappings are, pressing ctrl+* doesn't make any
 # sense whatsoever, because it's not ergonomic, but I call them from
 # bettertouchtool, and BTT is called from karabiner-elements
@@ -89,17 +90,43 @@ unbind C-y
 unbind C-t
 unbind C-h
 unbind C-g
+
+unbind C-w
+unbind C-q
+unbind C-a
+unbind C-d
+unbind C-f
+unbind C-x
+unbind C-c
+
 # Don't use C-r because it's used by tmux-resurrect
 # Don't use C-e because I'm already using it for sending command to all panes/windows in current session
-bind-key -r C-u run-shell "~/github/dotfiles-latest/tmux/tools/tmux-sessionizer.sh ~/github/dotfiles-latest"
-bind-key -r C-i run-shell "~/github/dotfiles-latest/tmux/tools/tmux-sessionizer.sh ~/github/dotfiles-public"
-bind-key -r C-o run-shell "~/github/dotfiles-latest/tmux/tools/tmux-sessionizer.sh ~/github/linkarzu.github.io"
-bind-key -r C-p run-shell "~/github/dotfiles-latest/tmux/tools/tmux-sessionizer.sh ~/github/scripts"
-bind-key -r C-y run-shell "~/github/dotfiles-latest/tmux/tools/tmux-sessionizer.sh ~/github/containerdata"
-bind-key -r C-t run-shell "~/github/dotfiles-latest/tmux/tools/tmux-sessionizer.sh ~/github/obsidian_main"
-bind-key -r C-h run-shell "~/github/dotfiles-latest/tmux/tools/tmux-sessionizer.sh ~"
+# Don't use C-s because Its used to save the session
+# Don't use C-z, not sure what its for
+bind-key -r C-u run-shell "~/github/dotfiles-latest/tmux/tools/prime/tmux-sessionizer-ssh.sh ~/github/dotfiles-latest"
+bind-key -r C-i run-shell "~/github/dotfiles-latest/tmux/tools/prime/tmux-sessionizer-ssh.sh ~/github/dotfiles-public"
+bind-key -r C-o run-shell "~/github/dotfiles-latest/tmux/tools/prime/tmux-sessionizer-ssh.sh ~/github/linkarzu.github.io"
+bind-key -r C-p run-shell "~/github/dotfiles-latest/tmux/tools/prime/tmux-sessionizer-ssh.sh ~/github/scripts"
+bind-key -r C-y run-shell "~/github/dotfiles-latest/tmux/tools/prime/tmux-sessionizer-ssh.sh ~/github/containerdata"
+bind-key -r C-t run-shell "~/github/dotfiles-latest/tmux/tools/prime/tmux-sessionizer-ssh.sh ~/github/obsidian_main"
+bind-key -r C-h run-shell "~/github/dotfiles-latest/tmux/tools/prime/tmux-sessionizer-ssh.sh ~"
 # Leaving this in quotes because iCloud dir has a white space
-bind-key -r C-g run-shell '~/github/dotfiles-latest/tmux/tools/tmux-sessionizer.sh "~/Library/Mobile Documents/com~apple~CloudDocs/icloud"'
+bind-key -r C-g run-shell '~/github/dotfiles-latest/tmux/tools/prime/tmux-sessionizer-ssh.sh "~/Library/Mobile Documents/com~apple~CloudDocs/icloud"'
+
+bind-key -r C-w run-shell "~/github/dotfiles-latest/tmux/tools/prime/tmux-sessionizer-ssh.sh deez_nutz docker3"
+bind-key -r C-q run-shell "~/github/dotfiles-latest/tmux/tools/prime/tmux-sessionizer-ssh.sh deez_nutz prodkubecp3"
+bind-key -r C-a run-shell "~/github/dotfiles-latest/tmux/tools/prime/tmux-sessionizer-ssh.sh deez_nutz dns3"
+bind-key -r C-d run-shell "~/github/dotfiles-latest/tmux/tools/prime/tmux-sessionizer-ssh.sh deez_nutz lb3"
+bind-key -r C-f run-shell "~/github/dotfiles-latest/tmux/tools/prime/tmux-sessionizer-ssh.sh deez_nutz prodkubew3"
+bind-key -r C-x run-shell "~/github/dotfiles-latest/tmux/tools/prime/tmux-sessionizer-ssh.sh deez_nutz storage3"
+bind-key -r C-c run-shell "~/github/dotfiles-latest/tmux/tools/prime/tmux-sessionizer-ssh.sh deez_nutz xocli3"
+
+unbind f
+bind-key -r f run-shell "tmux neww ~/github/dotfiles-latest/tmux/tools/prime/tmux-sessionizer-ssh.sh"
+unbind 1
+bind-key -r 1 run-shell "tmux neww ~/github/dotfiles-latest/tmux/tools/prime/ssh-select.sh"
+
+###############################################################################
 
 # Reload the tmux configuration, display a 2 second message
 unbind r

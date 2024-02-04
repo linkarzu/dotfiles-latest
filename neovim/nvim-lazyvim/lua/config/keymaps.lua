@@ -64,7 +64,11 @@ vim.keymap.set("n", "<leader>f.", function()
   vim.api.nvim_feedkeys("i", "n", false) -- Enter insert mode, moves to end of prompt if there's one
 end, { desc = "Execute current file in terminal" })
 
--- From Primeagen's tmux-sessionizer
--- ctrl+f in normal mode will silently run a command to create a new tmux window and execute the tmux-sessionizer.
--- Allowing quick creation and navigation of tmux sessions directly from the editor.
-vim.keymap.set("n", "<C-f>", "<cmd>silent !tmux neww ~/github/dotfiles-latest/tmux/tools/tmux-sessionizer.sh<CR>")
+-- -- From Primeagen's tmux-sessionizer
+-- -- ctrl+f in normal mode will silently run a command to create a new tmux window and execute the tmux-sessionizer.
+-- -- Allowing quick creation and navigation of tmux sessions directly from the editor.
+-- vim.keymap.set(
+--   "n",
+--   "<C-f>",
+--   "<cmd>silent !tmux neww ~/github/dotfiles-latest/tmux/tools/prime/tmux-sessionizer-ssh.sh<CR>"
+-- )

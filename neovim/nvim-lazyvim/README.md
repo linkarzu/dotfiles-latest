@@ -4,6 +4,10 @@
 
 Use the command `NoiceHistory`
 
+## See formatters applied to a file
+
+Use the command `ConformInfo`
+
 ## Spectre pattern matching
 
 - I needed to match:

@@ -70,5 +70,5 @@ end, { desc = "Execute current file in terminal" })
 -- vim.keymap.set(
 --   "n",
 --   "<C-f>",
---   "<cmd>silent !tmux neww ~/github/dotfiles-latest/tmux/tools/prime/tmux-sessionizer-ssh.sh<CR>"
+--   "<cmd>silent !tmux neww ~/github/dotfiles-latest/tmux/tools/prime/tmux-sessionizer.sh<CR>"
 -- )

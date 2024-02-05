@@ -65,3 +65,7 @@ style = '#9FC131 bold'
 truncation_length = 0
 truncate_to_repo = false
 
+[ruby]
+detect_variables = []
+detect_files = ['Gemfile', '.ruby-version']
+

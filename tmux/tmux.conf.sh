@@ -102,33 +102,36 @@ unbind C-f
 unbind C-x
 unbind C-c
 
+tmux_sessionizer="~/github/dotfiles-latest/tmux/tools/prime/tmux-sessionizer.sh"
+tmux_sshonizer_agen="~/github/dotfiles-latest/tmux/tools/linkarzu/tmux-sshonizer-agen.sh"
+ssh_select="~/github/dotfiles-latest/tmux/tools/linkarzu/ssh-select.sh"
+
 # Don't use C-r because it's used by tmux-resurrect
 # Don't use C-e because I'm already using it for sending command to all panes/windows in current session
 # Don't use C-s because Its used to save the session
 # Don't use C-z, not sure what its for
-bind-key -r C-u run-shell "~/github/dotfiles-latest/tmux/tools/prime/tmux-sessionizer.sh ~/github/dotfiles-latest"
-bind-key -r C-i run-shell "~/github/dotfiles-latest/tmux/tools/prime/tmux-sessionizer.sh ~/github/dotfiles-public"
-bind-key -r C-o run-shell "~/github/dotfiles-latest/tmux/tools/prime/tmux-sessionizer.sh ~/github/linkarzu.github.io"
-bind-key -r C-p run-shell "~/github/dotfiles-latest/tmux/tools/prime/tmux-sessionizer.sh ~/github/scripts"
-bind-key -r C-t run-shell "~/github/dotfiles-latest/tmux/tools/prime/tmux-sessionizer.sh ~/github/obsidian_main"
-bind-key -r C-y run-shell "~/github/dotfiles-latest/tmux/tools/prime/tmux-sessionizer.sh ~/github/containerdata"
-bind-key -r C-h run-shell "~/github/dotfiles-latest/tmux/tools/prime/tmux-sessionizer.sh ~"
+bind-key -r C-u run-shell "$tmux_sessionizer ~/github/dotfiles-latest"
+bind-key -r C-i run-shell "$tmux_sessionizer ~/github/dotfiles-public"
+bind-key -r C-o run-shell "$tmux_sessionizer ~/github/linkarzu.github.io"
+bind-key -r C-p run-shell "$tmux_sessionizer ~/github/scripts"
+bind-key -r C-t run-shell "$tmux_sessionizer ~/github/obsidian_main"
+bind-key -r C-y run-shell "$tmux_sessionizer ~/github/containerdata"
+bind-key -r C-h run-shell "$tmux_sessionizer ~"
 # Leaving this in quotes because iCloud dir has a white space
-bind-key -r C-g run-shell '~/github/dotfiles-latest/tmux/tools/prime/tmux-sessionizer.sh "~/Library/Mobile Documents/com~apple~CloudDocs/icloud"'
+bind-key -r C-g run-shell "$tmux_sessionizer '$HOME/Library/Mobile Documents/com~apple~CloudDocs/github/macos-setup'"
 
-bind-key -r C-w run-shell "~/github/dotfiles-latest/tmux/tools/linkarzu/tmux-sshonizer-agen.sh docker3"
-bind-key -r C-q run-shell "~/github/dotfiles-latest/tmux/tools/linkarzu/tmux-sshonizer-agen.sh prodkubecp3"
-bind-key -r C-a run-shell "~/github/dotfiles-latest/tmux/tools/linkarzu/tmux-sshonizer-agen.sh dns3"
-bind-key -r C-d run-shell "~/github/dotfiles-latest/tmux/tools/linkarzu/tmux-sshonizer-agen.sh lb3"
-bind-key -r C-f run-shell "~/github/dotfiles-latest/tmux/tools/linkarzu/tmux-sshonizer-agen.sh prodkubew3"
-bind-key -r C-x run-shell "~/github/dotfiles-latest/tmux/tools/linkarzu/tmux-sshonizer-agen.sh storage3"
-bind-key -r C-c run-shell "~/github/dotfiles-latest/tmux/tools/linkarzu/tmux-sshonizer-agen.sh xocli3"
+bind-key -r C-w run-shell "$tmux_sshonizer_agen docker3"
+bind-key -r C-q run-shell "$tmux_sshonizer_agen prodkubecp3"
+bind-key -r C-a run-shell "$tmux_sshonizer_agen dns3"
+bind-key -r C-d run-shell "$tmux_sshonizer_agen lb3"
+bind-key -r C-f run-shell "$tmux_sshonizer_agen prodkubew3"
+bind-key -r C-x run-shell "$tmux_sshonizer_agen storage3"
+bind-key -r C-c run-shell "$tmux_sshonizer_agen xocli3"
 
 unbind f
-bind-key -r f run-shell "tmux neww ~/github/dotfiles-latest/tmux/tools/prime/tmux-sessionizer.sh"
+bind-key -r f run-shell "tmux neww $tmux_sessionizer"
 unbind C-v
-bind-key -r C-v run-shell "tmux neww ~/github/dotfiles-latest/tmux/tools/linkarzu/ssh-select.sh"
-# bind-key -r C-v run-shell "tmux neww ~/github/dotfiles-latest/tmux/tools/linkarzu/ssh-select.sh"
+bind-key -r C-v run-shell "tmux neww $ssh_select"
 
 ###############################################################################
 

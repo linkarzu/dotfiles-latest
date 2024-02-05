@@ -6,6 +6,9 @@
 # UNIQUE_ID=do_not_delete_this_line
 # #############################################################################
 
+# Tmux prefix key
+set -g prefix C-b
+
 # My terminal, alacritty, was configured to use TERM: xterm-256color, in the alacritty.yml file
 # The only one that made truecolors work on nvim when using xterm-256color on alacritty is screen-256color
 # set -g default-terminal "xterm-256color"
@@ -103,28 +106,30 @@ unbind C-c
 # Don't use C-e because I'm already using it for sending command to all panes/windows in current session
 # Don't use C-s because Its used to save the session
 # Don't use C-z, not sure what its for
-bind-key -r C-u run-shell "~/github/dotfiles-latest/tmux/tools/prime/tmux-sessionizer-ssh.sh ~/github/dotfiles-latest"
-bind-key -r C-i run-shell "~/github/dotfiles-latest/tmux/tools/prime/tmux-sessionizer-ssh.sh ~/github/dotfiles-public"
-bind-key -r C-o run-shell "~/github/dotfiles-latest/tmux/tools/prime/tmux-sessionizer-ssh.sh ~/github/linkarzu.github.io"
-bind-key -r C-p run-shell "~/github/dotfiles-latest/tmux/tools/prime/tmux-sessionizer-ssh.sh ~/github/scripts"
-bind-key -r C-y run-shell "~/github/dotfiles-latest/tmux/tools/prime/tmux-sessionizer-ssh.sh ~/github/containerdata"
-bind-key -r C-t run-shell "~/github/dotfiles-latest/tmux/tools/prime/tmux-sessionizer-ssh.sh ~/github/obsidian_main"
-bind-key -r C-h run-shell "~/github/dotfiles-latest/tmux/tools/prime/tmux-sessionizer-ssh.sh ~"
+bind-key -r C-u run-shell "~/github/dotfiles-latest/tmux/tools/prime/tmux-sessionizer.sh ~/github/dotfiles-latest"
+bind-key -r C-i run-shell "~/github/dotfiles-latest/tmux/tools/prime/tmux-sessionizer.sh ~/github/dotfiles-public"
+bind-key -r C-o run-shell "~/github/dotfiles-latest/tmux/tools/prime/tmux-sessionizer.sh ~/github/linkarzu.github.io"
+bind-key -r C-p run-shell "~/github/dotfiles-latest/tmux/tools/prime/tmux-sessionizer.sh ~/github/scripts"
+bind-key -r C-t run-shell "~/github/dotfiles-latest/tmux/tools/prime/tmux-sessionizer.sh ~/github/obsidian_main"
+bind-key -r C-y run-shell "~/github/dotfiles-latest/tmux/tools/prime/tmux-sessionizer.sh ~/github/containerdata"
+bind-key -r C-h run-shell "~/github/dotfiles-latest/tmux/tools/prime/tmux-sessionizer.sh ~"
 # Leaving this in quotes because iCloud dir has a white space
-bind-key -r C-g run-shell '~/github/dotfiles-latest/tmux/tools/prime/tmux-sessionizer-ssh.sh "~/Library/Mobile Documents/com~apple~CloudDocs/icloud"'
+bind-key -r C-g run-shell '~/github/dotfiles-latest/tmux/tools/prime/tmux-sessionizer.sh "~/Library/Mobile Documents/com~apple~CloudDocs/icloud"'
 
-bind-key -r C-w run-shell "~/github/dotfiles-latest/tmux/tools/prime/tmux-sessionizer-ssh.sh deez_nutz docker3"
-bind-key -r C-q run-shell "~/github/dotfiles-latest/tmux/tools/prime/tmux-sessionizer-ssh.sh deez_nutz prodkubecp3"
-bind-key -r C-a run-shell "~/github/dotfiles-latest/tmux/tools/prime/tmux-sessionizer-ssh.sh deez_nutz dns3"
-bind-key -r C-d run-shell "~/github/dotfiles-latest/tmux/tools/prime/tmux-sessionizer-ssh.sh deez_nutz lb3"
-bind-key -r C-f run-shell "~/github/dotfiles-latest/tmux/tools/prime/tmux-sessionizer-ssh.sh deez_nutz prodkubew3"
-bind-key -r C-x run-shell "~/github/dotfiles-latest/tmux/tools/prime/tmux-sessionizer-ssh.sh deez_nutz storage3"
-bind-key -r C-c run-shell "~/github/dotfiles-latest/tmux/tools/prime/tmux-sessionizer-ssh.sh deez_nutz xocli3"
+bind-key -r C-w run-shell "~/github/dotfiles-latest/tmux/tools/linkarzu/tmux-sshonizer-agen.sh docker3"
+bind-key -r C-q run-shell "~/github/dotfiles-latest/tmux/tools/linkarzu/tmux-sshonizer-agen.sh prodkubecp3"
+bind-key -r C-a run-shell "~/github/dotfiles-latest/tmux/tools/linkarzu/tmux-sshonizer-agen.sh dns3"
+bind-key -r C-d run-shell "~/github/dotfiles-latest/tmux/tools/linkarzu/tmux-sshonizer-agen.sh lb3"
+bind-key -r C-f run-shell "~/github/dotfiles-latest/tmux/tools/linkarzu/tmux-sshonizer-agen.sh prodkubew3"
+bind-key -r C-x run-shell "~/github/dotfiles-latest/tmux/tools/linkarzu/tmux-sshonizer-agen.sh storage3"
+# bind-key -r C-c run-shell "~/github/dotfiles-latest/tmux/tools/linkarzu/tmux-sshonizer-agen.sh xocli3"
 
 unbind f
-bind-key -r f run-shell "tmux neww ~/github/dotfiles-latest/tmux/tools/prime/tmux-sessionizer-ssh.sh"
-unbind 1
-bind-key -r 1 run-shell "tmux neww ~/github/dotfiles-latest/tmux/tools/prime/ssh-select.sh"
+bind-key -r f run-shell "tmux neww ~/github/dotfiles-latest/tmux/tools/prime/tmux-sessionizer.sh"
+unbind C-v
+bind-key -r C-v send-prefix
+bind-key j run-shell "tmux neww ~/github/dotfiles-latest/tmux/tools/linkarzu/ssh-select.sh"
+# bind-key -r C-v run-shell "tmux neww ~/github/dotfiles-latest/tmux/tools/linkarzu/ssh-select.sh"
 
 ###############################################################################
 

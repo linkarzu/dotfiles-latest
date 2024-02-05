@@ -57,12 +57,17 @@ vim.keymap.set("n", "<leader>fX", '<cmd>!chmod -x "%"<CR>', { silent = true, des
 -- Had to include quotes around "%" because there are some apple dirs that contain spaces, like iCloud
 vim.keymap.set("n", "<leader>f.", function()
   local file = vim.fn.expand("%") -- Get the current file name
-  local escaped_file = vim.fn.shellescape(file) -- Properly escape the file name for shell commands
-  vim.cmd("!chmod +x " .. escaped_file) -- Make the file executable
-  vim.cmd("vsplit") -- Split the window vertically
-  vim.cmd("terminal " .. escaped_file) -- Open terminal and execute the file
-  vim.api.nvim_feedkeys("i", "n", false) -- Enter insert mode, moves to end of prompt if there's one
-end, { desc = "Execute current file in terminal" })
+  local first_line = vim.fn.getline(1) -- Get the first line of the file
+  if string.match(first_line, "^#!/") then -- If first line contains shebang
+    local escaped_file = vim.fn.shellescape(file) -- Properly escape the file name for shell commands
+    vim.cmd("!chmod +x " .. escaped_file) -- Make the file executable
+    vim.cmd("vsplit") -- Split the window vertically
+    vim.cmd("terminal " .. escaped_file) -- Open terminal and execute the file
+    vim.cmd("startinsert") -- Enter insert mode, recommended by echasnovski on Reddit
+  else
+    vim.cmd("echo 'Not a script. Shebang line not found.'")
+  end
+end, { desc = "Execute current file in terminal (if it's a script)" })
 
 -- -- From Primeagen's tmux-sessionizer
 -- -- ctrl+f in normal mode will silently run a command to create a new tmux window and execute the tmux-sessionizer.

@@ -122,13 +122,12 @@ bind-key -r C-a run-shell "~/github/dotfiles-latest/tmux/tools/linkarzu/tmux-ssh
 bind-key -r C-d run-shell "~/github/dotfiles-latest/tmux/tools/linkarzu/tmux-sshonizer-agen.sh lb3"
 bind-key -r C-f run-shell "~/github/dotfiles-latest/tmux/tools/linkarzu/tmux-sshonizer-agen.sh prodkubew3"
 bind-key -r C-x run-shell "~/github/dotfiles-latest/tmux/tools/linkarzu/tmux-sshonizer-agen.sh storage3"
-# bind-key -r C-c run-shell "~/github/dotfiles-latest/tmux/tools/linkarzu/tmux-sshonizer-agen.sh xocli3"
+bind-key -r C-c run-shell "~/github/dotfiles-latest/tmux/tools/linkarzu/tmux-sshonizer-agen.sh xocli3"
 
 unbind f
 bind-key -r f run-shell "tmux neww ~/github/dotfiles-latest/tmux/tools/prime/tmux-sessionizer.sh"
 unbind C-v
-bind-key -r C-v send-prefix
-bind-key j run-shell "tmux neww ~/github/dotfiles-latest/tmux/tools/linkarzu/ssh-select.sh"
+bind-key -r C-v run-shell "tmux neww ~/github/dotfiles-latest/tmux/tools/linkarzu/ssh-select.sh"
 # bind-key -r C-v run-shell "tmux neww ~/github/dotfiles-latest/tmux/tools/linkarzu/ssh-select.sh"
 
 ###############################################################################

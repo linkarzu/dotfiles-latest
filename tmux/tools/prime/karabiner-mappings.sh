@@ -10,7 +10,6 @@
 # - dotfiles-latest -> dotfiles_latest
 # - linkarzu.github.io -> linkarzu_github_io
 # - Notice I also escaped the ';' with '\;'
-
 dotfiles_latest="j"
 dotfiles_public="k"
 linkarzu_github_io="l"
@@ -18,4 +17,4 @@ scripts="\;"
 obsidian_main="u"
 containerdata="'"
 linkarzu="h"
-icloud="n"
+macos_setup="i"

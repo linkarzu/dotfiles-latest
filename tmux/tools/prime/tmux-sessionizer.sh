@@ -14,7 +14,8 @@ if [[ $# -eq 1 ]]; then
 elif [[ $# -eq 0 ]]; then
 	# Explicitly specified 0 in case someone decides to pass more than 1 argument
 	# Use 'find' to list directories in specified paths and 'fzf' for interactive selection
-	selected=$(find ~/github "$HOME/Library/Mobile Documents/com~apple~CloudDocs/icloud" -mindepth 1 -maxdepth 1 -type d | fzf)
+	selected=$(find ~/github "$HOME/Library/Mobile Documents/com~apple~CloudDocs/github" -mindepth 1 -maxdepth 1 -type d | fzf)
+	# Prime's example below
 	# selected=$(find ~/work/builds ~/projects ~/ ~/work ~/personal ~/personal/yt -mindepth 1 -maxdepth 1 -type d | fzf)
 
 	# Debugging, uncomment below if you need to see what's being selected

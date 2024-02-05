@@ -8,7 +8,7 @@
   need to add to your tmux.conf file
 
 ```bash
-LAYOUT_NAME="7030"
+LAYOUT_NAME="new-lay"
 LAYOUT_KEYBIND="L"
 
 mkdir -p ~/github/dotfiles-latest/tmux/layouts/$LAYOUT_NAME

@@ -1,9 +1,0 @@
-docker3 (j)
-storage3 (k)
-prodkubecp3 (l)
-prodkubew3 (;)
-dns3 (')
-lb3 (u)
-xocli3 (h)
-docker2
-docker1

@@ -107,7 +107,8 @@ const rules: KarabinerRules[] = [
       v: app("zoom.us"),
     },
 
-    // t = "tmux"
+    // t = "tmux" - video that explains how this works below
+    // https://youtu.be/MCbEPylDEWU
     t: {
       // home
       h: open(
@@ -147,7 +148,8 @@ const rules: KarabinerRules[] = [
       ),
     },
 
-    // e = "etmux"
+    // e = "etmux" - This is to SSH to devices - video that explains how this works below
+    // https://youtu.be/MCbEPylDEWU
     e: {
       // xocli3
       h: open(
@@ -180,6 +182,10 @@ const rules: KarabinerRules[] = [
       // Find
       n: open(
         "btt://execute_assigned_actions_for_trigger/?uuid=6C578F42-B350-46B1-A7BE-D1869A081B86"
+      ),
+      // ~/.ssh/config find
+      b: open(
+        "btt://execute_assigned_actions_for_trigger/?uuid=B649548D-C750-408D-97E8-74F58B7F504D"
       ),
     },
 

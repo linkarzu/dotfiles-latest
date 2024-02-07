@@ -39,9 +39,11 @@ fi
 # in the mappings file because it was interpreting the '-'
 selected_after_tr=$(basename "$ssh_name" | tr '.-' '__')
 
-# NOTE: If you don't want to use the 'karabiner-mappings.sh' file, just rename
-# that 'karabiner-mappings.sh' file to something else (or delete it)
-# This file adds a letter at the end of my session to remind me of the karabiner shortcut
+# NOTE:
+# For this to work, you do need to have a `ssh-hosts.sh` file because that's what's
+# going to be shown on the fzf menu
+# If you delete the `ssh-hosts.sh` file, only the `ssh_config_select.sh` script
+# will work
 mappings_file="$HOME/github/dotfiles-latest/tmux/tools/linkarzu/ssh-hosts.sh"
 if [ -f "$mappings_file" ]; then
 	source "$mappings_file"

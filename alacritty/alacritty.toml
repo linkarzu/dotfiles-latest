@@ -14,6 +14,11 @@ import = ["~/github/dotfiles-latest/alacritty/themes/catppuccin/catppuccin-mocha
 # If `true`, bold text is drawn using the bright color variants.
 draw_bold_text_with_bright_colors = true
 
+[colors.cursor]
+cursor = "#FFFFFF"
+text = "#000000"
+
+
 [env]
 # TERM variable
 #

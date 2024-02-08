@@ -1,0 +1,11 @@
+[colors.cursor]
+cursor = "CellForeground"
+text = "CellBackground"
+
+[colors.primary]
+background = "#1d1f21"
+foreground = "#c5c8c6"
+
+[colors.vi_mode_cursor]
+cursor = "CellForeground"
+text = "CellBackground"

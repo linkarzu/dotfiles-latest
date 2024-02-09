@@ -29,6 +29,10 @@ brew "bind"
 brew "helm"
 brew "kubernetes-cli"
 brew "mysql-client"
+# pngpaste is used by obsidian.nvim to paste images
+brew "pngpaste"
+# CLI tool that moves files or folder to the trash, used by neo-tree.nvim
+brew "trash"
 cask "raindropio"
 cask "cursorcerer"
 

@@ -12,6 +12,10 @@ vim.opt.winbar = "%=" .. vim.fn.systemlist("hostname")[1] .. "            %m %f"
 -- Shows colorcolumn that helps me with markdown guidelines
 vim.opt.colorcolumn = "80"
 
+-- If set to 0 it shows all the symbols in a file, like bulletpoints and
+-- codeblock languages, obsidian.nvim works better with 1 or 2
+vim.opt.conceallevel = 1
+
 -- Enable autochdir to automatically change the working directory to the current file's directory
 -- If you go inside a subdir, neotree will open that dir as the root
 -- vim.opt.autochdir = true

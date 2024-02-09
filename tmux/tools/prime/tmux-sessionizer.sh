@@ -48,9 +48,15 @@ mappings_file="$HOME/github/dotfiles-latest/tmux/tools/prime/karabiner-mappings.
 if [ -f "$mappings_file" ]; then
 	source "$mappings_file"
 	base_selected=$(basename "$selected_after_tr")
-	# Get the value of the variable whose name matches $base_selected
-	mapping_value="${!base_selected}"
-	selected_name="${base_selected}-${mapping_value}"
+	current_username=$(whoami)
+	if [[ "$base_selected" == "$current_username" ]]; then
+		# If selected_after_tr equals current username, append "-h"
+		selected_name="${base_selected}-${username_suffix}"
+	else
+		# Get the value of the variable whose name matches base_selected
+		mapping_value="${!base_selected}"
+		selected_name="${base_selected}-${mapping_value}"
+	fi
 else
 	selected_name=$selected_after_tr
 fi

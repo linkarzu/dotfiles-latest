@@ -10,11 +10,16 @@
 # - dotfiles-latest -> dotfiles_latest
 # - linkarzu.github.io -> linkarzu_github_io
 # - Notice I also escaped the ';' with '\;'
+
+# `username_suffix` is the mapping for the home directory
+# Do not modify this variable name because it's used by the tmux-sessionizer script
+# You can change the mapping on the right from "h" to whatever you want
+username_suffix="h"
+
 dotfiles_latest="j"
 dotfiles_public="k"
 linkarzu_github_io="l"
 scripts="\;"
 obsidian_main="u"
 containerdata="'"
-linkarzu="h"
 macos_setup="i"

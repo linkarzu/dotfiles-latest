@@ -77,6 +77,10 @@ bind C-j select-layout main-horizontal
 bind C-k select-layout main-vertical
 bind C-l run-shell ~/github/dotfiles-latest/tmux/layouts/2x3/apply_layout.sh
 
+# Switch between the last 2 tmux sessions, similar to 'cd -' in the terminal
+unbind Space
+bind-key Space switch-client -l
+
 ###############################################################################
 # ThePrimeagen's tmux-sessionizer script, got 'em
 ###############################################################################

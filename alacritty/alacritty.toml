@@ -94,7 +94,7 @@ opacity = 1
 # instances of alacritty with cmd+n and I cmd+` between them, without the top
 # bar, that's not possible
 # Square corners
-# decorations = "none"
+decorations = "none"
 # Round corners
 # decorations = "buttonless"
 

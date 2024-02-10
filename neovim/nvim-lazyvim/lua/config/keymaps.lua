@@ -69,6 +69,109 @@ vim.keymap.set("n", "<leader>f.", function()
   end
 end, { desc = "Execute current file in terminal (if it's a script)" })
 
+-- ############################################################################
+--                           Markdown section
+-- ############################################################################
+-- When I press leader, I want 'm' to sohw me 'markdown'
+-- https://github.com/folke/which-key.nvim?tab=readme-ov-file#%EF%B8%8F-mappings
+local wk = require("which-key")
+wk.register({
+  ["<leader>"] = {
+    m = {
+      name = "+markdown",
+    },
+  },
+})
+
+-- Generate/update a Markdown TOC and clean up top blank lines
+vim.keymap.set("n", "<leader>mt", function()
+  local path = vim.fn.expand("%") -- Expands the current file name to a full path
+  local bufnr = 0 -- The current buffer number, 0 references the current active buffer
+  -- Retrieves all lines from the current buffer
+  local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
+  local toc_exists = false -- Flag to check if TOC marker exists
+  local frontmatter_end = 0 -- To store the end line number of frontmatter
+  -- Check for frontmatter and TOC marker
+  for i, line in ipairs(lines) do
+    if i == 1 and line:match("^---$") then
+      -- Frontmatter start detected, now find the end
+      for j = i + 1, #lines do
+        if lines[j]:match("^---$") then
+          frontmatter_end = j -- Save the end line of the frontmatter
+          break
+        end
+      end
+    end
+    -- Checks for the TOC marker
+    if line:match("^%s*<!%-%-%s*toc%s*%-%->%s*$") then
+      toc_exists = true -- Sets the flag if TOC marker is found
+      break -- Stops the loop if TOC marker is found
+    end
+  end
+  -- Inserts H1 heading and <!-- toc --> at the appropriate position
+  if not toc_exists then
+    if frontmatter_end > 0 then
+      -- Insert after frontmatter
+      vim.api.nvim_buf_set_lines(
+        bufnr,
+        frontmatter_end + 1,
+        frontmatter_end + 1,
+        false,
+        { "", "# Contents", "<!-- toc -->" }
+      )
+    else
+      -- Insert at the top if no frontmatter
+      vim.api.nvim_buf_set_lines(bufnr, 0, 0, false, { "# Contents", "<!-- toc -->" })
+    end
+  end
+  vim.cmd("write") -- Saves the file
+  -- Runs markdown-toc command on the file to generate/update the TOC
+  vim.cmd("!markdown-toc -i " .. path)
+  vim.cmd("edit!") -- Reloads the file to reflect the changes made by markdown-toc
+  -- -- In case a cleanup is needed, leaving this old code here as a reference
+  -- -- I used this code before I implemented the frontmatter check
+  -- -- Moves the cursor to the top of the file
+  -- vim.api.nvim_win_set_cursor(bufnr, { 1, 0 })
+  -- -- Deletes leading blank lines from the top of the file
+  -- while true do
+  --   -- Retrieves the first line of the buffer
+  --   local line = vim.api.nvim_buf_get_lines(bufnr, 0, 1, false)[1]
+  --   -- Checks if the line is empty
+  --   if line == "" then
+  --     -- Deletes the line if it's empty
+  --     vim.api.nvim_buf_set_lines(bufnr, 0, 1, false, {})
+  --   else
+  --     -- Breaks the loop if the line is not empty, indicating content or TOC marker
+  --     break
+  --   end
+  -- end
+end, { desc = "Insert/update Markdown TOC" })
+
+-- Save the cursor position globally to access it across different mappings
+_G.saved_positions = {}
+
+-- Mapping to jump to the first line of the TOC
+vim.keymap.set("n", "<leader>mm", function()
+  -- Save the current cursor position
+  _G.saved_positions["toc_return"] = vim.api.nvim_win_get_cursor(0)
+  -- Perform a silent search for the <!-- toc --> marker and move the cursor two lines below it
+  vim.cmd("silent! /<!-- toc -->\\n\\n\\zs.*")
+  -- Clear the search highlight without showing the "search hit BOTTOM, continuing at TOP" message
+  vim.cmd("nohlsearch")
+end, { desc = "Jump to the first line of the TOC" })
+
+-- Mapping to return to the previously saved cursor position
+vim.keymap.set("n", "<leader>mf", function()
+  local pos = _G.saved_positions["toc_return"]
+  if pos then
+    vim.api.nvim_win_set_cursor(0, pos)
+  end
+end, { desc = "Return to position before jumping" })
+
+-- ############################################################################
+--                       End of markdown section
+-- ############################################################################
+
 -- -- From Primeagen's tmux-sessionizer
 -- -- ctrl+f in normal mode will silently run a command to create a new tmux window and execute the tmux-sessionizer.
 -- -- Allowing quick creation and navigation of tmux sessions directly from the editor.

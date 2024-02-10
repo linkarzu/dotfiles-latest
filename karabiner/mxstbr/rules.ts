@@ -176,7 +176,7 @@ const rules: KarabinerRules[] = [
         "btt://execute_assigned_actions_for_trigger/?uuid=445A9DDB-7484-45D5-AD9D-9933FAFD5BAC"
       ),
       // dns3
-      quote: open(
+      i: open(
         "btt://execute_assigned_actions_for_trigger/?uuid=8F06BCEE-5333-4D3E-8E8F-7863C5346C75"
       ),
       // lb3

@@ -1304,7 +1304,7 @@
                 "description": "Open btt://execute_assigned_actions_for_trigger/?uuid=8F06BCEE-5333-4D3E-8E8F-7863C5346C75",
                 "type": "basic",
                 "from": {
-                  "key_code": "quote",
+                  "key_code": "i",
                   "modifiers": {
                     "mandatory": [
                       "any"

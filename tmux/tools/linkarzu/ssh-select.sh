@@ -6,10 +6,10 @@
 # Remember to make this file executable
 
 # Define the path to your file containing SSH host aliases and their keys
-hosts_file="$HOME/github/dotfiles-latest/tmux/tools/linkarzu/ssh-hosts.sh"
+karabiner_mappings="$HOME/github/dotfiles-latest/tmux/tools/linkarzu/karabiner-mappings.sh"
 
-# Ensure the hosts_file exists
-if [ ! -f "$hosts_file" ]; then
+# Ensure the karabiner_mappings exists
+if [ ! -f "$karabiner_mappings" ]; then
 	tmux display-message -d 3000 "ssh hosts file not found"
 	sleep 3
 	exit 1
@@ -18,14 +18,14 @@ fi
 # Source the SSH hosts mappings
 # Sent to dev null in case there are hosts added without mappings
 # I.E 'docker2' instead of 'docker3="j"'
-source $hosts_file >/dev/null 2>&1
+source $karabiner_mappings >/dev/null 2>&1
 
 fzf_header=$'- The letter after the '=' is just to remember my karabiner mappings
 - Hosts with '=' will have it removed before SSHing to them
 - You can also have hosts without the '=' and they will work fine'
 
 # Use fzf to select a host, showing both the host and its key
-selected=$(cat "$hosts_file" | grep -v '^#' | fzf --height=40% --reverse --header="$fzf_header" --prompt="Type or select SSH host: ")
+selected=$(cat "$karabiner_mappings" | grep -v '^#' | fzf --height=40% --reverse --header="$fzf_header" --prompt="Type or select SSH host: ")
 # Debugging
 # tmux display-message -d 3000 "selected: $selected"
 # sleep 3
@@ -42,11 +42,11 @@ ssh_name=$(echo "$selected" | cut -d'=' -f1)
 selected_after_tr=$(basename "$ssh_name" | tr '.-' '__')
 
 # NOTE:
-# For this to work, you do need to have a `ssh-hosts.sh` file because that's what's
+# For this to work, you do need to have a `karabiner-mappings.sh` file because that's what's
 # going to be shown on the fzf menu
-# If you delete the `ssh-hosts.sh` file, only the `ssh_config_select.sh` script
+# If you delete the `karabiner-mappings.sh` file, only the `ssh_config_select.sh` script
 # will work
-mappings_file=$hosts_file
+mappings_file=$karabiner_mappings
 if [ -f "$mappings_file" ]; then
 	# source "$mappings_file"
 	# Get the value of the variable whose name matches $base_selected

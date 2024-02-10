@@ -13,7 +13,7 @@
 
 # Define the path to your SSH config and hosts mapping file
 ssh_config="$HOME/.ssh/config"
-hosts_file="$HOME/github/dotfiles-latest/tmux/tools/linkarzu/ssh-hosts.sh"
+karabiner_mappings="$HOME/github/dotfiles-latest/tmux/tools/linkarzu/karabiner-mappings.sh"
 
 # Ensure the ssh_config exists
 if [ ! -f "$ssh_config" ]; then
@@ -23,8 +23,8 @@ if [ ! -f "$ssh_config" ]; then
 fi
 
 # Source the SSH hosts mappings if available
-if [ -f "$hosts_file" ]; then
-	source "$hosts_file" >/dev/null 2>&1
+if [ -f "$karabiner_mappings" ]; then
+	source "$karabiner_mappings" >/dev/null 2>&1
 fi
 
 fzf_header=$'Select an SSH host to connect to:'
@@ -43,7 +43,7 @@ selected_after_tr=$(echo "$selected_host" | tr '.-' '__')
 # tmux display-message -d 3000 "selected_after_tr = $selected_after_tr"
 
 # Check if a static mapping exists for this host so that a new session is not created
-mappings_file=$hosts_file
+mappings_file=$karabiner_mappings
 if [ -f "$mappings_file" ]; then
 	# source "$mappings_file"
 	# Get the value of the variable whose name matches $base_selected

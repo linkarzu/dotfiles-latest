@@ -40,11 +40,11 @@ fi
 selected_after_tr=$(basename "$ssh_name" | tr '.-' '__')
 
 # NOTE:
-# For this to work, you do need to have a `ssh-hosts.sh` file because that's what's
+# For this to work, you do need to have a `karabiner-mappings.sh` file because that's what's
 # going to be shown on the fzf menu
-# If you delete the `ssh-hosts.sh` file, only the `ssh_config_select.sh` script
+# If you delete the `karabiner-mappings.sh` file, only the `ssh_config_select.sh` script
 # will work
-mappings_file="$HOME/github/dotfiles-latest/tmux/tools/linkarzu/ssh-hosts.sh"
+mappings_file="$HOME/github/dotfiles-latest/tmux/tools/linkarzu/karabiner-mappings.sh"
 if [ -f "$mappings_file" ]; then
 	source "$mappings_file"
 	# Get the value of the variable whose name matches $base_selected

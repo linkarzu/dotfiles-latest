@@ -36,3 +36,18 @@ help command
   - `>/dev/null 2>&1`
 - So I used (but didn't work, and don't have time to deal with this right now)
   - `[>]\/dev\/null 2[>]\&1`
+
+## Working with markdown
+
+- `:LazyExtras` is where I enable `lang.markdown`, this includes several plugins
+  -  headlines.nvim  markdown-preview.nvim  mason.nvim  nvim-lspconfig
+     nvim-treesitter  none-ls.nvim  nvim-lint
+  - headlines.nvim is the one that shows my headlines with colors and stuff
+- `:LazyExtras` is where I enable `prettier`
+  - You can also manage this in the `lazy.lua` file, but now I'll manage them in
+    the `lazyvim.json` file instead
+  - Prettier is the one that automatically formats my markdown files
+    - It removes blank lines
+    - Removes blank spaces at the end of a line
+    - But also messes up my chirpy tips because it adds
+      additional texts

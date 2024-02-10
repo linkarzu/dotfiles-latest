@@ -1,4 +1,12 @@
-# Dotfiles latest repo
+# Contents
+
+<!-- toc -->
+
+- [Repo overview](#repo-overview)
+- [Update symbolic links](#update-symbolic-links)
+- [Point your zshrc file to the desired repo](#point-your-zshrc-file-to-the-desired-repo)
+
+<!-- tocstop -->
 
 ## Repo overview
 

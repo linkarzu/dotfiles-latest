@@ -1,4 +1,6 @@
-# Repo overview
+# Dotfiles latest repo
+
+## Repo overview
 
 - This repo is where I keep the dotfiles I'm currently using, the other repo
   `https://github.com/linkarzu/dotfiles-public` is referenced in my youtube
@@ -7,7 +9,7 @@
 - My dotfiles tend to change, so I won't be modifying that other repo, so that
   youtube users can follow along and don't encounter new changes
 
-# Update symbolic links
+## Update symbolic links
 
 - Commands below will create all the files if they don't yet exist
   if they do exist, it will update them.

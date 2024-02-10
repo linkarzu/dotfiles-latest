@@ -10,6 +10,8 @@
 # - dotfiles-latest -> dotfiles_latest
 # - linkarzu.github.io -> linkarzu_github_io
 # - Notice I also escaped the ';' with '\;'
+# - Using "'" works, but not too well, because cannot switch to it from the
+# tmux sessions pane (ctrl+b s)
 
 # `username_suffix` is the mapping for the home directory
 # Do not modify this variable name because it's used by the tmux-sessionizer script
@@ -21,6 +23,6 @@ dotfiles_public="k"
 linkarzu_github_io="l"
 scripts="\;"
 obsidian_main="u"
-containerdata="'"
 macos_setup="i"
 containerdata_public="o"
+containerdata="p"

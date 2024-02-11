@@ -24,6 +24,14 @@ set -g default-terminal "tmux-256color"
 # set-option -sa terminal-features ',xterm-256color:RGB'
 set -sg terminal-overrides ",*:RGB"
 
+# When pressing prefix+s to list sessions, I want them sorted by time
+# That way my latest used sessions show at the top of the list
+# -s starts with sessions collapsed (doesn't show windows)
+# -Z zooms the pane (don't uderstand what this does)
+# -O specifies the initial sort field: one of ‘index’, ‘name’, or ‘time’ (activity).
+# https://unix.stackexchange.com/questions/608268/how-can-i-force-tmux-to-sort-my-sessions-alphabetically
+bind s choose-tree -Zs -O time
+
 # Create vertical split
 unbind '|'
 bind '|' split-window -h

@@ -78,3 +78,4 @@ help command
   - \`a - with backtick , jumps to the mark on first character
 - To see all the marks use `:marks`
 - `:delmarks a` would remove the mark a
+- `:delmarks a j k l m z n` removes all the marks specified

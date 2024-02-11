@@ -1,4 +1,5 @@
 -- https://github.com/williamboman/mason.nvim
+-- https://github.com/jonschlinkert/markdown-toc
 return {
   "williamboman/mason.nvim",
   opts = function(_, opts)

@@ -11,19 +11,24 @@ return {
     },
     custom_highlights = function()
       return {
+
         -- nvim spectre highlight colors
         DiffChange = { bg = "#a6e3a1", fg = "black" },
         DiffDelete = { bg = "#f38ba8", fg = "black" },
+
         -- visual mode highlighted text color
         Visual = { bg = "#7ec9d8", fg = "white" },
+
+        -- -- I moved these colors to the lukas-reineke/headlines.nvim plugin
+        -- -- Heading colors I use in my markdown files
+        -- Headline1 = { bg = "#295715", fg = "white" },
+        -- Headline2 = { bg = "#8d8200", fg = "white" },
+        -- Headline3 = { bg = "#a56106", fg = "white" },
+        -- Headline4 = { bg = "#7e0000", fg = "white" },
+        -- Headline5 = { bg = "#1e0b7b", fg = "white" },
         -- darker codeblock for my markdown files
-        CodeBlock = { bg = "#09090d" },
-        -- Heading colors I use in my markdown files
-        Headline1 = { bg = "#295715", fg = "white" },
-        Headline2 = { bg = "#8d8200", fg = "white" },
-        Headline3 = { bg = "#a56106", fg = "white" },
-        Headline4 = { bg = "#7e0000", fg = "white" },
-        Headline5 = { bg = "#1e0b7b", fg = "white" },
+        -- CodeBlock = { bg = "#09090d" },
+
         --     CursorLine = { bg = "#ff2800" },
 
         -- I haven't tested all of the ones below, so test at your own will

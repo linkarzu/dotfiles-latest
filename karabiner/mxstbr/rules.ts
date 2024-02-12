@@ -210,7 +210,7 @@ const rules: KarabinerRules[] = [
       h: open("raycast://extensions/mattisssa/spotify-player/search"),
     },
 
-    // s = "System"
+    // s = "System" or "Service"
     s: {
       j: {
         to: [
@@ -311,6 +311,10 @@ const rules: KarabinerRules[] = [
           },
         ],
       },
+      // Restart yabai
+      0: open(
+        "btt://execute_assigned_actions_for_trigger/?uuid=5EC0D2D3-869C-4284-B063-B53A17BF7C4C"
+      ),
       // comma: {
       //   to: [
       //     {

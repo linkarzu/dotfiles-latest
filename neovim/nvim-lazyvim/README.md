@@ -10,6 +10,7 @@
   - [Check the help command](#check-the-help-command)
   - [Spectre pattern matching](#spectre-pattern-matching)
   - [Working with markdown](#working-with-markdown)
+- [Working with marks](#working-with-marks)
 
 <!-- tocstop -->
 

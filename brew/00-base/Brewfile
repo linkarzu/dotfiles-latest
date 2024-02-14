@@ -6,6 +6,7 @@ tap "homebrew/bundle"
 tap "homebrew/services"
 tap "jesseduffield/lazygit"
 tap "homebrew/cask-fonts"
+brew "FelixKratz/formulae"
 
 brew "wget"
 # coreutils includes ls with colors, not needed since I now use eza
@@ -31,3 +32,5 @@ brew "zsh-autosuggestions"
 brew "zsh-vi-mode"
 cask "alacritty"
 brew "jq"
+brew "sketchybar"
+

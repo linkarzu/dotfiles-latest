@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Filename: ~/github/dotfiles-latest/yabai/scripting-addition.sh
 
 echo

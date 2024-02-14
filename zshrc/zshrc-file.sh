@@ -87,6 +87,8 @@ create_symlink ~/github/dotfiles-latest/yabai/yabairc ~/.yabairc
 create_symlink ~/github/dotfiles-latest/neovim/nvim-lazyvim ~/.config/nvim
 create_symlink ~/github/dotfiles-latest/hammerspoon ~/.hammerspoon
 create_symlink ~/github/dotfiles-latest/karabiner/mxstbr ~/.config/karabiner
+create_symlink ~/github/dotfiles-latest/sketchybar/felixkratz ~/.config/sketchybar
+# create_symlink ~/github/dotfiles-latest/sketchybar/neutonfoo ~/.config/sketchybar
 # echo "finished 1"
 
 # # This is on the other repo where I keep my ssh config files

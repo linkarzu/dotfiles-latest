@@ -19,6 +19,10 @@ return {
         -- visual mode highlighted text color
         Visual = { bg = "#7ec9d8", fg = "white" },
 
+        -- horizontal line that goes across where cursor is
+        CursorLine = { bg = "#3f404f" },
+        -- CursorLine = { bg = "#ff2800" },
+
         -- -- I moved these colors to the lukas-reineke/headlines.nvim plugin
         -- -- Heading colors I use in my markdown files
         -- Headline1 = { bg = "#295715", fg = "white" },
@@ -28,8 +32,6 @@ return {
         -- Headline5 = { bg = "#1e0b7b", fg = "white" },
         -- darker codeblock for my markdown files
         -- CodeBlock = { bg = "#09090d" },
-
-        --     CursorLine = { bg = "#ff2800" },
 
         -- I haven't tested all of the ones below, so test at your own will
         --     Search = { bg = "#569CD6", fg = "#1E1E1E" },

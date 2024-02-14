@@ -47,6 +47,8 @@ help command
 
 ### Spectre pattern matching
 
+- `https://github.com/nvim-pack/nvim-spectre`
+- Press `ti` to toggle ignore case
 - I needed to match:
   - `>/dev/null 2>&1`
 - So I used (but didn't work, and don't have time to deal with this right now)

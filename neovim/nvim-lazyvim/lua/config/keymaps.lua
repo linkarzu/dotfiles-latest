@@ -81,10 +81,6 @@ end, { desc = "Insert filename with path at cursor" })
 -- ############################################################################
 --                         Begin of markdown section
 -- ############################################################################
--- To generate the TOC I use the markdown-toc plugin
--- https://github.com/jonschlinkert/markdown-toc
--- I install it with mason, go see my 'mason-nvim' plugin
--- ############################################################################
 
 -- When I press leader, I want 'm' to sohw me 'markdown'
 -- https://github.com/folke/which-key.nvim?tab=readme-ov-file#%EF%B8%8F-mappings
@@ -98,6 +94,9 @@ wk.register({
 })
 
 -- Generate/update a Markdown TOC
+-- To generate the TOC I use the markdown-toc plugin
+-- https://github.com/jonschlinkert/markdown-toc
+-- I install it with mason, go see my 'mason-nvim' plugin file
 vim.keymap.set("n", "<leader>mt", function()
   local path = vim.fn.expand("%") -- Expands the current file name to a full path
   local bufnr = 0 -- The current buffer number, 0 references the current active buffer
@@ -178,9 +177,10 @@ vim.keymap.set("n", "<leader>mm", function()
   -- Retrieve the current cursor position (after moving to the TOC)
   local cursor_pos = vim.api.nvim_win_get_cursor(0)
   local row = cursor_pos[1]
-  local col = cursor_pos[2]
-  -- Move the cursor 6 positions to the right
-  vim.api.nvim_win_set_cursor(0, { row, col + 6 })
+  -- local col = cursor_pos[2]
+  -- Move the cursor to column 15 (starts counting at 0)
+  -- I like just going down on the TOC and press gd to go to a section
+  vim.api.nvim_win_set_cursor(0, { row, 14 })
 end, { desc = "Jump to the first line of the TOC" })
 
 -- Mapping to return to the previously saved cursor position
@@ -210,6 +210,16 @@ end, { desc = "Go to next markdown header" })
 -- ############################################################################
 --                       End of markdown section
 -- ############################################################################
+
+-- Marks keep coming back even after deleting them, this deletes them all
+-- This deletes all marks in the current buffer, including lowercase, uppercase, and numbered marks
+-- Fix should be applied on April 2024
+-- https://github.com/chentoast/marks.nvim/issues/13
+vim.keymap.set("n", "<leader>md", function()
+  -- Delete all marks in the current buffer
+  vim.cmd("delmarks!")
+  print("All marks deleted.")
+end, { desc = "Delete all marks" })
 
 -- -- From Primeagen's tmux-sessionizer
 -- -- ctrl+f in normal mode will silently run a command to create a new tmux window and execute the tmux-sessionizer.

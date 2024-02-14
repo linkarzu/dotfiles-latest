@@ -317,7 +317,8 @@ set -g @catppuccin_window_current_fill "number"
 set -g @catppuccin_window_current_text "#W"
 
 set -g @catppuccin_status_modules_left "session"
-set -g @catppuccin_status_modules_right "directory"
+set -g @catppuccin_status_modules_right "none"
+# set -g @catppuccin_status_modules_right "directory"
 # `user` and `host` are kind of useless, dont change when you ssh to devices
 # set -g @catppuccin_status_modules_right "directory user host"
 set -g @catppuccin_status_left_separator " "
@@ -326,7 +327,7 @@ set -g @catppuccin_status_right_separator_inverse "no"
 set -g @catppuccin_status_fill "icon"
 set -g @catppuccin_status_connect_separator "no"
 
-set -g @catppuccin_directory_text "#{pane_current_path}"
+# set -g @catppuccin_directory_text "#{pane_current_path}"
 
 # ----------------------------------------------------------------------------
 

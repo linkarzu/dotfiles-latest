@@ -11,6 +11,8 @@ tap "homebrew/cask-fonts"
 
 # I'll install the following fonts from neovim script
 cask "font-meslo-lg-nerd-font"
+cask "sf-symbols"
+cask "font-jetbrains-mono-nerd-font"
 
 brew "neovim"
 brew "gnu-sed"

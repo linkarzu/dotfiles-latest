@@ -31,8 +31,15 @@ sudo yabai --load-sa
 # 	yabai -m config right_padding 0
 # fi
 
-yabai -m config top_padding 04
-yabai -m config bottom_padding 05
+#Needed for yabai window state, I added this from sketchybar
+#https://github.com/FelixKratz/dotfiles
+yabai -m signal --add event=window_focused action="sketchybar --trigger window_focus"
+
+# Top padding for felixkratz sketchybar
+yabai -m config top_padding 39
+# Top padding for default sketchybar
+# yabai -m config top_padding 25
+# yabai -m config bottom_padding 05
 # yabai -m config left_padding 05
 # yabai -m config right_padding 05
 
@@ -66,7 +73,7 @@ done
 # Apps excluded from window management, so you can resize them and move them around
 MGMT_EXCLUDED_APPS=$ALWAYS_SHOWN_APPS
 # Uncomment the line below if you want to use different excluded apps
-MGMT_EXCLUDED_APPS="(iStat Menus|CleanShot X|Calculator|Hammerspoon|BetterDisplay|GIMP|Notes)"
+MGMT_EXCLUDED_APPS="(iStat Menus|CleanShot X|Calculator|Hammerspoon|BetterDisplay|GIMP|Notes|System Preferences|System Settings|Activity Monitor|App StoreSoftware Update)"
 # MGMT_EXCLUDED_APPS="(Notes|iStat Menus|CleanShot X|Udemy Business)"
 yabai -m rule --add app="^${MGMT_EXCLUDED_APPS}$" manage=off
 

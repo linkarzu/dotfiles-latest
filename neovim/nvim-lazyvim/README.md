@@ -70,6 +70,48 @@ help command
     - But also messes up my chirpy tips because it adds
       additional texts
 
+## Fix Mason warnings
+
+- You should not install neovim and all it's dependencies on a linux servers
+  this is due to security reasons, but if you still want to do it keep reading
+  - In `:MasonLog` I was getting these errors
+  - `Installation failed for Package(name=json-lsp) error=spawn: npm failed with exit code - and signal -. npm is not executable`
+  - `npm` is node package manager, first check if you have it installed with
+    - `npm --version`
+  - If not installed, install it, `nodejs` includes `npm` as part of its
+    installation
+  - I later realized that `unzip` is needed as well, so installing it
+  - I later realized that `python3-venv` is also needed, so adding it
+
+```bash
+sudo apt update
+sudo apt install nodejs unzip python3-venv
+```
+
+- Then I `reopened` neovim, and the error in `:MasonLog` changed to
+- `Installation failed for Package(name=stylua) error=spawn: unzip failed with exit code - and signal -. unzip is not executable`
+  - `unzip` is not installed, so that was fixed by installing it
+- Then I was getting this error in the logs
+  - `Installation failed for Package(name=ruff-lsp) error=spawn: python3 failed with exit code 1 and signal 0.`
+  - I opened `:Mason` and tried to install `ruff-lsp` there with `i`
+  - It showed me the full log
+
+```bash
+Creating virtual environment…
+The virtual environment was not created successfully because ensurepip is not
+available.  On Debian/Ubuntu systems, you need to install the python3-venv
+package using the following command.
+
+    apt install python3.11-venv
+
+You may need to use sudo with that command.  After installing the python3-venv
+package, recreate your virtual environment.
+
+Failing command: /home/krishna/.local/share/nvim/mason/packages/ruff-lsp/venv/bin/python3
+
+spawn: python3 failed with exit code 1 and signal 0.
+```
+
 ## Working with marks
 
 - While in normal mode, press `m` and then a letter `a-z` will create a mark

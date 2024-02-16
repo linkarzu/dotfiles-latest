@@ -9,14 +9,20 @@
 # Tmux prefix key
 set -g prefix C-b
 
-# My terminal, alacritty, was configured to use TERM: xterm-256color, in the alacritty.yml file
-# The only one that made truecolors work on nvim when using xterm-256color on alacritty is screen-256color
+# "xterm-256color" in alacritty and "screen-256color" in tmux doesnt have paste issues in neovim
+# "checkhealth" command in neovim shows no color warnings
+set -g default-terminal "screen-256color"
+
+# "xterm-256color" in alacritty and "xterm-256color" in tmux gives me truecolor
+# warnings in neovim
 # set -g default-terminal "xterm-256color"
-# set -g default-terminal "screen-256color"
-# tmux-256color used to fuck up everything when using xterm-256 color
-# I couldn't use backspace, but working fine since changed alacritty TERM to alacritty
-# https://copyprogramming.com/howto/why-would-i-set-term-to-xterm-256color-when-using-alacritty
-set -g default-terminal "tmux-256color"
+
+# When using "alacritty" in alacritty and "tmux-256color" in tmux, I was having paste
+# issues when I pasted over text highlighted in visual mode, spaces were removed
+# at the end of the text. This happened in NEOVIM specifically
+# "checkhealth" command in neovim shows no color warnings
+# set -g default-terminal "tmux-256color"
+
 # I was getting this warning in neovim
 # Neither Tc nor RGB capability set. True colors are disabled
 # Confirm your $TERM value outside of tmux first, mine returned "screen-256color"

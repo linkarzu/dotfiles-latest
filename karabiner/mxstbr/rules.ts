@@ -315,6 +315,14 @@ const rules: KarabinerRules[] = [
       0: open(
         "btt://execute_assigned_actions_for_trigger/?uuid=5EC0D2D3-869C-4284-B063-B53A17BF7C4C"
       ),
+      // Start video recording
+      8: open(
+        "btt://execute_assigned_actions_for_trigger/?uuid=24E07831-252B-4EB6-B6C4-5E1CDB742BF9"
+      ),
+      // Stop video recording
+      9: open(
+        "btt://execute_assigned_actions_for_trigger/?uuid=762AF6E2-41EE-4B74-A2D3-9B96C3D777B5"
+      ),
       // comma: {
       //   to: [
       //     {

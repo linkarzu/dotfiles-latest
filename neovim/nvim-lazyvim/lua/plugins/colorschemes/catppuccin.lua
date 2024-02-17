@@ -23,6 +23,17 @@ return {
         CursorLine = { bg = "#3f404f" },
         -- CursorLine = { bg = "#ff2800" },
 
+        -- Color of repeated words
+        illuminatedWordText = { bg = "#5886b0" },
+        -- Default value
+        -- illuminatedWordText = { bg = "#6a6b7a" },
+        -- IlluminatedWordText = { bg = "#a6e3a1", fg = "#5c4696" },
+        -- IlluminatedWordRead = { bg = "#a6e3a1", fg = "#5c4696" },
+        -- IlluminatedWordWrite = { bg = "#a6e3a1", fg = "#5c4696" },
+        -- IlluminatedWordText = { bg = "#f38ba8", fg = "#a6e3a1" },
+        -- IlluminatedWordRead = { bg = "#f38ba8", fg = "#a6e3a1" },
+        -- IlluminatedWordWrite = { bg = "#f38ba8", fg = "#a6e3a1" },
+
         -- -- I moved these colors to the lukas-reineke/headlines.nvim plugin
         -- -- Heading colors I use in my markdown files
         -- Headline1 = { bg = "#295715", fg = "white" },

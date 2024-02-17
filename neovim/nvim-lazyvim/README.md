@@ -16,6 +16,13 @@
 
 ## Things to remember
 
+### Syntax highlighting (treesitter)
+
+- SQL wasn't showing colors in my codeblocks when editing .md files, it's
+  because the `treesitter` language was not installed, so added the `treesitter.lua`
+  file and added it there
+- Use `checkhealth` to see which ones are installed
+
 ### Change value of highlight colors
 
 - I got the answer on this [reddit post](https://www.reddit.com/r/neovim/comments/1alflp1/can_someone_please_help_me_changing_these_colors/)

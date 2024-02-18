@@ -9,7 +9,7 @@ return {
       -- Can disable the theme for neotree so its the same color as the right panel
       neotree = true,
     },
-    custom_highlights = function()
+    custom_highlights = function(colors)
       return {
 
         -- nvim spectre highlight colors
@@ -50,7 +50,7 @@ return {
         --     MatchParen = { bg = "#FFD700", fg = "#000000" },
         --     Highlight = { bg = "#32CD32", fg = "#000000" },
         --     QuickFixLine = { bg = "#ADD8E6", fg = "#000000" },
-        --     Comment = { fg = colors.flamingo },
+        Comment = { fg = colors.flamingo },
         --     TabLineSel = { bg = colors.pink },
         --     CmpBorder = { fg = colors.surface2 },
         --     Pmenu = { bg = colors.none },

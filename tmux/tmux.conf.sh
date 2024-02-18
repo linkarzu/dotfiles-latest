@@ -123,12 +123,14 @@ unbind f
 unbind C-v
 unbind C-n
 unbind C-m
+unbind 1
 
 tmux_sessionizer="~/github/dotfiles-latest/tmux/tools/prime/tmux-sessionizer.sh"
 tmux_sshonizer_agen="~/github/dotfiles-latest/tmux/tools/linkarzu/tmux-sshonizer-agen.sh"
 ssh_select="~/github/dotfiles-latest/tmux/tools/linkarzu/ssh-select.sh"
 # Script below goes through you `~/.ssh/config` file and shows the hosts in an fzf menu
 ssh_config_select="~/github/dotfiles-latest/tmux/tools/linkarzu/ssh_config_select.sh"
+daily_note="~/github/scripts/macos/mac/300-dailyNote.sh"
 
 # Don't use C-r because it's used by tmux-resurrect
 # Don't use C-e because I'm already using it for sending command to all panes/windows in current session
@@ -156,6 +158,7 @@ bind-key -r C-c run-shell "$tmux_sshonizer_agen xocli3"
 bind-key -r f run-shell "tmux neww $tmux_sessionizer"
 bind-key -r C-v run-shell "tmux neww $ssh_select"
 bind-key -r C-n run-shell "tmux neww $ssh_config_select"
+bind-key -r 1 run-shell "tmux neww $daily_note"
 
 ###############################################################################
 

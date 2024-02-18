@@ -150,6 +150,10 @@ const rules: KarabinerRules[] = [
       n: open(
         "btt://execute_assigned_actions_for_trigger/?uuid=92398D5C-B95F-4E31-9CB9-1E3E732AF1C0"
       ),
+      // daily note
+      r: open(
+        "btt://execute_assigned_actions_for_trigger/?uuid=9B82DF9D-2DE2-4872-903A-D3C17EE9D555"
+      ),
     },
 
     // e = "etmux" - This is to SSH to devices - video that explains how this works below

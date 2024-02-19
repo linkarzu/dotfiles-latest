@@ -70,9 +70,19 @@ vim.keymap.set("n", "<leader>f.", function()
   end
 end, { desc = "Execute current file in terminal (if it's a script)" })
 
+-- Paste file path with the wordname Filename: first
 vim.keymap.set("n", "<leader>fp", function()
   local filePath = vim.fn.expand("%:~") -- Gets the file path relative to the home directory
   local lineToInsert = "Filename: " .. filePath
+  local row, _ = unpack(vim.api.nvim_win_get_cursor(0)) -- Get the current row number
+  -- Insert line, leave cursor current position
+  vim.api.nvim_buf_set_lines(0, row - 1, row - 0, false, { lineToInsert })
+end, { desc = "Insert filename with path at cursor" })
+
+-- Paste file path by itself
+vim.keymap.set("n", "<leader>fo", function()
+  local filePath = vim.fn.expand("%:~") -- Gets the file path relative to the home directory
+  local lineToInsert = filePath
   local row, _ = unpack(vim.api.nvim_win_get_cursor(0)) -- Get the current row number
   -- Insert line, leave cursor current position
   vim.api.nvim_buf_set_lines(0, row - 1, row - 0, false, { lineToInsert })

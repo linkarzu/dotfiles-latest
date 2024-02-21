@@ -1,3 +1,5 @@
+-- Filename: ~/github/dotfiles-latest/neovim/nvim-lazyvim/lua/plugins/mason-nvim.lua
+
 -- https://github.com/williamboman/mason.nvim
 -- https://github.com/jonschlinkert/markdown-toc
 return {

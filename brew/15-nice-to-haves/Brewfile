@@ -19,6 +19,7 @@ cask "google-drive"
 cask "microsoft-remote-desktop"
 cask "raycast"
 cask "setapp"
+cask "obs"
 
 #This errored out, I prefer to install it from the yabai script
 #brew "koekeishiya/formulae/yabai"

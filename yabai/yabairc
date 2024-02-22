@@ -47,6 +47,11 @@ yabai -m config top_padding 39
 # yabai -m signal --add event=window_focused action="cliclick m:0,0"
 # yabai -m signal --add event=window_focused app="Google Chrome" action="cliclick m:0,0"
 
+###############################################################################
+#                                Transparency
+###############################################################################
+yabai -m config window_opacity on
+
 # Make the below apps transparent
 APP_LIST="(Spotify|Alacritty)"
 # When my list of apps gains focus, make all background windows completely transparent
@@ -56,7 +61,15 @@ yabai -m signal --add event=window_focused app="^${APP_LIST}$" action="yabai -m 
 
 # When any other app gains focus, reset both active and background window opacity to fully visible
 yabai -m signal --add event=window_focused app!="^${APP_LIST}$" action="yabai -m config active_window_opacity 1.0"
-yabai -m signal --add event=window_focused app!="^${APP_LIST}$" action="yabai -m config normal_window_opacity 1.0"
+# I switched normal_window_opacity to a low value, because let's say I had the
+# settings window open for an app, when I switched to my browser I would see
+# that settings window from the other app on the top
+yabai -m signal --add event=window_focused app!="^${APP_LIST}$" action="yabai -m config normal_window_opacity 0.00001"
+# yabai -m signal --add event=window_focused app!="^${APP_LIST}$" action="yabai -m config normal_window_opacity 1.0"
+
+###############################################################################
+#                              Always on top
+###############################################################################
 
 # make the apps below fully opaque (not transparent)
 # This makes the following windows always appear on top
@@ -70,6 +83,10 @@ for id in $WINDOW_IDS; do
 	yabai -m window "$id" --opacity 1.0
 done
 
+###############################################################################
+#                              Excluded apps
+###############################################################################
+
 # Apps excluded from window management, so you can resize them and move them around
 MGMT_EXCLUDED_APPS=$ALWAYS_SHOWN_APPS
 # Uncomment the line below if you want to use different excluded apps
@@ -80,24 +97,34 @@ yabai -m rule --add app="^${MGMT_EXCLUDED_APPS}$" manage=off
 # In case you want to debug and see the contents of the variable
 # echo "MGMT_EXCLUDED_APPS: $MGMT_EXCLUDED_APPS" >> /tmp/yabai_debug.log
 
+###############################################################################
+#                                  Misc
+###############################################################################
+
 # global settings
 # When I leave youtube or chrome, hammerspoon will move the mouse to the corner
-#
+
 # "mouse_follows_focus on" will move the mouse back to the center, but DISABLE it or it will
 # be a nightmare to use iStat Menus
+yabai -m config mouse_follows_focus off
+
+# I don't understand what this does, I've enabled and disabled it in the past,
+# and still don't get it
+yabai -m config window_topmost on
+
+###############################################################################
+#                                Defaults
+###############################################################################
 
 yabai -m config \
-	mouse_follows_focus off \
 	focus_follows_mouse off \
 	window_origin_display default \
 	window_placement second_child \
 	window_zoom_persist on \
-	window_topmost off \
 	window_shadow off \
 	window_animation_duration 2 \
 	window_animation_frame_rate 120 \
 	window_opacity_duration 0.0 \
-	window_opacity on \
 	insert_feedback_color 0xffd75f5f \
 	active_window_border_color 0xff775759 \
 	normal_window_border_color 0xff555555 \

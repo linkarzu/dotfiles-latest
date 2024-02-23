@@ -1,0 +1,28 @@
+-- https://github.com/prettier/vim-prettier
+
+-- The prettier docs has a Vim setup section
+-- https://prettier.io/docs/en/vim
+-- Which showed me about this plugin
+-- I use this in combination with `vim.opt.textwidth = 80` because the textwidth
+-- wraps automatically when typing, but doesn't wrap when save.
+-- And this plugin wraps during save, but it doesn't wrap automatically
+
+-- I disabled this plugin, because my TOC was not being generated with
+-- leader+mt
+
+return {
+  "prettier/vim-prettier",
+  -- File types to enable vim-prettier for
+  ft = {
+    "markdown",
+  },
+  init = function()
+    -- The following two options can be used together for autoformatting files
+    -- on save without @format or @prettier tags
+    vim.g["prettier#autoformat"] = 1
+    vim.g["prettier#autoformat_require_pragma"] = 0
+    -- Set prose_wrap to always, never, or preserve
+    -- "always" is what enables auto wrapping
+    vim.g["prettier#config#prose_wrap"] = "always"
+  end,
+}

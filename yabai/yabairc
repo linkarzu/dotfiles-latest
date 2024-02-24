@@ -39,6 +39,9 @@ yabai -m signal --add event=window_focused app="^${apps_transparent}$" action="y
 yabai -m signal --add event=window_focused app!="^${apps_transparent}$" action="yabai -m config active_window_opacity 1.0"
 yabai -m signal --add event=window_focused app!="^${apps_transparent}$" action="yabai -m config normal_window_opacity 1.0"
 
+# yabai -m signal --add event=window_focused app=".*CleanShot X.*" action="yabai -m config active_window_opacity 1.0"
+# yabai -m signal --add event=window_focused app=".*CleanShot X.*" action="yabai -m config normal_window_opacity 1.0"
+
 ###############################################################################
 #                             layer=normal
 ###############################################################################
@@ -58,7 +61,7 @@ yabai -m rule --add app=".*" layer=normal
 
 # Apps excluded from window management, so you can resize them and move them around
 
-apps_mgoff_normal="(Calculator|iStat Menus|Hammerspoon|BetterDisplay|GIMP|Notes|System Preferences|System Settings|Activity Monitor|App StoreSoftware Update)"
+apps_mgoff_normal="(Calculator|iStat Menus|Hammerspoon|BetterDisplay|GIMP|Notes|System Preferences|System Settings|Activity Monitor|App StoreSoftware Update|CleanShot X)"
 # This keeps apps always below
 apps_mgoff_below="()"
 # This keeps apps always on the top
@@ -83,7 +86,7 @@ yabai -m config mouse_follows_focus off
 
 # I don't understand what this does, I've enabled and disabled it in the past,
 # and still don't get it
-yabai -m config window_topmost on
+yabai -m config window_topmost off
 
 ###############################################################################
 #                              Signal events

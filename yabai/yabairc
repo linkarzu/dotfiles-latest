@@ -12,90 +12,63 @@
 yabai -m signal --add event=dock_did_restart action="sudo yabai --load-sa"
 sudo yabai --load-sa
 
-# # Check the display size (e.g., grab the resolution here)
-# display_info=$(system_profiler SPDisplaysDataType | grep Resolution)
-#
-# # If the resolution is 6016 x 3384 I want to apply bigger paddings
-# # This means I'm connected to my 55 inch tv
-# # The * are used as wildcards
-# if [[ "$display_info" == *"6016 x 3384"* ]]; then
-# 	yabai -m config top_padding 400
-# 	yabai -m config bottom_padding 300
-# 	yabai -m config left_padding 1500
-# 	yabai -m config right_padding 12
-# else
-# 	# settings for other machines
-# 	yabai -m config top_padding 0
-# 	yabai -m config bottom_padding 0
-# 	yabai -m config left_padding 0
-# 	yabai -m config right_padding 0
-# fi
-
-#Needed for yabai window state, I added this from sketchybar
-#https://github.com/FelixKratz/dotfiles
-yabai -m signal --add event=window_focused action="sketchybar --trigger window_focus"
+###############################################################################
+#                                 Paddings
+###############################################################################
 
 # Top padding for felixkratz sketchybar
 yabai -m config top_padding 39
 # Top padding for default sketchybar
 # yabai -m config top_padding 25
 # yabai -m config bottom_padding 05
-# yabai -m config left_padding 05
+# yabai -m config left_padding 180
 # yabai -m config right_padding 05
 
-# Yabai signal to detect focus change for any application and move the cursor
-# yabai -m signal --add event=window_focused action="cliclick m:0,0"
-# yabai -m signal --add event=window_focused app="Google Chrome" action="cliclick m:0,0"
+###############################################################################
+#                               Transparency
+###############################################################################
 
-###############################################################################
-#                                Transparency
-###############################################################################
 yabai -m config window_opacity on
 
 # Make the below apps transparent
-APP_LIST="(Spotify|Alacritty)"
-# When my list of apps gains focus, make all background windows completely transparent
-yabai -m signal --add event=window_focused app="^${APP_LIST}$" action="yabai -m config active_window_opacity 0.85"
-yabai -m signal --add event=window_focused app="^${APP_LIST}$" action="yabai -m config normal_window_opacity 0.00001"
-# yabai -m signal --add event=window_focused app="$MGMT_EXCLUDED_APPS" action="yabai -m config normal_window_opacity 1.0"
+apps_transparent="(Spotify|Alacritty)"
+yabai -m signal --add event=window_focused app="^${apps_transparent}$" action="yabai -m config active_window_opacity 0.85"
+yabai -m signal --add event=window_focused app="^${apps_transparent}$" action="yabai -m config normal_window_opacity 0.00001"
 
 # When any other app gains focus, reset both active and background window opacity to fully visible
-yabai -m signal --add event=window_focused app!="^${APP_LIST}$" action="yabai -m config active_window_opacity 1.0"
-# I switched normal_window_opacity to a low value, because let's say I had the
-# settings window open for an app, when I switched to my browser I would see
-# that settings window from the other app on the top
-yabai -m signal --add event=window_focused app!="^${APP_LIST}$" action="yabai -m config normal_window_opacity 0.00001"
-# yabai -m signal --add event=window_focused app!="^${APP_LIST}$" action="yabai -m config normal_window_opacity 1.0"
+yabai -m signal --add event=window_focused app!="^${apps_transparent}$" action="yabai -m config active_window_opacity 1.0"
+yabai -m signal --add event=window_focused app!="^${apps_transparent}$" action="yabai -m config normal_window_opacity 1.0"
 
 ###############################################################################
-#                              Always on top
+#                             layer=normal
 ###############################################################################
 
-# make the apps below fully opaque (not transparent)
-# This makes the following windows always appear on top
-# IF THE APP WAS CLOSED, OPEN IT, AND RESTART YABAI FOR THIS TO TAKE EFFECT, otherwise can't get it's ID
-# All the options can be seen using 'man yabai'
-ALWAYS_SHOWN_APPS="(CleanShot X)"
-# Query yabai for windows and filter with jq using the regex pattern
-WINDOW_IDS=$(yabai -m query --windows | jq -r --arg APP_REGEX "$ALWAYS_SHOWN_APPS" '.[] | select(.app | test($APP_REGEX)) | .id')
-# Set the opacity for each window ID
-for id in $WINDOW_IDS; do
-	yabai -m window "$id" --opacity 1.0
-done
+# https://github.com/koekeishiya/yabai/issues/1929
+
+# Set all apps to the "normal" layer, otherwise they all start on the "below"
+# layer. Doing this fixed the issue I had with floating windows with OBS,
+# davinci resolve and other apps where their floating windows would show on top
+# of other apps
+
+yabai -m rule --add app=".*" layer=normal
 
 ###############################################################################
 #                              Excluded apps
 ###############################################################################
 
 # Apps excluded from window management, so you can resize them and move them around
-MGMT_EXCLUDED_APPS=$ALWAYS_SHOWN_APPS
-# Uncomment the line below if you want to use different excluded apps
-MGMT_EXCLUDED_APPS="(iStat Menus|CleanShot X|Calculator|Hammerspoon|BetterDisplay|GIMP|Notes|System Preferences|System Settings|Activity Monitor|App StoreSoftware Update)"
-# MGMT_EXCLUDED_APPS="(Notes|iStat Menus|CleanShot X|Udemy Business)"
-yabai -m rule --add app="^${MGMT_EXCLUDED_APPS}$" manage=off
 
-# In case you want to debug and see the contents of the variable
-# echo "MGMT_EXCLUDED_APPS: $MGMT_EXCLUDED_APPS" >> /tmp/yabai_debug.log
+apps_mgoff_normal="(Calculator|iStat Menus|Hammerspoon|BetterDisplay|GIMP|Notes|System Preferences|System Settings|Activity Monitor|App StoreSoftware Update)"
+# This keeps apps always below
+apps_mgoff_below="()"
+# This keeps apps always on the top
+apps_mgoff_above="()"
+yabai -m rule --add app="^${apps_mgoff_normal}$" manage=off layer=normal
+yabai -m rule --add app="^${apps_mgoff_below}$" manage=off layer=below
+yabai -m rule --add app="^${apps_mgoff_above}$" manage=off layer=above
+
+# In case you want to debug and see the contents of a variable
+# echo "apps_mgoff_below: $apps_mgoff_below" >> /tmp/yabai_debug.log
 
 ###############################################################################
 #                                  Misc
@@ -111,6 +84,19 @@ yabai -m config mouse_follows_focus off
 # I don't understand what this does, I've enabled and disabled it in the past,
 # and still don't get it
 yabai -m config window_topmost on
+
+###############################################################################
+#                              Signal events
+###############################################################################
+
+# Adds a signal that, when a window gains focus, triggers a custom action in SketchyBar
+# (presumably to update the status bar based on the focused window).
+# https://github.com/FelixKratz/dotfiles
+yabai -m signal --add event=window_focused action="sketchybar --trigger window_focus"
+
+# Yabai signal to detect focus change for any application and move the cursor
+# yabai -m signal --add event=window_focused action="cliclick m:0,0"
+# yabai -m signal --add event=window_focused app="Google Chrome" action="cliclick m:0,0"
 
 ###############################################################################
 #                                Defaults
@@ -142,3 +128,26 @@ yabai -m config \
 	mouse_action1 move \
 	mouse_action2 resize \
 	mouse_drop_action swap
+
+###############################################################################
+#                       Custom resolution settings
+###############################################################################
+
+# # Check the display size (e.g., grab the resolution here)
+# display_info=$(system_profiler SPDisplaysDataType | grep Resolution)
+#
+# # If the resolution is 6016 x 3384 I want to apply bigger paddings
+# # This means I'm connected to my 55 inch tv
+# # The * are used as wildcards
+# if [[ "$display_info" == *"6016 x 3384"* ]]; then
+# 	yabai -m config top_padding 400
+# 	yabai -m config bottom_padding 300
+# 	yabai -m config left_padding 1500
+# 	yabai -m config right_padding 12
+# else
+# 	# settings for other machines
+# 	yabai -m config top_padding 0
+# 	yabai -m config bottom_padding 0
+# 	yabai -m config left_padding 0
+# 	yabai -m config right_padding 0
+# fi

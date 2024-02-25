@@ -13,11 +13,29 @@ yabai -m signal --add event=dock_did_restart action="sudo yabai --load-sa"
 sudo yabai --load-sa
 
 ###############################################################################
+#                          Custom padding settings
+###############################################################################
+
+# Sketchybar size changes depending if I'm on my laptop or mac mini, solving it
+# this way, there may be a better way but this was the easiest to solve for now
+
+# Check the display size (e.g., grab the resolution here)
+display_resolution=$(system_profiler SPDisplaysDataType | grep Resolution)
+
+# First condition is to match my macbook pro, the * are used as wildcards
+if [[ "$display_resolution" == *"3456 x 2234"* ]]; then
+	yabai -m config top_padding 12
+else
+	# This matches my asus 27 inch monitor
+	yabai -m config top_padding 39
+fi
+
+###############################################################################
 #                                 Paddings
 ###############################################################################
 
 # Top padding for felixkratz sketchybar
-yabai -m config top_padding 39
+# yabai -m config top_padding 39
 # Top padding for default sketchybar
 # yabai -m config top_padding 25
 # yabai -m config bottom_padding 05
@@ -131,26 +149,3 @@ yabai -m config \
 	mouse_action1 move \
 	mouse_action2 resize \
 	mouse_drop_action swap
-
-###############################################################################
-#                       Custom resolution settings
-###############################################################################
-
-# # Check the display size (e.g., grab the resolution here)
-# display_info=$(system_profiler SPDisplaysDataType | grep Resolution)
-#
-# # If the resolution is 6016 x 3384 I want to apply bigger paddings
-# # This means I'm connected to my 55 inch tv
-# # The * are used as wildcards
-# if [[ "$display_info" == *"6016 x 3384"* ]]; then
-# 	yabai -m config top_padding 400
-# 	yabai -m config bottom_padding 300
-# 	yabai -m config left_padding 1500
-# 	yabai -m config right_padding 12
-# else
-# 	# settings for other machines
-# 	yabai -m config top_padding 0
-# 	yabai -m config bottom_padding 0
-# 	yabai -m config left_padding 0
-# 	yabai -m config right_padding 0
-# fi

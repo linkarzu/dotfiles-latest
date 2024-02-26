@@ -1,1 +1,12 @@
-proseWrap: "always"
+# Filename: ~/.prettierrc.yaml
+
+# Default configuration applied to all files
+# proseWrap: "preserve"
+
+# You might not want proseWrap to affect YAML files, so it's not set at the top level here
+# https://prettier.io/docs/en/configuration#configuration-overrides
+overrides:
+  # Specific override for Markdown (.md) files
+  - files: "*.md"
+    options:
+      proseWrap: "always"

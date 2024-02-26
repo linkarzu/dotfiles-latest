@@ -19,13 +19,14 @@
 ### Syntax highlighting (treesitter)
 
 - SQL wasn't showing colors in my codeblocks when editing .md files, it's
-  because the `treesitter` language was not installed, so added the `treesitter.lua`
-  file and added it there
+  because the `treesitter` language was not installed, so added the
+  `treesitter.lua` file and added it there
 - Use `checkhealth` to see which ones are installed
 
 ### Change value of highlight colors
 
-- I got the answer on this [reddit post](https://www.reddit.com/r/neovim/comments/1alflp1/can_someone_please_help_me_changing_these_colors/)
+- I got the answer on this
+  [reddit post](https://www.reddit.com/r/neovim/comments/1alflp1/can_someone_please_help_me_changing_these_colors/)
 - Move your cursor to the highlight you want to find out about and run the
   `:Inspect` command, there you will see the colors related to the highlight
 - You can confirm using the `:highlight` command, there you can grep for the
@@ -41,8 +42,8 @@ Use the command `:ConformInfo`
 
 ### Check the value of options
 
-I wanted to change this option `vim.opt.conceallevel = 1`, but first I wanted
-to check its value
+I wanted to change this option `vim.opt.conceallevel = 1`, but first I wanted to
+check its value
 
 - Can check it with the command `:set conceallevel?`
 
@@ -65,8 +66,8 @@ help command
 ### Working with markdown
 
 - `:LazyExtras` is where I enable `lang.markdown`, this includes several plugins
-  -  headlines.nvim  markdown-preview.nvim  mason.nvim  nvim-lspconfig
-     nvim-treesitter  none-ls.nvim  nvim-lint
+  -  headlines.nvim  markdown-preview.nvim  mason.nvim  nvim-lspconfig 
+    nvim-treesitter  none-ls.nvim  nvim-lint
   - headlines.nvim is the one that shows my headlines with colors and stuff
 - `:LazyExtras` is where I enable `prettier`
   - You can also manage this in the `lazy.lua` file, but now I'll manage them in
@@ -74,8 +75,9 @@ help command
   - Prettier is the one that automatically formats my markdown files
     - It removes blank lines
     - Removes blank spaces at the end of a line
-    - But also messes up my chirpy tips because it adds
-      additional texts
+    - But also messes up my chirpy tips because it adds additional texts
+- I like following markdown guidellines, so I don't like my lines to be longer
+  than 80 characters, I like to enable wrapping for them
 
 ## Fix Mason warnings
 

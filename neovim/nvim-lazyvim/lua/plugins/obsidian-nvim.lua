@@ -38,7 +38,6 @@ return {
       date_format = "%Y-%m-%d",
       -- Optional, if you want to change the date format of the default alias of daily notes.
       alias_format = "%B %-d, %Y",
-      -- alias_format = "YYYY/Qo/MM-MMM/WW/YYYY-MM-DD-dddd",
       -- Optional, if you want to automatically insert a template from your template directory like 'daily.md'
       template = nil,
     },

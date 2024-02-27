@@ -217,6 +217,90 @@ vim.keymap.set("n", "gj", function()
   vim.cmd("nohlsearch")
 end, { desc = "Go to next markdown header" })
 
+vim.keymap.set("n", "<leader>jj", function()
+  local date = os.date("%Y-%m-%d-%A")
+  local heading = "# " -- Heading with space for the cursor
+  local dateLine = "[[" .. date .. "]]" -- Formatted date line
+  local row, _ = unpack(vim.api.nvim_win_get_cursor(0)) -- Get the current row number
+  -- Insert both lines: heading and dateLine
+  vim.api.nvim_buf_set_lines(0, row, row, false, { heading, dateLine })
+  -- Move the cursor to the end of the heading
+  vim.api.nvim_win_set_cursor(0, { row + 1, 0 })
+  -- Enter insert mode at the end of the current line
+  vim.cmd("startinsert!")
+  -- vim.api.nvim_win_set_cursor(0, { row, #heading })
+end, { desc = "H1 heading and date" })
+
+vim.keymap.set("n", "<leader>kk", function()
+  local date = os.date("%Y-%m-%d-%A")
+  local heading = "## " -- Heading with space for the cursor
+  local dateLine = "[[" .. date .. "]]" -- Formatted date line
+  local row, _ = unpack(vim.api.nvim_win_get_cursor(0)) -- Get the current row number
+  -- Insert both lines: heading and dateLine
+  vim.api.nvim_buf_set_lines(0, row, row, false, { heading, dateLine })
+  -- Move the cursor to the end of the heading
+  vim.api.nvim_win_set_cursor(0, { row + 1, 0 })
+  -- Enter insert mode at the end of the current line
+  vim.cmd("startinsert!")
+  -- vim.api.nvim_win_set_cursor(0, { row, #heading })
+end, { desc = "H2 heading and date" })
+
+vim.keymap.set("n", "<leader>ll", function()
+  local date = os.date("%Y-%m-%d-%A")
+  local heading = "### " -- Heading with space for the cursor
+  local dateLine = "[[" .. date .. "]]" -- Formatted date line
+  local row, _ = unpack(vim.api.nvim_win_get_cursor(0)) -- Get the current row number
+  -- Insert both lines: heading and dateLine
+  vim.api.nvim_buf_set_lines(0, row, row, false, { heading, dateLine })
+  -- Move the cursor to the end of the heading
+  vim.api.nvim_win_set_cursor(0, { row + 1, 0 })
+  -- Enter insert mode at the end of the current line
+  vim.cmd("startinsert!")
+  -- vim.api.nvim_win_set_cursor(0, { row, #heading })
+end, { desc = "H3 heading and date" })
+
+vim.keymap.set("n", "<leader>;;", function()
+  local date = os.date("%Y-%m-%d-%A")
+  local heading = "#### " -- Heading with space for the cursor
+  local dateLine = "[[" .. date .. "]]" -- Formatted date line
+  local row, _ = unpack(vim.api.nvim_win_get_cursor(0)) -- Get the current row number
+  -- Insert both lines: heading and dateLine
+  vim.api.nvim_buf_set_lines(0, row, row, false, { heading, dateLine })
+  -- Move the cursor to the end of the heading
+  vim.api.nvim_win_set_cursor(0, { row + 1, 0 })
+  -- Enter insert mode at the end of the current line
+  vim.cmd("startinsert!")
+  -- vim.api.nvim_win_set_cursor(0, { row, #heading })
+end, { desc = "H4 heading and date" })
+
+vim.keymap.set("n", "<leader>uu", function()
+  local date = os.date("%Y-%m-%d-%A")
+  local heading = "##### " -- Heading with space for the cursor
+  local dateLine = "[[" .. date .. "]]" -- Formatted date line
+  local row, _ = unpack(vim.api.nvim_win_get_cursor(0)) -- Get the current row number
+  -- Insert both lines: heading and dateLine
+  vim.api.nvim_buf_set_lines(0, row, row, false, { heading, dateLine })
+  -- Move the cursor to the end of the heading
+  vim.api.nvim_win_set_cursor(0, { row + 1, 0 })
+  -- Enter insert mode at the end of the current line
+  vim.cmd("startinsert!")
+  -- vim.api.nvim_win_set_cursor(0, { row, #heading })
+end, { desc = "H5 heading and date" })
+
+vim.keymap.set("n", "<leader>ii", function()
+  local date = os.date("%Y-%m-%d-%A")
+  local heading = "###### " -- Heading with space for the cursor
+  local dateLine = "[[" .. date .. "]]" -- Formatted date line
+  local row, _ = unpack(vim.api.nvim_win_get_cursor(0)) -- Get the current row number
+  -- Insert both lines: heading and dateLine
+  vim.api.nvim_buf_set_lines(0, row, row, false, { heading, dateLine })
+  -- Move the cursor to the end of the heading
+  vim.api.nvim_win_set_cursor(0, { row + 1, 0 })
+  -- Enter insert mode at the end of the current line
+  vim.cmd("startinsert!")
+  -- vim.api.nvim_win_set_cursor(0, { row, #heading })
+end, { desc = "H6 heading and date" })
+
 -- ############################################################################
 --                       End of markdown section
 -- ############################################################################

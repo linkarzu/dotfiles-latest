@@ -1,0 +1,13 @@
+{
+  "bash code block": {
+    "prefix": "bash",
+    "body": ["```bash", "$1", "```"],
+    "description": "Insert a bash code block"
+  },
+
+  "yaml code block": {
+    "prefix": "yaml",
+    "body": ["```yaml", "$1", "```"],
+    "description": "Insert a yaml code block"
+  }
+}

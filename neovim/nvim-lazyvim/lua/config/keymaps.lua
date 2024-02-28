@@ -212,13 +212,13 @@ vim.keymap.set("n", "gk", function()
   local function isBlankLine(lineNum)
     return vim.fn.getline(lineNum):match("^%s*$") ~= nil
   end
-  -- Function to search backward for a markdown header
+  -- Function to search up for a markdown header
   local function searchBackwardForHeader()
     vim.cmd("silent! ?^\\s*#\\+\\s.*$")
     local currentLineNum = vim.fn.line(".")
     local aboveIsBlank = isBlankLine(currentLineNum - 1)
     local belowIsBlank = isBlankLine(currentLineNum + 1)
-    -- Check if above and below lines are blank, indicating a markdown header
+    -- Check if both above and below lines are blank, indicating a markdown header
     if aboveIsBlank and belowIsBlank then
       foundHeader = true
     end
@@ -226,7 +226,7 @@ vim.keymap.set("n", "gk", function()
   end
   -- Initial search
   local lastLineNum = searchBackwardForHeader()
-  -- Continue searching if the initial search did not find a suitable header
+  -- Continue searching if the initial search did not find a header
   while not foundHeader and vim.fn.line(".") > 1 do
     local currentLineNum = searchBackwardForHeader()
     -- Break the loop if the search doesn't change line number to prevent infinite loop
@@ -236,7 +236,8 @@ vim.keymap.set("n", "gk", function()
       lastLineNum = currentLineNum
     end
   end
-  vim.cmd("nohlsearch") -- Clear search highlighting after operation
+  -- Clear search highlighting after operation
+  vim.cmd("nohlsearch")
 end, { desc = "Go to previous markdown header considering surrounding lines" })
 
 -- Search DOWN for a markdown header
@@ -250,13 +251,13 @@ vim.keymap.set("n", "gj", function()
   local function isBlankLine(lineNum)
     return vim.fn.getline(lineNum):match("^%s*$") ~= nil
   end
-  -- Function to search forward for a markdown header
+  -- Function to search down for a markdown header
   local function searchForwardForHeader()
     vim.cmd("silent! /^\\s*#\\+\\s.*$")
     local currentLineNum = vim.fn.line(".")
     local aboveIsBlank = isBlankLine(currentLineNum - 1)
     local belowIsBlank = isBlankLine(currentLineNum + 1)
-    -- Check if above and below lines are blank, indicating a markdown header
+    -- Check if both above and below lines are blank, indicating a markdown header
     if aboveIsBlank and belowIsBlank then
       foundHeader = true
     end
@@ -264,7 +265,7 @@ vim.keymap.set("n", "gj", function()
   end
   -- Initial search
   local lastLineNum = searchForwardForHeader()
-  -- Continue searching if the initial search did not find a suitable header
+  -- Continue searching if the initial search did not find a header
   while not foundHeader and vim.fn.line(".") < vim.fn.line("$") do
     local currentLineNum = searchForwardForHeader()
     -- Break the loop if the search doesn't change line number to prevent infinite loop
@@ -274,7 +275,8 @@ vim.keymap.set("n", "gj", function()
       lastLineNum = currentLineNum
     end
   end
-  vim.cmd("nohlsearch") -- Clear search highlighting after operation
+  -- Clear search highlighting after operation
+  vim.cmd("nohlsearch")
 end, { desc = "Go to next markdown header considering surrounding lines" })
 
 -- -- Search UP for a markdown header, ensuring there's a space after the # symbols

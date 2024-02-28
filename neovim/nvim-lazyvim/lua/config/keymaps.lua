@@ -92,7 +92,7 @@ end, { desc = "Insert filename with path at cursor" })
 --                         Begin of markdown section
 -- ############################################################################
 
--- When I press leader, I want 'm' to sohw me 'markdown'
+-- When I press leader, I want 'm' to show me 'markdown'
 -- https://github.com/folke/which-key.nvim?tab=readme-ov-file#%EF%B8%8F-mappings
 local wk = require("which-key")
 wk.register({

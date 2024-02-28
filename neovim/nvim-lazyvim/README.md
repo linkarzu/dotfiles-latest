@@ -3,6 +3,7 @@
 <!-- toc -->
 
 - [Things to remember](#things-to-remember)
+  - [Syntax highlighting (treesitter)](#syntax-highlighting-treesitter)
   - [Change value of highlight colors](#change-value-of-highlight-colors)
   - [See messages history](#see-messages-history)
   - [See formatters applied to a file](#see-formatters-applied-to-a-file)
@@ -10,6 +11,7 @@
   - [Check the help command](#check-the-help-command)
   - [Spectre pattern matching](#spectre-pattern-matching)
   - [Working with markdown](#working-with-markdown)
+- [Fix Mason warnings](#fix-mason-warnings)
 - [Working with marks](#working-with-marks)
 
 <!-- tocstop -->
@@ -76,7 +78,7 @@ help command
     - It removes blank lines
     - Removes blank spaces at the end of a line
     - But also messes up my chirpy tips because it adds additional texts
-- I like following markdown guidellines, so I don't like my lines to be longer
+- I like following markdown guidelines, so I don't like my lines to be longer
   than 80 characters, I like to enable wrapping for them
 
 ## Fix Mason warnings

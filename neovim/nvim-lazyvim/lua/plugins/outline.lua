@@ -1,4 +1,8 @@
 -- https://github.com/hedyhli/outline.nvim
+--
+-- There are also some related plugins like `aerial.nvim` found below
+-- https://github.com/hedyhli/outline.nvim?tab=readme-ov-file#related-plugins
+--
 return {
   "hedyhli/outline.nvim",
   lazy = true,
@@ -8,6 +12,7 @@ return {
   },
   opts = {
     symbol_folding = {
+      -- Unfold entire symbol tree by default
       autofold_depth = false,
     },
   },

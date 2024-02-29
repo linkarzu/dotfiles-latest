@@ -1,4 +1,5 @@
 -- https://github.com/hedyhli/outline.nvim
+-- A sidebar with a tree-like outline of symbols from your code, powered by LSP
 --
 -- There are also some related plugins like `aerial.nvim` found below
 -- https://github.com/hedyhli/outline.nvim?tab=readme-ov-file#related-plugins
@@ -12,8 +13,10 @@ return {
   },
   opts = {
     symbol_folding = {
-      -- Unfold entire symbol tree by default
+      -- Unfold entire symbol tree by default with false, otherwise enter a
+      -- number starting from 0
       autofold_depth = false,
+      -- autofold_depth = 0,
     },
   },
 }

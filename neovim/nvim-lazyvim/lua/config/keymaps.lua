@@ -238,7 +238,7 @@ vim.keymap.set("n", "gk", function()
   end
   -- Clear search highlighting after operation
   vim.cmd("nohlsearch")
-end, { desc = "Go to previous markdown header considering surrounding lines" })
+end, { desc = "Go to previous markdown header" })
 
 -- Search DOWN for a markdown header
 -- If you have comments inside a codeblock, they can start with `# ` but make
@@ -277,7 +277,7 @@ vim.keymap.set("n", "gj", function()
   end
   -- Clear search highlighting after operation
   vim.cmd("nohlsearch")
-end, { desc = "Go to next markdown header considering surrounding lines" })
+end, { desc = "Go to next markdown header" })
 
 -- -- Search UP for a markdown header, ensuring there's a space after the # symbols
 -- -- Make sure your comments DO NOT have a space after the #

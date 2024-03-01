@@ -201,99 +201,117 @@ vim.keymap.set("n", "<leader>mf", function()
   end
 end, { desc = "Return to position before jumping" })
 
+-- -- Search UP for a markdown header
+-- -- If you have comments inside a codeblock, they can start with `# ` but make
+-- -- sure that the line either below or above of the comment is not empty
+-- -- Headings are considered the ones that have both an empty line above and also below
+-- -- My markdown headings are autoformatted, so I always make sure about that
+-- vim.keymap.set("n", "gk", function()
+--   local foundHeader = false
+--   -- Function to check if the given line number is blank
+--   local function isBlankLine(lineNum)
+--     return vim.fn.getline(lineNum):match("^%s*$") ~= nil
+--   end
+--   -- Function to search up for a markdown header
+--   local function searchBackwardForHeader()
+--     vim.cmd("silent! ?^\\s*#\\+\\s.*$")
+--     local currentLineNum = vim.fn.line(".")
+--     local aboveIsBlank = isBlankLine(currentLineNum - 1)
+--     local belowIsBlank = isBlankLine(currentLineNum + 1)
+--     -- Check if both above and below lines are blank, indicating a markdown header
+--     if aboveIsBlank and belowIsBlank then
+--       foundHeader = true
+--     end
+--     return currentLineNum
+--   end
+--   -- Initial search
+--   local lastLineNum = searchBackwardForHeader()
+--   -- Continue searching if the initial search did not find a header
+--   while not foundHeader and vim.fn.line(".") > 1 do
+--     local currentLineNum = searchBackwardForHeader()
+--     -- Break the loop if the search doesn't change line number to prevent infinite loop
+--     if currentLineNum == lastLineNum then
+--       break
+--     else
+--       lastLineNum = currentLineNum
+--     end
+--   end
+--   -- Clear search highlighting after operation
+--   vim.cmd("nohlsearch")
+-- end, { desc = "Go to previous markdown header" })
+--
+-- -- Search DOWN for a markdown header
+-- -- If you have comments inside a codeblock, they can start with `# ` but make
+-- -- sure that the line either below or above of the comment is not empty
+-- -- Headings are considered the ones that have both an empty line above and also below
+-- -- My markdown headings are autoformatted, so I always make sure about that
+-- vim.keymap.set("n", "gj", function()
+--   local foundHeader = false
+--   -- Function to check if the given line number is blank
+--   local function isBlankLine(lineNum)
+--     return vim.fn.getline(lineNum):match("^%s*$") ~= nil
+--   end
+--   -- Function to search down for a markdown header
+--   local function searchForwardForHeader()
+--     vim.cmd("silent! /^\\s*#\\+\\s.*$")
+--     local currentLineNum = vim.fn.line(".")
+--     local aboveIsBlank = isBlankLine(currentLineNum - 1)
+--     local belowIsBlank = isBlankLine(currentLineNum + 1)
+--     -- Check if both above and below lines are blank, indicating a markdown header
+--     if aboveIsBlank and belowIsBlank then
+--       foundHeader = true
+--     end
+--     return currentLineNum
+--   end
+--   -- Initial search
+--   local lastLineNum = searchForwardForHeader()
+--   -- Continue searching if the initial search did not find a header
+--   while not foundHeader and vim.fn.line(".") < vim.fn.line("$") do
+--     local currentLineNum = searchForwardForHeader()
+--     -- Break the loop if the search doesn't change line number to prevent infinite loop
+--     if currentLineNum == lastLineNum then
+--       break
+--     else
+--       lastLineNum = currentLineNum
+--     end
+--   end
+--   -- Clear search highlighting after operation
+--   vim.cmd("nohlsearch")
+-- end, { desc = "Go to next markdown header" })
+
 -- Search UP for a markdown header
--- If you have comments inside a codeblock, they can start with `# ` but make
--- sure that the line either below or above of the comment is not empty
--- Headings are considered the ones that have both an empty line above and also below
--- My markdown headings are autoformatted, so I always make sure about that
+-- Make sure to follow proper markdown convention, and you have a single H1
+-- heading at the very top of the file
+-- This will only search for H2 headings and above
 vim.keymap.set("n", "gk", function()
-  local foundHeader = false
-  -- Function to check if the given line number is blank
-  local function isBlankLine(lineNum)
-    return vim.fn.getline(lineNum):match("^%s*$") ~= nil
-  end
-  -- Function to search up for a markdown header
-  local function searchBackwardForHeader()
-    vim.cmd("silent! ?^\\s*#\\+\\s.*$")
-    local currentLineNum = vim.fn.line(".")
-    local aboveIsBlank = isBlankLine(currentLineNum - 1)
-    local belowIsBlank = isBlankLine(currentLineNum + 1)
-    -- Check if both above and below lines are blank, indicating a markdown header
-    if aboveIsBlank and belowIsBlank then
-      foundHeader = true
-    end
-    return currentLineNum
-  end
-  -- Initial search
-  local lastLineNum = searchBackwardForHeader()
-  -- Continue searching if the initial search did not find a header
-  while not foundHeader and vim.fn.line(".") > 1 do
-    local currentLineNum = searchBackwardForHeader()
-    -- Break the loop if the search doesn't change line number to prevent infinite loop
-    if currentLineNum == lastLineNum then
-      break
-    else
-      lastLineNum = currentLineNum
-    end
-  end
-  -- Clear search highlighting after operation
+  -- `?` - Start a search backwards from the current cursor position.
+  -- `^` - Match the beginning of a line.
+  -- `##` - Match 2 ## symbols
+  -- `\\+` - Match one or more occurrences of prev element (#)
+  -- `\\s` - Match exactly one whitespace character following the hashes
+  -- `.*` - Match any characters (except newline) following the space
+  -- `$` - Match extends to end of line
+  vim.cmd("silent! ?^##\\+\\s.*$")
+  -- Clear the search highlight
   vim.cmd("nohlsearch")
 end, { desc = "Go to previous markdown header" })
 
 -- Search DOWN for a markdown header
--- If you have comments inside a codeblock, they can start with `# ` but make
--- sure that the line either below or above of the comment is not empty
--- Headings are considered the ones that have both an empty line above and also below
--- My markdown headings are autoformatted, so I always make sure about that
+-- Make sure to follow proper markdown convention, and you have a single H1
+-- heading at the very top of the file
+-- This will only search for H2 headings and above
 vim.keymap.set("n", "gj", function()
-  local foundHeader = false
-  -- Function to check if the given line number is blank
-  local function isBlankLine(lineNum)
-    return vim.fn.getline(lineNum):match("^%s*$") ~= nil
-  end
-  -- Function to search down for a markdown header
-  local function searchForwardForHeader()
-    vim.cmd("silent! /^\\s*#\\+\\s.*$")
-    local currentLineNum = vim.fn.line(".")
-    local aboveIsBlank = isBlankLine(currentLineNum - 1)
-    local belowIsBlank = isBlankLine(currentLineNum + 1)
-    -- Check if both above and below lines are blank, indicating a markdown header
-    if aboveIsBlank and belowIsBlank then
-      foundHeader = true
-    end
-    return currentLineNum
-  end
-  -- Initial search
-  local lastLineNum = searchForwardForHeader()
-  -- Continue searching if the initial search did not find a header
-  while not foundHeader and vim.fn.line(".") < vim.fn.line("$") do
-    local currentLineNum = searchForwardForHeader()
-    -- Break the loop if the search doesn't change line number to prevent infinite loop
-    if currentLineNum == lastLineNum then
-      break
-    else
-      lastLineNum = currentLineNum
-    end
-  end
-  -- Clear search highlighting after operation
+  -- `/` - Start a search forwards from the current cursor position.
+  -- `^` - Match the beginning of a line.
+  -- `##` - Match 2 ## symbols
+  -- `\\+` - Match one or more occurrences of prev element (#)
+  -- `\\s` - Match exactly one whitespace character following the hashes
+  -- `.*` - Match any characters (except newline) following the space
+  -- `$` - Match extends to end of line
+  vim.cmd("silent! /^##\\+\\s.*$")
+  -- Clear the search highlight
   vim.cmd("nohlsearch")
 end, { desc = "Go to next markdown header" })
-
--- -- Search UP for a markdown header, ensuring there's a space after the # symbols
--- -- Make sure your comments DO NOT have a space after the #
--- vim.keymap.set("n", "gk", function()
---   vim.cmd("silent! ?^\\s*#\\+\\s.*$")
---   -- Clear the search highlight
---   vim.cmd("nohlsearch")
--- end, { desc = "Go to previous markdown header" })
-
--- -- Search DOWN for a markdown header, ensuring there's a space after the # symbols
--- -- Make sure your comments DO NOT have a space after the #
--- vim.keymap.set("n", "gj", function()
---   vim.cmd("silent! /^\\s*#\\+\\s.*$")
---   -- Clear the search highlight
---   vim.cmd("nohlsearch")
--- end, { desc = "Go to next markdown header" })
 
 vim.keymap.set("n", "<leader>jj", function()
   local date = os.date("%Y-%m-%d-%A")

@@ -101,7 +101,7 @@ const rules: KarabinerRules[] = [
       w: app("Microsoft Word"),
       e: app("Microsoft Excel"),
       r: app("Microsoft Remote Desktop"),
-      t: app("DaVinci Resolve"),
+      5: app("DaVinci Resolve"),
       x: app("GoTo"),
       c: app("Microsoft Outlook"),
       v: app("zoom.us"),

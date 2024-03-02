@@ -128,6 +128,30 @@
               {
                 "to": [
                   {
+                    "shell_command": "open -a 'DaVinci Resolve.app'"
+                  }
+                ],
+                "description": "Open -a 'DaVinci Resolve.app'",
+                "type": "basic",
+                "from": {
+                  "key_code": "5",
+                  "modifiers": {
+                    "mandatory": [
+                      "any"
+                    ]
+                  }
+                },
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "hyper_sublayer_spacebar",
+                    "value": 1
+                  }
+                ]
+              },
+              {
+                "to": [
+                  {
                     "shell_command": "open -a 'Spotify.app'"
                   }
                 ],
@@ -639,30 +663,6 @@
                 "type": "basic",
                 "from": {
                   "key_code": "r",
-                  "modifiers": {
-                    "mandatory": [
-                      "any"
-                    ]
-                  }
-                },
-                "conditions": [
-                  {
-                    "type": "variable_if",
-                    "name": "hyper_sublayer_spacebar",
-                    "value": 1
-                  }
-                ]
-              },
-              {
-                "to": [
-                  {
-                    "shell_command": "open -a 'DaVinci Resolve.app'"
-                  }
-                ],
-                "description": "Open -a 'DaVinci Resolve.app'",
-                "type": "basic",
-                "from": {
-                  "key_code": "t",
                   "modifiers": {
                     "mandatory": [
                       "any"

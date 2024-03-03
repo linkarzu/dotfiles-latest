@@ -1105,6 +1105,30 @@
                     "value": 1
                   }
                 ]
+              },
+              {
+                "to": [
+                  {
+                    "shell_command": "open btt://execute_assigned_actions_for_trigger/?uuid=C401A33D-0213-46DB-ADE2-E817A1400D0F"
+                  }
+                ],
+                "description": "Open btt://execute_assigned_actions_for_trigger/?uuid=C401A33D-0213-46DB-ADE2-E817A1400D0F",
+                "type": "basic",
+                "from": {
+                  "key_code": "e",
+                  "modifiers": {
+                    "mandatory": [
+                      "any"
+                    ]
+                  }
+                },
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "hyper_sublayer_t",
+                    "value": 1
+                  }
+                ]
               }
             ]
           },

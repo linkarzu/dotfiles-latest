@@ -113,6 +113,9 @@ yabai -m config window_topmost off
 # Adds a signal that, when a window gains focus, triggers a custom action in SketchyBar
 # (presumably to update the status bar based on the focused window).
 # https://github.com/FelixKratz/dotfiles
+# I'm not sure what this does, I don't see a difference
+# Not sure if related to "skhd shortcuts should trigger the sketchybar event" in
+# the owner dotfiles
 yabai -m signal --add event=window_focused action="sketchybar --trigger window_focus"
 
 # Yabai signal to detect focus change for any application and move the cursor

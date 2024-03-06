@@ -87,7 +87,7 @@ create_symlink ~/github/dotfiles-latest/yabai/yabairc ~/.yabairc
 create_symlink ~/github/dotfiles-latest/neovim/nvim-lazyvim ~/.config/nvim
 create_symlink ~/github/dotfiles-latest/hammerspoon ~/.hammerspoon
 create_symlink ~/github/dotfiles-latest/karabiner/mxstbr ~/.config/karabiner
-create_symlink ~/github/dotfiles-latest/sketchybar/felixkratz ~/.config/sketchybar
+create_symlink ~/github/dotfiles-latest/sketchybar/felixkratz-linkarzu ~/.config/sketchybar
 # create_symlink ~/github/dotfiles-latest/sketchybar/neutonfoo ~/.config/sketchybar
 # echo "finished 1"
 
@@ -219,6 +219,23 @@ esac
 
 # macOS-specific configurations
 if [ "$OS" = 'Mac' ]; then
+
+	# sketchybar
+	# This will update the brew package count after running a brew upgrade, brew
+	# update or brew outdated command
+	if command -v sketchybar &>/dev/null; then
+		# Define a custom 'brew' function to wrap the Homebrew command.
+		function brew() {
+			# Execute the original Homebrew command with all passed arguments.
+			command brew "$@"
+
+			# Check if the command includes "upgrade", "update", or "outdated".
+			if [[ $* =~ "upgrade" ]] || [[ $* =~ "update" ]] || [[ $* =~ "outdated" ]]; then
+				# If so, notify SketchyBar to trigger a custom action.
+				sketchybar --trigger brew_update
+			fi
+		}
+	fi
 
 	# Starship
 	# https://starship.rs/config/#prompt

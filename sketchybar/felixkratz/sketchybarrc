@@ -66,25 +66,45 @@ defaults=(
 
 sketchybar --default "${defaults[@]}"
 
-# Left
+###############################################################################
+#                                Left side
+###############################################################################
+
 source "$ITEM_DIR/apple.sh"
 # source "$ITEM_DIR/spaces.sh"
 # source "$ITEM_DIR/yabai.sh"
 source "$ITEM_DIR/front_app.sh"
 
-# Center
+###############################################################################
+#                                 Center
+###############################################################################
+
 source "$ITEM_DIR/spotify.sh"
 # source "$ITEM_DIR/media.sh"
 
-# Right
+###############################################################################
+#                               Right side
+###############################################################################
+
+# If calendar is clicked, will run zen.sh which hides everything, but you can
+# customize it to your liking
 source "$ITEM_DIR/calendar.sh"
+# Runs "brew outdated" command and shows you amount of outdated packages
 source "$ITEM_DIR/brew.sh"
+# Shows github notifications via gh cli, mine aren't working properly
 source "$ITEM_DIR/github.sh"
+# Shows the SSID you're connected to, and the IP address assigned
 source "$ITEM_DIR/wifi.sh"
+# By default the icon will only show when on battery and if it's 50% or less,
+# you can change "plugins/battery.sh" if needed to modify the behavior
 source "$ITEM_DIR/battery.sh"
+# left click to change volume
+# right click to switch audio sources, you need switchaudio-osx
 source "$ITEM_DIR/volume.sh"
+# CPU usage indicator
 source "$ITEM_DIR/cpu.sh"
-source "$ITEM_DIR/svim.sh"
+# Vim Indicator Displays the mode and the commandline status
+# source "$ITEM_DIR/svim.sh"
 
 ###############################################################################
 #                            Community plugins

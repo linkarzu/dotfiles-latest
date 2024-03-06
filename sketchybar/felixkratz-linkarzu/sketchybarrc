@@ -103,6 +103,8 @@ source "$ITEM_DIR/spotify.sh"
 source "$ITEM_DIR/calendar.sh"
 
 # Runs "brew outdated" command and shows you amount of outdated packages
+# Make sure to add the sectio to the .zshrc file, so that package count is
+# updated automatically after running a brew update, upgrade or outdated command
 source "$ITEM_DIR/brew.sh"
 
 # Shows github notifications via gh cli, mine aren't working properly

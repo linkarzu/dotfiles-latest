@@ -378,7 +378,7 @@ const rules: KarabinerRules[] = [
       ),
       // Paste alacritty text and go down
       k: open(
-        "btt://execute_assigned_actions_for_trigger/?uuid=213C11E3-1541-46B2-9DF3-8F9C9EC421FA"
+        "btt://execute_assigned_actions_for_trigger/?uuid=CBAA9D60-831D-4315-A6B8-195B8F179C26"
       ),
       // Paste kodekloud text and go down
       l: open(

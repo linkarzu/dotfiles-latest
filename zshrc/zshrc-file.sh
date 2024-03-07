@@ -223,14 +223,16 @@ if [ "$OS" = 'Mac' ]; then
 	# sketchybar
 	# This will update the brew package count after running a brew upgrade, brew
 	# update or brew outdated command
+	# Personally I added "list" and "install", and everything that is after but
+	# that's just a personal preference.
+	# That way sketchybar updates when I run those commands as well
 	if command -v sketchybar &>/dev/null; then
 		# Define a custom 'brew' function to wrap the Homebrew command.
 		function brew() {
 			# Execute the original Homebrew command with all passed arguments.
 			command brew "$@"
-
 			# Check if the command includes "upgrade", "update", or "outdated".
-			if [[ $* =~ "upgrade" ]] || [[ $* =~ "update" ]] || [[ $* =~ "outdated" ]]; then
+			if [[ $* =~ "upgrade" ]] || [[ $* =~ "update" ]] || [[ $* =~ "outdated" ]] || [[ $* =~ "list" ]] || [[ $* =~ "install" ]] || [[ $* =~ "uninstall" ]] || [[ $* =~ "bundle" ]] || [[ $* =~ "doctor" ]] || [[ $* =~ "info" ]] || [[ $* =~ "cleanup" ]]; then
 				# If so, notify SketchyBar to trigger a custom action.
 				sketchybar --trigger brew_update
 			fi

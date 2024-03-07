@@ -8,9 +8,13 @@ source "$CONFIG_DIR/icons.sh"  # Loads all defined icons
 ITEM_DIR="$CONFIG_DIR/items"     # Directory where the items are configured
 PLUGIN_DIR="$CONFIG_DIR/plugins" # Directory where all the plugin scripts are stored
 
-# FONT="SF Pro" # Needs to have Regular, Bold, Semibold, Heavy and Black variants
+# Needs to have Regular, Bold, Semibold, Heavy and Black variants
+# FONT="SF Pro"
 FONT="MesloLGM Nerd Font"
-PADDINGS=3 # All paddings use this value (icon, label, background)
+
+# All paddings use this value (icon, label, background), default is 3 but I
+# decreased it
+PADDINGS=1
 
 # Setting up and starting the helper process
 HELPER=git.felix.helper
@@ -82,6 +86,7 @@ source "$ITEM_DIR/apple.sh"
 # source "$ITEM_DIR/yabai.sh"
 
 # Shows the name and icon of the app currently focused
+# Clicking it opens mission control (can be customized)
 source "$ITEM_DIR/front_app.sh"
 
 ###############################################################################
@@ -103,11 +108,16 @@ source "$ITEM_DIR/media.sh"
 source "$ITEM_DIR/calendar.sh"
 
 # Runs "brew outdated" command and shows you amount of outdated packages
-# Make sure to add the sectio to the .zshrc file, so that package count is
-# updated automatically after running a brew update, upgrade or outdated command
+# Make sure to add the section to the .zshrc file, so that package count is
+# updated automatically after running brew commands
+# Will install an old package so you can see the number increase
+# `brew install ~/Downloads/wezterm.rb`
+# `https://github.com/wez/wezterm/releases`
+# `brew update && brew upgrade` updates the package and clears the counter
 source "$ITEM_DIR/brew.sh"
 
 # Shows github notifications via gh cli, mine aren't working properly
+# `gh api notifications` shows nothing but `gh status` does
 source "$ITEM_DIR/github.sh"
 
 # Shows the SSID you're connected to, and the IP address assigned
@@ -123,9 +133,6 @@ source "$ITEM_DIR/volume.sh"
 
 # CPU usage indicator
 source "$ITEM_DIR/cpu.sh"
-
-# Vim Indicator Displays the mode and the commandline status
-# source "$ITEM_DIR/svim.sh"
 
 ###############################################################################
 #                            Community plugins

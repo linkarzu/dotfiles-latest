@@ -1,4 +1,4 @@
-# Filename: /Users/krishna/github/dotfiles-latest/zshrc/zshrc-file.sh
+# Filename: ~/github/dotfiles-latest/zshrc/zshrc-file.sh
 
 # #############################################################################
 # Do not delete the `UNIQUE_ID` line below, I use it to backup original files
@@ -88,6 +88,8 @@ create_symlink ~/github/dotfiles-latest/neovim/nvim-lazyvim ~/.config/nvim
 create_symlink ~/github/dotfiles-latest/hammerspoon ~/.hammerspoon
 create_symlink ~/github/dotfiles-latest/karabiner/mxstbr ~/.config/karabiner
 create_symlink ~/github/dotfiles-latest/sketchybar/felixkratz-linkarzu ~/.config/sketchybar
+# create_symlink ~/github/dotfiles-latest/sketchybar/felixkratz ~/.config/sketchybar
+# create_symlink ~/github/dotfiles-latest/sketchybar/default ~/.config/sketchybar
 # create_symlink ~/github/dotfiles-latest/sketchybar/neutonfoo ~/.config/sketchybar
 # echo "finished 1"
 
@@ -227,6 +229,11 @@ if [ "$OS" = 'Mac' ]; then
 	# that's just a personal preference.
 	# That way sketchybar updates when I run those commands as well
 	if command -v sketchybar &>/dev/null; then
+
+		# When the zshrc file is ran, reload sketchybar, in case the theme was
+		# switched
+		sketchybar --reload
+
 		# Define a custom 'brew' function to wrap the Homebrew command.
 		function brew() {
 			# Execute the original Homebrew command with all passed arguments.

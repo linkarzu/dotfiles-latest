@@ -108,12 +108,13 @@ source "$ITEM_DIR/media.sh"
 source "$ITEM_DIR/calendar.sh"
 
 # Runs "brew outdated" command and shows you amount of outdated packages
-# Make sure to add the section to the .zshrc file, so that package count is
-# updated automatically after running brew commands
 # Will install an old package so you can see the number increase
 # `brew install ~/Downloads/wezterm.rb`
 # `https://github.com/wez/wezterm/releases`
 # `brew update && brew upgrade` updates the package and clears the counter
+# -----> Make sure to add the section to the .zshrc file, so that package count is
+# updated automatically after running brew commands
+# `https://github.com/linkarzu/dotfiles-latest/blob/8fd9af824fc1db73de185b3733dac5d8514f9fb0/zshrc/zshrc-file.sh#L225-L247`
 source "$ITEM_DIR/brew.sh"
 
 # Shows github notifications via gh cli, mine aren't working properly

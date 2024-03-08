@@ -18,16 +18,21 @@ sudo yabai --load-sa
 
 # Sketchybar size changes depending if I'm on my laptop or mac mini, solving it
 # this way, there may be a better way but this was the easiest to solve for now
-
-# Check the display size (e.g., grab the resolution here)
-display_resolution=$(system_profiler SPDisplaysDataType | grep Resolution)
-
-# First condition is to match my macbook pro, the * are used as wildcards
-if [[ "$display_resolution" == *"3456 x 2234"* ]]; then
-	yabai -m config top_padding 12
+# I only change the paddings if yabai is installed, otherwise I use default
+# paddings
+if command -v sketchybar &>/dev/null; then
+  # Check the display size (e.g., grab the resolution here)
+  display_resolution=$(system_profiler SPDisplaysDataType | grep Resolution)
+  # First condition is to match my macbook pro, the * are used as wildcards
+  if [[ "$display_resolution" == *"3456 x 2234"* ]]; then
+    yabai -m config top_padding 12
+  else
+    # This matches my asus 27 inch monitor
+    yabai -m config top_padding 39
+  fi
 else
-	# This matches my asus 27 inch monitor
-	yabai -m config top_padding 39
+  yabai -m config top_padding 02
+  yabai -m config bottom_padding 00
 fi
 
 ###############################################################################

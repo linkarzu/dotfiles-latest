@@ -70,6 +70,20 @@ vim.keymap.set("n", "<leader>cb", function()
   end
 end, { desc = "Execute bash script in pane on the right" })
 
+-- If this is a .go file, execute it in a split pane on the right
+-- Had to include quotes around "%" because there are some apple dirs that contain spaces, like iCloud
+vim.keymap.set("n", "<leader>cg", function()
+  local file = vim.fn.expand("%") -- Get the current file name
+  if string.match(file, "%.go$") then -- Check if the file is a .go file
+    local escaped_file = vim.fn.shellescape(file) -- Properly escape the file name for shell commands
+    vim.cmd("vsplit") -- Split the window vertically
+    vim.cmd("terminal go run " .. escaped_file) -- Run the file in a terminal pane
+    vim.cmd("startinsert") -- Enter insert mode in the terminal
+  else
+    vim.cmd("echo 'Not a Go file.'") -- Notify the user if the file is not a Go file
+  end
+end, { desc = "Execute Go file in pane on the right" })
+
 -- Paste file path with the wordname Filename: first
 vim.keymap.set("n", "<leader>fp", function()
   local filePath = vim.fn.expand("%:~") -- Gets the file path relative to the home directory

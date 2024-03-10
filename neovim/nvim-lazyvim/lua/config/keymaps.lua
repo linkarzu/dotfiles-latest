@@ -54,9 +54,9 @@ vim.keymap.set("n", "<leader>fx", '<cmd>!chmod +x "%"<CR>', { silent = true, des
 vim.keymap.set("n", "<leader>fX", '<cmd>!chmod -x "%"<CR>', { silent = true, desc = "Remove executable flag" })
 -- vim.keymap.set("n", "<leader>fX", "<cmd>!chmod -x %<CR>", { silent = true, desc = "Remove executable flag" })
 
--- If this is a script, make it executable, and execute it in a split pane on the right
+-- If this is a bash script, make it executable, and execute it in a split pane on the right
 -- Had to include quotes around "%" because there are some apple dirs that contain spaces, like iCloud
-vim.keymap.set("n", "<leader>f.", function()
+vim.keymap.set("n", "<leader>cb", function()
   local file = vim.fn.expand("%") -- Get the current file name
   local first_line = vim.fn.getline(1) -- Get the first line of the file
   if string.match(first_line, "^#!/") then -- If first line contains shebang
@@ -68,7 +68,7 @@ vim.keymap.set("n", "<leader>f.", function()
   else
     vim.cmd("echo 'Not a script. Shebang line not found.'")
   end
-end, { desc = "Execute current file in terminal (if it's a script)" })
+end, { desc = "Execute bash script in terminal" })
 
 -- Paste file path with the wordname Filename: first
 vim.keymap.set("n", "<leader>fp", function()

@@ -68,7 +68,7 @@ vim.keymap.set("n", "<leader>cb", function()
   else
     vim.cmd("echo 'Not a script. Shebang line not found.'")
   end
-end, { desc = "Execute bash script in terminal" })
+end, { desc = "Execute bash script in pane on the right" })
 
 -- Paste file path with the wordname Filename: first
 vim.keymap.set("n", "<leader>fp", function()

@@ -23,6 +23,7 @@
 - SQL wasn't showing colors in my codeblocks when editing .md files, it's
   because the `treesitter` language was not installed, so added the
   `treesitter.lua` file and added it there
+- `go` files had same "issue", so added `go` to `treesitter` and that fixed it
 - Use `checkhealth` to see which ones are installed
 
 ### Change value of highlight colors

@@ -125,6 +125,7 @@ unbind C-n
 unbind C-m
 unbind 1
 unbind 2
+unbind 3
 
 tmux_sessionizer="~/github/dotfiles-latest/tmux/tools/prime/tmux-sessionizer.sh"
 tmux_sshonizer_agen="~/github/dotfiles-latest/tmux/tools/linkarzu/tmux-sshonizer-agen.sh"
@@ -149,6 +150,7 @@ bind-key -r C-t run-shell "$tmux_sessionizer ~/github/obsidian_main"
 bind-key -r C-y run-shell "$tmux_sessionizer ~/github/containerdata"
 bind-key -r C-h run-shell "$tmux_sessionizer ~"
 bind-key -r C-m run-shell "$tmux_sessionizer ~/github/containerdata-public"
+bind-key -r 3 run-shell "$tmux_sessionizer ~/github/go"
 # Leaving this in quotes because iCloud dir has a white space
 bind-key -r C-g run-shell "$tmux_sessionizer '$HOME/Library/Mobile Documents/com~apple~CloudDocs/github/macos-setup'"
 

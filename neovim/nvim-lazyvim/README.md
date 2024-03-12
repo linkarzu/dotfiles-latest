@@ -82,12 +82,23 @@ help command
 - I like following markdown guidelines, so I don't like my lines to be longer
   than 80 characters, I like to enable wrapping for them
 
+#### markdownlint config
+
+- This is the plugin that shows me markdown warnings when the line length is
+  exceeded, or headings are not properly used for example
+- To modify the warning settings, copy the following file
+  `~/github/dotfiles-latest/neovim/nvim-lazyvim/.markdownlint.yaml`
+- To each dir in which you want the settings to be applied, for example, I
+  copied it to my `github/obsidian_main` and `github/linkarzu.github.io` dir.
+- I copied it to `~/github` but the changes were never applied, not sure why
+
 ## Fix Mason warnings
 
 - You should not install neovim and all it's dependencies on a linux servers
   this is due to security reasons, but if you still want to do it keep reading
   - In `:MasonLog` I was getting these errors
-  - `Installation failed for Package(name=json-lsp) error=spawn: npm failed with exit code - and signal -. npm is not executable`
+  - "Installation failed for Package(name=json-lsp) error=spawn: npm failed with
+    exit code - and signal -. npm is not executable"
   - `npm` is node package manager, first check if you have it installed with
     - `npm --version`
   - If not installed, install it, `nodejs` includes `npm` as part of its
@@ -101,10 +112,12 @@ sudo apt install nodejs unzip python3-venv
 ```
 
 - Then I `reopened` neovim, and the error in `:MasonLog` changed to
-- `Installation failed for Package(name=stylua) error=spawn: unzip failed with exit code - and signal -. unzip is not executable`
+- "Installation failed for Package(name=stylua) error=spawn: unzip failed with
+  exit code - and signal -. unzip is not executable"
   - `unzip` is not installed, so that was fixed by installing it
 - Then I was getting this error in the logs
-  - `Installation failed for Package(name=ruff-lsp) error=spawn: python3 failed with exit code 1 and signal 0.`
+  - "Installation failed for Package(name=ruff-lsp) error=spawn: python3 failed
+    with exit code 1 and signal 0."
   - I opened `:Mason` and tried to install `ruff-lsp` there with `i`
   - It showed me the full log
 

@@ -5,7 +5,8 @@
 POPUP_CLICK_SCRIPT="sketchybar --set \$NAME popup.drawing=toggle"
 
 github_bell=(
-	padding_right=6
+	padding_right=3
+	label.padding_left=1
 	update_freq=180
 	icon=$BELL
 	icon.font="$FONT:Bold:15.0"

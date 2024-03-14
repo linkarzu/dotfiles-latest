@@ -2,7 +2,7 @@
 
 <!-- toc -->
 
-- [My Youtube video that explain this](#my-youtube-video-that-explain-this)
+- [My Youtube video that explains this](#my-youtube-video-that-explains-this)
 - [Link to my blog with instructions](#link-to-my-blog-with-instructions)
 
 <!-- tocstop -->
@@ -11,7 +11,11 @@
 
 <div align="center">
     <a href="https://youtu.be/Cr35bp8yAzo">
-        <img src="https://res.cloudinary.com/daqwsgmx6/image/upload/v1706358848/youtube/2024-macos-workflow/07-karabiner-elements" alt="07 - Configure Karabiner-Elements in macOS" width="600"/>
+        <img
+          src="https://res.cloudinary.com/daqwsgmx6/image/upload/v1706358848/youtube/2024-macos-workflow/07-karabiner-elements"
+          alt="07 - Configure Karabiner-Elements in macOS"
+          width="600"
+        />
     </a>
 </div>
 

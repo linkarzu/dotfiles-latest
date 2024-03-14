@@ -15,7 +15,11 @@
 
 <div align="center">
     <a href="https://youtu.be/BEB7X78ivNM">
-        <img src="https://res.cloudinary.com/daqwsgmx6/image/upload/v1706358848/youtube/2024-macos-workflow/02-what-is-brew" alt="02 - What is brew and how to install it in macos" width="600"/>
+        <img
+          src="https://res.cloudinary.com/daqwsgmx6/image/upload/v1706358848/youtube/2024-macos-workflow/02-what-is-brew"
+          alt="02 - What is brew and how to install it in macos"
+          width="600"
+        />
     </a>
 </div>
 
@@ -23,7 +27,11 @@
 
 <div align="center">
     <a href="https://youtu.be/e7Bb1uUHpa8">
-        <img src="https://res.cloudinary.com/daqwsgmx6/image/upload/v1706358848/youtube/2024-macos-workflow/03-Install-mult-apps-brew" alt="03 - Install multiple apps with brew in macOS" width="600"/>
+        <img
+          src="https://res.cloudinary.com/daqwsgmx6/image/upload/v1706358848/youtube/2024-macos-workflow/03-Install-mult-apps-brew"
+          alt="03 - Install multiple apps with brew in macOS"
+          width="600"
+        />
     </a>
 </div>
 

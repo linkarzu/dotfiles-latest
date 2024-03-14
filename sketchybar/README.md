@@ -11,7 +11,11 @@
 
 <div align="center">
     <a href="https://youtube.com/watch?v=CY0gU_iPRTk">
-        <img src="https://res.cloudinary.com/daqwsgmx6/image/upload/v1706358848/youtube/2024-macos-workflow/10-sketchybar" alt="10 - Install and configure sketchybar macOS" width="600"/>
+        <img
+          src="https://res.cloudinary.com/daqwsgmx6/image/upload/v1706358848/youtube/2024-macos-workflow/10-sketchybar"
+          alt="10 - Install and configure sketchybar macOS"
+          width="600"
+        />
     </a>
 </div>
 

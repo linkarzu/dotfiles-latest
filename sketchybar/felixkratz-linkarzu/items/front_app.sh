@@ -3,6 +3,7 @@
 #Filename: ~/github/dotfiles-latest/sketchybar/felixkratz/items/front_app.sh
 
 front_app=(
+	label.padding_left=4
 	# Using "MesloLGM Nerd Font"
 	label.font="$FONT:Bold:14.0"
 	# Using default "SF Pro"

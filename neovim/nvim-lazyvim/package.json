@@ -21,6 +21,12 @@
           "markdown"
         ],
         "path": "snippets/markdown.json"
+      },
+      {
+        "language": [
+          "go"
+        ],
+        "path": "snippets/go.json"
       }
     ]
   }

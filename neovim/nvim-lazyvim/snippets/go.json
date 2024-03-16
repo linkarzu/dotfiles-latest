@@ -1,0 +1,7 @@
+{
+  "go program initialization": {
+    "prefix": "goinit",
+    "body": ["package main", "", "func main() {", "}"],
+    "description": "Insert a simple Go program initialization"
+  }
+}

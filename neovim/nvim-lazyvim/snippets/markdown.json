@@ -9,5 +9,11 @@
     "prefix": "yaml",
     "body": ["```yaml", "$1", "```"],
     "description": "Insert a yaml code block"
+  },
+
+  "go code block": {
+    "prefix": "go",
+    "body": ["```go", "$1", "```"],
+    "description": "Insert a go code block"
   }
 }

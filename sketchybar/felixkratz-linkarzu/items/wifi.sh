@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Filename: ~/github/dotfiles-latest/sketchybar/felixkratz-linkarzu/items/wifi.sh
+
 source "$CONFIG_DIR/icons.sh"
 
 wifi=(

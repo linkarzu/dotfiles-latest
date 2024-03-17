@@ -232,7 +232,9 @@ if [ "$OS" = 'Mac' ]; then
 
 		# When the zshrc file is ran, reload sketchybar, in case the theme was
 		# switched
-		sketchybar --reload
+		# I disabled this as it was getting refreshed every time I opened the
+		# terminal and if I restored a lot of sessions after rebooting it was a mess
+		# sketchybar --reload
 
 		# Define a custom 'brew' function to wrap the Homebrew command.
 		function brew() {

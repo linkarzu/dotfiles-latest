@@ -1109,10 +1109,10 @@
               {
                 "to": [
                   {
-                    "shell_command": "open btt://execute_assigned_actions_for_trigger/?uuid=C401A33D-0213-46DB-ADE2-E817A1400D0F"
+                    "shell_command": "open btt://execute_assigned_actions_for_trigger/?uuid=3DEAE844-CD5B-4695-A58D-AC7CFA935D46"
                   }
                 ],
-                "description": "Open btt://execute_assigned_actions_for_trigger/?uuid=C401A33D-0213-46DB-ADE2-E817A1400D0F",
+                "description": "Open btt://execute_assigned_actions_for_trigger/?uuid=3DEAE844-CD5B-4695-A58D-AC7CFA935D46",
                 "type": "basic",
                 "from": {
                   "key_code": "e",

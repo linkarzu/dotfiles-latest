@@ -66,17 +66,17 @@ yabai -m signal --add event=window_focused app!="^${apps_transparent}$" action="
 # yabai -m signal --add event=window_focused app=".*CleanShot X.*" action="yabai -m config normal_window_opacity 1.0"
 
 ###############################################################################
-#                             layer=normal
+#                             sub-layer=normal
 ###############################################################################
 
 # https://github.com/koekeishiya/yabai/issues/1929
 
-# Set all apps to the "normal" layer, otherwise they all start on the "below"
-# layer. Doing this fixed the issue I had with floating windows with OBS,
+# Set all apps to the "normal" sub-layer, otherwise they all start on the "below"
+# sub-layer. Doing this fixed the issue I had with floating windows with OBS,
 # davinci resolve and other apps where their floating windows would show on top
 # of other apps
 
-yabai -m rule --add app=".*" layer=normal
+yabai -m rule --add app=".*" sub-layer=normal
 
 ###############################################################################
 #                              Excluded apps
@@ -84,14 +84,14 @@ yabai -m rule --add app=".*" layer=normal
 
 # Apps excluded from window management, so you can resize them and move them around
 
-apps_mgoff_normal="(Calculator|iStat Menus|Hammerspoon|BetterDisplay|GIMP|Notes|System Preferences|System Settings|Activity Monitor|App StoreSoftware Update|CleanShot X)"
+apps_mgoff_normal="(Calculator|iStat Menus|Hammerspoon|BetterDisplay|GIMP|Notes|System Preferences|System Settings|Activity Monitor|App StoreSoftware Update|CleanShot X|Karabiner-Elements)"
 # This keeps apps always below
 apps_mgoff_below="()"
 # This keeps apps always on the top
 apps_mgoff_above="()"
-yabai -m rule --add app="^${apps_mgoff_normal}$" manage=off layer=normal
-yabai -m rule --add app="^${apps_mgoff_below}$" manage=off layer=below
-yabai -m rule --add app="^${apps_mgoff_above}$" manage=off layer=above
+yabai -m rule --add app="^${apps_mgoff_normal}$" manage=off sub-layer=normal
+yabai -m rule --add app="^${apps_mgoff_below}$" manage=off sub-layer=below
+yabai -m rule --add app="^${apps_mgoff_above}$" manage=off sub-layer=above
 
 # In case you want to debug and see the contents of a variable
 # echo "apps_mgoff_below: $apps_mgoff_below" >> /tmp/yabai_debug.log
@@ -110,6 +110,15 @@ yabai -m config mouse_follows_focus off
 # I don't understand what this does, I've enabled and disabled it in the past,
 # and still don't get it
 yabai -m config window_topmost off
+
+# Configure the layout mode
+# "stack" - is what I use, keeps a single app on the front
+# "bsp" - binary space partitioning enables automatic tiling (partitioning)
+# "float" - default mode, windows are not managed
+yabai -m config layout stack
+# yabai -m config layout bsp
+# yabai -m config layout float
+
 
 ###############################################################################
 #                              Signal events
@@ -152,7 +161,6 @@ yabai -m config \
 	split_type auto \
 	auto_balance off \
 	window_gap 06 \
-	layout stack \
 	mouse_modifier fn \
 	mouse_action1 move \
 	mouse_action2 resize \

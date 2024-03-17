@@ -91,6 +91,10 @@ vim.keymap.set("n", "<leader>fp", function()
   local row, _ = unpack(vim.api.nvim_win_get_cursor(0)) -- Get the current row number
   -- Insert line, leave cursor current position
   vim.api.nvim_buf_set_lines(0, row - 1, row - 0, false, { lineToInsert })
+  -- Comment out the newly inserted line using the plugin's 'gcc' command
+  vim.cmd("normal gcc")
+  -- Insert a blank line below the current line
+  vim.api.nvim_buf_set_lines(0, row, row, false, { "" })
 end, { desc = "Insert filename with path at cursor" })
 
 -- Paste file path by itself
@@ -100,6 +104,10 @@ vim.keymap.set("n", "<leader>fo", function()
   local row, _ = unpack(vim.api.nvim_win_get_cursor(0)) -- Get the current row number
   -- Insert line, leave cursor current position
   vim.api.nvim_buf_set_lines(0, row - 1, row - 0, false, { lineToInsert })
+  -- Comment out the newly inserted line using the plugin's 'gcc' command
+  vim.cmd("normal gcc")
+  -- Insert a blank line below the current line
+  vim.api.nvim_buf_set_lines(0, row, row, false, { "" })
 end, { desc = "Insert filename with path at cursor" })
 
 -- ############################################################################

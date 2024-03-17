@@ -117,6 +117,9 @@ source "$ITEM_DIR/calendar.sh"
 # `https://github.com/linkarzu/dotfiles-latest/blob/8fd9af824fc1db73de185b3733dac5d8514f9fb0/zshrc/zshrc-file.sh#L225-L247`
 source "$ITEM_DIR/brew.sh"
 
+# DND not working with sonoma, will figure it out later (hopefully)
+# source "$ITEM_DIR/dnd.sh"
+
 # Shows github notifications via gh cli, mine aren't working properly
 # `gh api notifications` shows nothing but `gh status` does
 source "$ITEM_DIR/github.sh"

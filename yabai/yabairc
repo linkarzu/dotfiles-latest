@@ -89,7 +89,7 @@ apps_mgoff_normal="(Calculator|iStat Menus|Hammerspoon|BetterDisplay|GIMP|Notes|
 apps_mgoff_below="()"
 # This keeps apps always on the top
 apps_mgoff_above="()"
-yabai -m rule --add app="^${apps_mgoff_normal}$" manage=off sub-layer=normal
+yabai -m rule --add app="^${apps_mgoff_normal}$" manage=off
 yabai -m rule --add app="^${apps_mgoff_below}$" manage=off sub-layer=below
 yabai -m rule --add app="^${apps_mgoff_above}$" manage=off sub-layer=above
 

@@ -128,6 +128,16 @@ end, { desc = "GOLANG, execute file" })
 --   end
 -- end, { desc = "Execute Go file in pane on the right" })
 
+-- Open a tmux pane on the right in bash, in the same directory as the current file
+-- Opening it in bash because it's faster, I don't have to run my .zshrc file,
+-- which pulls from my repo and a lot of other stuff
+vim.keymap.set("n", "<leader>c.", function()
+  local file_dir = vim.fn.expand("%:p:h") -- Get the directory of the current file
+  -- `-l 70` specifies the size of the tmux pane, in this case 70 columns
+  local cmd = "silent !tmux split-window -h -l 70 'cd " .. file_dir .. " && bash'"
+  vim.cmd(cmd)
+end, { desc = "BASH, current dir in right tmux pane" })
+
 -- Paste file path with the wordname Filename: first
 vim.keymap.set("n", "<leader>fp", function()
   local filePath = vim.fn.expand("%:~") -- Gets the file path relative to the home directory

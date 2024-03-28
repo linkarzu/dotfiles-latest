@@ -99,14 +99,15 @@ vim.keymap.set("n", "<leader>cg", function()
   local file = vim.fn.expand("%") -- Get the current file name
   if string.match(file, "%.go$") then -- Check if the file is a .go file
     local escaped_file = vim.fn.shellescape(file) -- Properly escape the file name for shell commands
+    local file_dir = vim.fn.expand("%:p:h") -- Get the directory of the current file
     local command_to_run = "go run " .. escaped_file
-    -- `-l 70` specifies the size of the tmux pane, in this case 70 columns
-    local cmd = "silent !tmux split-window -h -l 70 'sh -c \"echo "
+    local cmd = "silent !tmux split-window -h -l 70 'cd "
+      .. file_dir
+      .. ' && echo "'
       .. command_to_run
-      .. "; echo" -- Add a blank line
-      .. "; "
+      .. '\\n" && bash -c "'
       .. command_to_run
-      .. "; echo; echo; echo Press enter to exit...; read _\"'"
+      .. "; echo; echo Press enter to exit...; read _\"'"
     vim.cmd(cmd)
   else
     vim.cmd("echo 'Not a Go file.'") -- Notify the user if the file is not a Go file

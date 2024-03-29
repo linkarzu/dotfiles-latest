@@ -138,18 +138,47 @@ vim.keymap.set("n", "<leader>c.", function()
   vim.cmd(cmd)
 end, { desc = "BASH, current dir in right tmux pane" })
 
--- Paste file path with the wordname Filename: first
+-- This will add 3 lines:
+-- 1. File path with the wordname Filename: first, then the path, and Go project name
+-- 2. Just the filepath
+-- 3. Name that I will use for with `go mod init`
 vim.keymap.set("n", "<leader>fp", function()
   local filePath = vim.fn.expand("%:~") -- Gets the file path relative to the home directory
+  local fileName = vim.fn.expand("%:t") -- Gets the name of the file
+  local goProjectPath = filePath:gsub("^~/", ""):gsub("/[^/]+$", "") -- Removes the ~/ at the start and the filename at the end
   local lineToInsert = "Filename: " .. filePath
   local row, _ = unpack(vim.api.nvim_win_get_cursor(0)) -- Get the current row number
-  -- Insert line, leave cursor current position
+  -- Insert line with 'Filename: ' and insert blank lines right after
   vim.api.nvim_buf_set_lines(0, row - 1, row - 0, false, { lineToInsert })
-  -- Comment out the newly inserted line using the plugin's 'gcc' command
-  vim.cmd("normal gcc")
-  -- Insert a blank line below the current line
-  vim.api.nvim_buf_set_lines(0, row, row, false, { "" })
-end, { desc = "Insert filename with path at cursor" })
+  vim.api.nvim_buf_set_lines(0, row, row, false, { "" }) -- blank line
+  vim.api.nvim_buf_set_lines(0, row, row, false, { "" }) -- blank line
+  vim.api.nvim_buf_set_lines(0, row, row, false, { "" }) -- blank line
+  -- Insert second line with just the path
+  vim.api.nvim_buf_set_lines(0, row, row + 1, false, { filePath })
+  -- Check if the file is a main.go file
+  if fileName == "main.go" then
+    -- Insert third line with the Go project name
+    vim.api.nvim_buf_set_lines(0, row + 1, row + 2, false, { goProjectPath })
+    vim.cmd("normal! V2j")
+    vim.cmd("normal gcc")
+  else
+    vim.cmd("normal! V1j")
+    vim.cmd("normal gcc")
+  end
+end, { desc = "Insert filename with path and go project name at cursor" })
+
+-- -- Paste file path with the wordname Filename: first
+-- vim.keymap.set("n", "<leader>fp", function()
+--   local filePath = vim.fn.expand("%:~") -- Gets the file path relative to the home directory
+--   local lineToInsert = "Filename: " .. filePath
+--   local row, _ = unpack(vim.api.nvim_win_get_cursor(0)) -- Get the current row number
+--   -- Insert line, leave cursor current position
+--   vim.api.nvim_buf_set_lines(0, row - 1, row - 0, false, { lineToInsert })
+--   -- Comment out the newly inserted line using the plugin's 'gcc' command
+--   vim.cmd("normal gcc")
+--   -- Insert a blank line below the current line
+--   vim.api.nvim_buf_set_lines(0, row, row, false, { "" })
+-- end, { desc = "Insert filename with path at cursor" })
 
 -- Paste file path by itself
 vim.keymap.set("n", "<leader>fo", function()

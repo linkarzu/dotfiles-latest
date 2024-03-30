@@ -1,11 +1,5 @@
 # Filename: ~/github/dotfiles-latest/neovim/nvim-lazyvim/.markdownlint.yaml
-#
-# https://github.com/DavidAnson/markdownlint
-#
-# Copy this file to each dir in which you want the settings to be applied, for
-# example, I copied it to my 'github/obsidian_main' and
-# 'github/linkarzu.github.io' dir.
-# I copied it to '~/github' but the changes were never applied, not sure why
+# ~/github/dotfiles-latest/neovim/nvim-lazyvim/.markdownlint.yaml
 
 # Hard tabs
 # https://github.com/DavidAnson/markdownlint/blob/main/doc/md010.md
@@ -16,9 +10,17 @@ MD010:
 # https://github.com/DavidAnson/markdownlint/blob/main/doc/md013.md
 MD013:
   code_blocks: false
+  headings: false
+  tables: false
 
 # Inline HTML
 # https://github.com/DavidAnson/markdownlint/blob/main/doc/md033.md
 MD033:
   false
   # allowed_elements: ["a", "img", "div"]
+
+# Unordered list indentation
+# I disable this because for some documents I use 4 space indenting, like
+# markdown files that I need to upload to confluence
+# https://github.com/DavidAnson/markdownlint/blob/main/doc/md007.md
+MD007: false

@@ -15,5 +15,11 @@
     "prefix": "go",
     "body": ["```go", "$1", "```"],
     "description": "Insert a go code block"
+  },
+
+  "sql code block": {
+    "prefix": "sql",
+    "body": ["```sql", "$1", "```"],
+    "description": "Insert a sql code block"
   }
 }

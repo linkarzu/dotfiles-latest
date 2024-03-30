@@ -98,9 +98,10 @@ end, { desc = "BASH, execute file" })
 vim.keymap.set("n", "<leader>cg", function()
   local file = vim.fn.expand("%") -- Get the current file name
   if string.match(file, "%.go$") then -- Check if the file is a .go file
-    local escaped_file = vim.fn.shellescape(file) -- Properly escape the file name for shell commands
     local file_dir = vim.fn.expand("%:p:h") -- Get the directory of the current file
-    local command_to_run = "go run " .. escaped_file
+    -- local escaped_file = vim.fn.shellescape(file) -- Properly escape the file name for shell commands
+    -- local command_to_run = "go run " .. escaped_file
+    local command_to_run = "go run *.go"
     local cmd = "silent !tmux split-window -h -l 70 'cd "
       .. file_dir
       .. ' && echo "'
@@ -146,6 +147,10 @@ vim.keymap.set("n", "<leader>fp", function()
   local filePath = vim.fn.expand("%:~") -- Gets the file path relative to the home directory
   local fileName = vim.fn.expand("%:t") -- Gets the name of the file
   local goProjectPath = filePath:gsub("^~/", ""):gsub("/[^/]+$", "") -- Removes the ~/ at the start and the filename at the end
+  -- Add .com to github and insert username
+  goProjectPath = goProjectPath:gsub("github", "github.com/linkarzu")
+  -- Add "go mod init" to the beginning
+  goProjectPath = "go mod init " .. goProjectPath
   local lineToInsert = "Filename: " .. filePath
   local row, _ = unpack(vim.api.nvim_win_get_cursor(0)) -- Get the current row number
   -- Insert line with 'Filename: ' and insert blank lines right after

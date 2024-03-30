@@ -10,3 +10,12 @@ overrides:
   - files: "*.md"
     options:
       proseWrap: "always"
+  # # Specific override for Markdown (.md) files in a specific directory
+  # - files:
+  #     - "050-personal/work/doc/goto/monitoring/projects/**/*.md"
+  #   options:
+  #     # tabWidth: 4
+  #     # tab_width: 4
+  #     # indent_style: "space"
+  #     # indent_size: 5
+  #     proseWrap: "always"

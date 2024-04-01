@@ -6,8 +6,17 @@
 
 -- This add the bar that shows the file path on the top right
 -- vim.opt.winbar = "%=%m %f"
--- Modified version of the bar that also shows the hostname
-vim.opt.winbar = "%=" .. vim.fn.systemlist("hostname")[1] .. "            %m %f"
+--
+-- Modified version of the bar, shows pathname on right, hostname left
+-- vim.opt.winbar = "%=" .. vim.fn.systemlist("hostname")[1] .. "            %m %f"
+--
+-- This shows pathname on the left and hostname on the right
+-- vim.opt.winbar = "%m %f%=" .. vim.fn.systemlist("hostname")[1]
+--
+-- Using different colors, these headlines are defined in my headlines.lua file
+vim.cmd([[highlight WinBar1 guifg=#32D1FD]])
+vim.cmd([[highlight WinBar2 guifg=#79fd46]])
+vim.opt.winbar = "%#WinBar1#%m %f%*%=%#WinBar2#" .. vim.fn.systemlist("hostname")[1]
 
 -- If set to 0 it shows all the symbols in a file, like bulletpoints and
 -- codeblock languages, obsidian.nvim works better with 1 or 2

@@ -223,6 +223,11 @@ esac
 # macOS-specific configurations
 if [ "$OS" = 'Mac' ]; then
 
+	export JAVA_HOME="/opt/homebrew/opt/openjdk"
+	export PATH="$JAVA_HOME/bin:$PATH"
+	alias antlr4='java -Xmx500M -cp "/usr/local/lib/antlr-4.13.1-complete.jar:$CLASSPATH" org.antlr.v4.Tool'
+	alias grun='java -Xmx500M -cp "/usr/local/lib/antlr-4.13.1-complete.jar:$CLASSPATH" org.antlr.v4.gui.TestRig'
+
 	# sketchybar
 	# This will update the brew package count after running a brew upgrade, brew
 	# update or brew outdated command

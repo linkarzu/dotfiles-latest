@@ -13,7 +13,7 @@
 -- This shows pathname on the left and hostname on the right
 -- vim.opt.winbar = "%m %f%=" .. vim.fn.systemlist("hostname")[1]
 --
--- Using different colors, these headlines are defined in my headlines.lua file
+-- Using different colors, defining the colors in this file
 vim.cmd([[highlight WinBar1 guifg=#32D1FD]])
 vim.cmd([[highlight WinBar2 guifg=#79fd46]])
 vim.opt.winbar = "%#WinBar1#%m %f%*%=%#WinBar2#" .. vim.fn.systemlist("hostname")[1]

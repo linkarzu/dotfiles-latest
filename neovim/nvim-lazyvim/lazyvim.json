@@ -8,10 +8,12 @@
     "lazyvim.plugins.extras.lang.python",
     "lazyvim.plugins.extras.lang.terraform",
     "lazyvim.plugins.extras.lang.typescript",
-    "lazyvim.plugins.extras.lang.yaml"
+    "lazyvim.plugins.extras.lang.yaml",
+    "lazyvim.plugins.extras.editor.harpoon2"
   ],
   "news": {
     "NEWS.md": "3314"
   },
   "version": 3
 }
+

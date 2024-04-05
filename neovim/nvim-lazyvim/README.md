@@ -18,6 +18,17 @@
 
 ## Things to remember
 
+### Surround
+
+- Replace a surrounding
+  - Let's say I have this "surrounded text"
+  - And I want to change it with 'surrounded text'
+  - Place the cursor before the first "
+  - Then press `gsrn"'`
+    - goto, surround, replace, next, current surrounding, new surrounding
+  - Test below
+  - "surrounded text"
+
 ### Syntax highlighting (treesitter)
 
 - SQL wasn't showing colors in my codeblocks when editing .md files, it's

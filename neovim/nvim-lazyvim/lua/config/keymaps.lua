@@ -47,6 +47,12 @@ vim.keymap.set(
   { desc = "Replace word I'm currently on GLOBALLY" }
 )
 
+-- Quickly alternate between the last 2 files
+-- LazyVim comes with the default shortcut <leader>bb for this, but I navigate
+-- between alternate files way too often, so this more useful for me
+-- By default, in LazyVim, With leader<space> you usually find files in the root directory
+vim.keymap.set("n", "<leader><space>", "<cmd>e #<cr>", { desc = "Switch to Other Buffer" })
+
 -- Make the file you run the command on, executable, so you don't have to go out to the command line
 -- Had to include quotes around "%" because there are some apple dirs that contain spaces, like iCloud
 vim.keymap.set("n", "<leader>fx", '<cmd>!chmod +x "%"<CR>', { silent = true, desc = "Make file executable" })

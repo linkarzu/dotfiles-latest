@@ -8,11 +8,11 @@ env:
 
 window:
   dimensions:
-    columns: 200
-    lines: 55
+    columns: 185
+    lines: 40
   position:
-    x: 2750
-    y: 1100
+    x: 0
+    y: 430
   padding:
     x: 10
     y: 10

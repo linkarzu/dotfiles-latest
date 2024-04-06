@@ -12,6 +12,13 @@ return {
     custom_highlights = function(colors)
       return {
 
+        -- Chages the color on a little line on the left side of the currently
+        -- selected tab
+        TabLineSel = { bg = "#32D1FD" },
+
+        -- Change the text color of the currently selected buffer
+        BufferLineBufferSelected = { fg = "#32D1FD" },
+
         -- nvim spectre highlight colors
         DiffChange = { bg = "#a6e3a1", fg = "black" },
         DiffDelete = { bg = "#f38ba8", fg = "black" },

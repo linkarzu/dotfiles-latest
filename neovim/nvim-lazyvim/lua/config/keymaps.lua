@@ -1,3 +1,6 @@
+-- Filename: ~/github/dotfiles-latest/neovim/nvim-lazyvim/lua/config/keymaps.lua
+-- ~/github/dotfiles-latest/neovim/nvim-lazyvim/lua/config/keymaps.lua
+
 -- Keymaps are automatically loaded on the VeryLazy event
 -- Default keymaps that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/keymaps.lua
 -- Add any additional keymaps here
@@ -49,9 +52,12 @@ vim.keymap.set(
 
 -- Quickly alternate between the last 2 files
 -- LazyVim comes with the default shortcut <leader>bb for this, but I navigate
--- between alternate files way too often, so this more useful for me
+-- between alternate files way too often, so doing leader<space> is more useful for me
+--
 -- By default, in LazyVim, With leader<space> you usually find files in the root directory
-vim.keymap.set("n", "<leader><space>", "<cmd>e #<cr>", { desc = "Switch to Other Buffer" })
+--
+-- I tried disabling leader<space> in telescope.lua and setting it in this file but didn't work
+-- So I set the command to alternate between files directly in the `telescope.lua` file
 
 -- Make the file you run the command on, executable, so you don't have to go out to the command line
 -- Had to include quotes around "%" because there are some apple dirs that contain spaces, like iCloud
@@ -71,9 +77,10 @@ vim.keymap.set("n", "<leader>cb", function()
 
     -- Execute the script on a tmux pane on the right. On my mac I use zsh, so
     -- running this script with bash to not execute my zshrc file after
-    -- vim.cmd("silent !tmux split-window -h -l 70 'bash -c \"" .. escaped_file .. "; exec bash\"'")
+    -- vim.cmd("silent !tmux split-window -h -l 60 'bash -c \"" .. escaped_file .. "; exec bash\"'")
+    -- `-l 60` specifies the size of the tmux pane, in this case 60 columns
     vim.cmd(
-      "silent !tmux split-window -h -l 70 'bash -c \""
+      "silent !tmux split-window -h -l 60 'bash -c \""
         .. escaped_file
         .. "; echo; echo Press any key to exit...; read -n 1; exit\"'"
     )
@@ -108,7 +115,8 @@ vim.keymap.set("n", "<leader>cg", function()
     -- local escaped_file = vim.fn.shellescape(file) -- Properly escape the file name for shell commands
     -- local command_to_run = "go run " .. escaped_file
     local command_to_run = "go run *.go"
-    local cmd = "silent !tmux split-window -h -l 70 'cd "
+    -- `-l 60` specifies the size of the tmux pane, in this case 60 columns
+    local cmd = "silent !tmux split-window -h -l 60 'cd "
       .. file_dir
       .. ' && echo "'
       .. command_to_run
@@ -140,8 +148,8 @@ end, { desc = "GOLANG, execute file" })
 -- which pulls from my repo and a lot of other stuff
 vim.keymap.set("n", "<leader>c.", function()
   local file_dir = vim.fn.expand("%:p:h") -- Get the directory of the current file
-  -- `-l 70` specifies the size of the tmux pane, in this case 70 columns
-  local cmd = "silent !tmux split-window -h -l 70 'cd " .. file_dir .. " && bash'"
+  -- `-l 60` specifies the size of the tmux pane, in this case 60 columns
+  local cmd = "silent !tmux split-window -h -l 60 'cd " .. file_dir .. " && bash'"
   vim.cmd(cmd)
 end, { desc = "BASH, current dir in right tmux pane" })
 

@@ -20,6 +20,17 @@ https://github.com/kristijanhusak/vim-dadbod-completion
 
 -------------------------------------------------------------------------------
 
+postgres
+- Lets say I'm on macOS and I want to connect to a postgres DB
+- I need to have psql installed, otherwise I won't be able to connect to the databases
+- So install it with
+  - `brew install postgresql@15`
+  - Installation command found in `https://www.postgresql.org/download/macosx/`
+- Then you can check the version with 
+  - `psql --version`
+
+-------------------------------------------------------------------------------
+
 I found the below file in this thread that helped me solve the autocompletion
 issue I has having, this file is the one that the dadbod-ui creator uses
 https://github.com/kristijanhusak/vim-dadbod-completion/issues/53

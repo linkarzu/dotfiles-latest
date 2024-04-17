@@ -1,3 +1,8 @@
+-- Filename: ~/github/dotfiles-latest/neovim/nvim-lazyvim/lua/plugins/oil-nvim.lua
+-- ~/github/dotfiles-latest/neovim/nvim-lazyvim/lua/plugins/oil-nvim.lua
+--
+-- https://github.com/stevearc/oil.nvim
+
 -- Use `-` to open oil, that's the default command, see the mapping below
 
 -- From outside neovim, you can SSH to hosts using

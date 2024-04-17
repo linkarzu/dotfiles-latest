@@ -185,6 +185,9 @@ alias kgp='kubectl get pods'
 alias kgpa='kubectl get pods --all-namespaces'
 alias kgpo='kubectl get pods -o wide'
 
+# golang aliases
+alias coverage='go test -coverprofile=coverage.out && go tool cover -html=coverage.out'
+
 # echo
 # echo "2"
 # #############################################################################

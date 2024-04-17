@@ -1,0 +1,7 @@
+{
+  "lua multiline comment": {
+    "prefix": "luamulti",
+    "body": ["--[=====[", "$1", "--]=====]"],
+    "description": "Insert a multiline comment in lua"
+  }
+}

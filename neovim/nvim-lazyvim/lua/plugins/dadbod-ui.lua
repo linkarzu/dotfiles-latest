@@ -2,25 +2,32 @@
 -- which is the current one, and the other 2 plugins are listed under dependencies
 -- These dependencies will be automatically installed
 
--- https://github.com/tpope/vim-dadbod
--- Vim plugin for interacting with databases
--- Connections are specified with a single URL
--- :DB mysql://root:pass@mysql.home.linkarzu.com:3310 SHOW DATABASES;
+--[=====[
 
--- https://github.com/kristijanhusak/vim-dadbod-ui
--- To add a new dtabase, toggle DBUI, then hit capital `A` to add a new connection
--- mysql://root:pass@mysql.home.linkarzu.com:3310
--- Then you will be asked for the name of the database that will show in the toogle
+https://github.com/tpope/vim-dadbod
+Vim plugin for interacting with databases
+Connections are specified with a single URL
+:DB mysql://root:pass@mysql.home.linkarzu.com:3310 SHOW DATABASES;
 
--- https://github.com/kristijanhusak/vim-dadbod-completion
+https://github.com/kristijanhusak/vim-dadbod-ui
+To add a new dtabase, toggle DBUI, then hit capital `A` to add a new connection
+mysql://root:pass@mysql.home.linkarzu.com:3310
+mysql://root:pass@mariadb.home.linkarzu.com:3309/
+postgres://postgres:pass@postgres.home.linkarzu.com:5432/
+Then you will be asked for the name of the database that will show in the toogle
+
+https://github.com/kristijanhusak/vim-dadbod-completion
 
 -------------------------------------------------------------------------------
 
--- I found the below file in this thread that helped me solve the autocompletion
--- issue I has having, this file is the one that the dadbod-ui creator uses
--- https://github.com/kristijanhusak/vim-dadbod-completion/issues/53
--- Which points to
--- https://github.com/kristijanhusak/neovim-config/blob/master/nvim/lua/partials/plugins/db.lua
+I found the below file in this thread that helped me solve the autocompletion
+issue I has having, this file is the one that the dadbod-ui creator uses
+https://github.com/kristijanhusak/vim-dadbod-completion/issues/53
+
+Which points to
+https://github.com/kristijanhusak/neovim-config/blob/master/nvim/lua/partials/plugins/db.lua
+
+--]=====]
 
 return {
   "kristijanhusak/vim-dadbod-ui",

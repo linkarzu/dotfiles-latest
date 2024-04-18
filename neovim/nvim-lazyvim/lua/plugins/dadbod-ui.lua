@@ -31,12 +31,21 @@ postgres
 
 -------------------------------------------------------------------------------
 
-I found the below file in this thread that helped me solve the autocompletion
-issue I has having, this file is the one that the dadbod-ui creator uses
-https://github.com/kristijanhusak/vim-dadbod-completion/issues/53
+- I found the below file in this thread that helped me solve the autocompletion
+  issue I has having.
+- I had to add the cmp configg to `config/autocmds.lua`
+  `https://github.com/kristijanhusak/vim-dadbod-completion/issues/53#issuecomment-1705335855`
+- This thread also pointed me to the plugin's creator dotfiles
+- The file below is the one that the dadbod-ui creator uses, so that's the config I'm using
+  `https://github.com/kristijanhusak/neovim-config/blob/master/nvim/lua/partials/plugins/db.lua`
 
-Which points to
-https://github.com/kristijanhusak/neovim-config/blob/master/nvim/lua/partials/plugins/db.lua
+-------------------------------------------------------------------------------
+
+How to's
+- When dadbod is open press `?` to look at the help
+- <Leader>W - (sql) Save currently opened query
+  - That is an uppercase `W`
+  - This will save the query in the `vim.g.db_ui_save_location` location configured below
 
 --]=====]
 

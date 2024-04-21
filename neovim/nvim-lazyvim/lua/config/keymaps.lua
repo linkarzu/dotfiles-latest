@@ -230,6 +230,9 @@ wk.register({
   ["<leader>"] = {
     m = {
       name = "+markdown",
+      h = {
+        name = "+headings increase/decrease",
+      },
     },
   },
 })

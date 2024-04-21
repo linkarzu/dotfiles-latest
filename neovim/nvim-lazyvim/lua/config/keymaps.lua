@@ -531,6 +531,42 @@ vim.keymap.set("n", "<leader>ii", function()
   -- vim.api.nvim_win_set_cursor(0, { row, #heading })
 end, { desc = "H6 heading and date" })
 
+-- Create or find a daily note based on a date line format and open it in Neovim
+-- This is used in obsidian markdown files that have the "Link to non-existent
+-- document" warning
+vim.keymap.set("n", "<leader>fC", function()
+  local home = os.getenv("HOME")
+  local current_line = vim.api.nvim_get_current_line()
+  local year, month, day, weekday = current_line:match("%[%[(%d+)%-(%d+)%-(%d+)%-(%w+)%]%]")
+
+  if not (year and month and day and weekday) then
+    print("No valid date found in the line")
+    return
+  end
+
+  local month_abbr = os.date("%b", os.time({ year = year, month = month, day = day }))
+  local note_dir = string.format("%s/github/obsidian_main/250-daily/%s/%s-%s", home, year, month, month_abbr)
+  local note_name = string.format("%s-%s-%s-%s.md", year, month, day, weekday)
+  local full_path = note_dir .. "/" .. note_name
+
+  -- Check if the directory exists, if not, create it
+  vim.fn.mkdir(note_dir, "p")
+
+  -- Check if the file exists and create it if not
+  if vim.fn.filereadable(full_path) == 0 then
+    local file = io.open(full_path, "w")
+    if file then
+      file:write("# Contents\n\n<!-- toc -->\n\n- [Daily note](#daily-note)\n\n<!-- tocstop -->\n\n## Daily note\n")
+      file:close()
+      print("Created daily note: " .. full_path)
+      vim.cmd("tabedit " .. vim.fn.fnameescape(full_path))
+    else
+      print("Failed to create file: " .. full_path)
+    end
+  else
+    print("Daily note already exists: " .. full_path)
+  end
+end, { desc = "Create daily note" })
 -- ############################################################################
 --                       End of markdown section
 -- ############################################################################

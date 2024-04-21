@@ -567,6 +567,31 @@ vim.keymap.set("n", "<leader>fC", function()
     print("Daily note already exists: " .. full_path)
   end
 end, { desc = "Create daily note" })
+-- Surround the http:// url that the cursor is currently in with ``
+vim.keymap.set("n", "gsu", function()
+  local line = vim.api.nvim_get_current_line()
+  local col = vim.api.nvim_win_get_cursor(0)[2] + 1 -- Adjust for 0-index in Lua
+  -- This makes the `s` optional so it matches both http and https
+  local pattern = "https?://[^ ,;'\"<>%s)]*"
+
+  -- Find the starting and ending positions of the URL
+  local s, e = string.find(line, pattern)
+  while s and e do
+    if s <= col and e >= col then
+      -- When the cursor is within the URL
+      local url = string.sub(line, s, e)
+      -- Update the line with backticks around the URL
+      local new_line = string.sub(line, 1, s - 1) .. "`" .. url .. "`" .. string.sub(line, e + 1)
+      vim.api.nvim_set_current_line(new_line)
+      vim.cmd("silent write")
+      return
+    end
+    -- Find the next URL in the line
+    s, e = string.find(line, pattern, e + 1)
+    -- Save the file to update trouble list
+  end
+  print("No URL found under cursor")
+end, { desc = "Add surrounding to URL" })
 -- ############################################################################
 --                       End of markdown section
 -- ############################################################################

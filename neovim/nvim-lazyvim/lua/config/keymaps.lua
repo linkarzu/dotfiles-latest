@@ -212,6 +212,13 @@ vim.keymap.set("n", "<leader>fo", function()
   vim.api.nvim_buf_set_lines(0, row, row, false, { "" })
 end, { desc = "Insert filename with path at cursor" })
 
+-- I save a lot, and normally do it with `:w<CR>`, but I guess this will be
+-- easier on my fingers
+-- Original lazyvim.org keymap for this was "Other Window", but I never used it
+vim.keymap.set("n", "<leader>ww", function()
+  vim.cmd("write")
+end, { desc = "Write current file" })
+
 -- ############################################################################
 --                         Begin of markdown section
 -- ############################################################################

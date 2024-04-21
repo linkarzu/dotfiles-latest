@@ -608,6 +608,18 @@ vim.keymap.set("n", "<leader>mhI", function()
   -- I'm using [[ ]] to escape the special characters in a command
   vim.cmd([[:g/\(^$\n\s*#\+\s.*\n^$\)/ .+1 s/^#\+\s/#&/]])
 end, { desc = "Increase .md headings without confirmation" })
+
+-- These are similar, but instead of adding an # they remove it
+vim.keymap.set("n", "<leader>mhd", function()
+  -- I'm using [[ ]] to escape the special characters in a command
+  vim.cmd([[:g/^\s*#\{2,}\s/ s/^#\(#\+\s.*\)/\1/c]])
+end, { desc = "Decrease .md headings with confirmation" })
+
+vim.keymap.set("n", "<leader>mhD", function()
+  -- I'm using [[ ]] to escape the special characters in a command
+  vim.cmd([[:g/^\s*#\{2,}\s/ s/^#\(#\+\s.*\)/\1/]])
+end, { desc = "Decrease .md headings without confirmation" })
+
 -- ############################################################################
 --                       End of markdown section
 -- ############################################################################

@@ -592,6 +592,22 @@ vim.keymap.set("n", "gsu", function()
   end
   print("No URL found under cursor")
 end, { desc = "Add surrounding to URL" })
+
+-- - I have several `.md` documents that do not follow markdown guidelines
+-- - There are some old ones that have more than one H1 heading in them, so when I
+--   open one of those old documents, I want to add one more `#` to each heading
+-- - The command below does this only for:
+--   - Lines that have a newline `above` AND `below`
+--   - Lines that have a space after the `##` to avoid `#!/bin/bash`
+vim.keymap.set("n", "<leader>mhi", function()
+  -- I'm using [[ ]] to escape the special characters in a command
+  vim.cmd([[:g/\(^$\n\s*#\+\s.*\n^$\)/ .+1 s/^#\+\s/#&/c]])
+end, { desc = "Increase .md headings with confirmation" })
+
+vim.keymap.set("n", "<leader>mhI", function()
+  -- I'm using [[ ]] to escape the special characters in a command
+  vim.cmd([[:g/\(^$\n\s*#\+\s.*\n^$\)/ .+1 s/^#\+\s/#&/]])
+end, { desc = "Increase .md headings without confirmation" })
 -- ############################################################################
 --                       End of markdown section
 -- ############################################################################

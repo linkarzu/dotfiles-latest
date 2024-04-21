@@ -3,6 +3,7 @@
 <!-- toc -->
 
 - [Things to remember](#things-to-remember)
+  - [Surround](#surround)
   - [Syntax highlighting (treesitter)](#syntax-highlighting-treesitter)
   - [Change value of highlight colors](#change-value-of-highlight-colors)
   - [See messages history](#see-messages-history)
@@ -11,6 +12,7 @@
   - [Check the help command](#check-the-help-command)
   - [Spectre pattern matching](#spectre-pattern-matching)
   - [Working with markdown](#working-with-markdown)
+    - [markdownlint config](#markdownlint-config)
 - [Fix Mason warnings](#fix-mason-warnings)
 - [Working with marks](#working-with-marks)
 
@@ -28,6 +30,14 @@
     - goto, surround, replace, next, current surrounding, new surrounding
   - Test below
   - "surrounded text"
+- Add **bold** as surrounding
+  - First **select the text** in visual mode
+  - Then press `2gsa*`
+- Remove a surrounding surround
+  - If we have 'this surrounded text'
+    - Place cursor anywhere inside the surrounding and remove it with `gsd'`
+  - If we **have this bold surround**
+    - Place cursor anywhere inside the surrounding and remove it with `gsd*.`
 
 ### Syntax highlighting (treesitter)
 
@@ -160,3 +170,55 @@ spawn: python3 failed with exit code 1 and signal 0.
 - To see all the marks use `:marks`
 - `:delmarks a` would remove the mark a
 - `:delmarks a j k l m z n` removes all the marks specified
+
+## Replacements
+
+### Increase markdown headings
+
+- I have several `.md` documents that do not follow markdown guidelines
+- There are some old ones that have more than one H1 heading in them, so when I
+  open one of those old documents, I want to add one more `#` to each heading
+- The command below does this only for:
+  - Lines that have a newline `above` AND `below`
+  - Lines that have a space after the `##` to avoid `#!/bin/bash`
+
+```bash
+# Leaving a test shebang here
+#!/bin/bash
+
+# This asks for a confirmation so you can quickly confirm if it works or not
+# Just press `n` to NOT replace them
+:g/\(^$\n\s*#\+\s.*\n^$\)/ .+1 s/^#\+\s/#&/c
+
+# Once you're certain the command above works, remove the `c` at the end so it replaces all
+#
+# After using this command, go over your file because there might be bash
+# comments with a newline above and below them, so remove the double `##`
+:g/\(^$\n\s*#\+\s.*\n^$\)/ .+1 s/^#\+\s/#&/
+```
+
+- This other command doesn't care if there are newlines above and below
+- It will go over all the lines with a # and a space after
+  - So it will ignore `#!/bin/bash`
+
+```bash
+:%s/^\s*#\+\s/#&/gc
+```
+
+### Reduce markdown headings
+
+- This decreases the markdown heading levels throughout the whole file
+  - If ### turns it into ##
+  - If #### turns it into ###
+  - If ##### turns it into ####
+  - If ###### turns it into #####
+
+```bash
+# With confirmation
+:g/^\s*#\{2,}\s/ s/^#\(#\+\s.*\)/\1/c
+
+# Without confirmation
+:g/^\s*#\{2,}\s/ s/^#\(#\+\s.*\)/\1/
+```
+
+## End of file

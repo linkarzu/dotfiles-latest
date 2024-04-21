@@ -567,6 +567,7 @@ vim.keymap.set("n", "<leader>fC", function()
     print("Daily note already exists: " .. full_path)
   end
 end, { desc = "Create daily note" })
+
 -- Surround the http:// url that the cursor is currently in with ``
 vim.keymap.set("n", "gsu", function()
   local line = vim.api.nvim_get_current_line()

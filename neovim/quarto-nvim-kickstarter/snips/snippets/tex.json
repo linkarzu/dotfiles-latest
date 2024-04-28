@@ -1,0 +1,452 @@
+{
+    "\"gentbl(\\d+)x(\\d+)\"": {
+        "body": "endsnippet\n\npre_expand \"add_row(snip)\"\nsnippet \"tr(\\d+)\" \"Add table row of dimension ...\" r",
+        "description": "Generate table of *width* by *height*",
+        "prefix": "\"gentbl(\\d+)x(\\d+)\""
+    },
+    "()": {
+        "body": "\\left( 1 \\right) $0",
+        "description": "left( right)",
+        "prefix": "()"
+    },
+    "->": {
+        "body": "\\rightarrow",
+        "description": "right arrow",
+        "prefix": "->"
+    },
+    "/": {
+        "body": "\\\\frac{${VISUAL}}{$1}$0",
+        "description": "Fraction",
+        "prefix": "/"
+    },
+    "//": {
+        "body": "\\\\frac{$1}{$2}$0",
+        "description": "Fraction",
+        "prefix": "//"
+    },
+    "<=": {
+        "body": "\\le ",
+        "description": "leq",
+        "prefix": "<="
+    },
+    ">=": {
+        "body": "\\ge ",
+        "description": "geq",
+        "prefix": ">="
+    },
+    "Beamer": {
+        "body": "% !TeX program = lualatex\n\\documentclass[aspectratio=169, 11pt]{beamer}\n\\usetheme[numbering=fraction, progressbar=frametitle, titleformat=allcaps, block=fill]{metropolis}           % Use metropolis theme\n% \\usecolortheme{owl}\n\\newcommand{\\sub}{\\small\\alert}\n\\usepackage{appendixnumberbeamer}\n\\usepackage{graphicx}\n\\usepackage{booktabs}\n\\usepackage[scale=2]{ccicons}\n\\usepackage{pgfplots}\n\\usepackage{xspace}\n\\usepackage[utf8]{inputenc}\n\\usepackage{hyperref}\n\\usepackage{siunitx}\n\\usepackage[font=small,labelformat=empty, skip=0.5em]{caption}\n\\usepackage{chemformula}\n\\usepackage{paralist}\n\\usepackage{fontspec}\n\\usepackage[export]{adjustbox}\n\\usepackage{layout}\n\\newfontfamily\\DejaSans{DejaVu Sans}\n\\addtobeamertemplate{frametitle}{}{\\vspace{-0.8em}} % decrease\n\\setsansfont{Arial}\n\\setmonofont{Arial}\n\\definecolor{ASUmaroon}{RGB}{140,29,64}\n\\definecolor{ASUgold}{RGB}{255,198,39}\n\\setbeamercolor{background canvas}{bg=white}\n\\setbeamercolor{normal text}{fg=black}\n\\setbeamercolor{alerted text}{fg=ASUmaroon}\n\\setbeamercolor{frametitle}{bg=black, fg=ASUgold}\n\\setbeamercolor{progress bar}{fg=ASUgold}\n\\makeatletter\n\\setlength{\\metropolis@titleseparator@linewidth}{3pt}\n\\setlength{\\metropolis@progressonsectionpage@linewidth}{3pt}\n\\setlength{\\metropolis@progressinheadfoot@linewidth}{3pt}\n\\makeatother\n\n% Titlepage {{{2 %\n\\title{${1: title}}\n\\subtitle{${2: title}}\n\\date{\\today}\n\\author[shortname]{Julian Tao}\n\\institute[shortinst]{Associate Professor, Arizona State University}\n\\titlegraphic{\\vspace{4cm}\\flushright\\includegraphics[height=3cm]{{/home/julian/Dropbox\n(ASU)/LaTex/Beamer/Metro Theme/logo.pdf}}}\n% 2}}} %\n\n\\begin{document}\n\\maketitle\n\n\\begin{frame}{Table of contents}\n  \\setbeamertemplate{section in toc}[sections numbered]\n  \\tableofcontents[hideallsubsections]\n\\end{frame}\n\n\\section{${3:sectiontitle}}\n\n\\begin{frame}[fragile]{${4:frametitle}}\n$0\n\\end{frame}\n\n\\begin{frame}{Animation}\n  \\begin{itemize}[<+- | alert@+>]\n    \\item \\alert<4>{This is\\only<4>{ really} important}\n    \\item Now this\n    \\item And now this\n  \\end{itemize}\n\\end{frame}\n\n\\begin{frame}[standout, label=thanks]\n  Thank you!\n\\includegraphics[width=0.8\\textwidth]{{/home/julian/Dropbox (ASU)/LaTex/Beamer/Metro Theme/Acknowledge-logo.pdf}}\n\\end{frame}\n\n\\appendix\n\n\\begin{frame}[allowframebreaks]{References}\n\n  \\bibliography{demo}\n  \\bibliographystyle{abbrv}\n\n\\end{frame}\n\n\\begin{frame}[fragile]{Backup slides}\nBackup\n\\end{frame}\n\n\n\\end{document}",
+        "description": "Research Presentation",
+        "prefix": "Beamer"
+    },
+    "JTnote": {
+        "body": "%!TEX root = <master file name> % for multi-files\n\\documentclass[12pt,letterpaper]{article}\n\n\\newcommand{\\ReportingDate}{\\textsc${1:date}} % update note date\n\\newcommand{\\userName}{Julian Tao} \t\t\t\t\t%update your name\n\\newcommand{\\institution}{BiG Group @ ASU}\n\\usepackage{JTnotes}\n\n\\begin{document}\n\\univlogo\n\n\\title{${2:title}} % update this short title for your weekly report\n\\chead{\\textsc{\\thetitle}}\n{\\Huge \\ReportingDate}\n\\vspace{5ex}\n\\newline\n\\emph{${3:brief summary}} % replace this using your brief summary\n\n$0\n\n%\\newpage\n% \\bibliographystyle{plainnat}\n% \\bibliography{%%}\n\\end{document}",
+        "description": "JT Notes",
+        "prefix": "JTnote"
+    },
+    "NSF": {
+        "body": "\n\n\\documentclass[letterpaper, 11pt]{article}\n\\usepackage[margin=1in]{geometry}\n\\usepackage{xcolor}\n\\usepackage{microtype}\n\\usepackage[utf8]{inputenc}\n\\usepackage{graphicx}\n\\usepackage{wrapfig}\n\\usepackage{amsmath}\n\\usepackage{index}\n\\usepackage{fancyhdr}\n\\usepackage{chemformula}\n\\usepackage{paralist}\n\\setlength{\\pltopsep}{0.2em}\n\\setlength{\\floatsep}{0ex}\n\\setlength{\\textfloatsep}{2em}\n\\setlength{\\intextsep}{0.2em}\n\n\\usepackage[font=small,labelfont=bf, labelsep=period, skip=0.5em]{caption}\n\\usepackage[compact]{titlesec}\n%\\titlespacing{\\section}{0pt}{1ex}{1ex}\n%\\titlespacing{\\subsection}{0pt}{1ex}{0ex}\n%\\titlespacing{\\subsubsection}{0pt}{0.5ex}{0ex}\n\n\\begin{document}\n%\t\\renewcommand{\\headrulewidth}{2pt}\n%\t\\title{\\Large{\\textbf{\\LaTeX Tutorial}}}\n%\t\\author{ By Julian Tao}\n%\t\\maketitle\n%\n%\t\\tableofcontents\n%\n\n\\section{Project Overview}\n\\enlargethispage{\\baselineskip}\n$0\n\n\\begin{compactenum}[(1)]\n\t\\item \\textbf{}\n\\end{compactenum}\n\n\n\n\\section{Motivation, Rationale and Significance}\n\\subsection{title}\n\n\n\n\n\\end{document}\n",
+        "description": "NSF proposal template",
+        "prefix": "NSF"
+    },
+    "SI": {
+        "body": "\\SI{1}{${2}}",
+        "description": "SI-Unit",
+        "prefix": "SI"
+    },
+    "__": {
+        "body": "_{$1}$0",
+        "description": "subscript",
+        "prefix": "__"
+    },
+    "abs": {
+        "body": "\\begin{abstract}\n\t$0\n\\end{abstract}",
+        "description": "abstract environment",
+        "prefix": "abs"
+    },
+    "ac": {
+        "body": "\\ac{${1:acronym}}\n$0",
+        "description": "Acroynm normal",
+        "prefix": "ac"
+    },
+    "acl": {
+        "body": "\\acl{${1:acronym}}\n$0",
+        "description": "Acroynm expanded",
+        "prefix": "acl"
+    },
+    "al": {
+        "body": "\\begin{align}\n\t$0\n\\end{align}",
+        "description": "Align",
+        "prefix": "al"
+    },
+    "alnn": {
+        "body": "\\begin{align*}\n\t$0\n\\end{align*}",
+        "description": "Align without a number",
+        "prefix": "alnn"
+    },
+    "beg": {
+        "body": "\\begin{${1:something}}\n\t$0\n\\end{$1}",
+        "description": "begin{} / end{}",
+        "prefix": "beg"
+    },
+    "bf": {
+        "body": "\\textbf{$1} $0",
+        "description": "Bold",
+        "prefix": "bf"
+    },
+    "cb": {
+        "body": "^3",
+        "description": "^3",
+        "prefix": "cb"
+    },
+    "cha": {
+        "body": "\\chapter{${1:chapter name}}%\n\\label{cha:${2:${1/\\\\\\w+\\{(.*?)\\}|\\\\(.)|(\\w+)|([^\\w\\\\]+)/(?4:_:\\L$1$2$3\\E)/ga}}}\n\n$0",
+        "description": "Chapter",
+        "prefix": "cha"
+    },
+    "comp": {
+        "body": "\\begin{compactenum}[(1)]\n\t\\item $0\n\\end{compactenum}",
+        "description": "compactenum lists",
+        "prefix": "comp"
+    },
+    "dd": {
+        "body": "\\[\n\t${0}\n\\]",
+        "description": "Display math",
+        "prefix": "dd"
+    },
+    "ddb": {
+        "body": "\\DTLdisplaydb{$1}",
+        "description": "display database",
+        "prefix": "ddb"
+    },
+    "deg": {
+        "body": "^\\circ",
+        "prefix": "deg"
+    },
+    "desc": {
+        "body": "\\begin{description}\n\t\\item[$1] $0\n\\end{description}",
+        "description": "Description",
+        "prefix": "desc"
+    },
+    "dm": {
+        "body": "\\[\n1\n.\\] $0",
+        "description": "Math",
+        "prefix": "dm"
+    },
+    "dv": {
+        "body": "\\dv[1]{${2}}{${3}}",
+        "description": "Derivative",
+        "prefix": "dv"
+    },
+    "enum": {
+        "body": "\\begin{enumerate}\n\t\\item $0\n\\end{enumerate}",
+        "description": "Enumerate",
+        "prefix": "enum"
+    },
+    "eqa": {
+        "body": "\\begin{eqnarray}\n\t1 & ${2:${VISUAL}} & ${0:${VISUAL}}\n\\end{eqnarray}",
+        "description": "Equation array",
+        "prefix": "eqa"
+    },
+    "eqann": {
+        "body": "\\begin{eqnarray*}\n\t1 & ${2:${VISUAL}} & ${0:${VISUAL}}\n\\end{eqnarray*}",
+        "description": "Equation array without a number",
+        "prefix": "eqann"
+    },
+    "eqnn": {
+        "body": "\\begin{equation*}\n\t$0\n\\end{equation*}",
+        "description": "Equation without a number",
+        "prefix": "eqnn"
+    },
+    "equation": {
+        "body": "\\begin{equation}\n\t${0}\n\\end{equation}",
+        "description": "Environment: Equation",
+        "prefix": "equation"
+    },
+    "exam": {
+        "body": "\n\\documentclass[11pt,addpoints]{exam}\n\\usepackage{amsfonts,amssymb,amsmath, amsthm}\n\\usepackage{graphicx}\n\\usepackage{systeme}\n\\usepackage{pgf,tikz,pgfplots}\n\\usepackage{enumerate}\n\\usepackage{lastpage}\n\\usepackage[utf8]{inputenc}\n\\pgfplotsset{compat=1.15}\n\\usepgfplotslibrary{fillbetween}\n\\usepackage{mathrsfs}\n\\usetikzlibrary{arrows}\n\\usetikzlibrary{calc}\n\n\n\\pagestyle{headandfoot}\n\n\\firstpageheader{\\textbf {{$1: Examname} (\\numpoints\\ points)\\\\ }}{}{Name: \\underline{\\hspace{2in}}}\n%\\firstpageheadrule\n\n\\runningheader{{$1: Examname}}{}{Page \\thepage\\ of \\numpages}\n\\runningheadrule\n\n\\firstpagefooter{}{}{}\n\\runningfooter{}{}{}\n\n\n\\begin{document}\n\\begin{center}\n\\combinedgradetable[v][questions]\n\\end{center}\n\n    \\textbf{Instructions:}\n$2\n    \\fbox{\\parbox{\\textwidth}{\n    In recognition of and in the spirit of the Arizona State University Honor Code, I certify that I will neither give nor receive unpermitted aid on this examination.\n\n    \\vspace{1cm}\n\n    \\hspace*{\\fill}\n        Signature: \\quad \\rule{10cm}{0.5pt}\n    \\hspace*{\\fill}\n\n    \\bigskip\n    }}\n\n\n\\clearpage\n\n\\begin{questions} %------------------------------------------\n\\question\n$0\n\\begin{parts}\n\n\\part[5]\n\n\\end{parts}\n\\droptotalpoints\n\n\n\\newpage %---------------------------------------------------\n\n\n\\end{questions}\n\n\\end{document}",
+        "description": "exam template",
+        "prefix": "exam"
+    },
+    "f2c": {
+        "body": "\\begin{frame}[t]{${1:title}}\n\t\\begin{columns}\n\t\t\\begin{column}{${2:0.5}\\textwidth}\n\t\t\t\\begin{figure}[htpb]\n\t\t\t\t\\centering\n\t\t\t\t\\includegraphics[width=\\textwidth,height=0.8\\textheight,keepaspectratio]{${4:name.ext}}%\n\t\t\t\t\\caption{${4/(\\w+)\\.\\w+/\\u$1/}}%\n\t\t\t\t\\label{fig:${4/(\\w+)\\.\\w+/$1/}}\n\t\t\t\\end{figure}\n\t\t\\end{column}\n\t\t\\begin{column}{${3:0.5}\\textwidth}\n\t\t$0\n\t\t\\end{column}\n\t\\end{columns}\n\\end{frame}",
+        "description": "frame with two columns of a figure and text",
+        "prefix": "f2c"
+    },
+    "f2f": {
+        "body": "\\begin{frame}[t]{${1:title}}\n\t\\begin{columns}\n\t\t\\begin{column}{${2:0.5}\\textwidth}\n\t\t\t\\begin{figure}[htpb]\n\t\t\t\t\\centering\n\t\t\t\t\\includegraphics[width=\\textwidth,height=0.8\\textheight,keepaspectratio]{${4:name.ext}}%\n\t\t\t\t\\caption{${4/(\\w+)\\.\\w+/\\u$1/}}%\n\t\t\t\t\\label{fig:${4/(\\w+)\\.\\w+/$1/}}\n\t\t\t\\end{figure}\n\t\t\\end{column}\n\t\t\\begin{column}{${3:0.5}\\textwidth}\n\t\t\t\\begin{figure}[htpb]\n\t\t\t\t\\centering\n\t\t\t\t\\includegraphics[width=\\textwidth,height=0.8\\textheight,keepaspectratio]{${5:name.ext}}%\n\t\t\t\t\\caption{${5/(\\w+)\\.\\w+/\\u$1/}}%\n\t\t\t\t\\label{fig:${5/(\\w+)\\.\\w+/$1/}}\n\t\t\t\\end{figure}\n\t\t\\end{column}\n\t\\end{columns}\n\t$0\n\\end{frame}",
+        "description": "frame with two figures",
+        "prefix": "f2f"
+    },
+    "fig": {
+        "body": "\\begin{figure}[${2:htpb}]\n\t\\centering\n\t\\includegraphics[width=${3:0.8}\\linewidth]{${4:name.ext}}\n\t\\caption{${4/(\\w+)\\.\\w+/\\u$1/}$0}%\n\t\\label{fig:${4/(\\w+)\\.\\w+/$1/}}\n\\end{figure}",
+        "description": "Figure environment",
+        "prefix": "fig"
+    },
+    "fr": {
+        "body": "\\begin{frame}[t]{${1:title}}\n$0\n\\end{frame}",
+        "description": "Frame",
+        "prefix": "fr"
+    },
+    "gln": {
+        "body": "\\newglossaryentry{${1:identifier}}\n{\n  name={${2:name}},\n  first={${3:first occurrence}},\n  sort={${4:sort value}},\n  description={${0:description}},\n}",
+        "description": "New glossary item",
+        "prefix": "gln"
+    },
+    "glnl": {
+        "body": "\\longnewglossaryentry{${1:identifier}}\n{\n  name={${2:name}},\n  first={${3:first occurrence}},\n  sort={${4:sort value}},\n}\n{\n  ${0:description}\n}",
+        "description": "New long glossary item",
+        "prefix": "glnl"
+    },
+    "hw": {
+        "body": "\n\\documentclass{homeworg}\n\\title{HW \\# $1}\n\\author{}\n\n\\begin{document}\n\n\\maketitle\n\n\\problem\n$0\n\\problem*\n\\problem[10]\n\n\n\\end{document}",
+        "description": "homework template",
+        "prefix": "hw"
+    },
+    "inkscape": {
+        "body": "\\usepackage{import}\n\\usepackage{pdfpages}\n\\usepackage{transparent}\n\\usepackage{xcolor}\n\n\\newcommand{\\incfig}[2][1]{%\n    \\def\\svgwidth{#1\\columnwidth}\n    \\import{./figures/}{#2.pdf_tex}\n}\n\n\\pdfsuppresswarningpagegroup=1",
+        "description": "Include premeables to enable inkscape integration",
+        "prefix": "inkscape"
+    },
+    "it": {
+        "body": "\\item $0",
+        "description": "Individual item",
+        "prefix": "it"
+    },
+    "ita": {
+        "body": "\\textit{$1} $0",
+        "description": "Italics",
+        "prefix": "ita"
+    },
+    "item": {
+        "body": "\\begin{itemize}\n\t\\item $0\n\\end{itemize}",
+        "description": "Itemize",
+        "prefix": "item"
+    },
+    "ldb": {
+        "body": "\\DTLloadrawdb{$1}{$2}",
+        "description": "load database",
+        "prefix": "ldb"
+    },
+    "lim": {
+        "body": "\\lim_{${1:n} \\to ${2:\\infty}} ",
+        "description": "limit",
+        "prefix": "lim"
+    },
+    "limsup": {
+        "body": "\\limsup_{${1:n} \\to ${2:\\infty}} ",
+        "description": "limsup",
+        "prefix": "limsup"
+    },
+    "lp": {
+        "body": "\\left(${1:${VISUAL:contents}}\\right)$0",
+        "description": "Long parenthesis",
+        "prefix": "lp"
+    },
+    "lr": {
+        "body": "\\left( 1 \\right) $0",
+        "description": "left( right)",
+        "prefix": "lr"
+    },
+    "lr(": {
+        "body": "\\left( 1 \\right) $0",
+        "description": "left( right)",
+        "prefix": "lr("
+    },
+    "lr[": {
+        "body": "\\left[ 1 \\right] $0",
+        "description": "left[ right]",
+        "prefix": "lr["
+    },
+    "lra": {
+        "body": "\\left<1 \\right>$0",
+        "description": "leftangle rightangle",
+        "prefix": "lra"
+    },
+    "lrb": {
+        "body": "\\left\\\\{ 1 \\right\\\\} $0",
+        "description": "left\\{ right\\}",
+        "prefix": "lrb"
+    },
+    "lr{": {
+        "body": "\\left\\\\{ 1 \\right\\\\} $0",
+        "description": "left\\{ right\\}",
+        "prefix": "lr{"
+    },
+    "lr|": {
+        "body": "\\left| 1 \\right| $0",
+        "description": "left| right|",
+        "prefix": "lr|"
+    },
+    "mk": {
+        "body": "$${1}$`!p\nif t[2] and t[2][0] not in [',', '.', '?', '-', ' ']:\n\tsnip.rv = ' '\nelse:\n\tsnip.rv = ''\n`$2",
+        "description": "Math",
+        "prefix": "mk"
+    },
+    "ni": {
+        "body": "\\noindent\n$0",
+        "description": "Non-indented paragraph",
+        "prefix": "ni"
+    },
+    "ooo": {
+        "body": "\\infty",
+        "description": "\\infty",
+        "prefix": "ooo"
+    },
+    "pac": {
+        "body": "\\usepackage`!p snip.rv='[' if t[1] else \"\"`${1:options}`!p snip.rv = ']' if t[1] else \"\"`{${2:package}}$0",
+        "description": "Package",
+        "prefix": "pac"
+    },
+    "par": {
+        "body": "\\paragraph{${1:${VISUAL:paragraph name}}}%\n\\label{par:${2:${1/\\\\\\w+\\{(.*?)\\}|\\\\(.)|(\\w+)|([^\\w\\\\]+)/(?4:_:\\L$1$2$3\\E)/ga}}}\n\n$0",
+        "description": "Paragraph",
+        "prefix": "par"
+    },
+    "part": {
+        "body": "\\frac{\\partial ${1:V}}{\\partial ${2:x}} $0",
+        "description": "d/dx",
+        "prefix": "part"
+    },
+    "pdv": {
+        "body": "\\pdv[1]{${2}}{${3}}",
+        "description": "Partial Derivatie",
+        "prefix": "pdv"
+    },
+    "rd": {
+        "body": "^{($1)}$0",
+        "description": "to the ... power",
+        "prefix": "rd"
+    },
+    "rec": {
+        "body": "%%\n% Julian Tao Color Letterhead\n% LaTeX Template\n% June 2020\n\n\n\\documentclass[11pt,letterpaper]{letter} %this controls the paper style and font size\n\\usepackage{graphicx} % necessary for logos\n\\usepackage{parskip} % for spacing\n\\usepackage{geometry} % so that page 2> have 1\" margins\n\\usepackage{fancyhdr} % for fancy headers\n\\usepackage{lastpage}\n\\usepackage{wrapfig}\n\\pagestyle{fancy}\n\\renewcommand{\\headrulewidth}{0pt}\n\\fancyhead{} % footer for pages 2 on\n\\lfoot{\\footnotesize {\\textit{Letter from \\Who{} regarding \\forWho}}} % Left footer\n\\cfoot{} % Change for center footer\n\\rfoot{\\footnotesize Page \\thepage\\ of \\pageref{LastPage}} % Right footer page #s\n\\renewcommand{\\footrulewidth}{0pt}\n\n%Sender Information -- Edit this to fill in the header\n\\def\\Who{Julian Tao} % Fill in your name here\n\\def\\forWho{${1:Candidate}} % Fill in candidates name\n\\def\\Title{Associate Professor} % Your title\n\\def\\Where{SSEBE} % Your department/institution\n\\def\\Address{GWC 126 $|$ 650 E Tyler Mall} % Your address\n\\def\\CityZip{Tempe, AZ, 85281} % Your city, zip code, country, etc\n\\def\\Email{E-mail: julian.tao@asu.edu} % Your email address\n\\def\\TEL{Phone: (480)-965-1108 } % Your phone number\n\\def\\URL{https://sites.google.com/asu.edu/big} % Your URL\n\\longindentation=0pt\n\\address{\\Who\\\\\\ \\Title\\\\\\ \\Address\\\\\\ \\CityZip\\\\\\ \\Email\\\\\\ \\TEL\\\\\\ \\URL}\n%first page margins are different to accommodate the letterhead\n\n\\topmargin=-1.2in % Moves the top margin; here it is a negative value to move the text up\n\\textheight=9.5in % Total text height for this page\n\\oddsidemargin=-10pt % Left margin; widened here with a negative value\n\\textwidth=7in % Text width\n%\\let\\raggedleft\\raggedright % Makes the date appear on the left\n\n\\begin{document}\n\n\\begin{letter}{${2:Recipient name} \\\\\\ ${3:Street} \\\\\\ ${4:City}\\\\\\ ${5:Country} \\\\\\ [\\parskip]\nRe:${6:topic}} %put the recipient information here and maybe a reference line\n\n\\begin{center}\n\n\\begin{picture}(1000,1)\n    \\put(0,-60){\\includegraphics[width=\\textwidth]{{/home/julian/Dropbox\n    (ASU)/LaTex/RecLetter/Letterhead3.png}}}\n%    \\put(160,33){\\textbf{\\footnotesize \\Who }}\n%    \\put(160,22){\\footnotesize \\Title }\n%    \\put(160,11){\\footnotesize \\Where }\n%    \\put(260,33){\\footnotesize \\Address }\n%    \\put(260,22){\\footnotesize \\CityZip }\n%    \\put(260,11){\\footnotesize \\TEL }\n%    \\put(260,0){\\footnotesize \\Email }\n%    \\put(260,-11){\\footnotesize \\URL }\n    \\put(0,-60){\\rule{\\textwidth}{0.4pt}}\n\\end{picture}\n\\end{center}\n\\vspace{25mm}\n\n\\opening{Dear $2,}\n\n$0\n\n\\closing{Sincerely,}\n\\vspace{-5em}\n\\fromsig{\\includegraphics{{/home/julian/Dropbox\n(ASU)/LaTex/RecLetter/signature.png}}} %You can put an image of your signature here.\n\n\\end{letter}\n\n\\end{document}",
+        "description": "recletters",
+        "prefix": "rec"
+    },
+    "sec": {
+        "body": "\\section{${1:${VISUAL:section name}}}%\n\\label{sec:${2:${1/\\\\\\w+\\{(.*?)\\}|\\\\(.)|(\\w+)|([^\\w\\\\]+)/(?4:_:\\L$1$2$3\\E)/ga}}}\n\n$0",
+        "description": "Section",
+        "prefix": "sec"
+    },
+    "sec*": {
+        "body": "\\section*{${1:${VISUAL:section name}}}%\n\\label{sec:${2:${1/\\\\\\w+\\{(.*?)\\}|\\\\(.)|(\\w+)|([^\\w\\\\]+)/(?4:_:\\L$1$2$3\\E)/ga}}}\n\n${0}",
+        "description": "Section",
+        "prefix": "sec*"
+    },
+    "sq": {
+        "body": "\\sqrt{1} $0",
+        "description": "\\sqrt{}",
+        "prefix": "sq"
+    },
+    "sr": {
+        "body": "^2",
+        "description": "^2",
+        "prefix": "sr"
+    },
+    "ssub": {
+        "body": "\\subsubsection{${1:${VISUAL:subsubsection name}}}%\n\\label{ssub:${2:${1/\\\\\\w+\\{(.*?)\\}|\\\\(.)|(\\w+)|([^\\w\\\\]+)/(?4:_:\\L$1$2$3\\E)/ga}}}\n\n$0",
+        "description": "Subsubsection",
+        "prefix": "ssub"
+    },
+    "ssub*": {
+        "body": "\\subsubsection*{${1:${VISUAL:subsubsection name}}}%\n\\label{ssub:${2:${1/\\\\\\w+\\{(.*?)\\}|\\\\(.)|(\\w+)|([^\\w\\\\]+)/(?4:_:\\L$1$2$3\\E)/ga}}}\n\n${0}",
+        "description": "Subsubsection",
+        "prefix": "ssub*"
+    },
+    "sub": {
+        "body": "\\subsection{${1:${VISUAL:subsection name}}}%\n\\label{sub:${2:${1/\\\\\\w+\\{(.*?)\\}|\\\\(.)|(\\w+)|([^\\w\\\\]+)/(?4:_:\\L$1$2$3\\E)/ga}}}\n\n$0",
+        "description": "Subsection",
+        "prefix": "sub"
+    },
+    "sub*": {
+        "body": "\\subsection*{${1:${VISUAL:subsection name}}}%\n\\label{sub:${2:${1/\\\\\\w+\\{(.*?)\\}|\\\\(.)|(\\w+)|([^\\w\\\\]+)/(?4:_:\\L$1$2$3\\E)/ga}}}\n\n${0}",
+        "description": "Subsection",
+        "prefix": "sub*"
+    },
+    "subp": {
+        "body": "\\subparagraph{${1:${VISUAL:subparagraph name}}}%\n\\label{par:${2:${1/\\\\\\w+\\{(.*?)\\}|\\\\(.)|(\\w+)|([^\\w\\\\]+)/(?4:_:\\L$1$2$3\\E)/ga}}}\n\n$0",
+        "description": "Subparagraph",
+        "prefix": "subp"
+    },
+    "sum": {
+        "body": "\\sum_{n=${1:1}}^{${2:\\infty}} ${3:a_n z^n}",
+        "description": "sum",
+        "prefix": "sum"
+    },
+    "taba": {
+        "body": "\\begin{${1:t}${1/(t)$|(a)$|(.*)/(?1:abular)(?2:rray)/}}{${2:c}}\n$0${2/(?<=.)(c|l|r)|./(?1: & )/g}\n\\end{$1${1/(t)$|(a)$|(.*)/(?1:abular)(?2:rray)/}}",
+        "description": "tabular / array environment",
+        "prefix": "taba"
+    },
+    "table": {
+        "body": "\\begin{table}[${1:htpb}]\n\t\\centering\n\t\\caption{${2:caption}}\n\t\\label{tab:${3:label}}\n\t\\begin{${4:t}${4/(t)$|(a)$|(.*)/(?1:abular)(?2:rray)/}}{${5:c}}\n\t$0${5/(?<=.)(c|l|r)|./(?1: & )/g}\n\t\\end{$4${4/(t)$|(a)$|(.*)/(?1:abular)(?2:rray)/}}\n\\end{table}",
+        "description": "Table environment",
+        "prefix": "table"
+    },
+    "td": {
+        "body": "^{$1}$0",
+        "description": "to the ... power",
+        "prefix": "td"
+    },
+    "templ-article": {
+        "body": "\\documentclass[12pt, letterpaper]{article}\n\\usepackage[utf8]{inputenc}\n\\usepackage{graphicx}\n${1}\n\n\\begin{document}\n\n${0}\n\n\\end{document}",
+        "description": "Template: standard article",
+        "prefix": "templ-article"
+    },
+    "templ-minimal": {
+        "body": "\\documentclass{minimal}\n\\begin{document}\n\nHello World!${0}\n\n\\end{document}",
+        "description": "Template: Minimal",
+        "prefix": "templ-minimal"
+    },
+    "templ-pdfinclude": {
+        "body": "\\documentclass[letterpaper]{article}\n\\usepackage{pdfpages}\n\\usepackage{tikz}\n\\pagestyle{empty}\n\\begin{document}\n\n\\includepdf\n\tfitpaper,\n\tpages={1},\n\tpagecommand={\n\t\t\\tikz[overlay, remember picture] {...}\n\t}\n]{$0}\n\n\\end{document}",
+        "description": "Template: Include PDF",
+        "prefix": "templ-pdfinclude"
+    },
+    "templ-sintefmemo": {
+        "body": "% TeX program = lualatex\n\\documentclass[english]{sintefmemo}\n\\usepackage{siunitx}\n\\usepackage{parskip}\n\\usepackage{graphicx}\n\\usepackage{csquotes}\n\\usepackage[\n\tbackref=true,\n\tbibstyle=numeric,\n\tcitestyle=numeric-comp,\n\tgiveninits=true,\n\tmaxbibnames=99,\n\tsorting=none,\n\tisbn=false,\n\turl=false,\n\t]{biblatex}\n\\usepackage{microtype}\n\\usepackage{hyperref}\n\\usepackage{cleveref}\n\\usepackage[\n\tmargin=10pt,\n\tfont=small,\n\tlabelfont=bf,\n\t]{caption}\n\n% SINTEF Memo title page\n\\title{$1}\n\\author{$2}\n\\date{\\today}\n\\recipient[${3:comments, agreed, attention, information}]{$4}\n\\project{$5}\n\n% Set up siunitx\n\\sisetup{range-phrase = --}\n\\sisetup{range-units = single}\n\n% Set up hyperref\n\\hypersetup{\n\tcolorlinks=true,\n\tlinkcolor=black,\n\turlcolor=cyan,\n\tcitecolor=black,\n}\n\n% Set up cleveref\n\\crefname{equation}{Eq.}{Eqs.}\n\\crefname{section}{Sec.}{Secs.}\n\\crefname{table}{Tab.}{Tabs.}\n\\crefname{listing}{Listing}{Listings}\n\\crefname{figure}{Fig.}{Figs.}\n\\crefname{subfigure}{Fig.}{Figs.}\n\\newcommand{\\crefrangeconjunction}{--}\n\n% Set up graphics-related things\n\\graphicspath{{./figures/}}\n\n% Options for biblatex\n\\addbibresource{references.bib}\n\n\\begin{document}\n\n\\frontmatter\n\n\\section{Introduction}\n$0\n\n\\section{Conclusion}\n\n% Fakesection: Bibliography\n\\printbibliography\n\n\\end{document}",
+        "description": "Template: SINTEF Memo",
+        "prefix": "templ-sintefmemo"
+    },
+    "templ-tikz": {
+        "body": "\\documentclass{standalone}\n\\usepackage{tikz}\n\\usetikzlibrary{arrows}\n\\usetikzlibrary{positioning}\n\\usetikzlibrary{calc}\n\\begin{document}\n\n\\begin{tikzpicture}\n\t[\n\t\tthick\n\t]\n\t${0}\n\\end{tikzpicture}\n\n\\end{document}",
+        "description": "Template: standalone Tikz figure",
+        "prefix": "templ-tikz"
+    },
+    "und": {
+        "body": "\\underline{$1} $0",
+        "description": "Underline",
+        "prefix": "und"
+    },
+    "begin": {
+      "body": "\\begin{${1:something}}\n\t$0\n\\end{$1}",
+      "description": "begin{} / end{}",
+      "prefix": "begin"
+    },
+    "eqalign": {
+      "body": "\\begin{align}\n\t$0\n\\end{align}",
+      "description": "Align",
+      "prefix": "eqalign"
+    },
+    "notation": {
+      "body": "$1 &= \\text{$2} \\\\\\",
+      "description": "notation of variables in an equation",
+      "prefix": "notation"
+    },
+    "blindtext": {
+      "body": "\\blindtext",
+      "description": "add blindtext in LaTex",
+      "prefix": "blind"
+    },
+    "wrap figure": {
+      "body": [
+        "\\begin{wrapfigure}{r}{${1:width}\\textwidth}",
+        "   \\includegraphics[width=${1:width}\\textwidth]{./img/${2:path}}",
+        "   \\caption{${3:cap}}",
+        "   \\label{fig-${4:label}}",
+        "\\end{wrapfigure}"
+      ],
+      "description": "Add wrap figure with a caption and a label",
+      "prefix": "wrap"
+    }
+}

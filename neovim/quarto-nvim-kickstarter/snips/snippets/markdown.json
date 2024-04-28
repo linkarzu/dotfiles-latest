@@ -1,0 +1,22 @@
+{
+  "eq": {
+    "prefix": ["eq"],
+    "body": ["\\$\\$", "$1", "\\$\\$ {#eq-${2: label}}"]
+  },
+  "Insert Block Equation": {
+    "prefix": "$$",
+    "body": ["\\$$", "${0}", "\\$$"]
+  },
+  "img": {
+    "prefix": ["img"],
+    "body": ["![](./img/$1)"]
+  },
+  "br": {
+    "prefix": ["br"],
+    "body": ["<br/>"]
+  },
+  "todo": {
+    "prefix": ["todo"],
+    "body": ["* [ ] ${1:task} -- due:${2:today} ${3: project:}"]
+  }
+}

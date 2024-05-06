@@ -15,6 +15,17 @@ vim.keymap.set("n", "gl", "$", { desc = "go to the end of the line" })
 vim.keymap.set("v", "gh", "^", { desc = "Go to the beginning of the line in visual mode" })
 vim.keymap.set("v", "gl", "$", { desc = "Go to the end of the line in visual mode" })
 
+-- yank selected text into system clipboard
+-- Vim/Neovim has two clipboards: unnamed register (default) and system clipboard.
+-- Yanking with `y` goes to the unnamed register, accessible only within Vim.
+-- The system clipboard allows sharing data between Vim and other applications.
+-- Yanking with `"+y` copies text to both the unnamed register and system clipboard.
+-- The `"+` register represents the system clipboard.
+-- Using the system clipboard enables seamless integration with other programs.
+-- You can copy from Vim and paste in other apps, and vice versa.
+-- Mapping `<leader>y` to `"+y` provides a convenient way to yank to system clipboard.
+-- This allows quicker interaction with the clipboard without explicitly using `"+`.
+vim.keymap.set({ "n", "v" }, "<leader>y", [["+y]], { desc = "Yank to system clipboard" })
 -- yank/copy to end of line
 vim.keymap.set("n", "Y", "y$", { desc = "Yank to end of line" })
 

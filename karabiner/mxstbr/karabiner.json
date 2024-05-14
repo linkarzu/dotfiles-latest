@@ -2490,10 +2490,10 @@
               {
                 "to": [
                   {
-                    "shell_command": "open btt://execute_assigned_actions_for_trigger/?uuid=CBAA9D60-831D-4315-A6B8-195B8F179C26"
+                    "shell_command": "open btt://execute_assigned_actions_for_trigger/?uuid=93F19080-8CFA-48E5-A8F5-A04EE2884816"
                   }
                 ],
-                "description": "Open btt://execute_assigned_actions_for_trigger/?uuid=CBAA9D60-831D-4315-A6B8-195B8F179C26",
+                "description": "Open btt://execute_assigned_actions_for_trigger/?uuid=93F19080-8CFA-48E5-A8F5-A04EE2884816",
                 "type": "basic",
                 "from": {
                   "key_code": "k",
@@ -2514,10 +2514,10 @@
               {
                 "to": [
                   {
-                    "shell_command": "open btt://execute_assigned_actions_for_trigger/?uuid=3FD931CD-45A8-4AAF-8D73-A9C0E5C41A60"
+                    "shell_command": "open btt://execute_assigned_actions_for_trigger/?uuid=E46BB0D5-F67F-46D5-850C-197337EB26E3"
                   }
                 ],
-                "description": "Open btt://execute_assigned_actions_for_trigger/?uuid=3FD931CD-45A8-4AAF-8D73-A9C0E5C41A60",
+                "description": "Open btt://execute_assigned_actions_for_trigger/?uuid=E46BB0D5-F67F-46D5-850C-197337EB26E3",
                 "type": "basic",
                 "from": {
                   "key_code": "l",

@@ -383,11 +383,13 @@ const rules: KarabinerRules[] = [
       ),
       // Paste alacritty text and go down
       k: open(
-        "btt://execute_assigned_actions_for_trigger/?uuid=CBAA9D60-831D-4315-A6B8-195B8F179C26"
+        "btt://execute_assigned_actions_for_trigger/?uuid=93F19080-8CFA-48E5-A8F5-A04EE2884816"
       ),
-      // Paste kodekloud text and go down
+      // Paste alacritty text and go up
       l: open(
-        "btt://execute_assigned_actions_for_trigger/?uuid=3FD931CD-45A8-4AAF-8D73-A9C0E5C41A60"
+        // This one is working great
+        // paste alacritty go up LESS DELAY
+        "btt://execute_assigned_actions_for_trigger/?uuid=E46BB0D5-F67F-46D5-850C-197337EB26E3"
       ),
       // Reboot router
       u: open(

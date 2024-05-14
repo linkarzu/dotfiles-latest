@@ -6,6 +6,9 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(vim.env.LAZY or lazypath)
 
+-- Set the python3_host_prog variable
+vim.g.python3_host_prog = "~/.venvs/neovim/bin/python"
+
 require("lazy").setup({
   spec = {
     -- add LazyVim and import its plugins

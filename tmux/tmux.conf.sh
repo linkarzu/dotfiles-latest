@@ -357,6 +357,15 @@ set -g @catppuccin_status_connect_separator "no"
 # Other plugins
 ##############################################################################
 
+# list of tmux plugins
+
+# for navigating between tmux panes using Ctrl-hjkl
+# If you have neovim open in a tmux pane, and another tmux pane on the right,
+# you won't be able to jump from neovim to the tmux pane on the right.
+#
+# If you want to do jump between neovim and tmux, you need to install the same
+# 'vim-tmux-navigator' plugin inside neovim
+set -g @plugin 'christoomey/vim-tmux-navigator'
 # persist tmux sessions after computer restart
 # https://github.com/tmux-plugins/tmux-resurrect
 set -g @plugin 'tmux-plugins/tmux-resurrect'

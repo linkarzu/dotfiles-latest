@@ -176,6 +176,7 @@ bind r source-file ~/.tmux.conf \; display-message -d 2000 "Configuration reload
 
 # Bind pane synchronization to Ctrl-b s
 bind Q setw synchronize-panes
+bind Q setw synchronize-panes
 
 # This enables vim nagivation
 # If for example I'm in the scrolling mode (yellow) can navigate with vim motions
@@ -276,10 +277,6 @@ set -g status-position top
 # git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 set -g @plugin 'tmux-plugins/tpm'
 
-# list of tmux plugins
-# for navigating panes and vim/nvim with Ctrl-hjkl
-# set -g @plugin 'christoomey/vim-tmux-navigator'
-
 ##############################################################################
 # Themes section, only enable 1
 
@@ -333,6 +330,12 @@ set -g @catppuccin_window_default_text "#W"
 set -g @catppuccin_window_current_fill "number"
 set -g @catppuccin_window_current_text "#W"
 
+# I got the 'window_zoomed_flag' tip from 'DevOps Toolbox' youtuber
+# https://youtu.be/GH3kpsbbERo?si=4ZoV090qVbble7np
+#
+# Second option shows a message when panes are syncronized
+set -g @catppuccin_window_current_text "#W#{?window_zoomed_flag,#[fg=#ef87ff] (  ),}#{?pane_synchronized,#[fg=#ef87ff] SYNCHRONIZED-PANES,}"
+
 set -g @catppuccin_status_modules_left "session"
 set -g @catppuccin_status_modules_right "none"
 # set -g @catppuccin_status_modules_right "directory"
@@ -366,6 +369,7 @@ set -g @catppuccin_status_connect_separator "no"
 # If you want to do jump between neovim and tmux, you need to install the same
 # 'vim-tmux-navigator' plugin inside neovim
 set -g @plugin 'christoomey/vim-tmux-navigator'
+
 # persist tmux sessions after computer restart
 # https://github.com/tmux-plugins/tmux-resurrect
 set -g @plugin 'tmux-plugins/tmux-resurrect'

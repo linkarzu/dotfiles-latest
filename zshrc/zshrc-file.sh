@@ -86,6 +86,7 @@ create_symlink ~/github/dotfiles-latest/yabai/yabairc ~/.yabairc
 
 # Creating symlinks for directories
 create_symlink ~/github/dotfiles-latest/neovim/nvim-lazyvim ~/.config/nvim
+create_symlink ~/github/dotfiles-latest/neovim/quarto-nvim-kickstarter/ ~/.config/quarto-nvim-kickstarter
 create_symlink ~/github/dotfiles-latest/hammerspoon ~/.hammerspoon
 create_symlink ~/github/dotfiles-latest/karabiner/mxstbr ~/.config/karabiner
 create_symlink ~/github/dotfiles-latest/sketchybar/felixkratz-linkarzu ~/.config/sketchybar
@@ -176,7 +177,9 @@ alias lla='ls -alh'
 alias python='python3'
 # Shows the last 30 entries, default is 15
 alias history='history -30'
-alias v='nvim'
+alias v='export NVIM_APPNAME="nvim" && /opt/homebrew/bin/nvim'
+alias nvim='export NVIM_APPNAME="nvim" && /opt/homebrew/bin/nvim'
+alias q='export NVIM_APPNAME="quarto-nvim-kickstarter" && /opt/homebrew/bin/nvim'
 
 # kubernetes, if you need help, just run 'kgp --help' for example
 alias k='kubectl'
@@ -230,6 +233,8 @@ if [ "$OS" = 'Mac' ]; then
 	export PATH="$JAVA_HOME/bin:$PATH"
 	alias antlr4='java -Xmx500M -cp "/usr/local/lib/antlr-4.13.1-complete.jar:$CLASSPATH" org.antlr.v4.Tool'
 	alias grun='java -Xmx500M -cp "/usr/local/lib/antlr-4.13.1-complete.jar:$CLASSPATH" org.antlr.v4.gui.TestRig'
+
+	export PATH="/opt/homebrew/opt/libpq/bin:$PATH"
 
 	# sketchybar
 	# This will update the brew package count after running a brew upgrade, brew

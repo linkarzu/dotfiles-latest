@@ -94,7 +94,7 @@ const rules: KarabinerRules[] = [
       n: app("Visual Studio Code"),
       a: app("Mail"),
       s: app("Udemy Business"),
-      d: app("Dashlane"),
+      d: app("1Password"),
       f: app("Finder"),
       g: app("Udemy"),
       q: app("Setapp"),

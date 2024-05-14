@@ -22,6 +22,18 @@ return {
         "<cmd>BufExplorer<cr>",
         desc = "Open bufexplorer",
       },
+      {
+        "<S-h>",
+        "<cmd>BufExplorer<cr>",
+        mode = "n",
+        desc = "Open bufexplorer",
+      },
+      {
+        "<S-l>",
+        "<cmd>BufExplorer<cr>",
+        mode = "n",
+        desc = "Open bufexplorer",
+      },
     },
   },
 }

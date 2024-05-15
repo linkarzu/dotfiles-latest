@@ -9,6 +9,12 @@
 -- -- delete default buffer navigation keymaps
 -- vim.keymap.del("n", "<S-h>")
 -- vim.keymap.del("n", "<S-l>")
+
+-- I don't want to switch between buffers anymore, instead I'll use BufExplorer
+-- For this to work, make sure you have the plugin installed
+vim.keymap.set("n", "<S-h>", "<cmd>BufExplorer<cr>", { desc = "Open bufexplorer" })
+vim.keymap.set("n", "<S-l>", "<cmd>BufExplorer<cr>", { desc = "Open bufexplorer" })
+
 -- use kj to exit insert mode
 vim.keymap.set("i", "kj", "<ESC>", { desc = "Exit insert mode with kj" })
 

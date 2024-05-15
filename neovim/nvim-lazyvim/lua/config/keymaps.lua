@@ -5,6 +5,10 @@
 -- Default keymaps that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/keymaps.lua
 -- Add any additional keymaps here
 
+-- -- Leaving this here as an example in case you want to delete default keymaps
+-- -- delete default buffer navigation keymaps
+-- vim.keymap.del("n", "<S-h>")
+-- vim.keymap.del("n", "<S-l>")
 -- use kj to exit insert mode
 vim.keymap.set("i", "kj", "<ESC>", { desc = "Exit insert mode with kj" })
 

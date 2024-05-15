@@ -179,15 +179,33 @@ end, { desc = "GOLANG, execute file" })
 --   end
 -- end, { desc = "Execute Go file in pane on the right" })
 
--- Open a tmux pane on the right in bash, in the same directory as the current file
+-- Toggle a tmux pane on the right in bash, in the same directory as the current file
 -- Opening it in bash because it's faster, I don't have to run my .zshrc file,
 -- which pulls from my repo and a lot of other stuff
-vim.keymap.set("n", "<leader>c.", function()
+vim.keymap.set("n", "<leader>f.", function()
   local file_dir = vim.fn.expand("%:p:h") -- Get the directory of the current file
-  -- `-l 60` specifies the size of the tmux pane, in this case 60 columns
-  local cmd = "silent !tmux split-window -h -l 60 'cd " .. file_dir .. " && bash'"
-  vim.cmd(cmd)
-end, { desc = "BASH, current dir in right tmux pane" })
+  local pane_width = 60
+  local right_pane_id =
+    vim.fn.system("tmux list-panes -F '#{pane_id} #{pane_width}' | awk '$2 == " .. pane_width .. " {print $1}'")
+
+  if right_pane_id ~= "" then
+    -- If the right pane exists, close it
+    vim.fn.system("tmux kill-pane -t " .. right_pane_id)
+  else
+    -- If the right pane doesn't exist, open it
+    vim.fn.system("tmux split-window -h -l " .. pane_width .. " 'cd " .. file_dir .. " && bash'")
+  end
+end, { desc = "Open (toggle) current dir in right tmux pane" })
+
+-- -- Open a tmux pane on the right in bash, in the same directory as the current file
+-- -- Opening it in bash because it's faster, I don't have to run my .zshrc file,
+-- -- which pulls from my repo and a lot of other stuff
+-- vim.keymap.set("n", "<leader>f.", function()
+--   local file_dir = vim.fn.expand("%:p:h") -- Get the directory of the current file
+--   -- `-l 60` specifies the size of the tmux pane, in this case 60 columns
+--   local cmd = "silent !tmux split-window -h -l 60 'cd " .. file_dir .. " && bash'"
+--   vim.cmd(cmd)
+-- end, { desc = "Open current dir in right tmux pane" })
 
 -- This will add 3 lines:
 -- 1. File path with the wordname Filename: first, then the path, and Go project name

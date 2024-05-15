@@ -273,6 +273,19 @@ vim.keymap.set("n", "<leader>ww", function()
   vim.cmd("write")
 end, { desc = "Write current file" })
 
+-- An alternative way of saving
+--
+vim.keymap.set("i", "kjl", function()
+  -- Save the file
+  vim.cmd("write")
+  -- Move to the right
+  vim.cmd("normal l")
+  -- Switch back to command mode after saving
+  vim.cmd("stopinsert")
+  -- Print the "File saved" message and the file path
+  print("FILE SAVED: " .. vim.fn.expand("%:p"))
+end, { desc = "Write current file and exit insert mode" })
+
 -- ############################################################################
 --                         Begin of markdown section
 -- ############################################################################

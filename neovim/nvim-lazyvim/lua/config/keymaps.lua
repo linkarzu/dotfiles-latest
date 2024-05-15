@@ -31,11 +31,8 @@ vim.keymap.set("v", "gl", "$", { desc = "Go to the end of the line in visual mod
 -- The system clipboard allows sharing data between Vim and other applications.
 -- Yanking with `"+y` copies text to both the unnamed register and system clipboard.
 -- The `"+` register represents the system clipboard.
--- Using the system clipboard enables seamless integration with other programs.
--- You can copy from Vim and paste in other apps, and vice versa.
--- Mapping `<leader>y` to `"+y` provides a convenient way to yank to system clipboard.
--- This allows quicker interaction with the clipboard without explicitly using `"+`.
 vim.keymap.set({ "n", "v" }, "<leader>y", [["+y]], { desc = "Yank to system clipboard" })
+
 -- yank/copy to end of line
 vim.keymap.set("n", "Y", "y$", { desc = "Yank to end of line" })
 
@@ -86,6 +83,7 @@ vim.keymap.set(
   [[:%s/\<<C-r><C-w>\>/<C-r>=tolower(expand('<cword>'))<CR>/gI<Left><Left><Left>]],
   { desc = "GLOBALLY replace word I'm on with lowercase" }
 )
+
 -- Quickly alternate between the last 2 files
 -- LazyVim comes with the default shortcut <leader>bb for this, but I navigate
 -- between alternate files way too often, so doing leader<space> is more useful for me

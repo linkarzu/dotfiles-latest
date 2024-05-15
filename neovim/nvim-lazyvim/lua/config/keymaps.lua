@@ -702,6 +702,18 @@ vim.keymap.set("n", "<leader>md", function()
   print("All marks deleted.")
 end, { desc = "Delete all marks" })
 
+-- Open current file in finder
+vim.keymap.set("n", "<leader>fO", function()
+  local file_path = vim.fn.expand("%:p")
+  if file_path ~= "" then
+    local command = "open -R " .. vim.fn.shellescape(file_path)
+    vim.fn.system(command)
+    print("Opened file in Finder: " .. file_path)
+  else
+    print("No file is currently open")
+  end
+end, { desc = "Open current file in Finder" })
+
 -- -- From Primeagen's tmux-sessionizer
 -- -- ctrl+f in normal mode will silently run a command to create a new tmux window and execute the tmux-sessionizer.
 -- -- Allowing quick creation and navigation of tmux sessions directly from the editor.

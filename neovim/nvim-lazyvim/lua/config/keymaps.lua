@@ -71,6 +71,21 @@ vim.keymap.set(
   { desc = "Replace word I'm currently on GLOBALLY" }
 )
 
+-- Replaces the current word with the same word in uppercase, globally
+vim.keymap.set(
+  "n",
+  "<leader>sU",
+  [[:%s/\<<C-r><C-w>\>/<C-r>=toupper(expand('<cword>'))<CR>/gI<Left><Left><Left>]],
+  { desc = "GLOBALLY replace word I'm on with UPPERCASE" }
+)
+
+-- Replaces the current word with the same word in lowercase, globally
+vim.keymap.set(
+  "n",
+  "<leader>sL",
+  [[:%s/\<<C-r><C-w>\>/<C-r>=tolower(expand('<cword>'))<CR>/gI<Left><Left><Left>]],
+  { desc = "GLOBALLY replace word I'm on with lowercase" }
+)
 -- Quickly alternate between the last 2 files
 -- LazyVim comes with the default shortcut <leader>bb for this, but I navigate
 -- between alternate files way too often, so doing leader<space> is more useful for me

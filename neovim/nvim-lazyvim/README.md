@@ -20,6 +20,14 @@
 
 ## Things to remember
 
+### Increment decrement selection
+
+- This uses
+  [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter)
+- The default lazyvim keymaps are
+  - `<c-space>` (control+space) - to increment the selection
+  - `<bs>` (backspace) - to decrease the selection
+
 ### Surround
 
 - Replace a surrounding
@@ -56,9 +64,23 @@
 - You can confirm using the `:highlight` command, there you can grep for the
   values and see the current hex colors
 
-### See messages history
+### noice.nvim
 
-Use the command `:NoiceHistory`
+- This is a plugin created by folke, "Highly experimental plugin that completely
+  replaces the UI for messages, cmdline and the popupmenu"
+- Plugin that shows you little popups on the top right corner with messsages
+
+#### See messages history
+
+- Use the command `:NoiceHistory`
+- There's a default lazyvim keymap `<leader>snh`
+
+#### Dismiss All
+
+- If you open neovim on an old outdated machine, you will get hundreds of nocice
+  messages on the screen, sometimes occuppying the entire screen and you won't
+  be able to read
+- `<leader>snd` clears them all
 
 ### See formatters applied to a file
 
@@ -220,5 +242,111 @@ spawn: python3 failed with exit code 1 and signal 0.
 # Without confirmation
 :g/^\s*#\{2,}\s/ s/^#\(#\+\s.*\)/\1/
 ```
+
+## Providers
+
+### Python 3 provider
+
+- When running the `:healtcheck` command, I used to see these warnings under
+  they python 3 provider
+
+```bash
+provider: health#provider#check
+
+Python 3 provider (optional) ~
+- WARNING No Python executable found that can `import neovim`. Using the first available executable for diagnostics.
+- WARNING Could not load Python 3:
+  /opt/homebrew/bin/python3 does not have the "neovim" module.
+  /opt/homebrew/bin/python3.12 does not have the "neovim" module.
+  python3.11 not found in search path or not executable.
+  python3.10 not found in search path or not executable.
+  python3.9 not found in search path or not executable.
+  python3.8 not found in search path or not executable.
+  python3.7 not found in search path or not executable.
+  python not found in search path or not executable.
+  - ADVICE:
+    - See :help |provider-python| for more information.
+    - You may disable this provider (and warning) by adding `let g:loaded_python3_provider = 0` to your init.vim
+- Executable: Not found
+```
+
+- So I ran `:help provider-python` which showed me this
+  - In the documentation you can move around "tags" with `shift+k` that takes
+    you to the `|sections|`
+
+```bash
+To use Python plugins, you need the "pynvim" module. Run |:checkhealth| to see
+if you already have it (some package managers install the module with Nvim
+itself).
+
+For Python 3 plugins:
+1. Make sure Python 3.4+ is available in your $PATH.
+2. Install the module (try "python" if "python3" is missing): >bash
+   python3 -m pip install --user --upgrade pynvim
+
+The pip `--upgrade` flag ensures that you get the latest version even if
+a previous version was already installed.
+
+See also |python-virtualenv|.
+```
+
+- To fix this
+
+```bash
+# check the installed Python version, mine was 3.12, so Im good
+python3 --version
+
+# Create a virtual environment for Neovim
+python3 -m venv ~/.venvs/neovim
+
+# Activate the virtual environment
+source ~/.venvs/neovim/bin/activate
+
+# nstall the pynvim module within the virtual environment
+python3 -m pip install --upgrade pynvim
+
+# Then configure Neovim to use the virtual environment
+# I added the following to my lazy.lua file
+# -- Set the python3_host_prog variable
+# vim.g.python3_host_prog = "~/.venvs/neovim/bin/python"
+#
+# Right before the `require("lazy").setup({` line
+
+# Deactivate the virtual environment
+# This command deactivates the virtual environment in the current terminal session,
+# so you won't see the virtual environment name in your starship prompt anymore.
+# However, Neovim will still use the Python executable and packages from the virtual
+# environment because we have configured the `python3_host_prog` variable to point to
+# the Python executable within the virtual environment.
+# Deactivating the virtual environment only affects the current terminal session and
+# doesn't impact Neovim's ability to use the virtual environment for its Python support.
+deactivate
+```
+
+- After this, the python 3 provider shows this in `healtcheck`
+
+```bash
+Python 3 provider (optional) ~
+- Using: g:python3_host_prog = "~/.venvs/neovim/bin/python"
+- Executable: /Users/linkarzu/.venvs/neovim/bin/python
+- Python version: 3.12.3
+- pynvim version: 0.5.0
+- OK Latest pynvim is installed.
+```
+
+## Plugins stopped working
+
+### Reinstall markdown-preview.nvim
+
+- This plugin just stopped working, all I see when I try to run a preview was an
+  error `Node. js v21.7.3` and nothing else.
+- I updated all my packages, fixed errors in the `checkhealth` section, but
+  nothing worked
+- Reinstalling the plugin fixed it, here's how:
+  - Open `:Lazy` I normally do with `<leader>l`
+  - Find the plugin, and hit the lowercase `x` when next to it
+  - Then I just pressed uppercase `C` to check for updates
+  - Then I pressed `I` to install, and it installed it again
+- That solved the issue
 
 ## End of file

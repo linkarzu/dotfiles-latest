@@ -16,7 +16,23 @@ vim.keymap.set("n", "<S-h>", "<cmd>BufExplorer<cr>", { desc = "Open bufexplorer"
 vim.keymap.set("n", "<S-l>", "<cmd>BufExplorer<cr>", { desc = "Open bufexplorer" })
 
 -- use kj to exit insert mode
-vim.keymap.set("i", "kj", "<ESC>", { desc = "Exit insert mode with kj" })
+-- vim.keymap.set("i", "kj", "<ESC>", { desc = "Exit insert mode with kj" })
+
+-- An alternative way of saving
+-- Auto saving when exiting insert mode with `kj`
+vim.keymap.set("i", "kj", function()
+  -- "Write" saves regardless of whether the buffer has been modified or not
+  -- vim.cmd("write")
+  -- "Update" saves only if the buffer has been modified since the last save
+  -- Suggested in reddit by user @SeoCamo
+  vim.cmd("update")
+  -- Move to the right
+  vim.cmd("normal l")
+  -- Switch back to command mode after saving
+  vim.cmd("stopinsert")
+  -- Print the "File saved" message and the file path
+  -- print("FILE SAVED: " .. vim.fn.expand("%:p"))
+end, { desc = "Write current file and exit insert mode" })
 
 -- use gh to move to the beginning of the line in normal mode
 -- use gl to move to the end of the line in normal mode
@@ -270,19 +286,6 @@ end, { desc = "Insert filename with path at cursor" })
 vim.keymap.set("n", "<leader>ww", function()
   vim.cmd("write")
 end, { desc = "Write current file" })
-
--- An alternative way of saving
---
-vim.keymap.set("i", "kjl", function()
-  -- Save the file
-  vim.cmd("write")
-  -- Move to the right
-  vim.cmd("normal l")
-  -- Switch back to command mode after saving
-  vim.cmd("stopinsert")
-  -- Print the "File saved" message and the file path
-  print("FILE SAVED: " .. vim.fn.expand("%:p"))
-end, { desc = "Write current file and exit insert mode" })
 
 -- ############################################################################
 --                         Begin of markdown section

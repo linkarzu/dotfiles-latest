@@ -744,6 +744,43 @@ vim.keymap.set("n", "<leader>fO", function()
   end
 end, { desc = "Open current file in Finder" })
 
+-- Open image under cursor in macOS Preview app
+vim.keymap.set("n", "<leader>io", function()
+  local function get_image_path()
+    -- Get the current line
+    local line = vim.api.nvim_get_current_line()
+    -- Pattern to match image path in Markdown
+    local image_pattern = "%[.-%]%((.-)%)"
+    -- Extract relative image path
+    local _, _, relative_image_path = string.find(line, image_pattern)
+
+    -- Get the current file's directory
+    local current_file_path = vim.fn.expand("%:p:h")
+    -- Construct absolute image path
+    local absolute_image_path = current_file_path .. "/" .. relative_image_path
+
+    return absolute_image_path
+  end
+
+  -- Get the absolute image path
+  local image_path = get_image_path()
+
+  if image_path then
+    -- Construct command to open image in Preview
+    local command = "open -a Preview " .. vim.fn.shellescape(image_path)
+    -- Execute the command
+    local success = os.execute(command)
+
+    if success then
+      print("Opened image in Preview: " .. image_path)
+    else
+      print("Failed to open image in Preview: " .. image_path)
+    end
+  else
+    print("No image found under the cursor")
+  end
+end, { desc = "Open image under cursor in Preview" })
+
 -- -- From Primeagen's tmux-sessionizer
 -- -- ctrl+f in normal mode will silently run a command to create a new tmux window and execute the tmux-sessionizer.
 -- -- Allowing quick creation and navigation of tmux sessions directly from the editor.

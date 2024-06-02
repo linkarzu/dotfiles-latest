@@ -30,7 +30,7 @@ disabled = true
 disabled = true
 
 [time]
-style = '#A6AAF1 bold'
+style = '#a48cf2 bold'
 disabled = false
 format = '[\[$time\]]($style) '
 # https://docs.rs/chrono/0.4.7/chrono/format/strftime/index.html
@@ -40,28 +40,29 @@ time_format = '%y/%m/%d %T'
 # For this to show up correcly, you need to have cluster access
 # So your ~/.kube/config needs to be configured on the local machine
 [kubernetes]
+disabled = true
 # context = user@cluster
-format = '[$user@$cluster \($namespace\)](dimmed green) '
+format = '[$user@$cluster \($namespace\)](#f265b5) '
 # format = 'on [⛵ ($user on )($cluster in )$context \($namespace\)](dimmed green) '
-disabled = false
 # Only dirs that have this file inside will show the kubernetes prompt
 detect_files = ['900-detectkubernetes.sh']
+# detect_env_vars = ['STAR_USE_KUBE']
 # contexts = [
 #   { context_pattern = "dev.local.cluster.k8s", style = "green", symbol = "💔 " },
 # ]
 
 [username]
-style_user = '#a6aaf1 bold'
+style_user = '#a48cf2 bold'
 style_root = 'white bold'
 format = '[$user]($style)'
 show_always = true
 
 [hostname]
 ssh_only = false
-format = '[.@.](white bold)[$hostname](#50fa7b bold)'
+format = '[.@.](white bold)[$hostname](#37f499 bold)'
 
 [directory]
-style = '#00a5ff bold'
+style = '#04d1f9 bold'
 truncation_length = 0
 truncate_to_repo = false
 

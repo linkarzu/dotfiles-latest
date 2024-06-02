@@ -76,12 +76,14 @@ create_symlink() {
 }
 
 # Creating symlinks for files and directories
+# Creating symlinks for files
 create_symlink ~/github/dotfiles-latest/vimrc/vimrc-file ~/.vimrc
 create_symlink ~/github/dotfiles-latest/vimrc/vimrc-file ~/github/obsidian_main/.obsidian.vimrc
 create_symlink ~/github/dotfiles-latest/zshrc/zshrc-file.sh ~/.zshrc
 create_symlink ~/github/dotfiles-latest/bashrc/bashrc-file.sh ~/.bashrc
 create_symlink ~/github/dotfiles-latest/tmux/tmux.conf.sh ~/.tmux.conf
 create_symlink ~/github/dotfiles-latest/alacritty/alacritty.toml ~/.config/alacritty/alacritty.toml
+create_symlink ~/github/dotfiles-latest/kitty/kitty.conf ~/.config/kitty/kitty.conf
 create_symlink ~/github/dotfiles-latest/yabai/yabairc ~/.yabairc
 
 # Creating symlinks for directories

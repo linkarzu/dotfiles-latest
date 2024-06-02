@@ -3,22 +3,59 @@
 <!-- toc -->
 
 - [Things to remember](#things-to-remember)
-  - [Surround](#surround)
-  - [Syntax highlighting (treesitter)](#syntax-highlighting-treesitter)
-  - [Change value of highlight colors](#change-value-of-highlight-colors)
-  - [See messages history](#see-messages-history)
-  - [See formatters applied to a file](#see-formatters-applied-to-a-file)
-  - [Check the value of options](#check-the-value-of-options)
-  - [Check the help command](#check-the-help-command)
-  - [Spectre pattern matching](#spectre-pattern-matching)
-  - [Working with markdown](#working-with-markdown)
-    - [markdownlint config](#markdownlint-config)
+  * [Plugin that enables vio and vao](#plugin-that-enables-vio-and-vao)
+  * [Record macro](#record-macro)
+  * [Increment decrement selection](#increment-decrement-selection)
+  * [Surround](#surround)
+  * [Syntax highlighting (treesitter)](#syntax-highlighting-treesitter)
+  * [Change value of highlight colors](#change-value-of-highlight-colors)
+  * [noice.nvim](#noicenvim)
+    + [See messages history](#see-messages-history)
+    + [Dismiss All](#dismiss-all)
+  * [See formatters applied to a file](#see-formatters-applied-to-a-file)
+  * [Check the value of options](#check-the-value-of-options)
+  * [Check the help command](#check-the-help-command)
+  * [Spectre pattern matching](#spectre-pattern-matching)
+  * [Working with markdown](#working-with-markdown)
+    + [markdownlint config](#markdownlint-config)
 - [Fix Mason warnings](#fix-mason-warnings)
 - [Working with marks](#working-with-marks)
+- [Replacements](#replacements)
+  * [Increase markdown headings](#increase-markdown-headings)
+  * [Reduce markdown headings](#reduce-markdown-headings)
+- [Providers](#providers)
+  * [Python 3 provider](#python-3-provider)
+- [Plugins stopped working](#plugins-stopped-working)
+  * [Reinstall markdown-preview.nvim](#reinstall-markdown-previewnvim)
+- [image.nvim](#imagenvim)
+  * [Install luarocks (optional)](#install-luarocks-optional)
 
 <!-- tocstop -->
 
 ## Things to remember
+
+### Plugin that enables vio and vao
+
+- I use `vio` A LOT when working with markdown files to select all the text in a
+  codeblock, but it suddenly stopped working
+- By looking at the changelog, I realized that the plugin that does this is
+  `mini.ai`, it can be enabled via `:LazyExtras`, but I added manually instead
+
+### Record macro
+
+- I want to convert all the words inside '' to lowercase, as they're in
+  uppercase
+- Without macros I position myself on the first line, press `vi'u`
+  - select inside ' and then lowercase
+- I want to do this for 13 lines, so I'll create a macro:
+- Position your cursor on the first line where you want to start the macro
+- Press `qa` to start recording the macro in registar `a`
+- Perform the desired actions:
+  - Press `vi'u`
+  - Press `j` to move to the next line
+  - Press `q` to stop recording the macro
+- To execute the macro on the next 12 lines:
+  - Press `12@a`
 
 ### Increment decrement selection
 
@@ -349,4 +386,300 @@ Python 3 provider (optional) ~
   - Then I pressed `I` to install, and it installed it again
 - That solved the issue
 
-## End of file
+## image.nvim
+
+- I have an M1 mac running macos 14 (Sonoma)
+
+```bash
+sysctl -a | grep cpu.brand
+sw_vers
+```
+
+```bash
+linkarzu.@.mini~/github
+[24/05/23 14:33:36] kubernetes-admin@kubernetes ()
+❯ sysctl -a | grep cpu.brand
+machdep.cpu.brand_string: Apple M1
+
+linkarzu.@.mini~/github
+[24/05/23 14:33:40] kubernetes-admin@kubernetes ()
+❯ sw_vers
+ProductName:            macOS
+ProductVersion:         14.4.1
+BuildVersion:           23E224
+```
+
+- My neovim version is 0.10
+
+```bash
+nvim -v
+```
+
+```bash
+test comment
+linkarzu.@.mini~/.luarocks/share/lua/5.1/magick/wand via 🌙 v5.4.6
+[24/05/23 14:19:03] kubernetes-admin@kubernetes ()
+❯ nvim -v
+NVIM v0.10.0
+Build type: Release
+LuaJIT 2.1.1713773202
+Run "nvim -V1 -v" for more info
+```
+
+- I'm using the kitty terminal, version 0.34.1
+  - kitty is required, unless you want to use `ueberzugpp`
+
+```bash
+kitty --version
+```
+
+```bash
+linkarzu.@.mini~
+[24/05/23 09:53:24] kubernetes-admin@kubernetes ()
+❯ kitty --version
+kitty 0.34.1 created by Kovid Goyal
+```
+
+- I'm using zsh
+
+```bash
+echo $0
+```
+
+```bash
+linkarzu.@.mini~
+[24/05/23 09:53:28] kubernetes-admin@kubernetes ()
+❯ echo $0
+-zsh
+```
+
+- I installed the ImageMagick system package
+- `https://github.com/ImageMagick/ImageMagick/blob/main/Install-mac.txt`
+
+```bash
+brew install imagemagick
+```
+
+-To confirm that ImageMagick is installed
+
+```bash
+identify -version
+```
+
+```bash
+linkarzu.@.mini~
+[24/05/23 11:49:33] kubernetes-admin@kubernetes ()
+❯ identify -version
+Version: ImageMagick 7.1.1-32 Q16-HDRI aarch64 22207 https://imagemagick.org
+Copyright: (C) 1999 ImageMagick Studio LLC
+License: https://imagemagick.org/script/license.php
+Features: Cipher DPC HDRI Modules OpenMP(5.0)
+Delegates (built-in): bzlib fontconfig freetype gslib heic jng jp2 jpeg jxl lcms lqr ltdl lzma openexr png ps raw tiff webp xml zlib zstd
+Compiler: gcc (4.2)
+```
+
+- Review the imagemagick package information, pay close attention to the
+  `Dependencies` section
+  - Notice that I'm missing the `pkg-config` one (`x` next to the name)
+- Figuring this out took me a day, so pay close attention to it
+- I'll install this missing dependency below
+
+```bash
+brew info imagemagick
+```
+
+```bash
+linkarzu.@.mini/opt/homebrew/lib on  master via 🌙 via  v22.2.0
+[24/05/23 18:49:25] kubernetes-admin@kubernetes ()
+❯ brew info imagemagick
+==> imagemagick: stable 7.1.1-32 (bottled), HEAD
+Tools and libraries to manipulate images in many formats
+https://imagemagick.org/index.php
+Installed
+/opt/homebrew/Cellar/imagemagick/7.1.1-32 (809 files, 32.3MB) *
+  Poured from bottle using the formulae.brew.sh API on 2024-05-22 at 16:22:20
+From: https://github.com/Homebrew/homebrew-core/blob/HEAD/Formula/i/imagemagick.rb
+License: ImageMagick
+==> Dependencies
+Build: pkg-config ✘
+Required: freetype ✔, ghostscript ✔, jpeg-turbo ✔, libheif ✔, liblqr ✔, libpng ✔, libraw ✔, libtiff ✔, libtool ✔, little-cms2 ✔, openexr ✔, openjpeg ✔, webp ✔, xz ✔, libomp ✔
+==> Options
+--HEAD
+        Install HEAD version
+==> Analytics
+install: 71,186 (30 days), 224,277 (90 days), 885,106 (365 days)
+install-on-request: 65,697 (30 days), 208,218 (90 days), 816,570 (365 days)
+build-error: 19 (30 days)
+```
+
+- I'm installing the missing dependency shown above
+  - `https://github.com/3rd/image.nvim/issues/18#issuecomment-1837218766`
+
+```bash
+brew install pkg-config
+```
+
+- If you don't install this dependency above, you will get the error
+
+```bash
+msg_show image.nvim: magick rock not found, please install it and restart your editor.
+Error: "/Users/linkarzu/.luarocks/share/lua/5.1/magick/wand/lib.lua:220: Failed to load ImageMagick (MagickWand)"
+```
+
+- You need lua, notice the version I have installed
+  - `brew install lua`
+
+```bash
+lua -v
+```
+
+```bash
+linkarzu.@.mini~
+[24/05/24 12:03:10] kubernetes-admin@kubernetes ()
+❯ lua -v
+Lua 5.4.6  Copyright (C) 1994-2023 Lua.org, PUC-Rio
+```
+
+- Then just create the plugin file for `image.nvim`, which in my case is
+  `plugins/image-nvim.lua`
+  - This will install `luarocks` via `luarocks.nvim`, and the `magick`
+    dependency needed to view images
+  - If you do this, you don't need to install luarocks locally as shown in the
+    section below
+- `luarocks.nvim` is a Neovim plugin designed to streamline the installation of
+  luarocks packages directly within Neovim. It simplifies the process of
+  managing Lua dependencies, ensuring a hassle-free experience for Neovim users
+  - `https://github.com/vhyrro/luarocks.nvim`
+
+---
+
+- If using tmux add this to the tmux.conf file
+
+```bash
+# https://github.com/3rd/image.nvim/?tab=readme-ov-file#tmux
+# This is needed by the image.nvim plugin
+set -gq allow-passthrough on
+# This is related to the `tmux_show_only_in_active_window = true,` config in
+# image.nvim
+set -g visual-activity off
+```
+
+### Install luarocks (optional)
+
+- You ONLY need to install `luarocks` and `magick` if you're not doing it via
+  the `plugins/image-nvim.lua` neovim plugin
+- You need to install `luarocks`, to then install `magick`
+- `https://github.com/luarocks/luarocks/wiki/Installation-instructions-for-macOS`
+
+---
+
+- This section is if you want to install lua through `luaver`
+- I'm not sure if lua 5.1 is needed or if it works with 5.4, so I installed
+  `luaver` to manage multiple lua and luarocks versions and I'm using 5.1
+  - Notice that this install lua, luarocks and magick
+  - If you already have lua installed through brew, uninstall it first
+    - `brew uninstall lua`
+
+```bash
+	# Commands below downloads and uses a specific version
+	my_lua_touse=5.1 && luaver install $my_lua_touse && luaver set-default $my_lua_touse && luaver use $my_lua_touse
+	my_luar_touse=3.11.0 && luaver install-luarocks $my_luar_touse && luaver set-default-luarocks $my_luar_touse && luaver use-luarocks $my_luar_touse
+	luarocks install magick
+	luaver install 5.4.6
+```
+
+---
+
+- This section below is if you DONT want to use `luaver` but use lua directly
+  through brew
+  - First make sure lua is installed
+  - `brew install lua`
+- Then install luarocks
+
+```bash
+brew install luarocks
+```
+
+- Here's my luarocks version
+
+```bash
+luarocks --version
+```
+
+```bash
+linkarzu.@.mini~
+[24/05/23 12:04:33] kubernetes-admin@kubernetes ()
+❯ luarocks --version
+/opt/homebrew/bin/luarocks 3.11.0
+LuaRocks main command-line interface
+```
+
+- By just typing `luarocks` it shows me the configuration and also the lua
+  version
+  - I have lua 5.4 installed
+
+```bash
+luarocks
+```
+
+```bash
+Configuration:
+   Lua:
+      Version    : 5.4
+      LUA        : /opt/homebrew/opt/lua/bin/lua5.4 (ok)
+      LUA_INCDIR : /opt/homebrew/opt/lua/include/lua5.4 (ok)
+      LUA_LIBDIR : /opt/homebrew/opt/lua/lib (ok)
+
+   Configuration files:
+      System  : /opt/homebrew/etc/luarocks/config-5.4.lua (ok)
+      User    : /Users/linkarzu/.luarocks/config-5.4.lua (not found)
+
+   Rocks trees in use:
+      /Users/linkarzu/.luarocks ("user")
+      /opt/homebrew ("system")
+```
+
+- Now I'll install magick
+- Remember that I'm using lua 5.4, but when looking at the magick
+  [requirements](https://luarocks.org/modules/leafo/magick)
+  - I noticed a dependency for lua 5.1
+  - So I assume that's why the version 5.1 is specified below
+  - Tried installing without that version but it does not install it
+
+```bash
+luarocks --local --lua-version=5.1 install magick
+```
+
+```bash
+linkarzu.@.mini~
+[24/05/23 12:09:35] kubernetes-admin@kubernetes ()
+❯ luarocks --local --lua-version=5.1 install magick
+Installing https://luarocks.org/magick-1.6.0-1.src.rock
+
+magick 1.6.0-1 depends on lua 5.1 (5.1-1 provided by VM: success)
+No existing manifest. Attempting to rebuild...
+magick 1.6.0-1 is now installed in /Users/linkarzu/.luarocks (license: MIT)
+```
+
+- Notice that magick is installed
+
+```bash
+luarocks --lua-version=5.1 list
+```
+
+```bash
+linkarzu.@.mini~/github/obsidian_main on  main [!] took 2s
+[24/05/23 14:04:56] kubernetes-admin@kubernetes ()
+❯ luarocks --lua-version=5.1 list
+
+Rocks installed for Lua 5.1
+---------------------------
+
+magick
+   1.6.0-1 (installed) - /Users/linkarzu/.luarocks/lib/luarocks/rocks-5.1
+```
+
+- If you want to use the local luarocks installation instead of the
+  `luarocks.nvim` one
+- Uncomment the lines at the top of the `plugins/image-nvim.lua` file
+- Just make sure they point to the right path

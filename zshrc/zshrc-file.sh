@@ -271,6 +271,23 @@ if [ "$OS" = 'Mac' ]; then
 		}
 	fi
 
+	# Luaver
+	# luaver can be used to install multiple lua and luarocks versions
+	# Commands below downloads and uses a specific version
+	# my_lua_touse=5.1 && luaver install $my_lua_touse && luaver set-default $my_lua_touse && luaver use $my_lua_touse
+	# my_luar_touse=3.11.0 && luaver install-luarocks $my_luar_touse && luaver set-default-luarocks $my_luar_touse && luaver use-luarocks $my_luar_touse
+	# luarocks install magick
+	# luaver install 5.4.6
+	#
+	# This is in case luaver was installed through homebrew
+	# If the file is not empty, then source it
+	[ -s $(brew --prefix)/opt/luaver/bin/luaver ] && . $(brew --prefix)/opt/luaver/bin/luaver
+	# This is in case it the repo was cloned with the following command
+	# git clone https://github.com/DhavalKapil/luaver.git ~/.luaver
+	# If the file is not empty, then source it
+	[ -s ~/.luaver/luaver ] && . ~/.luaver/luaver
+	# Line below won't work with zsh, there's no zsh completions I guess
+	# [ -s ~/.luaver/completions/luaver.bash ] && . ~/.luaver/completions/luaver.bash
 	# Starship
 	# https://starship.rs/config/#prompt
 	if command -v starship &>/dev/null; then

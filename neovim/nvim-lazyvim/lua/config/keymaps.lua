@@ -303,6 +303,15 @@ vim.keymap.set("n", "<leader>ir", function()
   print("Images refreshed")
 end, { desc = "Refresh images" })
 
+-- Set up a keymap to clear all images in the current buffer
+-- You won't be able to get them back until you re-open the file
+vim.keymap.set("n", "<leader>ic", function()
+  -- I'm using [[ ]] to escape the special characters in a command
+  vim.cmd([[lua require("image").clear()]])
+  print("Images cleared")
+end, { desc = "Clear images" })
+
+-- ##################################################################
 --                         Begin of markdown section
 -- ############################################################################
 

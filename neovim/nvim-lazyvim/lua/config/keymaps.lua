@@ -287,7 +287,22 @@ vim.keymap.set("n", "<leader>ww", function()
   vim.cmd("write")
 end, { desc = "Write current file" })
 
--- ############################################################################
+-- Set up a keymap to clear all images in the current buffer and then refresh them
+vim.keymap.set("n", "<leader>ir", function()
+  local api = require("image")
+  local bufnr = vim.api.nvim_get_current_buf()
+  local images = api.get_images({ buffer = bufnr })
+  -- Clear all images
+  for _, image in ipairs(images) do
+    image:clear(true)
+  end
+  -- Refresh the cleared images
+  for _, image in ipairs(images) do
+    image:render()
+  end
+  print("Images refreshed")
+end, { desc = "Refresh images" })
+
 --                         Begin of markdown section
 -- ############################################################################
 

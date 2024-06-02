@@ -122,6 +122,11 @@
                     "type": "variable_if",
                     "name": "hyper_sublayer_l",
                     "value": 0
+                  },
+                  {
+                    "type": "variable_if",
+                    "name": "hyper_sublayer_b",
+                    "value": 0
                   }
                 ]
               },
@@ -176,10 +181,10 @@
               {
                 "to": [
                   {
-                    "shell_command": "open -a 'Alacritty.app'"
+                    "shell_command": "open -a 'kitty.app'"
                   }
                 ],
-                "description": "Open -a 'Alacritty.app'",
+                "description": "Open -a 'kitty.app'",
                 "type": "basic",
                 "from": {
                   "key_code": "j",
@@ -863,6 +868,11 @@
                     "type": "variable_if",
                     "name": "hyper_sublayer_l",
                     "value": 0
+                  },
+                  {
+                    "type": "variable_if",
+                    "name": "hyper_sublayer_b",
+                    "value": 0
                   }
                 ]
               },
@@ -1268,6 +1278,11 @@
                     "type": "variable_if",
                     "name": "hyper_sublayer_l",
                     "value": 0
+                  },
+                  {
+                    "type": "variable_if",
+                    "name": "hyper_sublayer_b",
+                    "value": 0
                   }
                 ]
               },
@@ -1576,6 +1591,11 @@
                   {
                     "type": "variable_if",
                     "name": "hyper_sublayer_l",
+                    "value": 0
+                  },
+                  {
+                    "type": "variable_if",
+                    "name": "hyper_sublayer_b",
                     "value": 0
                   }
                 ]
@@ -1933,6 +1953,11 @@
                   {
                     "type": "variable_if",
                     "name": "hyper_sublayer_l",
+                    "value": 0
+                  },
+                  {
+                    "type": "variable_if",
+                    "name": "hyper_sublayer_b",
                     "value": 0
                   }
                 ]
@@ -2460,6 +2485,11 @@
                     "type": "variable_if",
                     "name": "hyper_sublayer_l",
                     "value": 0
+                  },
+                  {
+                    "type": "variable_if",
+                    "name": "hyper_sublayer_b",
+                    "value": 0
                   }
                 ]
               },
@@ -2648,6 +2678,11 @@
                   {
                     "type": "variable_if",
                     "name": "hyper_sublayer_l",
+                    "value": 0
+                  },
+                  {
+                    "type": "variable_if",
+                    "name": "hyper_sublayer_b",
                     "value": 0
                   }
                 ]
@@ -2954,6 +2989,11 @@
                     "type": "variable_if",
                     "name": "hyper_sublayer_l",
                     "value": 0
+                  },
+                  {
+                    "type": "variable_if",
+                    "name": "hyper_sublayer_b",
+                    "value": 0
                   }
                 ]
               },
@@ -3168,6 +3208,33 @@
                 "type": "basic",
                 "from": {
                   "key_code": "l",
+                  "modifiers": {
+                    "mandatory": [
+                      "left_command",
+                      "left_control",
+                      "left_shift",
+                      "left_option"
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "description": "Hyper Key + b",
+            "manipulators": [
+              {
+                "to": [
+                  {
+                    "key_code": "b",
+                    "modifiers": [
+                      "left_control"
+                    ]
+                  }
+                ],
+                "type": "basic",
+                "from": {
+                  "key_code": "b",
                   "modifiers": {
                     "mandatory": [
                       "left_command",

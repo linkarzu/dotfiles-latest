@@ -80,7 +80,8 @@ const rules: KarabinerRules[] = [
     // I use spacebar as the app launcher
     spacebar: {
       h: app("Spotify"),
-      j: app("Alacritty"),
+      // j: app("Alacritty"),
+      j: app("kitty"),
       k: app("Safari"),
       l: app("Obsidian"),
       semicolon: app("ChatGPT"),
@@ -493,8 +494,8 @@ const rules: KarabinerRules[] = [
     //   },
     // },
 
-    // Vim nagivation
     // ALWAYS LEAVE THE ONES WITHOUT ANY SUBLAYERS AT THE BOTTOM
+    // Vim nagivation
     h: {
       to: [{ key_code: "left_arrow" }],
     },
@@ -506,6 +507,10 @@ const rules: KarabinerRules[] = [
     },
     l: {
       to: [{ key_code: "right_arrow" }],
+    },
+    // Map hyper+b to ctrl+b for tmux
+    b: {
+      to: [{ key_code: "b", modifiers: ["left_control"] }],
     },
   }),
 ];

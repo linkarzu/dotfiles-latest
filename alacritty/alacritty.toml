@@ -98,7 +98,7 @@ program = "/bin/zsh"
 args = ["--login", "-c", "/opt/homebrew/bin/tmux attach || //opt/homebrew/bin/tmux"]
 
 [window]
-opacity = 1
+# opacity = 1
 
 # Remove the title bar on the top, it's nice, but sometimes I use multiple
 # instances of alacritty with cmd+n and I cmd+` between them, without the top

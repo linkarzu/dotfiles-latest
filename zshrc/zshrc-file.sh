@@ -231,7 +231,9 @@ esac
 # macOS-specific configurations
 if [ "$OS" = 'Mac' ]; then
 
+	# Set JAVA_HOME to the OpenJDK installation managed by Homebrew
 	export JAVA_HOME="/opt/homebrew/opt/openjdk"
+	# Add JAVA_HOME/bin to the beginning of the PATH
 	export PATH="$JAVA_HOME/bin:$PATH"
 	alias antlr4='java -Xmx500M -cp "/usr/local/lib/antlr-4.13.1-complete.jar:$CLASSPATH" org.antlr.v4.Tool'
 	alias grun='java -Xmx500M -cp "/usr/local/lib/antlr-4.13.1-complete.jar:$CLASSPATH" org.antlr.v4.gui.TestRig'

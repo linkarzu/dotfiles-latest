@@ -315,6 +315,11 @@ end, { desc = "Clear images" })
 --                         Begin of markdown section
 -- ############################################################################
 
+-- Paste images, I also allow this in insert mode
+vim.keymap.set({ "n", "v", "i" }, "<C-v>", function()
+  vim.cmd("PasteImage")
+end, { desc = "Paste image from system clipboard" })
+
 -- When I press leader, I want 'm' to show me 'markdown'
 -- https://github.com/folke/which-key.nvim?tab=readme-ov-file#%EF%B8%8F-mappings
 local wk = require("which-key")

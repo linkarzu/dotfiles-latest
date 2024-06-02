@@ -75,7 +75,6 @@ create_symlink() {
 	echo -e "  TO: '$target_path'${noColor}"
 }
 
-# Creating symlinks for files and directories
 # Creating symlinks for files
 create_symlink ~/github/dotfiles-latest/vimrc/vimrc-file ~/.vimrc
 create_symlink ~/github/dotfiles-latest/vimrc/vimrc-file ~/github/obsidian_main/.obsidian.vimrc
@@ -252,7 +251,6 @@ if [ "$OS" = 'Mac' ]; then
 	# that's just a personal preference.
 	# That way sketchybar updates when I run those commands as well
 	if command -v sketchybar &>/dev/null; then
-
 		# When the zshrc file is ran, reload sketchybar, in case the theme was
 		# switched
 		# I disabled this as it was getting refreshed every time I opened the
@@ -288,6 +286,7 @@ if [ "$OS" = 'Mac' ]; then
 	[ -s ~/.luaver/luaver ] && . ~/.luaver/luaver
 	# Line below won't work with zsh, there's no zsh completions I guess
 	# [ -s ~/.luaver/completions/luaver.bash ] && . ~/.luaver/completions/luaver.bash
+
 	# Starship
 	# https://starship.rs/config/#prompt
 	if command -v starship &>/dev/null; then

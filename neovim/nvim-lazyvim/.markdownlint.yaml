@@ -24,3 +24,14 @@ MD033:
 # markdown files that I need to upload to confluence
 # https://github.com/DavidAnson/markdownlint/blob/main/doc/md007.md
 MD007: false
+
+# Spaces after list markers
+# Disabled this because of confluence formatting
+# https://github.com/DavidAnson/markdownlint/blob/main/doc/md030.md
+MD030: false
+
+# Unordered list style
+# Disabled this because the TOC was giving me warnings for using other symbols
+# than -
+# https://github.com/DavidAnson/markdownlint/blob/main/doc/md004.md
+MD004: false

@@ -1,4 +1,4 @@
-# Filename: ~/github/dotfiles-latest/neovim/nvim-lazyvim/.markdownlint.yaml
+# Filename: ~/github/dotfiles-latest/.markdownlint.yaml
 #
 # https://github.com/DavidAnson/markdownlint
 #
@@ -16,10 +16,28 @@ MD010:
 # https://github.com/DavidAnson/markdownlint/blob/main/doc/md013.md
 MD013:
   code_blocks: false
+  headings: false
+  tables: false
 
 # Inline HTML
 # https://github.com/DavidAnson/markdownlint/blob/main/doc/md033.md
-# Disabling MD033 rule to allow all HTML elements
 MD033:
   false
   # allowed_elements: ["a", "img", "div"]
+
+# Unordered list indentation
+# I disable this because for some documents I use 4 space indenting, like
+# markdown files that I need to upload to confluence
+# https://github.com/DavidAnson/markdownlint/blob/main/doc/md007.md
+MD007: false
+
+# Spaces after list markers
+# Disabled this because of confluence formatting
+# https://github.com/DavidAnson/markdownlint/blob/main/doc/md030.md
+MD030: false
+
+# Unordered list style
+# Disabled this because the TOC was giving me warnings for using other symbols
+# than -
+# https://github.com/DavidAnson/markdownlint/blob/main/doc/md004.md
+MD004: false

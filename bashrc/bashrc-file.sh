@@ -61,6 +61,22 @@ esac
 # macOS-specific configurations
 if [ "$OS" = 'Mac' ]; then
 
+	# Set JAVA_HOME to the OpenJDK installation managed by Homebrew
+	export JAVA_HOME="/opt/homebrew/opt/openjdk"
+	# Add JAVA_HOME/bin to the beginning of the PATH
+	export PATH="$JAVA_HOME/bin:$PATH"
+
+	# https://github.com/antlr/antlr4/blob/master/doc/getting-started.md#unix
+	# Add antlr-4.13.1-complete.jar to your CLASSPATH
+	export CLASSPATH=".:/usr/local/lib/antlr-4.13.1-complete.jar:$CLASSPATH"
+	# Create an alias for running ANTLR's TestRig
+	alias antlr4='java -Xmx500M -cp "/usr/local/lib/antlr-4.13.1-complete.jar:$CLASSPATH" org.antlr.v4.Tool'
+	alias grun='java -Xmx500M -cp "/usr/local/lib/antlr-4.13.1-complete.jar:$CLASSPATH" org.antlr.v4.gui.TestRig'
+
+	export PATH="/opt/homebrew/opt/libpq/bin:$PATH"
+	export LDFLAGS="-L/opt/homebrew/opt/libpq/lib"
+	export CPPFLAGS="-I/opt/homebrew/opt/libpq/include"
+
 	# Starship
 	# https://starship.rs/config/#prompt
 	if command -v starship &>/dev/null; then

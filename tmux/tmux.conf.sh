@@ -30,6 +30,13 @@ set -g default-terminal "screen-256color"
 # set-option -sa terminal-features ',xterm-256color:RGB'
 set -sg terminal-overrides ",*:RGB"
 
+# https://github.com/3rd/image.nvim/?tab=readme-ov-file#tmux
+# This is needed by the image.nvim plugin
+set -gq allow-passthrough on
+# This is related to the `tmux_show_only_in_active_window = true,` config in
+# image.nvim
+set -g visual-activity off
+
 # When pressing prefix+s to list sessions, I want them sorted by time
 # That way my latest used sessions show at the top of the list
 # -s starts with sessions collapsed (doesn't show windows)

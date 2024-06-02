@@ -24,6 +24,12 @@
 -- Then type 'g/' and enter what you want to match, a word or symbol
 -- Press enter and your text will be selected
 
+-- I wanted to insert an "i" between a ' and a ; in multiple lines
+-- I put the cursor in the '
+-- Pressed ctrl+n, then "n" to select the next words
+-- Then the letter "i" to insert
+-- Then the right arrow and then letter "i" to insert the "i" and escape
+
 -- Put yourself on the 1st letter of the word you want to edit, press ctrl+n
 -- keep pressing 'n' again to select the word on the below lines
 -- to skip the current word press 'q' and will continue to next

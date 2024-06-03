@@ -39,6 +39,7 @@ kitten themes
   directory
 
 ```bash
+mkdir -p ~/github/dotfiles-latest/kitty/themes/
 git clone --depth 1 https://github.com/kovidgoyal/kitty-themes.git ~/github/dotfiles-latest/kitty/themes/
 rm -rf ~/github/dotfiles-latest/kitty/themes/.git/
 rm -rf ~/github/dotfiles-latest/kitty/themes/.github/

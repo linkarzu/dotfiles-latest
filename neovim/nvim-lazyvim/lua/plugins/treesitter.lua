@@ -26,6 +26,8 @@ return {
         "javascript",
         "python",
         "dockerfile",
+        "html",
+        "css",
       },
     },
   },

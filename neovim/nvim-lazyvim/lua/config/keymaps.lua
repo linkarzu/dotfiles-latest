@@ -754,29 +754,33 @@ vim.keymap.set("n", "<leader>io", function()
     -- Pattern to match image path in Markdown
     local image_pattern = "%[.-%]%((.-)%)"
     -- Extract relative image path
-    local _, _, relative_image_path = string.find(line, image_pattern)
+    local _, _, image_path = string.find(line, image_pattern)
 
-    -- Get the current file's directory
-    local current_file_path = vim.fn.expand("%:p:h")
-    -- Construct absolute image path
-    local absolute_image_path = current_file_path .. "/" .. relative_image_path
-
-    return absolute_image_path
+    return image_path
   end
 
-  -- Get the absolute image path
+  -- Get the image path
   local image_path = get_image_path()
 
   if image_path then
-    -- Construct command to open image in Preview
-    local command = "open -a Preview " .. vim.fn.shellescape(image_path)
-    -- Execute the command
-    local success = os.execute(command)
-
-    if success then
-      print("Opened image in Preview: " .. image_path)
+    -- Check if the image path starts with "http" or "https"
+    if string.sub(image_path, 1, 4) == "http" then
+      print("URL image, use 'gx' to open it in the default browser.")
     else
-      print("Failed to open image in Preview: " .. image_path)
+      -- Construct absolute image path
+      local current_file_path = vim.fn.expand("%:p:h")
+      local absolute_image_path = current_file_path .. "/" .. image_path
+
+      -- Construct command to open image in Preview
+      local command = "open -a Preview " .. vim.fn.shellescape(absolute_image_path)
+      -- Execute the command
+      local success = os.execute(command)
+
+      if success then
+        print("Opened image in Preview: " .. absolute_image_path)
+      else
+        print("Failed to open image in Preview: " .. absolute_image_path)
+      end
     end
   else
     print("No image found under the cursor")

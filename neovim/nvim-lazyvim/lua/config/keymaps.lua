@@ -316,7 +316,9 @@ end, { desc = "Clear images" })
 -- ############################################################################
 
 -- Paste images, I also allow this in insert mode
-vim.keymap.set({ "n", "v", "i" }, "<C-v>", function()
+-- I tried using <C-v> but duh, that's used for visual block mode
+-- so don't do it
+vim.keymap.set({ "n", "v", "i" }, "<C-a>", function()
   vim.cmd("PasteImage")
 end, { desc = "Paste image from system clipboard" })
 

@@ -8,12 +8,12 @@ return {
     -- or leave it empty to use the default settings
     default = {
 
-      -- -- file and directory options
-      -- -- expands dir_path to an absolute path
-      -- -- When you paste a new image, and you hover over its path, instead of:
-      -- -- test-images-img/2024-06-03-at-10-58-55.webp
-      -- -- You would see the entire path:
-      -- -- /Users/linkarzu/github/obsidian_main/999-test/test-images-img/2024-06-03-at-10-58-55.webp
+      -- file and directory options
+      -- expands dir_path to an absolute path
+      -- When you paste a new image, and you hover over its path, instead of:
+      -- test-images-img/2024-06-03-at-10-58-55.webp
+      -- You would see the entire path:
+      -- /Users/linkarzu/github/obsidian_main/999-test/test-images-img/2024-06-03-at-10-58-55.webp
       use_absolute_path = false, ---@type boolean
 
       -- make dir_path relative to current file rather than the cwd
@@ -58,7 +58,7 @@ return {
       -- -- Here are other conversion options to play around
       -- -- Notice that with this other option you resize all the images
       -- process_cmd = "convert - -quality 75 -resize 50% png:-", ---@type string
-      --
+
       -- -- Other parameters I found in stackoverflow
       -- -- https://stackoverflow.com/a/27269260
       -- --
@@ -73,7 +73,7 @@ return {
       -- -- compression level, which is 0 (worst but fastest compression) to 9 (best but slowest)
       -- process_cmd = "convert - -depth 24 -define png:compression-filter=5 -define png:compression-level=9 -define png:compression-strategy=1 png:-",
       --
-      -- -- This is for jpegs
+      -- -- These are for jpegs
       -- process_cmd = "convert - -sampling-factor 4:2:0 -strip -interlace JPEG -colorspace RGB -quality 75 jpg:-",
       -- process_cmd = "convert - -strip -interlace Plane -gaussian-blur 0.05 -quality 75 jpg:-",
       --
@@ -84,10 +84,21 @@ return {
       markdown = {
         -- encode spaces and special characters in file path
         url_encode_path = true, ---@type boolean
+
+        -- -- The template is what specifies how the alternative text and path
+        -- -- of the image will appear in your file
+        --
+        -- -- $CURSOR will paste the image and place your cursor in that part so
+        -- -- you can type the "alternative text", keep in mind that this will
+        -- -- not affect the name that the image physically has
         -- template = "![$CURSOR]($FILE_PATH)", ---@type string
+        --
+        -- -- This will just statically type "Image" in the alternative text
         -- template = "![Image]($FILE_PATH)", ---@type string
+        --
+        -- -- This will dynamically configure the alternative text to show the
+        -- -- same that you configured as the "file_name" above
         template = "![$FILE_NAME]($FILE_PATH)", ---@type string
-        download_images = false, ---@type boolean
       },
     },
   },

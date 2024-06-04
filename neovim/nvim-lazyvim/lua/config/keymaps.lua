@@ -289,6 +289,17 @@ end, { desc = "Write current file" })
 
 -- ############################################################################
 
+-- Set up a keymap to refresh the current buffer
+vim.keymap.set("n", "<leader>br", function()
+  -- Reloads the file to reflect the changes
+  vim.cmd("edit!")
+  print("Buffer reloaded")
+end, { desc = "Reload current buffer" })
+
+-- ############################################################################
+--                             Image section
+-- ############################################################################
+
 -- Paste images, I also allow this in insert mode
 -- I tried using <C-v> but duh, that's used for visual block mode
 -- so don't do it
@@ -468,7 +479,7 @@ end, { desc = "(macOS) Delete image file under cursor" })
 
 -- ############################################################################
 
--- Set up a keymap to refresh the images in the current buffer
+-- Refresh the images in the current buffer
 -- Useful if you deleete an actual image file and want to see the changes
 -- without having to re-open neovim
 vim.keymap.set("n", "<leader>ir", function()
@@ -491,15 +502,6 @@ vim.keymap.set("n", "<leader>ic", function()
 end, { desc = "Clear images" })
 
 -- ############################################################################
-
--- Set up a keymap to refresh the current buffer
-vim.keymap.set("n", "<leader>br", function()
-  -- Reloads the file to reflect the changes
-  vim.cmd("edit!")
-  print("Buffer reloaded")
-end, { desc = "Reload current buffer" })
-
--- ##################################################################
 --                         Begin of markdown section
 -- ############################################################################
 

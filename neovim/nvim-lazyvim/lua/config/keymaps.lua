@@ -312,6 +312,8 @@ vim.keymap.set({ "n", "v", "i" }, "<C-a>", function()
   vim.cmd([[lua require("image").clear()]])
   -- Reloads the file to reflect the changes
   vim.cmd("edit!")
+  -- Switch back to command mode
+  vim.cmd("stopinsert")
 end, { desc = "Paste image from system clipboard" })
 
 -- ############################################################################
@@ -480,7 +482,7 @@ end, { desc = "(macOS) Delete image file under cursor" })
 -- ############################################################################
 
 -- Refresh the images in the current buffer
--- Useful if you deleete an actual image file and want to see the changes
+-- Useful if you delete an actual image file and want to see the changes
 -- without having to re-open neovim
 vim.keymap.set("n", "<leader>ir", function()
   -- First I clear the images

@@ -55,7 +55,9 @@ return {
             download_remote_images = true,
             -- Change this if you would only like to render the image where the
             -- cursor is at
-            only_render_image_at_cursor = false,
+            -- I set this to true, because if the file has way too many images
+            -- it will be laggy and will take time for the initial load
+            only_render_image_at_cursor = true,
             -- markdown extensions (ie. quarto) can go here
             filetypes = { "markdown", "vimwiki" },
           },
@@ -87,8 +89,8 @@ return {
 
         -- This is what I changed to make my images look smaller, like a
         -- thumbnail, the default value is 50
-        max_height_window_percentage = 10,
-        -- max_height_window_percentage = 40,
+        -- max_height_window_percentage = 20,
+        max_height_window_percentage = 40,
 
         -- toggles images when windows are overlapped
         window_overlap_clear_enabled = false,

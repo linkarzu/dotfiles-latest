@@ -41,3 +41,10 @@ MD030: false
 # than -
 # https://github.com/DavidAnson/markdownlint/blob/main/doc/md004.md
 MD004: false
+
+# Multiple consecutive blank lines
+# https://github.com/DavidAnson/markdownlint/blob/main/doc/md012.md
+# Not sure why at the end of markdown files I get an error that there are 2
+# blank lines when there's only 1, so increasing this to fix it
+MD012:
+  maximum: 2

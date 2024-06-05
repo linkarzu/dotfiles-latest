@@ -3,6 +3,7 @@
 <!-- toc -->
 
 - [Things to remember](#things-to-remember)
+  * [markdown-preview.nvim image size](#markdown-previewnvim-image-size)
   * [Plugin that enables vio and vao](#plugin-that-enables-vio-and-vao)
   * [Record macro](#record-macro)
   * [Increment decrement selection](#increment-decrement-selection)
@@ -33,6 +34,16 @@
 <!-- tocstop -->
 
 ## Things to remember
+
+### markdown-preview.nvim image size
+
+- This is how you can specify the size of the image when you look at it on the
+  browser
+  - Found in
+    [custom examples](https://github.com/iamcco/markdown-preview.nvim?tab=readme-ov-file#custom-examples)
+- `![2024-06-04-at-18-49-47.avif](0604-proyecto-final-img/2024-06-04-at-18-49-47.avif =300x)`
+- But prettier autoformats them and breaks them into separate lines, have to
+  figure out how to stop that
 
 ### Plugin that enables vio and vao
 

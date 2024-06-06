@@ -362,6 +362,11 @@ end, { desc = "(macOS) Open image under cursor in Preview" })
 -- ############################################################################
 
 -- Open image under cursor in Finder (macOS)
+--
+-- THIS ONLY WORKS IF YOU'RE NNNNNOOOOOOTTTTT USING ABSOLUTE PATHS,
+-- BUT INSTEAD YOURE USING RELATIVE PATHS
+--
+-- If using absolute paths, use the default `gx` to open the image instead
 vim.keymap.set("n", "<leader>if", function()
   local function get_image_path()
     -- Get the current line

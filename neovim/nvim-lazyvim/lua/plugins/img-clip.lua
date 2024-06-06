@@ -14,6 +14,11 @@ return {
       -- test-images-img/2024-06-03-at-10-58-55.webp
       -- You would see the entire path:
       -- /Users/linkarzu/github/obsidian_main/999-test/test-images-img/2024-06-03-at-10-58-55.webp
+      --
+      -- IN MY CASE I DON'T WANT TO USE ABSOLUTE PATHS
+      -- if I switch to a nother computer and I have a different username,
+      -- therefore a different home directory, that's a problem because the
+      -- absolute paths will be pointing to a different directory
       use_absolute_path = false, ---@type boolean
 
       -- make dir_path relative to current file rather than the cwd

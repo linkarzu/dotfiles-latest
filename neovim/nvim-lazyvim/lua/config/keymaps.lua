@@ -15,24 +15,29 @@
 vim.keymap.set("n", "<S-h>", "<cmd>BufExplorer<cr>", { desc = "Open bufexplorer" })
 vim.keymap.set("n", "<S-l>", "<cmd>BufExplorer<cr>", { desc = "Open bufexplorer" })
 
--- use kj to exit insert mode
--- vim.keymap.set("i", "kj", "<ESC>", { desc = "Exit insert mode with kj" })
+-- -- use kj to exit insert mode
+-- -- I auto save with
+-- --  ~/github/dotfiles-latest/neovim/nvim-lazyvim/lua/plugins/auto-save.lua
+vim.keymap.set("i", "kj", "<ESC>", { desc = "Exit insert mode with kj" })
 
--- An alternative way of saving
--- Auto saving when exiting insert mode with `kj`
-vim.keymap.set("i", "kj", function()
-  -- "Write" saves regardless of whether the buffer has been modified or not
-  -- vim.cmd("write")
-  -- "Update" saves only if the buffer has been modified since the last save
-  -- Suggested in reddit by user @SeoCamo
-  vim.cmd("update")
-  -- Move to the right
-  vim.cmd("normal l")
-  -- Switch back to command mode after saving
-  vim.cmd("stopinsert")
-  -- Print the "File saved" message and the file path
-  -- print("FILE SAVED: " .. vim.fn.expand("%:p"))
-end, { desc = "Write current file and exit insert mode" })
+-- -- An alternative way of saving (autosave)
+-- -- Auto saving when exiting insert mode with `kj`
+-- -- Disabling this because switched over to
+-- --  ~/github/dotfiles-latest/neovim/nvim-lazyvim/lua/plugins/auto-save.lua
+-- -- And it works :muacks:, beautifully
+-- vim.keymap.set("i", "kj", function()
+--   -- "Write" saves regardless of whether the buffer has been modified or not
+--   -- vim.cmd("write")
+--   -- "Update" saves only if the buffer has been modified since the last save
+--   -- Suggested in reddit by user @SeoCamo
+--   vim.cmd("update")
+--   -- Move to the right
+--   vim.cmd("normal l")
+--   -- Switch back to command mode after saving
+--   vim.cmd("stopinsert")
+--   -- Print the "File saved" message and the file path
+--   -- print("FILE SAVED: " .. vim.fn.expand("%:p"))
+-- end, { desc = "Write current file and exit insert mode" })
 
 -- use gh to move to the beginning of the line in normal mode
 -- use gl to move to the end of the line in normal mode

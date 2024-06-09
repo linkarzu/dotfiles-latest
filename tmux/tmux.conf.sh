@@ -37,6 +37,14 @@ set -gq allow-passthrough on
 # image.nvim
 set -g visual-activity off
 
+# Alternate session
+# Switch between the last 2 tmux sessions, similar to 'cd -' in the terminal
+# I use this in combination with the `choose-tree` to sort sessions by time
+# Otherwise, by default, sessions are sorted by name, and that makes no sense
+# -l stands for `last`, see `man tmux`
+unbind Space
+bind-key Space switch-client -l
+
 # When pressing prefix+s to list sessions, I want them sorted by time
 # That way my latest used sessions show at the top of the list
 # -s starts with sessions collapsed (doesn't show windows)
@@ -97,10 +105,6 @@ bind L run-shell ~/github/dotfiles-latest/tmux/layouts/7030/apply_layout.sh
 bind C-j select-layout main-horizontal
 bind C-k select-layout main-vertical
 bind C-l run-shell ~/github/dotfiles-latest/tmux/layouts/2x3/apply_layout.sh
-
-# Switch between the last 2 tmux sessions, similar to 'cd -' in the terminal
-unbind Space
-bind-key Space switch-client -l
 
 ###############################################################################
 # ThePrimeagen's tmux-sessionizer script, got 'em

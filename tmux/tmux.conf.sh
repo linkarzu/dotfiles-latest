@@ -41,7 +41,7 @@ set -g visual-activity off
 # Switch between the last 2 tmux sessions, similar to 'cd -' in the terminal
 # I use this in combination with the `choose-tree` to sort sessions by time
 # Otherwise, by default, sessions are sorted by name, and that makes no sense
-# -l stands for `last`, see `man tmux`
+# -l stands for `last session`, see `man tmux`
 unbind Space
 bind-key Space switch-client -l
 

@@ -113,6 +113,12 @@ vim.keymap.set(
 --
 -- I tried disabling leader<space> in telescope.lua and setting it in this file but didn't work
 -- So I set the command to alternate between files directly in the `telescope.lua` file
+--
+-- With `:help registers` you can see the register below
+-- Alternate buffer register "#
+-- The command to switch is `:e #`
+-- `:e` is used to `edit-a-file`, see `help :e`
+--
 
 -- Make the file you run the command on, executable, so you don't have to go out to the command line
 -- Had to include quotes around "%" because there are some apple dirs that contain spaces, like iCloud

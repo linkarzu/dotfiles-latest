@@ -871,7 +871,7 @@ vim.keymap.set("n", "<leader>fC", function()
       file:write("# Contents\n\n<!-- toc -->\n\n- [Daily note](#daily-note)\n\n<!-- tocstop -->\n\n## Daily note\n")
       file:close()
       print("Created daily note: " .. full_path)
-      vim.cmd("tabedit " .. vim.fn.fnameescape(full_path))
+      vim.cmd("edit " .. vim.fn.fnameescape(full_path))
     else
       print("Failed to create file: " .. full_path)
     end

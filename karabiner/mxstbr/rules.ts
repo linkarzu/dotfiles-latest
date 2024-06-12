@@ -396,6 +396,10 @@ const rules: KarabinerRules[] = [
       u: open(
         "btt://execute_assigned_actions_for_trigger/?uuid=EA461EE0-4C15-4113-93B6-07C12086FF1F"
       ),
+      // Test ping
+      hyphen: open(
+        "btt://execute_assigned_actions_for_trigger/?uuid=EADC365D-0747-4E8F-ACB6-79564FEF1410"
+      ),
     },
 
     // shift+arrows to select stuff

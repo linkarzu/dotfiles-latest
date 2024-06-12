@@ -132,9 +132,9 @@ const rules: KarabinerRules[] = [
         "btt://execute_assigned_actions_for_trigger/?uuid=E2BEB425-38A3-46D8-AAF8-067CA979D4FB"
       ),
       // dotfiles-public
-      k: open(
-        "btt://execute_assigned_actions_for_trigger/?uuid=96E9BDEC-F0C5-4E77-AF1F-1EF5914BFDDF"
-      ),
+      // k: open(
+      //   "btt://execute_assigned_actions_for_trigger/?uuid=96E9BDEC-F0C5-4E77-AF1F-1EF5914BFDDF"
+      // ),
       // linkarzu.github.io
       l: open(
         "btt://execute_assigned_actions_for_trigger/?uuid=1893BEBE-DC99-41CC-9BE6-74B66E3BBB2C"
@@ -213,7 +213,7 @@ const rules: KarabinerRules[] = [
         "btt://execute_assigned_actions_for_trigger/?uuid=6C578F42-B350-46B1-A7BE-D1869A081B86"
       ),
       // ~/.ssh/config find
-      b: open(
+      r: open(
         "btt://execute_assigned_actions_for_trigger/?uuid=B649548D-C750-408D-97E8-74F58B7F504D"
       ),
     },
@@ -384,7 +384,7 @@ const rules: KarabinerRules[] = [
       ),
       // Paste alacritty text and go down
       k: open(
-        "btt://execute_assigned_actions_for_trigger/?uuid=93F19080-8CFA-48E5-A8F5-A04EE2884816"
+        "btt://execute_assigned_actions_for_trigger/?uuid=5AF2559D-E6C9-4665-8D06-2CAF35B1AB07"
       ),
       // Paste alacritty text and go up
       l: open(

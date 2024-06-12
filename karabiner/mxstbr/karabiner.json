@@ -927,30 +927,6 @@
               {
                 "to": [
                   {
-                    "shell_command": "open btt://execute_assigned_actions_for_trigger/?uuid=96E9BDEC-F0C5-4E77-AF1F-1EF5914BFDDF"
-                  }
-                ],
-                "description": "Open btt://execute_assigned_actions_for_trigger/?uuid=96E9BDEC-F0C5-4E77-AF1F-1EF5914BFDDF",
-                "type": "basic",
-                "from": {
-                  "key_code": "k",
-                  "modifiers": {
-                    "mandatory": [
-                      "any"
-                    ]
-                  }
-                },
-                "conditions": [
-                  {
-                    "type": "variable_if",
-                    "name": "hyper_sublayer_t",
-                    "value": 1
-                  }
-                ]
-              },
-              {
-                "to": [
-                  {
                     "shell_command": "open btt://execute_assigned_actions_for_trigger/?uuid=1893BEBE-DC99-41CC-9BE6-74B66E3BBB2C"
                   }
                 ],
@@ -1487,7 +1463,7 @@
                 "description": "Open btt://execute_assigned_actions_for_trigger/?uuid=B649548D-C750-408D-97E8-74F58B7F504D",
                 "type": "basic",
                 "from": {
-                  "key_code": "b",
+                  "key_code": "r",
                   "modifiers": {
                     "mandatory": [
                       "any"
@@ -2520,10 +2496,10 @@
               {
                 "to": [
                   {
-                    "shell_command": "open btt://execute_assigned_actions_for_trigger/?uuid=93F19080-8CFA-48E5-A8F5-A04EE2884816"
+                    "shell_command": "open btt://execute_assigned_actions_for_trigger/?uuid=5AF2559D-E6C9-4665-8D06-2CAF35B1AB07"
                   }
                 ],
-                "description": "Open btt://execute_assigned_actions_for_trigger/?uuid=93F19080-8CFA-48E5-A8F5-A04EE2884816",
+                "description": "Open btt://execute_assigned_actions_for_trigger/?uuid=5AF2559D-E6C9-4665-8D06-2CAF35B1AB07",
                 "type": "basic",
                 "from": {
                   "key_code": "k",

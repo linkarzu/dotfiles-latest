@@ -1,7 +1,8 @@
 -- https://github.com/okuuva/auto-save.nvim
--- This is a fork of original plugin `pocco81/auto-save.nvim` but the original
--- one was updated 2 years ago, and I was experiencing issues with autoformat
--- undo/redo
+--
+-- This is a fork of original plugin `https://github.com/pocco81/auto-save.nvim`
+-- but the original one was updated 2 years ago, and I was experiencing issues
+-- with autoformat and undo/redo
 --
 -- Filename: ~/github/dotfiles-latest/neovim/nvim-lazyvim/lua/plugins/auto-save.lua
 -- ~/github/dotfiles-latest/neovim/nvim-lazyvim/lua/plugins/auto-save.lua
@@ -38,6 +39,8 @@ return {
       -- Do not execute autocmds when saving
       -- This is what fixed the issues with undo/redo that I had
       -- https://github.com/okuuva/auto-save.nvim/issues/55
+      -- Issue in original plugin
+      -- https://github.com/pocco81/auto-save.nvim/issues/70
       noautocmd = false,
       lockmarks = false, -- lock marks when saving, see `:h lockmarks` for more details
       -- delay after which a pending save is executed (default 1000)

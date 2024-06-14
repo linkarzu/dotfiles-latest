@@ -126,17 +126,13 @@ y = 6
 # which is what I use for tmux commands instead of ctrl+b
 # option_as_alt = "Both"
 
-[window.class]
-general = "Alacritty"
-instance = "Alacritty"
-
 [window.dimensions]
 columns = 185
 lines = 40
 
-[window.position]
-x = 0
-y = 430
+# [window.position]
+# x = 0
+# y = 430
 
 # I don't need to enable this, as I normally select in visual mode and yank
 # But apparently it allows you to copy to clipboard by just selecting the text

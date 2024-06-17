@@ -3,6 +3,11 @@
 return {
   {
     "nvim-neo-tree/neo-tree.nvim",
+    -- This disables or enables the plugin
+    -- I'm switching over to mini.files (mini-files.lua) because neotree had
+    -- some issues for me, when renaming files or directories sometimes they
+    -- didn't update so had to be using oil.nvim
+    enabled = false,
     keys = {
       -- I swapped these 2
       { "<leader>e", "<leader>fE", desc = "Explorer NeoTree (cwd)", remap = true },

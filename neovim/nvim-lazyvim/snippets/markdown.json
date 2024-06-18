@@ -23,9 +23,27 @@
     "description": "Insert a sql code block"
   },
 
+  "chirpy tip": {
+    "prefix": "chirpy",
+    "body": [
+      " ",
+      "<!-- markdownlint-disable -->",
+      "<!-- prettier-ignore-start -->",
+      " ",
+      "<!-- tip=green, info=blue, warning=yellow, danger=red -->",
+      " ",
+      "> $1",
+      "{: .prompt-$2 }",
+      " ",
+      "<!-- prettier-ignore-end -->",
+      "<!-- markdownlint-restore -->"
+    ],
+    "description": "Insert a chirpy theme tip"
+  },
+
   "link in new tab": {
     "prefix": "linkt",
     "body": ["[$1]($2){:target=\"_blank\"}"],
-    "description": "Insert a sql code block"
+    "description": "Open a link in a new tab (chirpy theme)"
   }
 }

@@ -30,7 +30,7 @@ disabled = true
 disabled = true
 
 [time]
-style = '#AE8FD9 bold'
+style = '#BAD98F bold'
 disabled = false
 format = '[\[$time\]]($style) '
 # https://docs.rs/chrono/0.4.7/chrono/format/strftime/index.html
@@ -51,7 +51,7 @@ detect_files = ['900-detectkubernetes.sh']
 # ]
 
 [username]
-style_user = '#AE8FD9 bold'
+style_user = '#BAD98F bold'
 style_root = 'white bold'
 format = '[$user]($style)'
 show_always = true

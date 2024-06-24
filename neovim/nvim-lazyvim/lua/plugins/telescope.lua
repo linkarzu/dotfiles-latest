@@ -44,6 +44,11 @@ return {
         "<cmd>BufExplorer<cr>",
         desc = "Open bufexplorer",
       },
+      {
+        "<leader>tt",
+        "<cmd>TodoTelescope keywords=TODO<cr>",
+        desc = "TODO Telescope",
+      },
     },
   },
 }

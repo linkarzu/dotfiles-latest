@@ -1,6 +1,7 @@
 #!/bin/bash
 
-# Filename: ~/github/dotfiles-latest/sketchybar/felixkratz/plugins/mic_click.sh
+# Filename: ~/github/dotfiles-latest/sketchybar/felixkratz-linkarzu/plugins/mic_click.sh
+# ~/github/dotfiles-latest/sketchybar/felixkratz-linkarzu/plugins/mic_click.sh
 
 # https://github.com/FelixKratz/SketchyBar/discussions/12#discussioncomment-1216899
 

@@ -1,6 +1,7 @@
 #!/bin/bash
 
-# Filename: ~/github/dotfiles-latest/sketchybar/felixkratz/plugins/mic.sh
+# Filename: ~/github/dotfiles-latest/sketchybar/felixkratz-linkarzu/plugins/mic.sh
+# ~/github/dotfiles-latest/sketchybar/felixkratz-linkarzu/plugins/mic.sh
 
 # https://github.com/FelixKratz/SketchyBar/discussions/12#discussioncomment-1216899
 

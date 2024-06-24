@@ -228,8 +228,8 @@ const rules: KarabinerRules[] = [
       y: open(
         "raycast://extensions/tonka3000/youtube/search-videos?arguments=%7B%22query%22%3A%22%22%7D"
       ),
-      u: open("raycast://extensions/raycast/reminders/create-reminder"),
-      i: open("raycast://extensions/raycast/reminders/my-reminders"),
+      u: open("raycast://extensions/raycast/apple-reminders/create-reminder"),
+      i: open("raycast://extensions/raycast/apple-reminders/my-reminders"),
       o: open("raycast://extensions/raycast/github/search-repositories"),
       p: open("raycast://extensions/nhojb/brew/search"),
       h: open("raycast://extensions/mattisssa/spotify-player/search"),

@@ -1723,10 +1723,10 @@
               {
                 "to": [
                   {
-                    "shell_command": "open raycast://extensions/raycast/reminders/create-reminder"
+                    "shell_command": "open raycast://extensions/raycast/apple-reminders/create-reminder"
                   }
                 ],
-                "description": "Open raycast://extensions/raycast/reminders/create-reminder",
+                "description": "Open raycast://extensions/raycast/apple-reminders/create-reminder",
                 "type": "basic",
                 "from": {
                   "key_code": "u",
@@ -1747,10 +1747,10 @@
               {
                 "to": [
                   {
-                    "shell_command": "open raycast://extensions/raycast/reminders/my-reminders"
+                    "shell_command": "open raycast://extensions/raycast/apple-reminders/my-reminders"
                   }
                 ],
-                "description": "Open raycast://extensions/raycast/reminders/my-reminders",
+                "description": "Open raycast://extensions/raycast/apple-reminders/my-reminders",
                 "type": "basic",
                 "from": {
                   "key_code": "i",

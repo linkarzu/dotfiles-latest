@@ -52,9 +52,9 @@ nmap('Q', '<Nop>')
 --- If an R terminal has been opend, this is in r_mode
 --- and will handle python code via reticulate when sent
 --- from a python chunk.
---- TODO: incorpoarate this into quarto-nvim plugin
+--- TODO incorpoarate this into quarto-nvim plugin
 --- such that QuartoRun functions get the same capabilities
---- TODO: figure out bracketed paste for reticulate python repl.
+--- TODO figure out bracketed paste for reticulate python repl.
 local function send_cell()
   if vim.b['quarto_is_r_mode'] == nil then
     vim.fn['slime#send_cell']()

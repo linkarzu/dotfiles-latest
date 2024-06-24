@@ -35,7 +35,8 @@ disabled = false
 format = '[\[$time\]]($style) '
 # https://docs.rs/chrono/0.4.7/chrono/format/strftime/index.html
 # %T	00:34:60	Hour-minute-second format. Same to %H:%M:%S.
-time_format = '%y/%m/%d %T'
+# time_format = '%y/%m/%d %T'
+time_format = '%y/%m/%d'
 
 # For this to show up correcly, you need to have cluster access
 # So your ~/.kube/config needs to be configured on the local machine

@@ -1,3 +1,6 @@
+-- Filename: ~/github/dotfiles-latest/neovim/nvim-lazyvim/lua/plugins/mini-files.lua
+-- ~/github/dotfiles-latest/neovim/nvim-lazyvim/lua/plugins/mini-files.lua
+--
 -- https://github.com/echasnovski/mini.files
 --
 -- I got this configuration from LazyVim.org
@@ -6,6 +9,25 @@
 return {
   "echasnovski/mini.files",
   opts = {
+    -- I didn't like the default mappings, so I modified them
+    -- Module mappings created only inside explorer.
+    -- Use `''` (empty string) to not create one.
+    mappings = {
+      close = "q",
+      -- Use this if you want to open several files
+      go_in = "l",
+      -- This opens the file, but quits out of mini.files
+      go_in_plus = "<CR>",
+      -- I swapped the following 2 to test
+      go_out = "H",
+      go_out_plus = "h",
+      reset = ",",
+      reveal_cwd = ".",
+      show_help = "g?",
+      synchronize = "s",
+      trim_left = "<",
+      trim_right = ">",
+    },
     windows = {
       preview = true,
       width_focus = 30,

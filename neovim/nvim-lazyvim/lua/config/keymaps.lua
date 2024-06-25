@@ -233,10 +233,10 @@ end, { desc = "Open (toggle) current dir in right tmux pane" })
 -- end, { desc = "Open current dir in right tmux pane" })
 
 -- This will add 3 lines:
--- 1. File path with the wordname Filename: first, then the path, and Go project name
 -- 2. Just the filepath
+-- 1. File path with the wordname Filename: first, then the path, and Go project name
 -- 3. Name that I will use for with `go mod init`
-vim.keymap.set({ "n", "v", "i" }, "<C-p>", function()
+vim.keymap.set({ "n", "v", "i" }, "<C-z>", function()
   local filePath = vim.fn.expand("%:~") -- Gets the file path relative to the home directory
   local fileName = vim.fn.expand("%:t") -- Gets the name of the file
   local goProjectPath = filePath:gsub("^~/", ""):gsub("/[^/]+$", "") -- Removes the ~/ at the start and the filename at the end

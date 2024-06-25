@@ -17,16 +17,37 @@
 # export BG1=0xff363944
 # export BG2=0xff414550
 
-### Catppuccin
+#### Catppuccin
+#export BLACK=0xff181926
+#export WHITE=0xffcad3f5
+#export RED=0xffed8796
+#export GREEN=0xffa6da95
+#export BLUE=0xff8aadf4
+#export YELLOW=0xffeed49f
+#export ORANGE=0xfff5a97f
+#export MAGENTA=0xffc6a0f6
+#export GREY=0xff939ab7
+#export TRANSPARENT=0x00000000
+#export BG0=0xff1e1e2e
+#export BG0O50=0x801e1e2e
+#export BG0O60=0x991e1e2e
+#export BG0O70=0xB21e1e2e
+#export BG0O80=0xCC1e1e2e
+#export BG0O85=0xD91e1e2e
+#export BG1=0x603c3e4f
+#export BG2=0x60494d64
+
+# Eldritch Theme
+# https://github.com/eldritch-theme
 export BLACK=0xff181926
-export WHITE=0xffcad3f5
-export RED=0xffed8796
-export GREEN=0xffa6da95
-export BLUE=0xff8aadf4
-export YELLOW=0xffeed49f
-export ORANGE=0xfff5a97f
-export MAGENTA=0xffc6a0f6
-export GREY=0xff939ab7
+export WHITE=0xffebfafa
+export RED=0xfff16c75
+export GREEN=0xff37f499
+export BLUE=0xff04d1f9
+export YELLOW=0xfff1fc79
+export ORANGE=0xfff7c67f
+export MAGENTA=0xffa48cf2
+export GREY=0xff323449
 export TRANSPARENT=0x00000000
 export BG0=0xff1e1e2e
 export BG0O50=0x801e1e2e

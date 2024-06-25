@@ -70,8 +70,8 @@ return {
         return permissions
       end,
       color = function()
-        local _, bg_color = get_permissions_color() -- Use bg_color for dynamic coloring
-        return { fg = fg_color, bg = bg_color, gui = "bold" }
+        local _, permissions_bg_color = get_permissions_color() -- Use bg_color for dynamic coloring
+        return { fg = fg_color, bg = permissions_bg_color, gui = "bold" }
       end,
       -- separator = { left = "", right = "" },
       -- separator = { left = "", right = "" },

@@ -14,8 +14,8 @@
 -- vim.opt.winbar = "%m %f%=" .. vim.fn.systemlist("hostname")[1]
 --
 -- Using different colors, defining the colors in this file
-vim.cmd([[highlight WinBar1 guifg=#32D1FD]])
-vim.cmd([[highlight WinBar2 guifg=#79fd46]])
+vim.cmd([[highlight WinBar1 guifg=#04d1f9]])
+vim.cmd([[highlight WinBar2 guifg=#37f499]])
 vim.opt.winbar = "%#WinBar1#%m %f%*%=%#WinBar2#" .. vim.fn.systemlist("hostname")[1]
 
 -- If set to 0 it shows all the symbols in a file, like bulletpoints and

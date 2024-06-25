@@ -26,6 +26,10 @@ return {
       highlights.SpellCap = { sp = "#37f499", undercurl = true }
       highlights.SpellLocal = { sp = "#37f499", undercurl = true }
       highlights.SpellRare = { sp = "#37f499", undercurl = true }
+
+      -- These colors are used by mini-files.lua to show git changes
+      highlights.MiniDiffSignAdd = { fg = "#f1fc79", bold = true }
+      highlights.MiniDiffSignChange = { fg = "#37f499", bold = true }
     end,
   },
 }

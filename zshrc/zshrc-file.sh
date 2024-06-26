@@ -310,6 +310,7 @@ if [ "$OS" = 'Mac' ]; then
 	# ls replacement
 	# exa is unmaintained, so now using eza
 	# https://github.com/ogham/exa
+	# https://github.com/eza-community/eza
 	if command -v eza &>/dev/null; then
 		alias ls='eza'
 		alias ll='eza -lhg'

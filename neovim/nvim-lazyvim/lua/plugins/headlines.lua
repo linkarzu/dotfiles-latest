@@ -10,13 +10,24 @@ return {
   "lukas-reineke/headlines.nvim",
   dependencies = "nvim-treesitter/nvim-treesitter",
   config = function()
-    -- Define custom highlight groups using Vimscript
-    vim.cmd([[highlight Headline1 guibg=#295715 guifg=white]])
-    vim.cmd([[highlight Headline2 guibg=#8d8200 guifg=white]])
-    vim.cmd([[highlight Headline3 guibg=#a56106 guifg=white]])
-    vim.cmd([[highlight Headline4 guibg=#7e0000 guifg=white]])
-    vim.cmd([[highlight Headline5 guibg=#1e0b7b guifg=white]])
-    vim.cmd([[highlight Headline6 guibg=#560b7b guifg=white]])
+    -- -- Define custom highlight groups using Vimscript
+    -- -- Theme below is Eldritch
+    vim.cmd([[highlight Headline1 guibg=#f1fc79  guifg=#323449]])
+    vim.cmd([[highlight Headline2 guibg=#37f499 guifg=#323449]])
+    vim.cmd([[highlight Headline3 guibg=#04d1f9 guifg=#323449]])
+    vim.cmd([[highlight Headline4 guibg=#f16c75 guifg=white]])
+    vim.cmd([[highlight Headline5 guibg=#7081d0 guifg=white]])
+    vim.cmd([[highlight Headline6 guibg=#f265b5 guifg=white]])
+
+    -- -- These were my previous colors, they don't make sense, just something I
+    -- -- used back in Google docs
+    -- vim.cmd([[highlight Headline1 guibg=#295715 guifg=white]])
+    -- vim.cmd([[highlight Headline2 guibg=#8d8200 guifg=white]])
+    -- vim.cmd([[highlight Headline3 guibg=#a56106 guifg=white]])
+    -- vim.cmd([[highlight Headline4 guibg=#7e0000 guifg=white]])
+    -- vim.cmd([[highlight Headline5 guibg=#1e0b7b guifg=white]])
+    -- vim.cmd([[highlight Headline6 guibg=#560b7b guifg=white]])
+
     -- Defines the codeblock background color to something darker
     vim.cmd([[highlight CodeBlock guibg=#09090d]])
     -- When you add a line of dashes with --- this specifies the color, I'm not
@@ -52,6 +63,8 @@ return {
           "Headline5",
           "Headline6",
         },
+
+        bullets = { "󰎤", "󰎧", "󰎪", "󰎭", "󰎱", "󰎳" },
       },
     })
   end,

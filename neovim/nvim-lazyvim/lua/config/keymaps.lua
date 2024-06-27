@@ -549,6 +549,11 @@ wk.register({
   },
 })
 
+-- Use <CR> to fold when in normal mode
+vim.keymap.set("n", "<CR>", function()
+  vim.cmd("normal za")
+end, { desc = "Toggle fold" })
+
 -- Detect todos and toggle between ":" and ";", or show a message if not found
 -- This is to "mark them as done"
 vim.keymap.set("n", "<leader>td", function()

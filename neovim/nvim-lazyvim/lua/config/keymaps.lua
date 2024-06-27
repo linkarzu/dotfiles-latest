@@ -550,6 +550,7 @@ wk.register({
 })
 
 -- Use <CR> to fold when in normal mode
+-- To see help about folds use `:help fold`
 vim.keymap.set("n", "<CR>", function()
   vim.cmd("normal za")
 end, { desc = "Toggle fold" })

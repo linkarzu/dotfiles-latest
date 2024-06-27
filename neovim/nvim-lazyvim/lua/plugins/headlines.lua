@@ -15,9 +15,9 @@ return {
     vim.cmd([[highlight Headline1 guibg=#f1fc79  guifg=#323449]])
     vim.cmd([[highlight Headline2 guibg=#37f499 guifg=#323449]])
     vim.cmd([[highlight Headline3 guibg=#04d1f9 guifg=#323449]])
-    vim.cmd([[highlight Headline4 guibg=#f16c75 guifg=white]])
-    vim.cmd([[highlight Headline5 guibg=#7081d0 guifg=white]])
-    vim.cmd([[highlight Headline6 guibg=#f265b5 guifg=white]])
+    vim.cmd([[highlight Headline4 guibg=#f16c75 guifg=#323449]])
+    vim.cmd([[highlight Headline5 guibg=#7081d0 guifg=#323449]])
+    vim.cmd([[highlight Headline6 guibg=#f265b5 guifg=#323449]])
 
     -- -- These were my previous colors, they don't make sense, just something I
     -- -- used back in Google docs
@@ -65,6 +65,8 @@ return {
         },
 
         bullets = { "󰎤", "󰎧", "󰎪", "󰎭", "󰎱", "󰎳" },
+        -- bullets = { "󰎤", "󰎧", "󰎪", "󰎮", "󰎰", "󰎵" },
+        -- bullets = { "◉", "○", "✸", "✿" },
       },
     })
   end,

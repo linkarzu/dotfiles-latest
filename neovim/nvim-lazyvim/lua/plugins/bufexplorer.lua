@@ -18,7 +18,7 @@ return {
     -- leaving it there
     keys = {
       {
-        "<leader>bz",
+        "<leader>bb",
         "<cmd>BufExplorer<cr>",
         desc = "Open bufexplorer",
       },

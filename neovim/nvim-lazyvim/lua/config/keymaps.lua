@@ -575,7 +575,13 @@ end, { desc = "Decrease Indent" })
 -- Use <CR> to fold when in normal mode
 -- To see help about folds use `:help fold`
 vim.keymap.set("n", "<CR>", function()
-  vim.cmd("normal za")
+  local line = vim.fn.line(".") -- Get the current line number
+  local foldlevel = vim.fn.foldlevel(line) -- Get the fold level of the current line
+  if foldlevel == 0 then
+    vim.notify("No fold found", vim.log.levels.INFO)
+  else
+    vim.cmd("normal! za") -- Use normal! to avoid recursive mappings
+  end
 end, { desc = "Toggle fold" })
 
 -- Detect todos and toggle between ":" and ";", or show a message if not found
@@ -900,20 +906,16 @@ vim.keymap.set("n", "<leader>fC", function()
   local home = os.getenv("HOME")
   local current_line = vim.api.nvim_get_current_line()
   local year, month, day, weekday = current_line:match("%[%[(%d+)%-(%d+)%-(%d+)%-(%w+)%]%]")
-
   if not (year and month and day and weekday) then
     print("No valid date found in the line")
     return
   end
-
   local month_abbr = os.date("%b", os.time({ year = year, month = month, day = day }))
   local note_dir = string.format("%s/github/obsidian_main/250-daily/%s/%s-%s", home, year, month, month_abbr)
   local note_name = string.format("%s-%s-%s-%s.md", year, month, day, weekday)
   local full_path = note_dir .. "/" .. note_name
-
   -- Check if the directory exists, if not, create it
   vim.fn.mkdir(note_dir, "p")
-
   -- Check if the file exists and create it if not
   if vim.fn.filereadable(full_path) == 0 then
     local file = io.open(full_path, "w")

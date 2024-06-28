@@ -584,6 +584,9 @@ end, { desc = "TODO toggle item done or not" })
 vim.keymap.set("n", "<leader>mt", function()
   local path = vim.fn.expand("%") -- Expands the current file name to a full path
   local bufnr = 0 -- The current buffer number, 0 references the current active buffer
+  -- Save the current view
+  -- If I don't do this, my folds are lost when I run this keymap
+  vim.cmd("mkview")
   -- Retrieves all lines from the current buffer
   local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
   local toc_exists = false -- Flag to check if TOC marker exists
@@ -609,13 +612,7 @@ vim.keymap.set("n", "<leader>mt", function()
   if not toc_exists then
     if frontmatter_end > 0 then
       -- Insert after frontmatter
-      vim.api.nvim_buf_set_lines(
-        bufnr,
-        frontmatter_end + 1,
-        frontmatter_end + 1,
-        false,
-        { "", "# Contents", "<!-- toc -->" }
-      )
+      vim.api.nvim_buf_set_lines(bufnr, frontmatter_end, frontmatter_end, false, { "", "# Contents", "<!-- toc -->" })
     else
       -- Insert at the top if no frontmatter
       vim.api.nvim_buf_set_lines(bufnr, 0, 0, false, { "# Contents", "<!-- toc -->" })
@@ -645,6 +642,8 @@ vim.keymap.set("n", "<leader>mt", function()
   --     break
   --   end
   -- end
+  -- Restore the saved view (including folds)
+  vim.cmd("loadview")
 end, { desc = "Insert/update Markdown TOC" })
 
 -- Save the cursor position globally to access it across different mappings

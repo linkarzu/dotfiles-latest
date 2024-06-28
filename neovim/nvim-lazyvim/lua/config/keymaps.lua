@@ -44,7 +44,8 @@ vim.keymap.set("i", "kj", "<ESC>", { desc = "Exit insert mode with kj" })
 vim.keymap.set("n", "gh", "^", { desc = "Go to the beginning of the line" })
 vim.keymap.set("n", "gl", "$", { desc = "go to the end of the line" })
 vim.keymap.set("v", "gh", "^", { desc = "Go to the beginning of the line in visual mode" })
-vim.keymap.set("v", "gl", "$", { desc = "Go to the end of the line in visual mode" })
+-- After going to the end of the line, come back 1 character
+vim.keymap.set("v", "gl", "$h", { desc = "Go to the end of the line in visual mode" })
 
 -- yank selected text into system clipboard
 -- Vim/Neovim has two clipboards: unnamed register (default) and system clipboard.

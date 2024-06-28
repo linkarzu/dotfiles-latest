@@ -90,6 +90,7 @@ create_symlink ~/github/dotfiles-latest/yabai/yabairc ~/.yabairc
 # Creating symlinks for directories
 create_symlink ~/github/dotfiles-latest/neovim/nvim-lazyvim ~/.config/nvim
 create_symlink ~/github/dotfiles-latest/neovim/quarto-nvim-kickstarter/ ~/.config/quarto-nvim-kickstarter
+create_symlink ~/github/dotfiles-latest/neovim/kickstart.nvim/ ~/.config/kickstart.nvim
 create_symlink ~/github/dotfiles-latest/hammerspoon ~/.hammerspoon
 create_symlink ~/github/dotfiles-latest/karabiner/mxstbr ~/.config/karabiner
 create_symlink ~/github/dotfiles-latest/sketchybar/felixkratz-linkarzu ~/.config/sketchybar
@@ -180,9 +181,18 @@ alias lla='ls -alh'
 alias python='python3'
 # Shows the last 30 entries, default is 15
 alias history='history -30'
+
+# You can use NVIM_APPNAME=nvim-NAME to maintain multiple configurations.
+# For example, you can install the kickstart configuration
+# in ~/.config/nvim-kickstart and create the alias below
+#
+# In my case, the neovim directories inside ~/.config/ are symlinks that point
+# to their respective neovim directories stored in my ~/github/dotfiles-latest/
+# directory
 alias v='export NVIM_APPNAME="nvim" && /opt/homebrew/bin/nvim'
 alias nvim='export NVIM_APPNAME="nvim" && /opt/homebrew/bin/nvim'
-alias q='export NVIM_APPNAME="quarto-nvim-kickstarter" && /opt/homebrew/bin/nvim'
+alias vq='export NVIM_APPNAME="quarto-nvim-kickstarter" && /opt/homebrew/bin/nvim'
+alias vk='export NVIM_APPNAME="kickstart.nvim" && /opt/homebrew/bin/nvim'
 
 # kubernetes, if you need help, just run 'kgp --help' for example
 alias k='kubectl'

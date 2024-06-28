@@ -1,0 +1,61 @@
+[colors.bright]
+black = "#7081d0"
+blue = "#a48cf2"
+cyan = "#66e4fd"
+green = "#69F8B3"
+magenta = "#FD92CE"
+red = "#f16c75"
+white = "#ffffff"
+yellow = "#f1fc79"
+
+[colors.cursor]
+cursor = "#37f499"
+text = "#f8f8f2"
+
+[colors.hints.end]
+background = "#212337"
+foreground = "#f1fc79"
+
+[colors.hints.start]
+background = "#f1fc79"
+foreground = "#212337"
+
+[colors.line_indicator]
+background = "None"
+foreground = "None"
+
+[colors.normal]
+black = "#21222c"
+blue = "#9071f4"
+cyan = "#04d1f9"
+green = "#37f499"
+magenta = "#f265b5"
+red = "#f9515d"
+white = "#ebfafa"
+yellow = "#e9f941"
+
+[colors.primary]
+background = "#212337"
+bright_foreground = "#ebfafa"
+foreground = "#ebfafa"
+
+[colors.search.focused_match]
+background = "#f16c75"
+foreground = "#212337"
+
+# [colors.search."footer.bar"]
+# background = "#212337"
+# foreground = "#ebfafa"
+
+[colors.search.matches]
+background = "#37f499"
+foreground = "#212337"
+
+[colors.selection]
+background = "#bf4f8e"
+text = "#ebfafa"
+
+[colors.vi_mode_cursor]
+cursor = "#37f499"
+text = "#f8f8f2"
+

@@ -5,10 +5,12 @@
 # #############################################################################
 
 # import = ["~/github/dotfiles-latest/alacritty/themes/dracula/dracula.toml"]
-import = ["~/github/dotfiles-latest/alacritty/themes/catppuccin/catppuccin-mocha.toml"]
+# import = ["~/github/dotfiles-latest/alacritty/themes/catppuccin/catppuccin-mocha.toml"]
 # import = ["~/github/dotfiles-latest/alacritty/themes/catppuccin/catppuccin-macchiato.toml"]
 # import = ["~/github/dotfiles-latest/alacritty/themes/catppuccin/catppuccin-frappe.toml"]
 # import = ["~/github/dotfiles-latest/alacritty/themes/catppuccin/catppuccin-latte.toml"]
+import = ["~/github/dotfiles-latest/alacritty/themes/eldritch/eldritch.toml"]
+
 
 [colors]
 # If `true`, bold text is drawn using the bright color variants.

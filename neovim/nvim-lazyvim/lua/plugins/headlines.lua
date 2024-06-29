@@ -19,6 +19,22 @@ return {
     vim.cmd([[highlight Headline5 guibg=#7081d0 guifg=#323449]])
     vim.cmd([[highlight Headline6 guibg=#f265b5 guifg=#323449]])
 
+    -- -- This is for eldritch as well, dim background
+    -- vim.cmd([[highlight Headline1 guifg=#f1fc79 guibg=#606430]])
+    -- vim.cmd([[highlight Headline2 guifg=#37f499 guibg=#16613d]])
+    -- vim.cmd([[highlight Headline3 guifg=#04d1f9 guibg=#015363]])
+    -- vim.cmd([[highlight Headline4 guifg=#f16c75 guibg=#602b2e]])
+    -- vim.cmd([[highlight Headline5 guifg=#7081d0 guibg=#2c3353]])
+    -- vim.cmd([[highlight Headline6 guifg=#f265b5 guibg=#602848]])
+
+    -- -- This is for eldritch as well, strong backround
+    -- vim.cmd([[highlight Headline1 guibg=#f1fc79 guifg=#606430]])
+    -- vim.cmd([[highlight Headline2 guibg=#37f499 guifg=#16613d]])
+    -- vim.cmd([[highlight Headline3 guibg=#04d1f9 guifg=#015363]])
+    -- vim.cmd([[highlight Headline4 guibg=#f16c75 guifg=#602b2e]])
+    -- vim.cmd([[highlight Headline5 guibg=#7081d0 guifg=#2c3353]])
+    -- vim.cmd([[highlight Headline6 guibg=#f265b5 guifg=#602848]])
+
     -- -- These were my previous colors, they don't make sense, just something I
     -- -- used back in Google docs
     -- vim.cmd([[highlight Headline1 guibg=#295715 guifg=white]])

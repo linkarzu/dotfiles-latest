@@ -3,6 +3,7 @@
 <!-- toc -->
 
 - [Things to remember](#things-to-remember)
+  * [Paste issues](#paste-issues)
   * [markdown-preview.nvim image size](#markdown-previewnvim-image-size)
   * [Plugin that enables vio and vao](#plugin-that-enables-vio-and-vao)
   * [Record macro](#record-macro)
@@ -34,6 +35,34 @@
 <!-- tocstop -->
 
 ## Things to remember
+
+### Paste issues
+
+- Let's say I have these paragraphs in neovim, I want to replace the middle one
+  with text from outside neovim, text coming from my browser
+
+```bash
+Laborum aute consectetur sit reprehenderit.
+Laborum aute consectetur sit reprehenderit.
+
+# h1 Heading 8-)
+## h2 Heading
+### h3 Heading
+#### h4 Heading
+##### h5 Heading
+###### h6 Heading
+
+Minim tempor ullamco do eu pariatur minim.
+Minim tempor ullamco do eu pariatur minim.
+```
+
+- Notice that paragraph 2 has a newline right below it
+- I copy the text from my browser with cmd+c (macos)
+- I select the 2 lines in the middle with visual mode
+- I paste that text inside neovim with cmd+v and it pastes it, but it removes
+  the newline right after the 2nd paragraph, and it sucks
+- If instead of pasting the text with cmd+v, I paste it with shift+p
+  `it pastes it correctly`
 
 ### markdown-preview.nvim image size
 

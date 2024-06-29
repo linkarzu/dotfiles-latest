@@ -25,7 +25,11 @@ if command -v sketchybar &>/dev/null; then
   display_resolution=$(system_profiler SPDisplaysDataType | grep Resolution)
   # First condition is to match my macbook pro, the * are used as wildcards
   if [[ "$display_resolution" == *"3456 x 2234"* ]]; then
-    yabai -m config top_padding 12
+    # yabai -m config top_padding 12
+    yabai -m config top_padding 22
+    yabai -m config bottom_padding 10
+    yabai -m config left_padding 10
+    yabai -m config right_padding 10
   else
     # This matches my asus 27 inch monitor
     # yabai -m config top_padding 39

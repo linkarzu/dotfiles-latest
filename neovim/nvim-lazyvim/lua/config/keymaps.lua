@@ -41,7 +41,7 @@ vim.keymap.set("i", "kj", "<ESC>", { desc = "[P]Exit insert mode with kj" })
 
 -- use gh to move to the beginning of the line in normal mode
 -- use gl to move to the end of the line in normal mode
-vim.keymap.set("v", "gh", "^", { desc = "[P]Go to the beginning line" })
+vim.keymap.set({ "n", "v" }, "gh", "^", { desc = "[P]Go to the beginning line" })
 vim.keymap.set({ "n", "v" }, "gl", "$", { desc = "[P]go to the end of the line" })
 -- In visual mode, after going to the end of the line, come back 1 character
 vim.keymap.set("v", "gl", "$h", { desc = "[P]Go to the end of the line" })

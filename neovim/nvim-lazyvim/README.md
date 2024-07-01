@@ -30,6 +30,7 @@
 - [Plugins stopped working](#plugins-stopped-working)
   * [Reinstall markdown-preview.nvim](#reinstall-markdown-previewnvim)
 - [image.nvim](#imagenvim)
+  * [Install image.nvim](#install-imagenvim)
   * [Install luarocks (optional)](#install-luarocks-optional)
 
 <!-- tocstop -->
@@ -110,15 +111,13 @@ Minim tempor ullamco do eu pariatur minim.
 - Replace a surrounding
   - Let's say I have this "surrounded text"
   - And I want to change it with 'surrounded text'
-  - Place the cursor before the first "
-  - Then press `gsrn"'`
-    - goto, surround, replace, next, current surrounding, new surrounding
-  - Test below
-  - "surrounded text"
+  - Place the cursor anywhere inside the " "
+  - Then press `gsr"'`
+    - goto, surround, replace, current surrounding, new surrounding
 - Add **bold** as surrounding
   - First **select the text** in visual mode
   - Then press `2gsa*`
-- Remove a surrounding surround
+- Remove a surround
   - If we have 'this surrounded text'
     - Place cursor anywhere inside the surrounding and remove it with `gsd'`
   - If we **have this bold surround**
@@ -210,7 +209,7 @@ help command
   `~/github/dotfiles-latest/neovim/nvim-lazyvim/.markdownlint.yaml`
 - To each dir in which you want the settings to be applied, for example, I
   copied it to my `github/obsidian_main` and `github/linkarzu.github.io` dir.
-- I copied it to `~/github` but the changes were never applied, not sure why
+- Copy it to the working directory, you can see it with `:pwd`
 
 ## Fix Mason warnings
 
@@ -427,6 +426,8 @@ Python 3 provider (optional) ~
 - That solved the issue
 
 ## image.nvim
+
+### Install image.nvim
 
 - I have an M1 mac running macos 14 (Sonoma)
 

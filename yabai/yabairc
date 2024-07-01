@@ -37,7 +37,8 @@ if command -v sketchybar &>/dev/null; then
     yabai -m config bottom_padding 20
     yabai -m config left_padding 20
     yabai -m config right_padding 20
-
+    # Below one is used for youtube thumbnails
+    # yabai -m config right_padding 400
   fi
 else
   yabai -m config top_padding 02

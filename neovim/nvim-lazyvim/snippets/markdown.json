@@ -41,6 +41,12 @@
     "description": "Insert a chirpy theme tip"
   },
 
+  "regular link": {
+    "prefix": "link",
+    "body": ["[$1]($2)"],
+    "description": "Create a new link"
+  },
+
   "link in new tab": {
     "prefix": "linkt",
     "body": ["[$1]($2){:target=\"_blank\"}"],

@@ -537,16 +537,25 @@ end, { desc = "Clear images" })
 --                         Begin of markdown section
 -- ############################################################################
 
--- When I press leader, I want 'm' to show me 'markdown'
+-- When I press leader, I want to modify the name of the options shown
+-- "m" is for "markdown" and "t" is for "todo"
 -- https://github.com/folke/which-key.nvim?tab=readme-ov-file#%EF%B8%8F-mappings
 local wk = require("which-key")
 wk.register({
   ["<leader>"] = {
     m = {
-      name = "+markdown",
+      mode = { "v", "n" },
+      name = "+[P]markdown",
       h = {
-        name = "+headings increase/decrease",
+        name = "+[P]headings increase/decrease",
       },
+      l = {
+        name = "+[P]links",
+      },
+    },
+    t = {
+      mode = { "n" },
+      name = "+[P]todo",
     },
   },
 })

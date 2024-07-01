@@ -1,7 +1,7 @@
 -- https://github.com/echasnovski/mini.indentscope
 --
--- Filename: ~/github/dotfiles-latest/neovim/nvim-lazyvim/lua/plugins/mini-indentscope.lua
--- ~/github/dotfiles-latest/neovim/nvim-lazyvim/lua/plugins/mini-indentscope.lua
+-- Filename: ~/github/dotfiles-latest/neovim/neobean/lua/plugins/mini-indentscope.lua
+-- ~/github/dotfiles-latest/neovim/neobean/lua/plugins/mini-indentscope.lua
 --
 -- This plugins shows you a vertical colored line that allows you to see the
 -- scope of your indentations

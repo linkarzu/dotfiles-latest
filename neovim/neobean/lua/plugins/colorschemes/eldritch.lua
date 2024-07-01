@@ -1,7 +1,7 @@
 -- https://github.com/eldritch-theme/eldritch.nvim
 --
--- Filename: ~/github/dotfiles-latest/neovim/nvim-lazyvim/lua/plugins/colorschemes/eldritch.lua
--- ~/github/dotfiles-latest/neovim/nvim-lazyvim/lua/plugins/colorschemes/eldritch.lua
+-- Filename: ~/github/dotfiles-latest/neovim/neobean/lua/plugins/colorschemes/eldritch.lua
+-- ~/github/dotfiles-latest/neovim/neobean/lua/plugins/colorschemes/eldritch.lua
 
 return {
   "eldritch-theme/eldritch.nvim",

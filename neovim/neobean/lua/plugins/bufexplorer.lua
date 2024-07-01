@@ -1,5 +1,5 @@
--- Filename: ~/github/dotfiles-latest/neovim/nvim-lazyvim/lua/plugins/bufexplorer.lua
--- ~/github/dotfiles-latest/neovim/nvim-lazyvim/lua/plugins/bufexplorer.lua
+-- Filename: ~/github/dotfiles-latest/neovim/neobean/lua/plugins/bufexplorer.lua
+-- ~/github/dotfiles-latest/neovim/neobean/lua/plugins/bufexplorer.lua
 --
 -- https://github.com/jlanzarotta/bufexplorer
 

@@ -1,5 +1,5 @@
--- Filename: ~/github/dotfiles-latest/neovim/nvim-lazyvim/lua/config/keymaps.lua
--- ~/github/dotfiles-latest/neovim/nvim-lazyvim/lua/config/keymaps.lua
+-- Filename: ~/github/dotfiles-latest/neovim/neobean/lua/config/keymaps.lua
+-- ~/github/dotfiles-latest/neovim/neobean/lua/config/keymaps.lua
 
 -- Keymaps are automatically loaded on the VeryLazy event
 -- Default keymaps that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/keymaps.lua
@@ -17,13 +17,13 @@ vim.keymap.set("n", "<S-l>", "<cmd>BufExplorer<cr>", { desc = "[P]Open bufexplor
 
 -- -- use kj to exit insert mode
 -- -- I auto save with
--- --  ~/github/dotfiles-latest/neovim/nvim-lazyvim/lua/plugins/auto-save.lua
+-- --  ~/github/dotfiles-latest/neovim/neobean/lua/plugins/auto-save.lua
 vim.keymap.set("i", "kj", "<ESC>", { desc = "[P]Exit insert mode with kj" })
 
 -- -- An alternative way of saving (autosave)
 -- -- Auto saving when exiting insert mode with `kj`
 -- -- Disabling this because switched over to
--- --  ~/github/dotfiles-latest/neovim/nvim-lazyvim/lua/plugins/auto-save.lua
+-- --  ~/github/dotfiles-latest/neovim/neobean/lua/plugins/auto-save.lua
 -- -- And it works :muacks:, beautifully
 -- vim.keymap.set("i", "kj", function()
 --   -- "Write" saves regardless of whether the buffer has been modified or not

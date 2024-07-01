@@ -1,5 +1,5 @@
--- Filename: ~/github/dotfiles-latest/neovim/nvim-lazyvim/lua/plugins/oil-nvim.lua
--- ~/github/dotfiles-latest/neovim/nvim-lazyvim/lua/plugins/oil-nvim.lua
+-- Filename: ~/github/dotfiles-latest/neovim/neobean/lua/plugins/oil-nvim.lua
+-- ~/github/dotfiles-latest/neovim/neobean/lua/plugins/oil-nvim.lua
 --
 -- https://github.com/stevearc/oil.nvim
 

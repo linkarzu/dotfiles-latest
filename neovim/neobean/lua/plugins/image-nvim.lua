@@ -1,10 +1,10 @@
 -- https://github.com/3rd/image.nvim
 --
--- Filename: ~/github/dotfiles-latest/neovim/nvim-lazyvim/lua/plugins/image-nvim.lua
--- ~/github/dotfiles-latest/neovim/nvim-lazyvim/lua/plugins/image-nvim.lua
+-- Filename: ~/github/dotfiles-latest/neovim/neobean/lua/plugins/image-nvim.lua
+-- ~/github/dotfiles-latest/neovim/neobean/lua/plugins/image-nvim.lua
 
 -- For dependencies see
--- `~/github/dotfiles-latest/neovim/nvim-lazyvim/README.md`
+-- `~/github/dotfiles-latest/neovim/neobean/README.md`
 --
 -- -- Uncomment the following 2 lines if you use the local luarocks installation
 -- -- Leave them commented to instead use `luarocks.nvim`
@@ -71,14 +71,14 @@ return {
           -- This is disabled by default
           -- Detect and render images referenced in HTML files
           -- Make sure you have an html treesitter parser installed
-          -- ~/github/dotfiles-latest/neovim/nvim-lazyvim/lua/plugins/treesitter.lua
+          -- ~/github/dotfiles-latest/neovim/neobean/lua/plugins/treesitter.lua
           html = {
             enabled = true,
           },
           -- This is disabled by default
           -- Detect and render images referenced in CSS files
           -- Make sure you have a css treesitter parser installed
-          -- ~/github/dotfiles-latest/neovim/nvim-lazyvim/lua/plugins/treesitter.lua
+          -- ~/github/dotfiles-latest/neovim/neobean/lua/plugins/treesitter.lua
           css = {
             enabled = true,
           },

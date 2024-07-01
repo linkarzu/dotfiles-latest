@@ -1,5 +1,5 @@
--- Filename: ~/github/dotfiles-latest/neovim/nvim-lazyvim/lua/plugins/lualine.lua
--- ~/github/dotfiles-latest/neovim/nvim-lazyvim/lua/plugins/lualine.lua
+-- Filename: ~/github/dotfiles-latest/neovim/neobean/lua/plugins/lualine.lua
+-- ~/github/dotfiles-latest/neovim/neobean/lua/plugins/lualine.lua
 --
 -- I think I grabbed the config from this plugin using Folke's lazyvim.org and
 -- just made some changes on the top

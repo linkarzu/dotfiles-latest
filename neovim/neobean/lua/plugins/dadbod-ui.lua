@@ -76,7 +76,7 @@ return {
     -- The default location for this is `~/.local/share/db_ui`
     vim.g.db_ui_save_location = "~/Library/Mobile Documents/com~apple~CloudDocs/db-ui"
     -- vim.g.db_ui_save_location = "~/.ssh/dbui"
-    -- vim.g.db_ui_tmp_query_location = "~/github/dotfiles-latest/neovim/nvim-lazyvim/dadbod/queries"
+    -- vim.g.db_ui_tmp_query_location = "~/github/dotfiles-latest/neovim/neobean/dadbod/queries"
 
     vim.g.db_ui_hide_schemas = { "pg_toast_temp.*" }
   end,

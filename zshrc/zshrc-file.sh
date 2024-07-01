@@ -88,7 +88,7 @@ create_symlink ~/github/dotfiles-latest/kitty/kitty.conf ~/.config/kitty/kitty.c
 create_symlink ~/github/dotfiles-latest/yabai/yabairc ~/.yabairc
 
 # Creating symlinks for directories
-create_symlink ~/github/dotfiles-latest/neovim/nvim-lazyvim ~/.config/nvim
+create_symlink ~/github/dotfiles-latest/neovim/neobean ~/.config/nvim
 create_symlink ~/github/dotfiles-latest/neovim/quarto-nvim-kickstarter/ ~/.config/quarto-nvim-kickstarter
 create_symlink ~/github/dotfiles-latest/neovim/kickstart.nvim/ ~/.config/kickstart.nvim
 create_symlink ~/github/dotfiles-latest/hammerspoon ~/.hammerspoon
@@ -112,7 +112,7 @@ create_symlink ~/github/dotfiles-latest/sketchybar/felixkratz-linkarzu ~/.config
 # ln -snf ~/github/dotfiles-latest/yabai/yabairc ~/.yabairc >/dev/null 2>&1
 #
 # # Below are symlinks that point to directories
-# ln -snf ~/github/dotfiles-latest/neovim/nvim-lazyvim ~/.config/nvim >/dev/null 2>&1
+# ln -snf ~/github/dotfiles-latest/neovim/neobean ~/.config/nvim >/dev/null 2>&1
 # ln -snf ~/github/dotfiles-latest/hammerspoon ~/.hammerspoon >/dev/null 2>&1
 # ln -snf ~/github/dotfiles-latest/karabiner/mxstbr ~/.config/karabiner >/dev/null 2>&1
 

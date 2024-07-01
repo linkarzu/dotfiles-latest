@@ -1,5 +1,5 @@
--- Filename: ~/github/dotfiles-latest/neovim/nvim-lazyvim/lua/plugins/mini-files.lua
--- ~/github/dotfiles-latest/neovim/nvim-lazyvim/lua/plugins/mini-files.lua
+-- Filename: ~/github/dotfiles-latest/neovim/neobean/lua/plugins/mini-files.lua
+-- ~/github/dotfiles-latest/neovim/neobean/lua/plugins/mini-files.lua
 --
 -- https://github.com/echasnovski/mini.files
 --

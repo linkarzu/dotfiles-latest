@@ -1,5 +1,5 @@
--- Filename: ~/github/dotfiles-latest/neovim/nvim-lazyvim/lua/plugins/headlines.lua
--- ~/github/dotfiles-latest/neovim/nvim-lazyvim/lua/plugins/headlines.lua
+-- Filename: ~/github/dotfiles-latest/neovim/neobean/lua/plugins/headlines.lua
+-- ~/github/dotfiles-latest/neovim/neobean/lua/plugins/headlines.lua
 
 -- https://github.com/lukas-reineke/headlines.nvim
 -- This already comes installed with lazyvim but I modify the heading colors and

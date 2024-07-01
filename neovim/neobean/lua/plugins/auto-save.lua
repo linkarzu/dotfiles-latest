@@ -4,8 +4,8 @@
 -- but the original one was updated 2 years ago, and I was experiencing issues
 -- with autoformat and undo/redo
 --
--- Filename: ~/github/dotfiles-latest/neovim/nvim-lazyvim/lua/plugins/auto-save.lua
--- ~/github/dotfiles-latest/neovim/nvim-lazyvim/lua/plugins/auto-save.lua
+-- Filename: ~/github/dotfiles-latest/neovim/neobean/lua/plugins/auto-save.lua
+-- ~/github/dotfiles-latest/neovim/neobean/lua/plugins/auto-save.lua
 
 return {
   {

@@ -1,5 +1,5 @@
--- Filename: ~/github/dotfiles-latest/neovim/nvim-lazyvim/lua/plugins/vim-tmux-navigator.lua
--- ~/github/dotfiles-latest/neovim/nvim-lazyvim/lua/plugins/vim-tmux-navigator.lua
+-- Filename: ~/github/dotfiles-latest/neovim/neobean/lua/plugins/vim-tmux-navigator.lua
+-- ~/github/dotfiles-latest/neovim/neobean/lua/plugins/vim-tmux-navigator.lua
 
 -- https://github.com/christoomey/vim-tmux-navigator
 --

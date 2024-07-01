@@ -1,5 +1,5 @@
--- Filename: ~/github/dotfiles-latest/neovim/nvim-lazyvim/lua/plugins/telescope.lua
--- ~/github/dotfiles-latest/neovim/nvim-lazyvim/lua/plugins/telescope.lua
+-- Filename: ~/github/dotfiles-latest/neovim/neobean/lua/plugins/telescope.lua
+-- ~/github/dotfiles-latest/neovim/neobean/lua/plugins/telescope.lua
 
 -- https://github.com/nvim-telescope/telescope.nvim
 -- http://www.lazyvim.org/extras/editor/telescope#telescopenvim

@@ -1,5 +1,5 @@
--- Filename: ~/github/dotfiles-latest/neovim/nvim-lazyvim/lua/config/lazy.lua
--- ~/github/dotfiles-latest/neovim/nvim-lazyvim/lua/config/lazy.lua
+-- Filename: ~/github/dotfiles-latest/neovim/neobean/lua/config/lazy.lua
+-- ~/github/dotfiles-latest/neovim/neobean/lua/config/lazy.lua
 
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then

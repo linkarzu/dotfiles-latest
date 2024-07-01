@@ -1,5 +1,5 @@
--- Filename: ~/github/dotfiles-latest/neovim/nvim-lazyvim/lua/plugins/bullets.lua
--- ~/github/dotfiles-latest/neovim/nvim-lazyvim/lua/plugins/bullets.lua
+-- Filename: ~/github/dotfiles-latest/neovim/neobean/lua/plugins/bullets.lua
+-- ~/github/dotfiles-latest/neovim/neobean/lua/plugins/bullets.lua
 --
 -- This plugin automatically adds bulletpoints on the next line respecting
 -- indentation

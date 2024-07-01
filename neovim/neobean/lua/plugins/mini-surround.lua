@@ -1,5 +1,5 @@
--- Filename: ~/github/dotfiles-latest/neovim/nvim-lazyvim/lua/plugins/mini-surround.lua
--- ~/github/dotfiles-latest/neovim/nvim-lazyvim/lua/plugins/mini-surround.lua
+-- Filename: ~/github/dotfiles-latest/neovim/neobean/lua/plugins/mini-surround.lua
+-- ~/github/dotfiles-latest/neovim/neobean/lua/plugins/mini-surround.lua
 --
 -- I'm just using lazyvim.org defaults here
 -- This plugin comes installed by default, but it was removed one time, so just

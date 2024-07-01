@@ -1,5 +1,5 @@
--- Filename: ~/github/dotfiles-latest/neovim/nvim-lazyvim/lua/plugins/nvim-cmp.lua
--- ~/github/dotfiles-latest/neovim/nvim-lazyvim/lua/plugins/nvim-cmp.lua
+-- Filename: ~/github/dotfiles-latest/neovim/neobean/lua/plugins/nvim-cmp.lua
+-- ~/github/dotfiles-latest/neovim/neobean/lua/plugins/nvim-cmp.lua
 --
 -- I don't want to accept a snippet or an autocomplete when pressing enter, but
 -- instead accept them with ctrl+y

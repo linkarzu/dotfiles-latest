@@ -599,6 +599,32 @@ vim.keymap.set("n", "<leader>mb", function()
   end
 end, { desc = "[P]BOLD toggle on current word or selection" })
 
+-- In visual mode, surround the selected text with markdown link syntax
+vim.keymap.set("v", "<leader>mll", function()
+  -- delete selected text
+  vim.cmd("normal d")
+  -- Insert the following in insert mode
+  vim.cmd("startinsert")
+  vim.api.nvim_put({ "[]() " }, "c", true, true)
+  -- Move to the left, paste, and then move to the right
+  vim.cmd("normal F[pf)")
+  -- vim.cmd("normal 2hpF[l")
+  -- Leave me in insert mode to start typing
+  vim.cmd("startinsert")
+end, { desc = "[P]Convert to link" })
+
+-- In visual mode, surround the selected text with markdown link syntax
+vim.keymap.set("v", "<leader>mlt", function()
+  -- delete selected text
+  vim.cmd("normal d")
+  -- Insert the following in insert mode
+  vim.cmd("startinsert")
+  vim.api.nvim_put({ '[](){:target="_blank"} ' }, "c", true, true)
+  vim.cmd("normal F[pf)")
+  -- Leave me in insert mode to start typing
+  vim.cmd("startinsert")
+end, { desc = "[P]Convert to link (new tab)" })
+
 -- -- The following are related to indentation with tab, may not work perfectly
 -- -- but get the job done
 -- -- To indent in insert mode use C-T and C-D and in normal mode >> and <<

@@ -552,25 +552,31 @@ wk.register({
 
 -- -- The following are related to indentation with tab, may not work perfectly
 -- -- but get the job done
--- Increase indent with tab in normal mode
-vim.keymap.set("n", "<Tab>", function()
-  vim.cmd("normal >>")
-end, { desc = "Increase Indent" })
-
--- Decrease indent with tab in normal mode
-vim.keymap.set("n", "<S-Tab>", function()
-  vim.cmd("normal <<")
-end, { desc = "Decrease Indent" })
-
--- Increase indent with tab in insert mode
-vim.keymap.set("i", "<Tab>", function()
-  vim.api.nvim_input("<C-T>")
-end, { desc = "Increase Indent" })
-
--- Decrease indent with tab in insert mode
-vim.keymap.set("i", "<S-Tab>", function()
-  vim.api.nvim_input("<C-D>")
-end, { desc = "Decrease Indent" })
+-- -- To indent in insert mode use C-T and C-D and in normal mode >> and <<
+-- --
+-- -- I disabled these as they interfere when jumpting to different sections of
+-- -- my snippets, and probably other stuff, not a good idea
+-- -- Maybe look for a different key, but not tab
+-- --
+-- -- Increase indent with tab in normal mode
+-- vim.keymap.set("n", "<Tab>", function()
+--   vim.cmd("normal >>")
+-- end, { desc = "[P]Increase Indent" })
+--
+-- -- Decrease indent with tab in normal mode
+-- vim.keymap.set("n", "<S-Tab>", function()
+--   vim.cmd("normal <<")
+-- end, { desc = "[P]Decrease Indent" })
+--
+-- -- Increase indent with tab in insert mode
+-- vim.keymap.set("i", "<Tab>", function()
+--   vim.api.nvim_input("<C-T>")
+-- end, { desc = "[P]Increase Indent" })
+--
+-- -- Decrease indent with tab in insert mode
+-- vim.keymap.set("i", "<S-Tab>", function()
+--   vim.api.nvim_input("<C-D>")
+-- end, { desc = "[P]Decrease Indent" })
 
 -- Use <CR> to fold when in normal mode
 -- To see help about folds use `:help fold`

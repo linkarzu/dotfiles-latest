@@ -187,7 +187,7 @@ unbind r
 bind r source-file ~/.tmux.conf \; display-message -d 2000 "Configuration reloaded!"
 
 # Bind pane synchronization to Ctrl-b s
-bind Q setw synchronize-panes
+unbind Q
 bind Q setw synchronize-panes
 
 # This enables vim nagivation
@@ -324,6 +324,7 @@ set -g @plugin 'tmux-plugins/tpm'
 # https://github.com/catppuccin/tmux
 # Cons:
 # - Doesn't have a synch panes like dracula
+#   - Actually I was able to implement this, see below
 # Pros:
 # - I feel my terminal waaaaay smoother/faster, not completely sure about this
 #   But could be due to all the refreshing and polling of data Dracula had to do
@@ -336,18 +337,6 @@ set -g @catppuccin_window_right_separator " "
 set -g @catppuccin_window_middle_separator " █"
 set -g @catppuccin_window_number_position "right"
 
-set -g @catppuccin_window_default_fill "number"
-set -g @catppuccin_window_default_text "#W"
-
-set -g @catppuccin_window_current_fill "number"
-set -g @catppuccin_window_current_text "#W"
-
-# I got the 'window_zoomed_flag' tip from 'DevOps Toolbox' youtuber
-# https://youtu.be/GH3kpsbbERo?si=4ZoV090qVbble7np
-#
-# Second option shows a message when panes are syncronized
-set -g @catppuccin_window_current_text "#W#{?window_zoomed_flag,#[fg=#ef87ff] (  ),}#{?pane_synchronized,#[fg=#ef87ff] SYNCHRONIZED-PANES,}"
-
 set -g @catppuccin_status_modules_left "session"
 set -g @catppuccin_status_modules_right "none"
 # set -g @catppuccin_status_modules_right "directory"
@@ -356,10 +345,51 @@ set -g @catppuccin_status_modules_right "none"
 set -g @catppuccin_status_left_separator " "
 set -g @catppuccin_status_right_separator ""
 set -g @catppuccin_status_right_separator_inverse "no"
-set -g @catppuccin_status_fill "icon"
 set -g @catppuccin_status_connect_separator "no"
 
 # set -g @catppuccin_directory_text "#{pane_current_path}"
+
+## ELDRITCH COLORS
+# Color of the ACTIVE window, windows are opened with ctrl+b c
+set -g @catppuccin_window_current_color "#04d1f9"
+# set -g @catppuccin_window_current_background ""
+
+# Color of the rest of the windows that are not active
+set -g @catppuccin_window_default_color "#02687c"
+set -g @catppuccin_window_default_background "#212337"
+
+# The following 2 colors are for the lines that separate tmux splits
+set -g @catppuccin_pane_active_border_style "fg=#04d1f9"
+set -g @catppuccin_pane_border_style "fg=#a5afc2"
+
+# This can be set to "icon" or "all" if set to "all" the entire tmux session
+# name has color
+# set -g @catppuccin_status_fill "icon"
+set -g @catppuccin_status_fill "all"
+# If you set this, you will see the classic colored tmux line that goes across
+# the entire screen
+set -g @catppuccin_status_background "theme"
+# If you set this to off, the tmux line completely dissappears
+set -g @catppuccin_status_default "on"
+
+# default for catppuccin_session_color is #{?client_prefix,$thm_red,$thm_green}
+# https://github.com/catppuccin/tmux/issues/140#issuecomment-1956204278
+set -g @catppuccin_session_color "#{?client_prefix,#a48cf2,#37f499}"
+
+# This sets the color of the window text, #W shows the application name
+set -g @catppuccin_window_default_fill "number"
+set -g @catppuccin_window_default_text "#[fg=#ebfafa]#W"
+
+set -g @catppuccin_window_current_fill "number"
+set -g @catppuccin_window_current_text "#[fg=#ebfafa]#W"
+
+# Put this option below the '@catppuccin_window_current_text' option for it to
+# override it, otherwise it won't work
+# I got the 'window_zoomed_flag' tip from 'DevOps Toolbox' youtuber
+# https://youtu.be/GH3kpsbbERo?si=4ZoV090qVbble7np
+#
+# Second option shows a message when panes are syncronized
+set -g @catppuccin_window_current_text "#W#{?window_zoomed_flag,#[fg=#a48cf2] (   ),}#{?pane_synchronized,#[fg=#a48cf2] SYNCHRONIZED-PANES,}"
 
 # ----------------------------------------------------------------------------
 

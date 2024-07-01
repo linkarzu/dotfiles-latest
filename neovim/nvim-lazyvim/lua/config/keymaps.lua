@@ -965,25 +965,49 @@ end, { desc = "Add surrounding to URL" })
 --   - Lines that have a newline `above` AND `below`
 --   - Lines that have a space after the `##` to avoid `#!/bin/bash`
 vim.keymap.set("n", "<leader>mhi", function()
+  -- Save the current cursor position
+  local cursor_pos = vim.api.nvim_win_get_cursor(0)
   -- I'm using [[ ]] to escape the special characters in a command
   vim.cmd([[:g/\(^$\n\s*#\+\s.*\n^$\)/ .+1 s/^#\+\s/#&/c]])
-end, { desc = "Increase .md headings with confirmation" })
+  -- Restore the cursor position
+  vim.api.nvim_win_set_cursor(0, cursor_pos)
+  -- Clear search highlight
+  vim.cmd("nohlsearch")
+end, { desc = "[P]Increase headings with confirmation" })
 
 vim.keymap.set("n", "<leader>mhI", function()
+  -- Save the current cursor position
+  local cursor_pos = vim.api.nvim_win_get_cursor(0)
   -- I'm using [[ ]] to escape the special characters in a command
   vim.cmd([[:g/\(^$\n\s*#\+\s.*\n^$\)/ .+1 s/^#\+\s/#&/]])
-end, { desc = "Increase .md headings without confirmation" })
+  -- Restore the cursor position
+  vim.api.nvim_win_set_cursor(0, cursor_pos)
+  -- Clear search highlight
+  vim.cmd("nohlsearch")
+end, { desc = "[P]Increase headings without confirmation" })
 
 -- These are similar, but instead of adding an # they remove it
 vim.keymap.set("n", "<leader>mhd", function()
+  -- Save the current cursor position
+  local cursor_pos = vim.api.nvim_win_get_cursor(0)
   -- I'm using [[ ]] to escape the special characters in a command
   vim.cmd([[:g/^\s*#\{2,}\s/ s/^#\(#\+\s.*\)/\1/c]])
-end, { desc = "Decrease .md headings with confirmation" })
+  -- Restore the cursor position
+  vim.api.nvim_win_set_cursor(0, cursor_pos)
+  -- Clear search highlight
+  vim.cmd("nohlsearch")
+end, { desc = "[P]Decrease headings with confirmation" })
 
 vim.keymap.set("n", "<leader>mhD", function()
+  -- Save the current cursor position
+  local cursor_pos = vim.api.nvim_win_get_cursor(0)
   -- I'm using [[ ]] to escape the special characters in a command
   vim.cmd([[:g/^\s*#\{2,}\s/ s/^#\(#\+\s.*\)/\1/]])
-end, { desc = "Decrease .md headings without confirmation" })
+  -- Restore the cursor position
+  vim.api.nvim_win_set_cursor(0, cursor_pos)
+  -- Clear search highlight
+  vim.cmd("nohlsearch")
+end, { desc = "[P]Decrease headings without confirmation" })
 
 -- ############################################################################
 --                       End of markdown section

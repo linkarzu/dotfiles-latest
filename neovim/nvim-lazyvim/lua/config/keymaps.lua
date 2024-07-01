@@ -12,13 +12,13 @@
 
 -- I don't want to switch between buffers anymore, instead I'll use BufExplorer
 -- For this to work, make sure you have the plugin installed
-vim.keymap.set("n", "<S-h>", "<cmd>BufExplorer<cr>", { desc = "Open bufexplorer" })
-vim.keymap.set("n", "<S-l>", "<cmd>BufExplorer<cr>", { desc = "Open bufexplorer" })
+vim.keymap.set("n", "<S-h>", "<cmd>BufExplorer<cr>", { desc = "[P]Open bufexplorer" })
+vim.keymap.set("n", "<S-l>", "<cmd>BufExplorer<cr>", { desc = "[P]Open bufexplorer" })
 
 -- -- use kj to exit insert mode
 -- -- I auto save with
 -- --  ~/github/dotfiles-latest/neovim/nvim-lazyvim/lua/plugins/auto-save.lua
-vim.keymap.set("i", "kj", "<ESC>", { desc = "Exit insert mode with kj" })
+vim.keymap.set("i", "kj", "<ESC>", { desc = "[P]Exit insert mode with kj" })
 
 -- -- An alternative way of saving (autosave)
 -- -- Auto saving when exiting insert mode with `kj`
@@ -37,42 +37,42 @@ vim.keymap.set("i", "kj", "<ESC>", { desc = "Exit insert mode with kj" })
 --   vim.cmd("stopinsert")
 --   -- Print the "File saved" message and the file path
 --   -- print("FILE SAVED: " .. vim.fn.expand("%:p"))
--- end, { desc = "Write current file and exit insert mode" })
+-- end, { desc = "[P]Write current file and exit insert mode" })
 
 -- use gh to move to the beginning of the line in normal mode
 -- use gl to move to the end of the line in normal mode
-vim.keymap.set("n", "gh", "^", { desc = "Go to the beginning of the line" })
-vim.keymap.set("n", "gl", "$", { desc = "go to the end of the line" })
-vim.keymap.set("v", "gh", "^", { desc = "Go to the beginning of the line in visual mode" })
--- After going to the end of the line, come back 1 character
-vim.keymap.set("v", "gl", "$h", { desc = "Go to the end of the line in visual mode" })
+vim.keymap.set("v", "gh", "^", { desc = "[P]Go to the beginning line" })
+vim.keymap.set({ "n", "v" }, "gl", "$", { desc = "[P]go to the end of the line" })
+-- In visual mode, after going to the end of the line, come back 1 character
+vim.keymap.set("v", "gl", "$h", { desc = "[P]Go to the end of the line" })
 
 -- yank selected text into system clipboard
 -- Vim/Neovim has two clipboards: unnamed register (default) and system clipboard.
+--
 -- Yanking with `y` goes to the unnamed register, accessible only within Vim.
 -- The system clipboard allows sharing data between Vim and other applications.
 -- Yanking with `"+y` copies text to both the unnamed register and system clipboard.
 -- The `"+` register represents the system clipboard.
-vim.keymap.set({ "n", "v" }, "<leader>y", [["+y]], { desc = "Yank to system clipboard" })
+vim.keymap.set({ "n", "v" }, "<leader>y", [["+y]], { desc = "[P]Yank to system clipboard" })
 
 -- yank/copy to end of line
-vim.keymap.set("n", "Y", "y$", { desc = "Yank to end of line" })
+vim.keymap.set("n", "Y", "y$", { desc = "[P]Yank to end of line" })
 
 -- Disabled this because I use these keymaps to navigate markdown headers
 -- Ctrl+d and u are used to move up or down a half screen
 -- but I don't like to use ctrl, so enabled this as well, both options work
 -- zz makes the cursor to stay in the middle
 -- If you want to return back to ctrl+d and ctrl+u
--- vim.keymap.set("n", "gk", "<C-u>zz", { desc = "Go up a half screen" })
--- vim.keymap.set("n", "gj", "<C-d>zz", { desc = "Go down a half screen" })
+-- vim.keymap.set("n", "gk", "<C-u>zz", { desc = "[P]Go up a half screen" })
+-- vim.keymap.set("n", "gj", "<C-d>zz", { desc = "[P]Go down a half screen" })
 
 -- When jumping with ctrl+d and u the cursors stays in the middle
 vim.keymap.set("n", "<C-d>", "<C-d>zz")
 vim.keymap.set("n", "<c-u>", "<c-u>zz")
 
 -- Move lines up and down in visual mode
-vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv", { desc = "Move line down in visual mode" })
-vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv", { desc = "Move line up in visual mode" })
+vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv", { desc = "[P]Move line down in visual mode" })
+vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv", { desc = "[P]Move line up in visual mode" })
 
 -- When you do joins with J it will keep your cursor at the beginning instead of at the end
 vim.keymap.set("n", "J", "mzJ`z")
@@ -87,7 +87,7 @@ vim.keymap.set(
   "n",
   "<leader>su",
   [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]],
-  { desc = "Replace word I'm currently on GLOBALLY" }
+  { desc = "[P]Replace word I'm currently on GLOBALLY" }
 )
 
 -- Replaces the current word with the same word in uppercase, globally
@@ -95,7 +95,7 @@ vim.keymap.set(
   "n",
   "<leader>sU",
   [[:%s/\<<C-r><C-w>\>/<C-r>=toupper(expand('<cword>'))<CR>/gI<Left><Left><Left>]],
-  { desc = "GLOBALLY replace word I'm on with UPPERCASE" }
+  { desc = "[P]GLOBALLY replace word I'm on with UPPERCASE" }
 )
 
 -- Replaces the current word with the same word in lowercase, globally
@@ -103,7 +103,7 @@ vim.keymap.set(
   "n",
   "<leader>sL",
   [[:%s/\<<C-r><C-w>\>/<C-r>=tolower(expand('<cword>'))<CR>/gI<Left><Left><Left>]],
-  { desc = "GLOBALLY replace word I'm on with lowercase" }
+  { desc = "[P]GLOBALLY replace word I'm on with lowercase" }
 )
 
 -- Quickly alternate between the last 2 files
@@ -119,7 +119,6 @@ vim.keymap.set(
 -- Alternate buffer register "#
 -- The command to switch is `:e #`
 -- `:e` is used to `edit-a-file`, see `help :e`
---
 
 -- Make the file you run the command on, executable, so you don't have to go out to the command line
 -- Had to include quotes around "%" because there are some apple dirs that contain spaces, like iCloud
@@ -149,7 +148,7 @@ vim.keymap.set("n", "<leader>cb", function()
   else
     vim.cmd("echo 'Not a script. Shebang line not found.'")
   end
-end, { desc = "BASH, execute file" })
+end, { desc = "[P]BASH, execute file" })
 
 -- -- If this is a bash script, make it executable, and execute it in a split pane on the right
 -- -- Had to include quotes around "%" because there are some apple dirs that contain spaces, like iCloud
@@ -165,7 +164,7 @@ end, { desc = "BASH, execute file" })
 --   else
 --     vim.cmd("echo 'Not a script. Shebang line not found.'")
 --   end
--- end, { desc = "Execute bash script in pane on the right" })
+-- end, { desc = "[P]Execute bash script in pane on the right" })
 
 -- If this is a .go file, execute it in a tmux pane on the right
 -- Using a tmux pane allows me to easily select text
@@ -189,7 +188,7 @@ vim.keymap.set("n", "<leader>cg", function()
   else
     vim.cmd("echo 'Not a Go file.'") -- Notify the user if the file is not a Go file
   end
-end, { desc = "GOLANG, execute file" })
+end, { desc = "[P]GOLANG, execute file" })
 
 -- -- If this is a .go file, execute it in a split pane on the right
 -- -- Had to include quotes around "%" because there are some apple dirs that contain spaces, like iCloud
@@ -203,7 +202,7 @@ end, { desc = "GOLANG, execute file" })
 --   else
 --     vim.cmd("echo 'Not a Go file.'") -- Notify the user if the file is not a Go file
 --   end
--- end, { desc = "Execute Go file in pane on the right" })
+-- end, { desc = "[P]Execute Go file in pane on the right" })
 
 -- Toggle a tmux pane on the right in bash, in the same directory as the current file
 -- Opening it in bash because it's faster, I don't have to run my .zshrc file,
@@ -221,7 +220,7 @@ vim.keymap.set("n", "<leader>f.", function()
     -- If the right pane doesn't exist, open it
     vim.fn.system("tmux split-window -h -l " .. pane_width .. " 'cd " .. file_dir .. " && bash'")
   end
-end, { desc = "Open (toggle) current dir in right tmux pane" })
+end, { desc = "[P]Open (toggle) current dir in right tmux pane" })
 
 -- -- Open a tmux pane on the right in bash, in the same directory as the current file
 -- -- Opening it in bash because it's faster, I don't have to run my .zshrc file,
@@ -231,7 +230,7 @@ end, { desc = "Open (toggle) current dir in right tmux pane" })
 --   -- `-l 60` specifies the size of the tmux pane, in this case 60 columns
 --   local cmd = "silent !tmux split-window -h -l 60 'cd " .. file_dir .. " && bash'"
 --   vim.cmd(cmd)
--- end, { desc = "Open current dir in right tmux pane" })
+-- end, { desc = "[P]Open current dir in right tmux pane" })
 
 -- This will add 3 lines:
 -- 1. File path with the wordname Filename: first, then the path, and Go project name
@@ -297,7 +296,7 @@ end, { desc = "[P]Insert filename with path at cursor" })
 -- Original lazyvim.org keymap for this was "Other Window", but I never used it
 vim.keymap.set("n", "<leader>ww", function()
   vim.cmd("write")
-end, { desc = "Write current file" })
+end, { desc = "[P]Write current file" })
 
 -- ############################################################################
 
@@ -306,7 +305,7 @@ vim.keymap.set("n", "<leader>br", function()
   -- Reloads the file to reflect the changes
   vim.cmd("edit!")
   print("Buffer reloaded")
-end, { desc = "Reload current buffer" })
+end, { desc = "[P]Reload current buffer" })
 
 -- ############################################################################
 --                             Image section
@@ -333,12 +332,12 @@ vim.keymap.set({ "n", "v", "i" }, "<C-a>", function()
     vim.cmd([[lua require("image").clear()]])
     -- Reloads the file to reflect the changes
     vim.cmd("edit!")
-    -- Switch back to command mode
+    -- Switch back to command mode or normal mode
     vim.cmd("stopinsert")
   else
     print("No image pasted. File not updated.")
   end
-end, { desc = "Paste image from system clipboard" })
+end, { desc = "[P]Paste image from system clipboard" })
 
 -- ############################################################################
 
@@ -381,7 +380,7 @@ vim.keymap.set("n", "<leader>io", function()
   else
     print("No image found under the cursor")
   end
-end, { desc = "(macOS) Open image under cursor in Preview" })
+end, { desc = "[P](macOS) Open image under cursor in Preview" })
 
 -- ############################################################################
 
@@ -428,7 +427,7 @@ vim.keymap.set("n", "<leader>if", function()
   else
     print("No image found under the cursor")
   end
-end, { desc = "(macOS) Open image under cursor in Finder" })
+end, { desc = "[P](macOS) Open image under cursor in Finder" })
 
 -- ############################################################################
 
@@ -506,7 +505,7 @@ vim.keymap.set("n", "<leader>id", function()
       { "No image found under the cursor", "WarningMsg" },
     }, false, {})
   end
-end, { desc = "(macOS) Delete image file under cursor" })
+end, { desc = "[P](macOS) Delete image file under cursor" })
 
 -- ############################################################################
 
@@ -520,7 +519,7 @@ vim.keymap.set("n", "<leader>ir", function()
   -- Reloads the file to reflect the changes
   vim.cmd("edit!")
   print("Images refreshed")
-end, { desc = "Refresh images" })
+end, { desc = "[P]Refresh images" })
 
 -- ############################################################################
 
@@ -530,7 +529,7 @@ vim.keymap.set("n", "<leader>ic", function()
   -- I'm using [[ ]] to escape the special characters in a command
   vim.cmd([[lua require("image").clear()]])
   print("Images cleared")
-end, { desc = "Clear images" })
+end, { desc = "[P]Clear images" })
 
 -- ############################################################################
 --                         Begin of markdown section
@@ -672,7 +671,7 @@ vim.keymap.set("n", "<CR>", function()
   else
     vim.cmd("normal! za") -- Use normal! to avoid recursive mappings
   end
-end, { desc = "Toggle fold" })
+end, { desc = "[P]Toggle fold" })
 
 -- Detect todos and toggle between ":" and ";", or show a message if not found
 -- This is to "mark them as done"
@@ -694,7 +693,7 @@ vim.keymap.set("n", "<leader>td", function()
   else
     vim.cmd("echo 'todo item not detected'")
   end
-end, { desc = "TODO toggle item done or not" })
+end, { desc = "[P]TODO toggle item done or not" })
 
 -- Generate/update a Markdown TOC
 -- To generate the TOC I use the markdown-toc plugin
@@ -763,7 +762,7 @@ vim.keymap.set("n", "<leader>mt", function()
   -- end
   -- Restore the saved view (including folds)
   vim.cmd("loadview")
-end, { desc = "Insert/update Markdown TOC" })
+end, { desc = "[P]Insert/update Markdown TOC" })
 
 -- Save the cursor position globally to access it across different mappings
 _G.saved_positions = {}
@@ -783,7 +782,7 @@ vim.keymap.set("n", "<leader>mm", function()
   -- Move the cursor to column 15 (starts counting at 0)
   -- I like just going down on the TOC and press gd to go to a section
   vim.api.nvim_win_set_cursor(0, { row, 14 })
-end, { desc = "Jump to the first line of the TOC" })
+end, { desc = "[P]Jump to the first line of the TOC" })
 
 -- Mapping to return to the previously saved cursor position
 vim.keymap.set("n", "<leader>mf", function()
@@ -791,7 +790,7 @@ vim.keymap.set("n", "<leader>mf", function()
   if pos then
     vim.api.nvim_win_set_cursor(0, pos)
   end
-end, { desc = "Return to position before jumping" })
+end, { desc = "[P]Return to position before jumping" })
 
 -- -- Search UP for a markdown header
 -- -- If you have comments inside a codeblock, they can start with `# ` but make
@@ -830,7 +829,7 @@ end, { desc = "Return to position before jumping" })
 --   end
 --   -- Clear search highlighting after operation
 --   vim.cmd("nohlsearch")
--- end, { desc = "Go to previous markdown header" })
+-- end, { desc = "[P]Go to previous markdown header" })
 --
 -- -- Search DOWN for a markdown header
 -- -- If you have comments inside a codeblock, they can start with `# ` but make
@@ -869,7 +868,7 @@ end, { desc = "Return to position before jumping" })
 --   end
 --   -- Clear search highlighting after operation
 --   vim.cmd("nohlsearch")
--- end, { desc = "Go to next markdown header" })
+-- end, { desc = "[P]Go to next markdown header" })
 
 -- Search UP for a markdown header
 -- Make sure to follow proper markdown convention, and you have a single H1
@@ -886,7 +885,7 @@ vim.keymap.set({ "n", "v" }, "gk", function()
   vim.cmd("silent! ?^##\\+\\s.*$")
   -- Clear the search highlight
   vim.cmd("nohlsearch")
-end, { desc = "Go to previous markdown header" })
+end, { desc = "[P]Go to previous markdown header" })
 
 -- Search DOWN for a markdown header
 -- Make sure to follow proper markdown convention, and you have a single H1
@@ -903,7 +902,7 @@ vim.keymap.set({ "n", "v" }, "gj", function()
   vim.cmd("silent! /^##\\+\\s.*$")
   -- Clear the search highlight
   vim.cmd("nohlsearch")
-end, { desc = "Go to next markdown header" })
+end, { desc = "[P]Go to next markdown header" })
 
 vim.keymap.set("n", "<leader>jj", function()
   local date = os.date("%Y-%m-%d-%A")
@@ -917,7 +916,7 @@ vim.keymap.set("n", "<leader>jj", function()
   -- Enter insert mode at the end of the current line
   vim.cmd("startinsert!")
   -- vim.api.nvim_win_set_cursor(0, { row, #heading })
-end, { desc = "H1 heading and date" })
+end, { desc = "[P]H1 heading and date" })
 
 vim.keymap.set("n", "<leader>kk", function()
   local date = os.date("%Y-%m-%d-%A")
@@ -931,7 +930,7 @@ vim.keymap.set("n", "<leader>kk", function()
   -- Enter insert mode at the end of the current line
   vim.cmd("startinsert!")
   -- vim.api.nvim_win_set_cursor(0, { row, #heading })
-end, { desc = "H2 heading and date" })
+end, { desc = "[P]H2 heading and date" })
 
 vim.keymap.set("n", "<leader>ll", function()
   local date = os.date("%Y-%m-%d-%A")
@@ -945,7 +944,7 @@ vim.keymap.set("n", "<leader>ll", function()
   -- Enter insert mode at the end of the current line
   vim.cmd("startinsert!")
   -- vim.api.nvim_win_set_cursor(0, { row, #heading })
-end, { desc = "H3 heading and date" })
+end, { desc = "[P]H3 heading and date" })
 
 vim.keymap.set("n", "<leader>;;", function()
   local date = os.date("%Y-%m-%d-%A")
@@ -959,7 +958,7 @@ vim.keymap.set("n", "<leader>;;", function()
   -- Enter insert mode at the end of the current line
   vim.cmd("startinsert!")
   -- vim.api.nvim_win_set_cursor(0, { row, #heading })
-end, { desc = "H4 heading and date" })
+end, { desc = "[P]H4 heading and date" })
 
 vim.keymap.set("n", "<leader>uu", function()
   local date = os.date("%Y-%m-%d-%A")
@@ -973,7 +972,7 @@ vim.keymap.set("n", "<leader>uu", function()
   -- Enter insert mode at the end of the current line
   vim.cmd("startinsert!")
   -- vim.api.nvim_win_set_cursor(0, { row, #heading })
-end, { desc = "H5 heading and date" })
+end, { desc = "[P]H5 heading and date" })
 
 vim.keymap.set("n", "<leader>ii", function()
   local date = os.date("%Y-%m-%d-%A")
@@ -987,7 +986,7 @@ vim.keymap.set("n", "<leader>ii", function()
   -- Enter insert mode at the end of the current line
   vim.cmd("startinsert!")
   -- vim.api.nvim_win_set_cursor(0, { row, #heading })
-end, { desc = "H6 heading and date" })
+end, { desc = "[P]H6 heading and date" })
 
 -- Create or find a daily note based on a date line format and open it in Neovim
 -- This is used in obsidian markdown files that have the "Link to non-existent
@@ -1020,7 +1019,7 @@ vim.keymap.set("n", "<leader>fC", function()
   else
     print("Daily note already exists: " .. full_path)
   end
-end, { desc = "Create daily note" })
+end, { desc = "[P]Create daily note" })
 
 -- Surround the http:// url that the cursor is currently in with ``
 vim.keymap.set("n", "gsu", function()
@@ -1046,7 +1045,7 @@ vim.keymap.set("n", "gsu", function()
     -- Save the file to update trouble list
   end
   print("No URL found under cursor")
-end, { desc = "Add surrounding to URL" })
+end, { desc = "[P]Add surrounding to URL" })
 
 -- - I have several `.md` documents that do not follow markdown guidelines
 -- - There are some old ones that have more than one H1 heading in them, so when I
@@ -1111,7 +1110,7 @@ vim.keymap.set("n", "<leader>md", function()
   -- Delete all marks in the current buffer
   vim.cmd("delmarks!")
   print("All marks deleted.")
-end, { desc = "Delete all marks" })
+end, { desc = "[P]Delete all marks" })
 
 -- Open current file in finder
 vim.keymap.set("n", "<leader>fO", function()
@@ -1123,7 +1122,7 @@ vim.keymap.set("n", "<leader>fO", function()
   else
     print("No file is currently open")
   end
-end, { desc = "Open current file in Finder" })
+end, { desc = "[P]Open current file in Finder" })
 
 -- -- From Primeagen's tmux-sessionizer
 -- -- ctrl+f in normal mode will silently run a command to create a new tmux window and execute the tmux-sessionizer.

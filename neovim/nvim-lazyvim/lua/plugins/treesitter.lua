@@ -3,7 +3,7 @@
 -- Filename: ~/github/dotfiles-latest/neovim/nvim-lazyvim/lua/plugins/treesitter.lua
 -- ~/github/dotfiles-latest/neovim/nvim-lazyvim/lua/plugins/treesitter.lua
 
--- SQL wasn't sohwing in my codeblocks when working with .md files, that's
+-- SQL wasn't showing in my codeblocks when working with .md files, that's
 -- how I found out it was missing from treesitter
 
 return {

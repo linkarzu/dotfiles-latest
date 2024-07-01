@@ -280,7 +280,7 @@ end, { desc = "Insert filename with path and go project name at cursor" })
 -- end, { desc = "Insert filename with path at cursor" })
 
 -- Paste file path by itself
-vim.keymap.set("n", "<leader>fo", function()
+vim.keymap.set("n", "<leader>fp", function()
   local filePath = vim.fn.expand("%:~") -- Gets the file path relative to the home directory
   local lineToInsert = filePath
   local row, _ = unpack(vim.api.nvim_win_get_cursor(0)) -- Get the current row number
@@ -290,7 +290,8 @@ vim.keymap.set("n", "<leader>fo", function()
   vim.cmd("normal gcc")
   -- Insert a blank line below the current line
   vim.api.nvim_buf_set_lines(0, row, row, false, { "" })
-end, { desc = "Insert filename with path at cursor" })
+end, { desc = "[P]Insert filename with path at cursor" })
+
 
 -- I save a lot, and normally do it with `:w<CR>`, but I guess this will be
 -- easier on my fingers

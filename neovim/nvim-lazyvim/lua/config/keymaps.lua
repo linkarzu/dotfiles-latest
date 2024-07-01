@@ -560,6 +560,45 @@ wk.register({
   },
 })
 
+-- In visual mode, check if the selected text is already bold and show a message if it is
+-- If not, surround it with double asterisks for bold
+vim.keymap.set("v", "<leader>mb", function()
+  -- Get the selected text range
+  local start_row, start_col = unpack(vim.fn.getpos("'<"), 2, 3)
+  local end_row, end_col = unpack(vim.fn.getpos("'>"), 2, 3)
+  -- Get the selected lines
+  local lines = vim.api.nvim_buf_get_lines(0, start_row - 1, end_row, false)
+  local selected_text = table.concat(lines, "\n"):sub(start_col, #lines == 1 and end_col or -1)
+  if selected_text:match("^%*%*.*%*%*$") then
+    vim.notify("Text already bold", vim.log.levels.INFO)
+  else
+    vim.cmd("normal 2gsa*")
+  end
+end, { desc = "[P]BOLD current selection" })
+
+-- In normal mode, toggle bold on the current word or the text under the cursor
+vim.keymap.set("n", "<leader>mb", function()
+  local cursor_pos = vim.api.nvim_win_get_cursor(0)
+  -- local row = cursor_pos[1] -- Removed the unused variable
+  local col = cursor_pos[2]
+  local line = vim.api.nvim_get_current_line()
+  -- Check if the cursor is on an asterisk
+  if line:sub(col + 1, col + 1):match("%*") then
+    vim.notify("Cursor is on an asterisk, run inside the bold text", vim.log.levels.WARN)
+    return
+  end
+  -- Check if the cursor is inside surrounded text
+  local before = line:sub(1, col)
+  local after = line:sub(col + 1)
+  local inside_surround = before:match("%*%*[^%*]*$") and after:match("^[^%*]*%*%*")
+  if inside_surround then
+    vim.cmd("normal gsd*.")
+  else
+    vim.cmd("normal viw")
+    vim.cmd("normal 2gsa*")
+  end
+end, { desc = "[P]BOLD toggle on current word or selection" })
+
 -- -- The following are related to indentation with tab, may not work perfectly
 -- -- but get the job done
 -- -- To indent in insert mode use C-T and C-D and in normal mode >> and <<

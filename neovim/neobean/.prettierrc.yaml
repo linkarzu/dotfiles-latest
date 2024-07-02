@@ -1,21 +1,62 @@
 # Filename: ~/.prettierrc.yaml
+# ~/.prettierrc.yaml
 
-# Default configuration applied to all files
+# This will autoformat existing lines over 80 characters and also long lines
+# that you paste that exceed the 80 characters
+
+###############################################################################
+
+# The configuration file will be resolved starting from the location of the
+# file being formatted, and searching up the file tree until a config file is
+# (or isn’t) found.
+#
+# Prettier intentionally doesn’t support any kind of global configuration.
+# This is to make sure that when a project is copied to another computer,
+# Prettier’s behavior stays the same. Otherwise, Prettier wouldn’t be able to
+# guarantee that everybody in a team gets the same consistent results.
+#
+# I added the file in my home directory directly ~/.prettierrc.yaml, and it
+# and it was being picked up by all the files inside, for exmaple files
+# in the ~/github/dotfiles-latest directory
+#
+# So my .zshrc file automatically creates a symlink in my home directory that
+# points to this file. That way everthing inside my home directory can be
+# formatted using this single file
+
+###############################################################################
+
+# This sets it for all the file formats, not only markdown
+# "preserve" is the default configuration applied to all files
 # proseWrap: "preserve"
+# proseWrap: "always"
 
-# You might not want proseWrap to affect YAML files, so it's not set at the top level here
+# You might not want proseWrap to affect YAML files for example, so that's why
+# it's not set above
+#
+# Also notice that you can specify different settings for different directories
+#
 # https://prettier.io/docs/en/configuration#configuration-overrides
 overrides:
   # Specific override for Markdown (.md) files
   - files: "*.md"
     options:
       proseWrap: "always"
+      # The default for this value is 80 if not specified, if you increase it
+      # lines will be longer
+      # All the different options can be found in
+      # https://prettier.io/docs/en/options#print-width
+      printWidth: 80
   # # Specific override for Markdown (.md) files in a specific directory
-  # - files:
-  #     - "050-personal/work/doc/goto/monitoring/projects/**/*.md"
-  #   options:
-  #     # tabWidth: 4
-  #     # tab_width: 4
-  #     # indent_style: "space"
-  #     # indent_size: 5
-  #     proseWrap: "always"
+  # # This sets the indentation to 4 spaces and line length from 80 to 100
+  # # This is because confluence sucks with markdown support, but this makes it
+  # # work
+  # # Notice it's at the same indentation level of the `- files` above
+  - files:
+      - "github/obsidian_main/050-personal/work/doc/goto/monitoring/projects/**/*.md"
+    options:
+      tabWidth: 4
+      # tab_width: 4
+      # indent_style: "space"
+      # indent_size: 5
+      proseWrap: "always"
+      printWidth: 100

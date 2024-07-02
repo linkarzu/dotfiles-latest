@@ -265,18 +265,25 @@ vim.keymap.set({ "n", "v", "i" }, "<C-z>", function()
   end
 end, { desc = "[P]Insert filename with path and go project name at cursor" })
 
--- Paste file path by itself
+-- -- Paste file path by itself
+-- vim.keymap.set("n", "<leader>fp", function()
+--   local filePath = vim.fn.expand("%:~") -- Gets the file path relative to the home directory
+--   local lineToInsert = filePath
+--   local row, _ = unpack(vim.api.nvim_win_get_cursor(0)) -- Get the current row number
+--   -- Insert line, leave cursor current position
+--   vim.api.nvim_buf_set_lines(0, row - 1, row - 0, false, { lineToInsert })
+--   -- Comment out the newly inserted line using the plugin's 'gcc' command
+--   vim.cmd("normal gcc")
+--   -- Insert a blank line below the current line
+--   vim.api.nvim_buf_set_lines(0, row, row, false, { "" })
+-- end, { desc = "[P]Insert filename with path at cursor" })
+
+-- Copy file path / filepath to the clipboard
 vim.keymap.set("n", "<leader>fp", function()
   local filePath = vim.fn.expand("%:~") -- Gets the file path relative to the home directory
-  local lineToInsert = filePath
-  local row, _ = unpack(vim.api.nvim_win_get_cursor(0)) -- Get the current row number
-  -- Insert line, leave cursor current position
-  vim.api.nvim_buf_set_lines(0, row - 1, row - 0, false, { lineToInsert })
-  -- Comment out the newly inserted line using the plugin's 'gcc' command
-  vim.cmd("normal gcc")
-  -- Insert a blank line below the current line
-  vim.api.nvim_buf_set_lines(0, row, row, false, { "" })
-end, { desc = "[P]Insert filename with path at cursor" })
+  vim.fn.setreg("+", filePath) -- Copy the file path to the clipboard register
+  print("File path copied to clipboard: " .. filePath) -- Optional: print message to confirm
+end, { desc = "[P]Copy file path to clipboard" })
 
 -- -- Paste file path with the wordname Filename: first
 -- vim.keymap.set("n", "<leader>fz", function()

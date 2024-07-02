@@ -21,6 +21,13 @@ MD007: false
 MD010:
   code_blocks: false
 
+# Multiple consecutive blank lines
+# https://github.com/DavidAnson/markdownlint/blob/main/doc/md012.md
+# Not sure why at the end of markdown files I get an error that there are 2
+# blank lines when there's only 1, so increasing this to fix it
+MD012:
+  maximum: 2
+
 # Line length
 # I disabled this because autoformatting takes care of the line length for me,
 # so it's not necessary, also if I have a really long markdown link with {:target="\_blank"}

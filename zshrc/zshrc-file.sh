@@ -86,6 +86,7 @@ create_symlink ~/github/dotfiles-latest/tmux/tmux.conf.sh ~/.tmux.conf
 create_symlink ~/github/dotfiles-latest/alacritty/alacritty.toml ~/.config/alacritty/alacritty.toml
 create_symlink ~/github/dotfiles-latest/kitty/kitty.conf ~/.config/kitty/kitty.conf
 create_symlink ~/github/dotfiles-latest/yabai/yabairc ~/.yabairc
+create_symlink ~/github/dotfiles-latest/neovim/neobean/.prettierrc.yaml ~/.prettierrc.yaml
 
 # Creating symlinks for directories
 create_symlink ~/github/dotfiles-latest/neovim/neobean ~/.config/nvim

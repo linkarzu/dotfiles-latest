@@ -705,12 +705,14 @@ end, { desc = "[P]Paste Github link" })
 -- Use <CR> to fold when in normal mode
 -- To see help about folds use `:help fold`
 vim.keymap.set("n", "<CR>", function()
-  local line = vim.fn.line(".") -- Get the current line number
-  local foldlevel = vim.fn.foldlevel(line) -- Get the fold level of the current line
+  -- Get the current line number
+  local line = vim.fn.line(".")
+  -- Get the fold level of the current line
+  local foldlevel = vim.fn.foldlevel(line)
   if foldlevel == 0 then
     vim.notify("No fold found", vim.log.levels.INFO)
   else
-    vim.cmd("normal! za") -- Use normal! to avoid recursive mappings
+    vim.cmd("normal! za")
   end
 end, { desc = "[P]Toggle fold" })
 
@@ -1091,9 +1093,6 @@ end, { desc = "[P]Add surrounding to URL" })
 -- - I have several `.md` documents that do not follow markdown guidelines
 -- - There are some old ones that have more than one H1 heading in them, so when I
 --   open one of those old documents, I want to add one more `#` to each heading
--- - The command below does this only for:
---   - Lines that have a newline `above` AND `below`
---   - Lines that have a space after the `##` to avoid `#!/bin/bash`
 vim.keymap.set("n", "<leader>mhi", function()
   -- Save the current cursor position
   local cursor_pos = vim.api.nvim_win_get_cursor(0)

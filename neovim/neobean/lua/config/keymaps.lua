@@ -557,6 +557,9 @@ wk.register({
       l = {
         name = "+[P]links",
       },
+      s = {
+        name = "+[P]spell",
+      },
     },
     t = {
       mode = { "n" },
@@ -564,6 +567,37 @@ wk.register({
     },
   },
 })
+
+-- Show spelling suggestions / spell suggestions
+vim.keymap.set("n", "<leader>mss", function()
+  -- Simulate pressing "z=" with "m" option using feedkeys
+  -- vim.api.nvim_replace_termcodes ensures "z=" is correctly interpreted
+  -- 'm' is the {mode}, which in this case is 'Remap keys'. This is default.
+  -- If {mode} is absent, keys are remapped.
+  --
+  -- I tried this keymap as usually with
+  -- vim.cmd("normal! z=")
+  -- But didn't work, only with nvim_feedkeys
+  vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("z=", true, false, true), "m", true)
+end, { desc = "[P]Spelling suggestions" })
+
+-- markdown good, accept spell suggestion
+-- Add word under the cursor as a good word
+vim.keymap.set("n", "<leader>msg", function()
+  vim.cmd("normal! zg")
+end, { desc = "[P]Spelling add word to spellfile" })
+
+-- Undo zw, remove the word from the entry in 'spellfile'.
+vim.keymap.set("n", "<leader>msu", function()
+  vim.cmd("normal! zug")
+end, { desc = "[P]Spelling undo, remove word from list" })
+
+-- Repeat the replacement done by |z=| for all matches with the replaced word
+-- in the current window.
+vim.keymap.set("n", "<leader>msr", function()
+  -- vim.cmd(":spellr")
+  vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(":spellr\n", true, false, true), "m", true)
+end, { desc = "[P]Spelling repeat" })
 
 -- In visual mode, check if the selected text is already bold and show a message if it is
 -- If not, surround it with double asterisks for bold

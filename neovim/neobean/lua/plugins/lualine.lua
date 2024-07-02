@@ -11,6 +11,27 @@ return {
   opts = function(_, opts)
     local fg_color = "#212337" -- Foreground color for the text
 
+    local icons = LazyVim.config.icons
+    opts.sections.lualine_c = {
+      -- LazyVim.lualine.root_dir(),
+      {
+        "diagnostics",
+        symbols = {
+          error = icons.diagnostics.Error,
+          warn = icons.diagnostics.Warn,
+          info = icons.diagnostics.Info,
+          hint = icons.diagnostics.Hint,
+        },
+      },
+      -- { "filetype", icon_only = true, separator = "", padding = { left = 1, right = 0 } },
+      -- { LazyVim.lualine.pretty_path() },
+    }
+
+    opts.sections.lualine_y = {
+      { "progress", separator = " ", padding = { left = 1, right = 0 } },
+      { "location", padding = { left = 0, right = 1 } },
+    }
+
     -- Disable lualine_z section which shows the time
     -- http://www.lazyvim.org/plugins/ui#lualinenvim
     opts.sections.lualine_z = {}

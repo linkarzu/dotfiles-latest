@@ -12,12 +12,12 @@ set -g prefix C-b
 
 # "xterm-256color" in alacritty and "screen-256color" in tmux doesnt have paste issues in neovim
 # "checkhealth" command in neovim shows no color warnings
-set -g default-terminal "screen-256color"
-
+# set -g default-terminal "screen-256color"
+#
 # "xterm-256color" in alacritty and "xterm-256color" in tmux gives me truecolor
 # warnings in neovim
 # set -g default-terminal "xterm-256color"
-
+#
 # When using "alacritty" in alacritty and "tmux-256color" in tmux, I was having paste
 # issues when I pasted over text highlighted in visual mode, spaces were removed
 # at the end of the text. This happened in NEOVIM specifically
@@ -30,6 +30,18 @@ set -g default-terminal "screen-256color"
 # echo $TERM
 # set-option -sa terminal-features ',xterm-256color:RGB'
 set -sg terminal-overrides ",*:RGB"
+
+# Undercurl support (works with kitty)
+# Fix found below in Folke's tokyonight theme :heart:
+# https://github.com/folke/tokyonight.nvim#fix-undercurls-in-tmux
+#
+# After reloading the configuration, you also have to kill the tmux session for
+# these changes to take effect
+set -g default-terminal "${TERM}"
+# undercurl support
+set -as terminal-overrides ',*:Smulx=\E[4::%p1%dm'
+# underscore colours - needs tmux-3.0
+set -as terminal-overrides ',*:Setulc=\E[58::2::%p1%{65536}%/%d::%p1%{256}%/%{255}%&%d::%p1%{255}%&%d%;m'
 
 # https://github.com/3rd/image.nvim/?tab=readme-ov-file#tmux
 # This is needed by the image.nvim plugin

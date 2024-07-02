@@ -560,6 +560,9 @@ wk.register({
       s = {
         name = "+[P]spell",
       },
+      f = {
+        name = "+[P]fold",
+      },
     },
     t = {
       mode = { "n" },
@@ -716,6 +719,147 @@ vim.keymap.set("n", "<CR>", function()
   end
 end, { desc = "[P]Toggle fold" })
 
+-- Function to unfold markdown headings of level 2 or above
+local function unfold_markdown_headings()
+  local saved_view = vim.fn.winsaveview()
+  vim.cmd("set foldmethod=manual")
+  local function unfold_heading_if_folded()
+    local line = vim.fn.line(".")
+    local is_folded = vim.fn.foldclosed(line)
+    if is_folded ~= -1 then
+      vim.cmd("normal! zo")
+    end
+  end
+  local function unfold_headings_of_level(level)
+    vim.cmd("normal! gg")
+    local prev_line = vim.fn.line(".")
+    while true do
+      local current_line = vim.fn.line(".")
+      vim.cmd("silent! /^" .. string.rep("#", level) .. "\\s.*$/")
+      if vim.fn.line(".") == current_line then
+        break
+      end
+      unfold_heading_if_folded()
+      vim.cmd("normal! j")
+      local new_line = vim.fn.line(".")
+      if new_line < prev_line then
+        break
+      end
+      prev_line = new_line
+    end
+  end
+  for level = 2, 6 do
+    unfold_headings_of_level(level)
+  end
+  vim.cmd("nohlsearch")
+  vim.fn.winrestview(saved_view)
+end
+-- Keymap for unfolding markdown headings of level 2 or above
+vim.keymap.set("n", "<leader>mfu", unfold_markdown_headings, { desc = "[P]Unfold all headings level 2 or above" })
+
+-- Set the keymap to navigate and fold markdown headings of level 2 or above
+vim.keymap.set("n", "<leader>mfk", function()
+  unfold_markdown_headings()
+  vim.cmd("normal! mfu")
+  -- Save the current cursor position
+  local saved_view = vim.fn.winsaveview()
+  -- Function to fold heading if not folded
+  local function fold_heading_if_not_folded()
+    local line = vim.fn.line(".")
+    local is_folded = vim.fn.foldclosed(line)
+    if is_folded == -1 then
+      vim.cmd("normal! za")
+    end
+  end
+  -- Function to fold all headings of a specific level
+  local function fold_headings_of_level(level)
+    -- Go to the top of the file
+    vim.cmd("normal! gg")
+    local prev_line = vim.fn.line(".")
+    while true do
+      -- Get the current line number before searching
+      local current_line = vim.fn.line(".")
+      -- Search for next heading of the specified level
+      vim.cmd("silent! /^" .. string.rep("#", level) .. "\\s.*$/")
+      -- Break the loop if no more headings found or if the search didn't move the cursor
+      if vim.fn.line(".") == current_line then
+        break
+      end
+      -- Fold the heading if it is not folded
+      fold_heading_if_not_folded()
+      -- Move to the next line to avoid infinite loop
+      vim.cmd("normal! j")
+      -- Get the new line number after moving
+      local new_line = vim.fn.line(".")
+      -- Break the loop if the new line number is less than the previous line number
+      if new_line < prev_line then
+        break
+      end
+      -- Update the previous line number
+      prev_line = new_line
+    end
+  end
+  -- Fold headings in the order of levels 6, 5, 4, 3, 2
+  for level = 6, 2, -1 do
+    fold_headings_of_level(level)
+  end
+  -- Clear the search highlight
+  vim.cmd("nohlsearch")
+  -- Restore the cursor position
+  vim.fn.winrestview(saved_view)
+end, { desc = "[P]Fold all headings level 2 or above" })
+
+-- Set the keymap to navigate and fold markdown headings of level 3 or above
+vim.keymap.set("n", "<leader>mfl", function()
+  unfold_markdown_headings()
+  -- Save the current cursor position
+  local saved_view = vim.fn.winsaveview()
+  -- Function to fold heading if not folded
+  local function fold_heading_if_not_folded()
+    local line = vim.fn.line(".")
+    local is_folded = vim.fn.foldclosed(line)
+    if is_folded == -1 then
+      vim.cmd("normal! za")
+    end
+  end
+  -- Function to fold all headings of a specific level
+  local function fold_headings_of_level(level)
+    -- Go to the top of the file
+    vim.cmd("normal! gg")
+    local prev_line = vim.fn.line(".")
+    while true do
+      -- Get the current line number before searching
+      local current_line = vim.fn.line(".")
+      -- Search for next heading of the specified level
+      vim.cmd("silent! /^" .. string.rep("#", level) .. "\\s.*$/")
+      -- Break the loop if no more headings found or if the search didn't move the cursor
+      if vim.fn.line(".") == current_line then
+        break
+      end
+      -- Fold the heading if it is not folded
+      fold_heading_if_not_folded()
+      -- Move to the next line to avoid infinite loop
+      vim.cmd("normal! j")
+      -- Get the new line number after moving
+      local new_line = vim.fn.line(".")
+      -- Break the loop if the new line number is less than the previous line number
+      if new_line < prev_line then
+        break
+      end
+      -- Update the previous line number
+      prev_line = new_line
+    end
+  end
+  -- Fold headings in the order of levels 6, 5, 4, 3
+  for level = 6, 3, -1 do
+    fold_headings_of_level(level)
+  end
+  -- Clear the search highlight
+  vim.cmd("nohlsearch")
+  -- Restore the cursor position
+  vim.fn.winrestview(saved_view)
+end, { desc = "[P]Fold all headings level 3 or above" })
+
 -- Detect todos and toggle between ":" and ";", or show a message if not found
 -- This is to "mark them as done"
 vim.keymap.set("n", "<leader>td", function()
@@ -828,7 +972,7 @@ vim.keymap.set("n", "<leader>mm", function()
 end, { desc = "[P]Jump to the first line of the TOC" })
 
 -- Mapping to return to the previously saved cursor position
-vim.keymap.set("n", "<leader>mf", function()
+vim.keymap.set("n", "<leader>mn", function()
   local pos = _G.saved_positions["toc_return"]
   if pos then
     vim.api.nvim_win_set_cursor(0, pos)

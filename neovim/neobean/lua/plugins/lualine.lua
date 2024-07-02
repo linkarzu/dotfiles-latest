@@ -87,21 +87,50 @@ return {
     -- Insert file permissions component into lualine_x
     table.insert(opts.sections.lualine_x, 1, {
       function()
-        local permissions, _ = get_permissions_color() -- Ignore bg_color here if unused
-        return permissions
+        if vim.bo.filetype ~= "markdown" then
+          local permissions, _ = get_permissions_color() -- Ignore bg_color here if unused
+          return permissions
+        else
+          return ""
+        end
       end,
       color = function()
-        local _, permissions_bg_color = get_permissions_color() -- Use bg_color for dynamic coloring
-        return { fg = fg_color, bg = permissions_bg_color, gui = "bold" }
+        if vim.bo.filetype ~= "markdown" then
+          local _, permissions_bg_color = get_permissions_color() -- Use bg_color for dynamic coloring
+          return { fg = fg_color, bg = permissions_bg_color, gui = "bold" }
+        else
+          return { fg = fg_color, bg = bg_color, gui = "bold" } -- Default color when markdown
+        end
       end,
-      -- separator = { left = "", right = "" },
-      -- separator = { left = "", right = "" },
-      -- separator = { left = "", right = "" },
+      separator = { left = "█", right = "█ " },
+      padding = 0,
+    })
+
+    -- Function to check spelling status and determine background color
+    local function spell_status()
+      if vim.wo.spell then
+        return "Spell: On"
+      else
+        return "Spell: Off"
+      end
+    end
+
+    -- Function to determine the background color based on spelling status
+    local function spell_bg_color()
+      if vim.wo.spell then
+        return "#37f499" -- Green for spell on
+      else
+        return "#f16c75" -- Red for spell off
+      end
+    end
+
+    -- Insert spelling status component into lualine_x
+    table.insert(opts.sections.lualine_x, 1, {
+      spell_status,
+      color = function()
+        return { fg = fg_color, bg = spell_bg_color(), gui = "bold" }
+      end,
       separator = { left = "", right = "█ " },
-      -- separator = { left = "", right = "" },
-      -- separator = { left = "", right = "" },
-      -- separator = { left = "", right = "" },
-      -- separator = { left = "", right = "" },
       padding = 0,
     })
   end,

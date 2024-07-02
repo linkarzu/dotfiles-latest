@@ -41,9 +41,9 @@ return {
         desc = "Alternate buffer",
       },
       {
-        "<leader>tt",
+        "<leader>tl",
         "<cmd>TodoTelescope keywords=TODO<cr>",
-        desc = "TODO Telescope",
+        desc = "[P]TODO list (Telescope)",
       },
     },
   },

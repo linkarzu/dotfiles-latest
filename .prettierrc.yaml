@@ -1,5 +1,5 @@
-# Filename: ~/.prettierrc.yaml
-# ~/.prettierrc.yaml
+# Filename: ~/github/dotfiles-latest/.prettierrc.yaml
+# ~/github/dotfiles-latest/.prettierrc.yaml
 
 # This will autoformat existing lines over 80 characters and also long lines
 # that you paste that exceed the 80 characters

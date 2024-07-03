@@ -45,6 +45,11 @@ return {
         "<cmd>TodoTelescope keywords=TODO<cr>",
         desc = "[P]TODO list (Telescope)",
       },
+      {
+        "<leader>ta",
+        "<cmd>TodoTelescope keywords=PERF,HACK,TODO,NOTE,FIX<cr>",
+        desc = "[P]TODO list ALL (Telescope)",
+      },
     },
   },
 }

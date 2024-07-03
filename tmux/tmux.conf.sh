@@ -156,7 +156,7 @@ tmux_sshonizer_agen="~/github/dotfiles-latest/tmux/tools/linkarzu/tmux-sshonizer
 ssh_select="~/github/dotfiles-latest/tmux/tools/linkarzu/ssh-select.sh"
 # Script below goes through you `~/.ssh/config` file and shows the hosts in an fzf menu
 ssh_config_select="~/github/dotfiles-latest/tmux/tools/linkarzu/ssh_config_select.sh"
-daily_note="~/github/scripts/macos/mac/300-dailyNote.sh"
+daily_note="~/github/dotfiles-latest/scripts/macos/mac/300-dailyNote.sh"
 
 # I tend to forget my karabiner mappings, so this opens the file in a new tmux
 # session
@@ -231,12 +231,12 @@ bind-key -T copy-mode-vi 'y' send -X copy-selection
 # https://scripter.co/command-to-every-pane-window-session-in-tmux/
 # Send the same command to all panes/windows in current session
 bind C-e command-prompt -p "Command:" \
-	"run \"tmux list-panes -s -F '##{session_name}:##{window_index}.##{pane_index}' \
+  "run \"tmux list-panes -s -F '##{session_name}:##{window_index}.##{pane_index}' \
                 | xargs -I PANE tmux send-keys -t PANE '%1' Enter\""
 
 # Send the same command to all panes/windows/sessions
 bind E command-prompt -p "Command:" \
-	"run \"tmux list-panes -a -F '##{session_name}:##{window_index}.##{pane_index}' \
+  "run \"tmux list-panes -a -F '##{session_name}:##{window_index}.##{pane_index}' \
               | xargs -I PANE tmux send-keys -t PANE '%1' Enter\""
 
 # Increase scroll history

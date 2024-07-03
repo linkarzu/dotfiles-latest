@@ -1237,17 +1237,8 @@ end, { desc = "[P]Add surrounding to URL" })
 -- - I have several `.md` documents that do not follow markdown guidelines
 -- - There are some old ones that have more than one H1 heading in them, so when I
 --   open one of those old documents, I want to add one more `#` to each heading
-vim.keymap.set("n", "<leader>mhi", function()
-  -- Save the current cursor position
-  local cursor_pos = vim.api.nvim_win_get_cursor(0)
-  -- I'm using [[ ]] to escape the special characters in a command
-  vim.cmd([[:g/\(^$\n\s*#\+\s.*\n^$\)/ .+1 s/^#\+\s/#&/c]])
-  -- Restore the cursor position
-  vim.api.nvim_win_set_cursor(0, cursor_pos)
-  -- Clear search highlight
-  vim.cmd("nohlsearch")
-end, { desc = "[P]Increase headings with confirmation" })
-
+--
+--  This doesn't ask for confirmation and just increase all the headings
 vim.keymap.set("n", "<leader>mhI", function()
   -- Save the current cursor position
   local cursor_pos = vim.api.nvim_win_get_cursor(0)
@@ -1259,18 +1250,6 @@ vim.keymap.set("n", "<leader>mhI", function()
   vim.cmd("nohlsearch")
 end, { desc = "[P]Increase headings without confirmation" })
 
--- These are similar, but instead of adding an # they remove it
-vim.keymap.set("n", "<leader>mhd", function()
-  -- Save the current cursor position
-  local cursor_pos = vim.api.nvim_win_get_cursor(0)
-  -- I'm using [[ ]] to escape the special characters in a command
-  vim.cmd([[:g/^\s*#\{2,}\s/ s/^#\(#\+\s.*\)/\1/c]])
-  -- Restore the cursor position
-  vim.api.nvim_win_set_cursor(0, cursor_pos)
-  -- Clear search highlight
-  vim.cmd("nohlsearch")
-end, { desc = "[P]Decrease headings with confirmation" })
-
 vim.keymap.set("n", "<leader>mhD", function()
   -- Save the current cursor position
   local cursor_pos = vim.api.nvim_win_get_cursor(0)
@@ -1281,6 +1260,38 @@ vim.keymap.set("n", "<leader>mhD", function()
   -- Clear search highlight
   vim.cmd("nohlsearch")
 end, { desc = "[P]Decrease headings without confirmation" })
+
+-- -- This goes 1 heading at a time and asks for **confirmation**
+-- -- - keep pressing `n` to NOT increase, but you can see it detects headings
+-- --  - `y` (yes): Replace this instance and continue to the next match.
+-- --  - `n` (no): Do not replace this instance and continue to the next match.
+-- --  - `a` (all): Replace all remaining instances without further prompting.
+-- --  - `q` (quit): Quit without making any further replacements.
+-- --  - `l` (last): Replace this instance and then quit
+-- --  - `^E` (`Ctrl+E`): Scroll the text window down one line
+-- --  - `^Y` (`Ctrl+Y`): Scroll the text window up one line
+-- vim.keymap.set("n", "<leader>mhi", function()
+--   -- Save the current cursor position
+--   local cursor_pos = vim.api.nvim_win_get_cursor(0)
+--   -- I'm using [[ ]] to escape the special characters in a command
+--   vim.cmd([[:g/\(^$\n\s*#\+\s.*\n^$\)/ .+1 s/^#\+\s/#&/c]])
+--   -- Restore the cursor position
+--   vim.api.nvim_win_set_cursor(0, cursor_pos)
+--   -- Clear search highlight
+--   vim.cmd("nohlsearch")
+-- end, { desc = "[P]Increase headings with confirmation" })
+
+-- -- These are similar, but instead of adding an # they remove it
+-- vim.keymap.set("n", "<leader>mhd", function()
+--   -- Save the current cursor position
+--   local cursor_pos = vim.api.nvim_win_get_cursor(0)
+--   -- I'm using [[ ]] to escape the special characters in a command
+--   vim.cmd([[:g/^\s*#\{2,}\s/ s/^#\(#\+\s.*\)/\1/c]])
+--   -- Restore the cursor position
+--   vim.api.nvim_win_set_cursor(0, cursor_pos)
+--   -- Clear search highlight
+--   vim.cmd("nohlsearch")
+-- end, { desc = "[P]Decrease headings with confirmation" })
 
 -- ############################################################################
 --                       End of markdown section

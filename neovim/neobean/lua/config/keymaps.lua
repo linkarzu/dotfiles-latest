@@ -1237,10 +1237,9 @@ end, { desc = "[P]H6 heading and date" })
 -- Create or find a daily note based on a date line format and open it in Neovim
 -- This is used in obsidian markdown files that have the "Link to non-existent
 -- document" warning
-vim.keymap.set("n", "<leader>fC", function()
+local function create_daily_note(date_line)
   local home = os.getenv("HOME")
-  local current_line = vim.api.nvim_get_current_line()
-  local year, month, day, weekday = current_line:match("%[%[(%d+)%-(%d+)%-(%d+)%-(%w+)%]%]")
+  local year, month, day, weekday = date_line:match("%[%[(%d+)%-(%d+)%-(%d+)%-(%w+)%]%]")
   if not (year and month and day and weekday) then
     print("No valid date found in the line")
     return
@@ -1257,14 +1256,29 @@ vim.keymap.set("n", "<leader>fC", function()
     if file then
       file:write("# Contents\n\n<!-- toc -->\n\n- [Daily note](#daily-note)\n\n<!-- tocstop -->\n\n## Daily note\n")
       file:close()
-      print("Created daily note: " .. full_path)
+      -- Open the file and then close it to refresh the buffer
+      -- I do this, because otherwise the current file does not recognize that
+      -- the new file was created
       vim.cmd("edit " .. vim.fn.fnameescape(full_path))
+      vim.cmd("bd!")
+      vim.api.nvim_echo({
+        { "CREATED DAILY NOTE\n", "WarningMsg" },
+        { full_path, "WarningMsg" },
+      }, false, {})
     else
       print("Failed to create file: " .. full_path)
     end
   else
     print("Daily note already exists: " .. full_path)
   end
+end
+
+
+-- Create or find a daily note
+vim.keymap.set("n", "<leader>fC", function()
+  -- Use the current line for date extraction
+  local current_line = vim.api.nvim_get_current_line()
+  create_daily_note(current_line)
 end, { desc = "[P]Create daily note" })
 
 -- Surround the http:// url that the cursor is currently in with ``

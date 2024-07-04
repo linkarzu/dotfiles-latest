@@ -787,12 +787,6 @@ vim.keymap.set("n", "<CR>", function()
   end
 end, { desc = "[P]Toggle fold" })
 
-local function save_and_restore_view(fn)
-  local saved_view = vim.fn.winsaveview()
-  fn()
-  vim.fn.winrestview(saved_view)
-end
-
 local function set_foldmethod_expr()
   -- These are lazyvim.org defaults but setting them just in case a file
   -- doesn't have them set
@@ -804,7 +798,7 @@ local function set_foldmethod_expr()
     vim.opt.foldmethod = "indent"
     vim.opt.foldtext = "v:lua.require'lazyvim.util'.ui.foldtext()"
   end
-  vim.opt.foldlevel = 95
+  vim.opt.foldlevel = 99
 end
 
 -- Function to fold all headings of a specific level
@@ -833,12 +827,14 @@ end
 
 local function fold_markdown_headings(levels)
   set_foldmethod_expr()
-  save_and_restore_view(function()
-    for _, level in ipairs(levels) do
-      fold_headings_of_level(level)
-    end
-    vim.cmd("nohlsearch")
-  end)
+  -- I save the view to know where to jump back after folding
+  local saved_view = vim.fn.winsaveview()
+  for _, level in ipairs(levels) do
+    fold_headings_of_level(level)
+  end
+  vim.cmd("nohlsearch")
+  -- Restore the view to jump to where I was
+  vim.fn.winrestview(saved_view)
 end
 
 -- Keymap for unfolding markdown headings of level 2 or above
@@ -846,7 +842,15 @@ vim.keymap.set("n", "<leader>mfu", function()
   vim.cmd("normal! zR") -- Unfold all headings
 end, { desc = "[P]Unfold all headings level 2 or above" })
 
+-- Keymap for folding markdown headings of level 1 or above
+vim.keymap.set("n", "<leader>mfj", function()
+  -- Unfold everything first or I had issues
+  vim.cmd("normal! zR")
+  fold_markdown_headings({ 6, 5, 4, 3, 2, 1 })
+end, { desc = "[P]Fold all headings level 1 or above" })
+
 -- Keymap for folding markdown headings of level 2 or above
+-- I know, it reads like "madafaka" but "k" for me means "2"
 vim.keymap.set("n", "<leader>mfk", function()
   -- Unfold everything first or I had issues
   vim.cmd("normal! zR")
@@ -859,6 +863,13 @@ vim.keymap.set("n", "<leader>mfl", function()
   vim.cmd("normal! zR")
   fold_markdown_headings({ 6, 5, 4, 3 })
 end, { desc = "[P]Fold all headings level 3 or above" })
+
+-- Keymap for folding markdown headings of level 4 or above
+vim.keymap.set("n", "<leader>mf;", function()
+  -- Unfold everything first or I had issues
+  vim.cmd("normal! zR")
+  fold_markdown_headings({ 6, 5, 4 })
+end, { desc = "[P]Fold all headings level 4 or above" })
 
 -------------------------------------------------------------------------------
 --                         End Folding section

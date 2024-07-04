@@ -33,48 +33,48 @@ mkdir -p ~/github/obsidian_main
 # If the file exists, it will create a backup in the same dir
 # echo "1"
 create_symlink() {
-  local source_path=$1
-  local target_path=$2
-  local backup_needed=true
+	local source_path=$1
+	local target_path=$2
+	local backup_needed=true
 
-  # echo
+	# echo
 
-  # Check if the target is a file and contains the unique identifier
-  if [ -f "$target_path" ] && grep -q "UNIQUE_ID=do_not_delete_this_line" "$target_path"; then
-    # echo "$target_path is a FILE and contains UNIQUE_ID"
-    backup_needed=false
-  fi
+	# Check if the target is a file and contains the unique identifier
+	if [ -f "$target_path" ] && grep -q "UNIQUE_ID=do_not_delete_this_line" "$target_path"; then
+		# echo "$target_path is a FILE and contains UNIQUE_ID"
+		backup_needed=false
+	fi
 
-  # Check if the target is a directory and contains the UNIQUE_ID.sh file with the unique identifier
-  if [ -d "$target_path" ] && [ -f "$target_path/UNIQUE_ID.sh" ]; then
-    if grep -q "UNIQUE_ID=do_not_delete_this_line" "$target_path/UNIQUE_ID.sh"; then
-      # echo "$target_path is a DIRECTORY and contains UNIQUE_ID"
-      backup_needed=false
-    fi
-  fi
-  # Check if symlink already exists and points to the correct source
-  if [ -L "$target_path" ]; then
-    if [ "$(readlink "$target_path")" = "$source_path" ]; then
-      # echo "$target_path exists and is correct, no action needed"
-      return 0
-    else
-      echo -e "${boldYellow}'$target_path' is a symlink"
-      echo -e "but it points to a different source, updating it${noColor}"
-    fi
-  fi
+	# Check if the target is a directory and contains the UNIQUE_ID.sh file with the unique identifier
+	if [ -d "$target_path" ] && [ -f "$target_path/UNIQUE_ID.sh" ]; then
+		if grep -q "UNIQUE_ID=do_not_delete_this_line" "$target_path/UNIQUE_ID.sh"; then
+			# echo "$target_path is a DIRECTORY and contains UNIQUE_ID"
+			backup_needed=false
+		fi
+	fi
+	# Check if symlink already exists and points to the correct source
+	if [ -L "$target_path" ]; then
+		if [ "$(readlink "$target_path")" = "$source_path" ]; then
+			# echo "$target_path exists and is correct, no action needed"
+			return 0
+		else
+			echo -e "${boldYellow}'$target_path' is a symlink"
+			echo -e "but it points to a different source, updating it${noColor}"
+		fi
+	fi
 
-  # Backup the target if it's not a symlink and backup is needed
-  if [ -e "$target_path" ] && [ ! -L "$target_path" ] && [ "$backup_needed" = true ]; then
-    local backup_path="${target_path}_backup_$(date +%Y%m%d%H%M%S)"
-    echo -e "${boldYellow}Backing up your existing file '$target_path' to '$backup_path'${noColor}"
-    mv "$target_path" "$backup_path"
-  fi
+	# Backup the target if it's not a symlink and backup is needed
+	if [ -e "$target_path" ] && [ ! -L "$target_path" ] && [ "$backup_needed" = true ]; then
+		local backup_path="${target_path}_backup_$(date +%Y%m%d%H%M%S)"
+		echo -e "${boldYellow}Backing up your existing file '$target_path' to '$backup_path'${noColor}"
+		mv "$target_path" "$backup_path"
+	fi
 
-  # Create the symlink and print message
-  ln -snf "$source_path" "$target_path"
-  echo -e "${boldPurple}Created or updated symlink"
-  echo -e "${boldGreen}FROM: '$source_path'"
-  echo -e "  TO: '$target_path'${noColor}"
+	# Create the symlink and print message
+	ln -snf "$source_path" "$target_path"
+	echo -e "${boldPurple}Created or updated symlink"
+	echo -e "${boldGreen}FROM: '$source_path'"
+	echo -e "  TO: '$target_path'${noColor}"
 }
 
 # Creating symlinks for files
@@ -86,7 +86,6 @@ create_symlink ~/github/dotfiles-latest/tmux/tmux.conf.sh ~/.tmux.conf
 create_symlink ~/github/dotfiles-latest/alacritty/alacritty.toml ~/.config/alacritty/alacritty.toml
 create_symlink ~/github/dotfiles-latest/kitty/kitty.conf ~/.config/kitty/kitty.conf
 create_symlink ~/github/dotfiles-latest/yabai/yabairc ~/.yabairc
-create_symlink ~/github/dotfiles-latest/neovim/neobean/.prettierrc.yaml ~/.prettierrc.yaml
 create_symlink ~/github/dotfiles-latest/.prettierrc.yaml ~/.prettierrc.yaml
 
 # Creating symlinks for directories
@@ -159,8 +158,8 @@ HISTSIZE=10000
 SAVEHIST=10000
 # Check if the history file exists, if not, create it
 if [[ ! -f $HISTFILE ]]; then
-  touch $HISTFILE
-  chmod 600 $HISTFILE
+	touch $HISTFILE
+	chmod 600 $HISTFILE
 fi
 # Append commands to the history file as they are entered
 setopt appendhistory
@@ -231,521 +230,521 @@ echo "Pulling latest changes, please wait..."
 # Detect OS
 case "$(uname -s)" in
 Darwin)
-  OS='Mac'
-  ;;
+	OS='Mac'
+	;;
 Linux)
-  OS='Linux'
-  ;;
+	OS='Linux'
+	;;
 *)
-  OS='Other'
-  ;;
+	OS='Other'
+	;;
 esac
 
 # macOS-specific configurations
 if [ "$OS" = 'Mac' ]; then
 
-  # Set JAVA_HOME to the OpenJDK installation managed by Homebrew
-  export JAVA_HOME="/opt/homebrew/opt/openjdk"
-  # Add JAVA_HOME/bin to the beginning of the PATH
-  export PATH="$JAVA_HOME/bin:$PATH"
+	# Set JAVA_HOME to the OpenJDK installation managed by Homebrew
+	export JAVA_HOME="/opt/homebrew/opt/openjdk"
+	# Add JAVA_HOME/bin to the beginning of the PATH
+	export PATH="$JAVA_HOME/bin:$PATH"
 
-  # https://github.com/antlr/antlr4/blob/master/doc/getting-started.md#unix
-  # Add antlr-4.13.1-complete.jar to your CLASSPATH
-  export CLASSPATH=".:/usr/local/lib/antlr-4.13.1-complete.jar:$CLASSPATH"
-  # Create an alias for running ANTLR's TestRig
-  alias antlr4='java -Xmx500M -cp "/usr/local/lib/antlr-4.13.1-complete.jar:$CLASSPATH" org.antlr.v4.Tool'
-  alias grun='java -Xmx500M -cp "/usr/local/lib/antlr-4.13.1-complete.jar:$CLASSPATH" org.antlr.v4.gui.TestRig'
+	# https://github.com/antlr/antlr4/blob/master/doc/getting-started.md#unix
+	# Add antlr-4.13.1-complete.jar to your CLASSPATH
+	export CLASSPATH=".:/usr/local/lib/antlr-4.13.1-complete.jar:$CLASSPATH"
+	# Create an alias for running ANTLR's TestRig
+	alias antlr4='java -Xmx500M -cp "/usr/local/lib/antlr-4.13.1-complete.jar:$CLASSPATH" org.antlr.v4.Tool'
+	alias grun='java -Xmx500M -cp "/usr/local/lib/antlr-4.13.1-complete.jar:$CLASSPATH" org.antlr.v4.gui.TestRig'
 
-  export PATH="/opt/homebrew/opt/libpq/bin:$PATH"
+	export PATH="/opt/homebrew/opt/libpq/bin:$PATH"
 
-  # sketchybar
-  # This will update the brew package count after running a brew upgrade, brew
-  # update or brew outdated command
-  # Personally I added "list" and "install", and everything that is after but
-  # that's just a personal preference.
-  # That way sketchybar updates when I run those commands as well
-  if command -v sketchybar &>/dev/null; then
-    # When the zshrc file is ran, reload sketchybar, in case the theme was
-    # switched
-    # I disabled this as it was getting refreshed every time I opened the
-    # terminal and if I restored a lot of sessions after rebooting it was a mess
-    # sketchybar --reload
+	# sketchybar
+	# This will update the brew package count after running a brew upgrade, brew
+	# update or brew outdated command
+	# Personally I added "list" and "install", and everything that is after but
+	# that's just a personal preference.
+	# That way sketchybar updates when I run those commands as well
+	if command -v sketchybar &>/dev/null; then
+		# When the zshrc file is ran, reload sketchybar, in case the theme was
+		# switched
+		# I disabled this as it was getting refreshed every time I opened the
+		# terminal and if I restored a lot of sessions after rebooting it was a mess
+		# sketchybar --reload
 
-    # Define a custom 'brew' function to wrap the Homebrew command.
-    function brew() {
-      # Execute the original Homebrew command with all passed arguments.
-      command brew "$@"
-      # Check if the command includes "upgrade", "update", or "outdated".
-      if [[ $* =~ "upgrade" ]] || [[ $* =~ "update" ]] || [[ $* =~ "outdated" ]] || [[ $* =~ "list" ]] || [[ $* =~ "install" ]] || [[ $* =~ "uninstall" ]] || [[ $* =~ "bundle" ]] || [[ $* =~ "doctor" ]] || [[ $* =~ "info" ]] || [[ $* =~ "cleanup" ]]; then
-        # If so, notify SketchyBar to trigger a custom action.
-        sketchybar --trigger brew_update
-      fi
-    }
-  fi
+		# Define a custom 'brew' function to wrap the Homebrew command.
+		function brew() {
+			# Execute the original Homebrew command with all passed arguments.
+			command brew "$@"
+			# Check if the command includes "upgrade", "update", or "outdated".
+			if [[ $* =~ "upgrade" ]] || [[ $* =~ "update" ]] || [[ $* =~ "outdated" ]] || [[ $* =~ "list" ]] || [[ $* =~ "install" ]] || [[ $* =~ "uninstall" ]] || [[ $* =~ "bundle" ]] || [[ $* =~ "doctor" ]] || [[ $* =~ "info" ]] || [[ $* =~ "cleanup" ]]; then
+				# If so, notify SketchyBar to trigger a custom action.
+				sketchybar --trigger brew_update
+			fi
+		}
+	fi
 
-  # Luaver
-  # luaver can be used to install multiple lua and luarocks versions
-  # Commands below downloads and uses a specific version
-  # my_lua_touse=5.1 && luaver install $my_lua_touse && luaver set-default $my_lua_touse && luaver use $my_lua_touse
-  # my_luar_touse=3.11.0 && luaver install-luarocks $my_luar_touse && luaver set-default-luarocks $my_luar_touse && luaver use-luarocks $my_luar_touse
-  # luarocks install magick
-  # luaver install 5.4.6
-  #
-  # This is in case luaver was installed through homebrew
-  # If the file is not empty, then source it
-  [ -s $(brew --prefix)/opt/luaver/bin/luaver ] && . $(brew --prefix)/opt/luaver/bin/luaver
-  # This is in case it the repo was cloned with the following command
-  # git clone https://github.com/DhavalKapil/luaver.git ~/.luaver
-  # If the file is not empty, then source it
-  [ -s ~/.luaver/luaver ] && . ~/.luaver/luaver
-  # Line below won't work with zsh, there's no zsh completions I guess
-  # [ -s ~/.luaver/completions/luaver.bash ] && . ~/.luaver/completions/luaver.bash
+	# Luaver
+	# luaver can be used to install multiple lua and luarocks versions
+	# Commands below downloads and uses a specific version
+	# my_lua_touse=5.1 && luaver install $my_lua_touse && luaver set-default $my_lua_touse && luaver use $my_lua_touse
+	# my_luar_touse=3.11.0 && luaver install-luarocks $my_luar_touse && luaver set-default-luarocks $my_luar_touse && luaver use-luarocks $my_luar_touse
+	# luarocks install magick
+	# luaver install 5.4.6
+	#
+	# This is in case luaver was installed through homebrew
+	# If the file is not empty, then source it
+	[ -s $(brew --prefix)/opt/luaver/bin/luaver ] && . $(brew --prefix)/opt/luaver/bin/luaver
+	# This is in case it the repo was cloned with the following command
+	# git clone https://github.com/DhavalKapil/luaver.git ~/.luaver
+	# If the file is not empty, then source it
+	[ -s ~/.luaver/luaver ] && . ~/.luaver/luaver
+	# Line below won't work with zsh, there's no zsh completions I guess
+	# [ -s ~/.luaver/completions/luaver.bash ] && . ~/.luaver/completions/luaver.bash
 
-  # Starship
-  # https://starship.rs/config/#prompt
-  if command -v starship &>/dev/null; then
-    export STARSHIP_CONFIG=$HOME/github/dotfiles-latest/starship-config/starship.toml
-    eval "$(starship init zsh)" >/dev/null 2>&1
-  fi
+	# Starship
+	# https://starship.rs/config/#prompt
+	if command -v starship &>/dev/null; then
+		export STARSHIP_CONFIG=$HOME/github/dotfiles-latest/starship-config/starship.toml
+		eval "$(starship init zsh)" >/dev/null 2>&1
+	fi
 
-  # Brew autocompletion settings
-  # https://docs.brew.sh/Shell-Completion#configuring-completions-in-zsh
-  # -v makes command display a description of how the shell would
-  # invoke the command, so you're checking if the command exists and is executable.
-  if command -v brew &>/dev/null; then
-    FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
+	# Brew autocompletion settings
+	# https://docs.brew.sh/Shell-Completion#configuring-completions-in-zsh
+	# -v makes command display a description of how the shell would
+	# invoke the command, so you're checking if the command exists and is executable.
+	if command -v brew &>/dev/null; then
+		FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
 
-    autoload -Uz compinit
-    compinit
-  fi
+		autoload -Uz compinit
+		compinit
+	fi
 
-  # ls replacement
-  # exa is unmaintained, so now using eza
-  # https://github.com/ogham/exa
-  # https://github.com/eza-community/eza
-  if command -v eza &>/dev/null; then
-    alias ls='eza'
-    alias ll='eza -lhg'
-    alias lla='eza -alhg'
-    alias tree='eza --tree'
-  fi
+	# ls replacement
+	# exa is unmaintained, so now using eza
+	# https://github.com/ogham/exa
+	# https://github.com/eza-community/eza
+	if command -v eza &>/dev/null; then
+		alias ls='eza'
+		alias ll='eza -lhg'
+		alias lla='eza -alhg'
+		alias tree='eza --tree'
+	fi
 
-  # Bat -> Cat with wings
-  # https://github.com/sharkdp/bat
-  if command -v bat &>/dev/null; then
-    # --style=plain - removes line numbers and got modifications
-    # --paging=never - doesnt pipe it through less
-    alias cat='bat --paging=never --style=plain'
-    alias catt='bat'
-    alias cata='bat --show-all --paging=never'
-  fi
+	# Bat -> Cat with wings
+	# https://github.com/sharkdp/bat
+	if command -v bat &>/dev/null; then
+		# --style=plain - removes line numbers and got modifications
+		# --paging=never - doesnt pipe it through less
+		alias cat='bat --paging=never --style=plain'
+		alias catt='bat'
+		alias cata='bat --show-all --paging=never'
+	fi
 
-  # Initialize fzf if installed
-  # https://github.com/junegunn/fzf
-  # Useful commands
-  # ctrl+r - command history
-  # ctrl+t - search for files
-  # ssh ::<tab><name> - shows you list of hosts in case don't remember exact name
-  # kill -9 ::<tab><name> - find and kill a process
-  # telnet ::<TAB>
-  if [ -f ~/.fzf.zsh ]; then
+	# Initialize fzf if installed
+	# https://github.com/junegunn/fzf
+	# Useful commands
+	# ctrl+r - command history
+	# ctrl+t - search for files
+	# ssh ::<tab><name> - shows you list of hosts in case don't remember exact name
+	# kill -9 ::<tab><name> - find and kill a process
+	# telnet ::<TAB>
+	if [ -f ~/.fzf.zsh ]; then
 
-    # After installing fzf with brew, you have to run the install script
-    # echo -e "y\ny\nn" | /opt/homebrew/opt/fzf/install
+		# After installing fzf with brew, you have to run the install script
+		# echo -e "y\ny\nn" | /opt/homebrew/opt/fzf/install
 
-    source ~/.fzf.zsh
+		source ~/.fzf.zsh
 
-    # Preview file content using bat
-    export FZF_CTRL_T_OPTS="
+		# Preview file content using bat
+		export FZF_CTRL_T_OPTS="
     --preview 'bat -n --color=always {}'
     --bind 'ctrl-/:change-preview-window(down|hidden|)'"
 
-    # Use :: as the trigger sequence instead of the default **
-    export FZF_COMPLETION_TRIGGER='::'
-  fi
+		# Use :: as the trigger sequence instead of the default **
+		export FZF_COMPLETION_TRIGGER='::'
+	fi
 
-  # vi(vim) mode plugin for ZSH
-  # https://github.com/jeffreytse/zsh-vi-mode
-  # Insert mode to type and edit text
-  # Normal mode to use vim commands
-  # tets {really} long (command) using a { lot } of symbols {page} and {abc} and other ones [find] () "test page" {'command 2'}
-  if [ -f "$(brew --prefix)/opt/zsh-vi-mode/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh" ]; then
-    source $(brew --prefix)/opt/zsh-vi-mode/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh
-    # Following 4 lines modify the escape key to `kj`
-    ZVM_VI_ESCAPE_BINDKEY=kj
-    ZVM_VI_INSERT_ESCAPE_BINDKEY=$ZVM_VI_ESCAPE_BINDKEY
-    ZVM_VI_VISUAL_ESCAPE_BINDKEY=$ZVM_VI_ESCAPE_BINDKEY
-    ZVM_VI_OPPEND_ESCAPE_BINDKEY=$ZVM_VI_ESCAPE_BINDKEY
+	# vi(vim) mode plugin for ZSH
+	# https://github.com/jeffreytse/zsh-vi-mode
+	# Insert mode to type and edit text
+	# Normal mode to use vim commands
+	# tets {really} long (command) using a { lot } of symbols {page} and {abc} and other ones [find] () "test page" {'command 2'}
+	if [ -f "$(brew --prefix)/opt/zsh-vi-mode/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh" ]; then
+		source $(brew --prefix)/opt/zsh-vi-mode/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh
+		# Following 4 lines modify the escape key to `kj`
+		ZVM_VI_ESCAPE_BINDKEY=kj
+		ZVM_VI_INSERT_ESCAPE_BINDKEY=$ZVM_VI_ESCAPE_BINDKEY
+		ZVM_VI_VISUAL_ESCAPE_BINDKEY=$ZVM_VI_ESCAPE_BINDKEY
+		ZVM_VI_OPPEND_ESCAPE_BINDKEY=$ZVM_VI_ESCAPE_BINDKEY
 
-    function zvm_after_lazy_keybindings() {
-      # Remap to go to the beginning of the line
-      zvm_bindkey vicmd 'gh' beginning-of-line
-      # Remap to go to the end of the line
-      zvm_bindkey vicmd 'gl' end-of-line
-    }
+		function zvm_after_lazy_keybindings() {
+			# Remap to go to the beginning of the line
+			zvm_bindkey vicmd 'gh' beginning-of-line
+			# Remap to go to the end of the line
+			zvm_bindkey vicmd 'gl' end-of-line
+		}
 
-    # Source .fzf.zsh so that the ctrl+r bindkey is given back fzf
-    zvm_after_init_commands+=('[ -f $HOME/.fzf.zsh ] && source $HOME/.fzf.zsh')
-  fi
+		# Source .fzf.zsh so that the ctrl+r bindkey is given back fzf
+		zvm_after_init_commands+=('[ -f $HOME/.fzf.zsh ] && source $HOME/.fzf.zsh')
+	fi
 
-  # https://github.com/zsh-users/zsh-autosuggestions
-  # Right arrow to accept suggestion
-  if [ -f "$(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh" ]; then
-    source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
-  fi
+	# https://github.com/zsh-users/zsh-autosuggestions
+	# Right arrow to accept suggestion
+	if [ -f "$(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh" ]; then
+		source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+	fi
 
-  # Changed from z.lua to zoxide, as it's more maintaned
-  # smarter cd command, it remembers which directories you use most
-  # frequently, so you can "jump" to them in just a few keystrokes.
-  # https://github.com/ajeetdsouza/zoxide
-  # https://github.com/skywind3000/z.lua
-  if command -v zoxide &>/dev/null; then
-    eval "$(zoxide init zsh)"
+	# Changed from z.lua to zoxide, as it's more maintaned
+	# smarter cd command, it remembers which directories you use most
+	# frequently, so you can "jump" to them in just a few keystrokes.
+	# https://github.com/ajeetdsouza/zoxide
+	# https://github.com/skywind3000/z.lua
+	if command -v zoxide &>/dev/null; then
+		eval "$(zoxide init zsh)"
 
-    alias cd='z'
-    # Alias below is same as 'cd -', takes to the previous directory
-    alias cdd='z -'
+		alias cd='z'
+		# Alias below is same as 'cd -', takes to the previous directory
+		alias cdd='z -'
 
-    #Since I migrated from z.lua, I can import my data
-    # zoxide import --from=z "$HOME/.zlua" --merge
+		#Since I migrated from z.lua, I can import my data
+		# zoxide import --from=z "$HOME/.zlua" --merge
 
-    # Useful commands
-    # z foo<SPACE><TAB>  # show interactive completions
-  fi
+		# Useful commands
+		# z foo<SPACE><TAB>  # show interactive completions
+	fi
 
-  # Add MySQL client to PATH, if it exists
-  if [ -d "/opt/homebrew/opt/mysql-client/bin" ]; then
-    export PATH="/opt/homebrew/opt/mysql-client/bin:$PATH"
-  fi
+	# Add MySQL client to PATH, if it exists
+	if [ -d "/opt/homebrew/opt/mysql-client/bin" ]; then
+		export PATH="/opt/homebrew/opt/mysql-client/bin:$PATH"
+	fi
 
-  # Source Google Cloud SDK configurations, if Homebrew and the SDK are installed
-  if command -v brew &>/dev/null; then
-    if [ -f "$(brew --prefix)/share/google-cloud-sdk/path.zsh.inc" ]; then
-      source "$(brew --prefix)/share/google-cloud-sdk/path.zsh.inc"
-    fi
-    if [ -f "$(brew --prefix)/share/google-cloud-sdk/completion.zsh.inc" ]; then
-      source "$(brew --prefix)/share/google-cloud-sdk/completion.zsh.inc"
-    fi
-  fi
+	# Source Google Cloud SDK configurations, if Homebrew and the SDK are installed
+	if command -v brew &>/dev/null; then
+		if [ -f "$(brew --prefix)/share/google-cloud-sdk/path.zsh.inc" ]; then
+			source "$(brew --prefix)/share/google-cloud-sdk/path.zsh.inc"
+		fi
+		if [ -f "$(brew --prefix)/share/google-cloud-sdk/completion.zsh.inc" ]; then
+			source "$(brew --prefix)/share/google-cloud-sdk/completion.zsh.inc"
+		fi
+	fi
 
-  # Initialize kubernetes kubectl completion if kubectl is installed
-  # https://kubernetes.io/docs/tasks/tools/install-kubectl-macos/#enable-shell-autocompletion
-  if command -v kubectl &>/dev/null; then
-    source <(kubectl completion zsh)
-  fi
+	# Initialize kubernetes kubectl completion if kubectl is installed
+	# https://kubernetes.io/docs/tasks/tools/install-kubectl-macos/#enable-shell-autocompletion
+	if command -v kubectl &>/dev/null; then
+		source <(kubectl completion zsh)
+	fi
 
-  # Check if chruby is installed
-  # Source chruby scripts if they exist
-  # Working instructions to install on macos can be found on the jekyll site
-  # https://jekyllrb.com/docs/installation/macos/
-  if [ -f "$(brew --prefix)/opt/chruby/share/chruby/chruby.sh" ]; then
-    source "$(brew --prefix)/opt/chruby/share/chruby/chruby.sh"
-    source "$(brew --prefix)/opt/chruby/share/chruby/auto.sh"
-    # Set default Ruby version using chruby
-    # Replace 'ruby-3.1.3' with the version you have or want to use
-    # You can also put a conditional check here if you want
-    chruby ruby-3.1.3
-  fi
+	# Check if chruby is installed
+	# Source chruby scripts if they exist
+	# Working instructions to install on macos can be found on the jekyll site
+	# https://jekyllrb.com/docs/installation/macos/
+	if [ -f "$(brew --prefix)/opt/chruby/share/chruby/chruby.sh" ]; then
+		source "$(brew --prefix)/opt/chruby/share/chruby/chruby.sh"
+		source "$(brew --prefix)/opt/chruby/share/chruby/auto.sh"
+		# Set default Ruby version using chruby
+		# Replace 'ruby-3.1.3' with the version you have or want to use
+		# You can also put a conditional check here if you want
+		chruby ruby-3.1.3
+	fi
 
 fi
 
 # Linux (Debian)-specific configurations
 if [ "$OS" = 'Linux' ]; then
-  # Add Debian-specific configurations here
-  # For example, you can add z.lua config for Linux here, if not installed will install them
+	# Add Debian-specific configurations here
+	# For example, you can add z.lua config for Linux here, if not installed will install them
 
-  alias ls='ls --color=auto'
+	alias ls='ls --color=auto'
 
-  echo "Updating packages, please wait (wont upgrade)..."
-  sudo apt-get update >/dev/null 2>&1
+	echo "Updating packages, please wait (wont upgrade)..."
+	sudo apt-get update >/dev/null 2>&1
 
-  # Initialize Starship, if installed, otherwise install it
-  # Extract the last digit of $HOST
-  last_digit="${HOST: -1}"
-  # Determine the Starship config file to use
-  case $last_digit in
-  1)
-    starship_file="starship1.toml"
-    ;;
-  2)
-    starship_file="starship2.toml"
-    ;;
-  3)
-    starship_file="starship3.toml"
-    ;;
-  *)
-    starship_file="starship4.toml"
-    ;;
-  esac
+	# Initialize Starship, if installed, otherwise install it
+	# Extract the last digit of $HOST
+	last_digit="${HOST: -1}"
+	# Determine the Starship config file to use
+	case $last_digit in
+	1)
+		starship_file="starship1.toml"
+		;;
+	2)
+		starship_file="starship2.toml"
+		;;
+	3)
+		starship_file="starship3.toml"
+		;;
+	*)
+		starship_file="starship4.toml"
+		;;
+	esac
 
-  install_this_package="yes"
-  if command -v starship &>/dev/null; then
-    # This is what applies the specific profile
-    export STARSHIP_CONFIG=$HOME/github/dotfiles-latest/starship-config/$starship_file >/dev/null 2>&1
-    eval "$(starship init zsh)" >/dev/null 2>&1
-  else
-    if [ "$install_this_package" != "no" ]; then
-      echo
-      echo "Installing starship, please wait..."
-      # -y at the end answers 'yes' to any prompts
-      curl -sS https://starship.rs/install.sh | sh -s - -y 2>&1 >/dev/null
-      # Verify starship installation
-      if ! command -v starship >/dev/null 2>&1; then
-        echo -e "${boldRed}Warning: Failed to install Starship. Check this manually${noColor}"
-        # sleep 1
-      else
-        # After installing, initialize it
-        eval "$(starship init zsh)"
-        # This is what applies the specific profile
-        export STARSHIP_CONFIG=$HOME/github/dotfiles-latest/starship-config/$starship_file
-        echo "Starship installed successfully."
-      fi
-    fi
-  fi
+	install_this_package="yes"
+	if command -v starship &>/dev/null; then
+		# This is what applies the specific profile
+		export STARSHIP_CONFIG=$HOME/github/dotfiles-latest/starship-config/$starship_file >/dev/null 2>&1
+		eval "$(starship init zsh)" >/dev/null 2>&1
+	else
+		if [ "$install_this_package" != "no" ]; then
+			echo
+			echo "Installing starship, please wait..."
+			# -y at the end answers 'yes' to any prompts
+			curl -sS https://starship.rs/install.sh | sh -s - -y 2>&1 >/dev/null
+			# Verify starship installation
+			if ! command -v starship >/dev/null 2>&1; then
+				echo -e "${boldRed}Warning: Failed to install Starship. Check this manually${noColor}"
+				# sleep 1
+			else
+				# After installing, initialize it
+				eval "$(starship init zsh)"
+				# This is what applies the specific profile
+				export STARSHIP_CONFIG=$HOME/github/dotfiles-latest/starship-config/$starship_file
+				echo "Starship installed successfully."
+			fi
+		fi
+	fi
 
-  # Initialize z.lua, if it is installed
-  # If not installed, this will install lua and then z.lua
-  install_this_package="no"
-  if command -v $HOME/github/z.lua/z.lua &>/dev/null; then
-    eval "$(lua $HOME/github/z.lua/z.lua --init zsh enhanced once)"
-  else
-    if [ "$install_this_package" != "no" ]; then
-      # First we need to install Lua
-      # Search for the latest version of Lua and extract the package name
-      echo
-      echo "Installing lua, please wait..."
-      LUA_PACKAGE=$(apt search lua | grep -o 'lua[0-9]\+\.[0-9]\+/stable' | sort -Vr | head -n 1 | cut -d'/' -f1)
-      # Check if a package was found
-      if [ -z "$LUA_PACKAGE" ]; then
-        echo
-        echo -e "${boldGreen}No Lua package found. Skipping z.lua installation...${noColor}"
-        # sleep 1
-      else
-        # sleep 1
-        sudo apt-get install -y $LUA_PACKAGE 2>&1 >/dev/null
-        # Verify if Lua was installed successfully
-        if ! command -v lua >/dev/null 2>&1; then
-          echo -e "${boldRed}Warning: Failed to install Lua. Check this manually.${noColor}"
-          # sleep 1
-        else
-        fi
-      fi
+	# Initialize z.lua, if it is installed
+	# If not installed, this will install lua and then z.lua
+	install_this_package="no"
+	if command -v $HOME/github/z.lua/z.lua &>/dev/null; then
+		eval "$(lua $HOME/github/z.lua/z.lua --init zsh enhanced once)"
+	else
+		if [ "$install_this_package" != "no" ]; then
+			# First we need to install Lua
+			# Search for the latest version of Lua and extract the package name
+			echo
+			echo "Installing lua, please wait..."
+			LUA_PACKAGE=$(apt search lua | grep -o 'lua[0-9]\+\.[0-9]\+/stable' | sort -Vr | head -n 1 | cut -d'/' -f1)
+			# Check if a package was found
+			if [ -z "$LUA_PACKAGE" ]; then
+				echo
+				echo -e "${boldGreen}No Lua package found. Skipping z.lua installation...${noColor}"
+				# sleep 1
+			else
+				# sleep 1
+				sudo apt-get install -y $LUA_PACKAGE 2>&1 >/dev/null
+				# Verify if Lua was installed successfully
+				if ! command -v lua >/dev/null 2>&1; then
+					echo -e "${boldRed}Warning: Failed to install Lua. Check this manually.${noColor}"
+					# sleep 1
+				else
+				fi
+			fi
 
-      # After installing Lua, I need to install z.lua from github
-      echo
-      if [ ! -d "$HOME/github/z.lua" ]; then
-        mkdir -p $HOME/github
-        cd $HOME/github
-        git clone https://github.com/skywind3000/z.lua.git 2>&1 >/dev/null
-      fi
+			# After installing Lua, I need to install z.lua from github
+			echo
+			if [ ! -d "$HOME/github/z.lua" ]; then
+				mkdir -p $HOME/github
+				cd $HOME/github
+				git clone https://github.com/skywind3000/z.lua.git 2>&1 >/dev/null
+			fi
 
-      # verify if the z.lua github repo was cloned successfully
-      if [ ! -d "$HOME/github/z.lua" ]; then
-        echo -e "${boldgreen}warning: failed to clone the repository. skipping the z.lua configuration....${nocolor}"
-        # sleep 1
-      else
-        echo "successfully cloned the z.lua repository."
-        # After installing, initialize it
-        eval "$(lua $HOME/github/z.lua/z.lua --init zsh enhanced once)"
-        echo "$LUA_PACKAGE installed successfully."
-      fi
-    fi
-  fi
+			# verify if the z.lua github repo was cloned successfully
+			if [ ! -d "$HOME/github/z.lua" ]; then
+				echo -e "${boldgreen}warning: failed to clone the repository. skipping the z.lua configuration....${nocolor}"
+				# sleep 1
+			else
+				echo "successfully cloned the z.lua repository."
+				# After installing, initialize it
+				eval "$(lua $HOME/github/z.lua/z.lua --init zsh enhanced once)"
+				echo "$LUA_PACKAGE installed successfully."
+			fi
+		fi
+	fi
 
-  # Source zsh-autosuggestions if file exists
-  install_this_package="no"
-  if [ -f "$HOME/github/zsh-autosuggestions/zsh-autosuggestions.zsh" ]; then
-    source $HOME/github/zsh-autosuggestions/zsh-autosuggestions.zsh
-  else
-    if [ "$install_this_package" != "no" ]; then
-      echo
-      echo "Installing zsh-autosuggestions, please wait..."
-      # Download github repo
-      mkdir -p $HOME/github
-      cd $HOME/github
-      git clone https://github.com/zsh-users/zsh-autosuggestions 2>&1 >/dev/null
-      # Verify if the repo was cloned successfully
-      if [ ! -d "$HOME/github/zsh-autosuggestions" ]; then
-        echo
-        echo -e "${boldRed}Warning: Failed to clone the zsh-autosuggestions repository. Check this manually${noColor}"
-        # sleep 1
-      else
-        # After installing, initialize it
-        source $HOME/github/zsh-autosuggestions/zsh-autosuggestions.zsh
-        echo "Successfully installed zsh-autosuggestions"
-      fi
-    fi
-  fi
+	# Source zsh-autosuggestions if file exists
+	install_this_package="no"
+	if [ -f "$HOME/github/zsh-autosuggestions/zsh-autosuggestions.zsh" ]; then
+		source $HOME/github/zsh-autosuggestions/zsh-autosuggestions.zsh
+	else
+		if [ "$install_this_package" != "no" ]; then
+			echo
+			echo "Installing zsh-autosuggestions, please wait..."
+			# Download github repo
+			mkdir -p $HOME/github
+			cd $HOME/github
+			git clone https://github.com/zsh-users/zsh-autosuggestions 2>&1 >/dev/null
+			# Verify if the repo was cloned successfully
+			if [ ! -d "$HOME/github/zsh-autosuggestions" ]; then
+				echo
+				echo -e "${boldRed}Warning: Failed to clone the zsh-autosuggestions repository. Check this manually${noColor}"
+				# sleep 1
+			else
+				# After installing, initialize it
+				source $HOME/github/zsh-autosuggestions/zsh-autosuggestions.zsh
+				echo "Successfully installed zsh-autosuggestions"
+			fi
+		fi
+	fi
 
-  # Initialize zsh-vi-mode, if it is installed
-  install_this_package="no"
-  if [ -d "$HOME/github/zsh-vi-mode" ]; then
-    source $HOME/github/zsh-vi-mode/zsh-vi-mode.plugin.zsh
-    # This modifies the escape key
-    ZVM_VI_ESCAPE_BINDKEY=kj
-    ZVM_VI_INSERT_ESCAPE_BINDKEY=$ZVM_VI_ESCAPE_BINDKEY
-    ZVM_VI_VISUAL_ESCAPE_BINDKEY=$ZVM_VI_ESCAPE_BINDKEY
-    ZVM_VI_OPPEND_ESCAPE_BINDKEY=$ZVM_VI_ESCAPE_BINDKEY
-    # Source .fzf.zsh so that the ctrl+r bindkey is given back fzf
-    zvm_after_init_commands+=('[ -f $HOME/.fzf.zsh ] && source $HOME/.fzf.zsh')
-  else
-    if [ "$install_this_package" != "no" ]; then
-      echo
-      echo "Installing zsh-vi-mode, please wait..."
-      # Download zsh-vi-mode from github
-      mkdir -p $HOME/github
-      cd $HOME/github
-      git clone https://github.com/jeffreytse/zsh-vi-mode.git 2>&1 >/dev/null
-      # Verify if the zsh-vi-mode GitHub repo was cloned successfully
-      if [ ! -d "$HOME/github/zsh-vi-mode" ]; then
-        echo
-        echo -e "${boldRed}Warning: Failed to clone the zsh-vi-mode repository. Check this manually.${noColor}"
-        # sleep 1
-      else
-        # After installing, initialize it
-        source $HOME/github/zsh-vi-mode/zsh-vi-mode.plugin.zsh
-        # This modifies the escape key
-        ZVM_VI_ESCAPE_BINDKEY=kj
-        ZVM_VI_INSERT_ESCAPE_BINDKEY=$ZVM_VI_ESCAPE_BINDKEY
-        ZVM_VI_VISUAL_ESCAPE_BINDKEY=$ZVM_VI_ESCAPE_BINDKEY
-        ZVM_VI_OPPEND_ESCAPE_BINDKEY=$ZVM_VI_ESCAPE_BINDKEY
-        # Source .fzf.zsh so that the ctrl+r bindkey is given back fzf
-        zvm_after_init_commands+=('[ -f $HOME/.fzf.zsh ] && source $HOME/.fzf.zsh')
-        echo "Successfully installed zsh-vi-mode"
-      fi
-    fi
-  fi
+	# Initialize zsh-vi-mode, if it is installed
+	install_this_package="no"
+	if [ -d "$HOME/github/zsh-vi-mode" ]; then
+		source $HOME/github/zsh-vi-mode/zsh-vi-mode.plugin.zsh
+		# This modifies the escape key
+		ZVM_VI_ESCAPE_BINDKEY=kj
+		ZVM_VI_INSERT_ESCAPE_BINDKEY=$ZVM_VI_ESCAPE_BINDKEY
+		ZVM_VI_VISUAL_ESCAPE_BINDKEY=$ZVM_VI_ESCAPE_BINDKEY
+		ZVM_VI_OPPEND_ESCAPE_BINDKEY=$ZVM_VI_ESCAPE_BINDKEY
+		# Source .fzf.zsh so that the ctrl+r bindkey is given back fzf
+		zvm_after_init_commands+=('[ -f $HOME/.fzf.zsh ] && source $HOME/.fzf.zsh')
+	else
+		if [ "$install_this_package" != "no" ]; then
+			echo
+			echo "Installing zsh-vi-mode, please wait..."
+			# Download zsh-vi-mode from github
+			mkdir -p $HOME/github
+			cd $HOME/github
+			git clone https://github.com/jeffreytse/zsh-vi-mode.git 2>&1 >/dev/null
+			# Verify if the zsh-vi-mode GitHub repo was cloned successfully
+			if [ ! -d "$HOME/github/zsh-vi-mode" ]; then
+				echo
+				echo -e "${boldRed}Warning: Failed to clone the zsh-vi-mode repository. Check this manually.${noColor}"
+				# sleep 1
+			else
+				# After installing, initialize it
+				source $HOME/github/zsh-vi-mode/zsh-vi-mode.plugin.zsh
+				# This modifies the escape key
+				ZVM_VI_ESCAPE_BINDKEY=kj
+				ZVM_VI_INSERT_ESCAPE_BINDKEY=$ZVM_VI_ESCAPE_BINDKEY
+				ZVM_VI_VISUAL_ESCAPE_BINDKEY=$ZVM_VI_ESCAPE_BINDKEY
+				ZVM_VI_OPPEND_ESCAPE_BINDKEY=$ZVM_VI_ESCAPE_BINDKEY
+				# Source .fzf.zsh so that the ctrl+r bindkey is given back fzf
+				zvm_after_init_commands+=('[ -f $HOME/.fzf.zsh ] && source $HOME/.fzf.zsh')
+				echo "Successfully installed zsh-vi-mode"
+			fi
+		fi
+	fi
 
-  # Initialize neofetch, if it is installed
-  if command -v neofetch &>/dev/null; then
-    # leave blank space before the command
-    echo
-    neofetch
-  fi
+	# Initialize neofetch, if it is installed
+	if command -v neofetch &>/dev/null; then
+		# leave blank space before the command
+		echo
+		neofetch
+	fi
 
-  # Initialize fzf if installed
-  install_this_package="yes"
-  if [ -f ~/.fzf.zsh ]; then
-    source ~/.fzf.zsh
-  else
-    if [ "$install_this_package" != "no" ]; then
-      echo
-      echo "Installing fzf, please wait..."
-      # Download fzf from GitHub if it's not installed
-      mkdir -p $HOME/github
-      cd $HOME/github
-      git clone --depth 1 https://github.com/junegunn/fzf.git 2>&1 >/dev/null
-      # Verify if the fzf GitHub repo was cloned successfully
-      if [ ! -d "$HOME/github/fzf" ]; then
-        echo -e "${boldRed}Warning: Failed to clone the fzf repository. Check this manually.${noColor}"
-      else
-        echo "Successfully cloned the fzf repository."
-        # Install fzf, this will answer `y`, `y`, and `n` to the questions asked
-        echo -e "y\ny\nn" | $HOME/github/fzf/install 2>&1 >/dev/null
-        # After installing, initialize it
-        source ~/.fzf.zsh
-        echo "Successfully installed fzf"
-      fi
-    fi
-  fi
+	# Initialize fzf if installed
+	install_this_package="yes"
+	if [ -f ~/.fzf.zsh ]; then
+		source ~/.fzf.zsh
+	else
+		if [ "$install_this_package" != "no" ]; then
+			echo
+			echo "Installing fzf, please wait..."
+			# Download fzf from GitHub if it's not installed
+			mkdir -p $HOME/github
+			cd $HOME/github
+			git clone --depth 1 https://github.com/junegunn/fzf.git 2>&1 >/dev/null
+			# Verify if the fzf GitHub repo was cloned successfully
+			if [ ! -d "$HOME/github/fzf" ]; then
+				echo -e "${boldRed}Warning: Failed to clone the fzf repository. Check this manually.${noColor}"
+			else
+				echo "Successfully cloned the fzf repository."
+				# Install fzf, this will answer `y`, `y`, and `n` to the questions asked
+				echo -e "y\ny\nn" | $HOME/github/fzf/install 2>&1 >/dev/null
+				# After installing, initialize it
+				source ~/.fzf.zsh
+				echo "Successfully installed fzf"
+			fi
+		fi
+	fi
 
-  cd ~
+	cd ~
 
-  # Check if the Meslo Nerd Font is already installed
-  install_this_package="no"
-  if [ "$install_this_package" != "no" ]; then
-    if ! fc-list | grep -qi "Meslo"; then
-      echo
-      echo "Installing Meslo Nerd Fonts..."
+	# Check if the Meslo Nerd Font is already installed
+	install_this_package="no"
+	if [ "$install_this_package" != "no" ]; then
+		if ! fc-list | grep -qi "Meslo"; then
+			echo
+			echo "Installing Meslo Nerd Fonts..."
 
-      # Download the font archive
-      curl -OL https://github.com/ryanoasis/nerd-fonts/releases/latest/download/Meslo.tar.xz 2>&1 >/dev/null
+			# Download the font archive
+			curl -OL https://github.com/ryanoasis/nerd-fonts/releases/latest/download/Meslo.tar.xz 2>&1 >/dev/null
 
-      # Ensure the fonts directory exists and extract the fonts
-      mkdir -p ~/.local/share/fonts
-      tar -xvf Meslo.tar.xz -C ~/.local/share/fonts 2>&1 >/dev/null
-      rm Meslo.tar.xz
+			# Ensure the fonts directory exists and extract the fonts
+			mkdir -p ~/.local/share/fonts
+			tar -xvf Meslo.tar.xz -C ~/.local/share/fonts 2>&1 >/dev/null
+			rm Meslo.tar.xz
 
-      # Refresh the font cache
-      fc-cache -fv 2>&1 >/dev/null
+			# Refresh the font cache
+			fc-cache -fv 2>&1 >/dev/null
 
-      echo "Meslo Nerd Fonts installed."
-    fi
-  fi
+			echo "Meslo Nerd Fonts installed."
+		fi
+	fi
 
-  # Check if Neovim is already installed, otherwise install it
-  install_this_package="no"
-  if ! command -v nvim &>/dev/null; then
-    if [ "$install_this_package" != "no" ]; then
-      echo
-      echo "Installing neovim, please wait..."
-      # Install latest version of neovim
-      # Debian repos have a really old version, so had to go this route
-      # switched to wget as was having issues when downloading with curl
-      cd ~
-      wget https://github.com/neovim/neovim/releases/latest/download/nvim.appimage 2>&1 >/dev/null
-      # curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim.appimage
-      # After downloading it, you have to make it executable to be able to extract it
-      chmod u+x nvim.appimage
-      # I'll extract the executable and expose it globally
-      ./nvim.appimage --appimage-extract 2>&1 >/dev/null
-      sudo mv squashfs-root /
-      sudo ln -s /squashfs-root/AppRun /usr/bin/nvim
-      rm nvim.appimage
-      # Remove any cached files that may exist from a previous config
-      echo "removing backup files.."
-      mv ~/.local/share/nvim{,.bak} >/dev/null 2>&1
-      mv ~/.local/state/nvim{,.bak} >/dev/null 2>&1
-      mv ~/.cache/nvim{,.bak} >/dev/null 2>&1
-      echo "Downloaded neovim"
+	# Check if Neovim is already installed, otherwise install it
+	install_this_package="no"
+	if ! command -v nvim &>/dev/null; then
+		if [ "$install_this_package" != "no" ]; then
+			echo
+			echo "Installing neovim, please wait..."
+			# Install latest version of neovim
+			# Debian repos have a really old version, so had to go this route
+			# switched to wget as was having issues when downloading with curl
+			cd ~
+			wget https://github.com/neovim/neovim/releases/latest/download/nvim.appimage 2>&1 >/dev/null
+			# curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim.appimage
+			# After downloading it, you have to make it executable to be able to extract it
+			chmod u+x nvim.appimage
+			# I'll extract the executable and expose it globally
+			./nvim.appimage --appimage-extract 2>&1 >/dev/null
+			sudo mv squashfs-root /
+			sudo ln -s /squashfs-root/AppRun /usr/bin/nvim
+			rm nvim.appimage
+			# Remove any cached files that may exist from a previous config
+			echo "removing backup files.."
+			mv ~/.local/share/nvim{,.bak} >/dev/null 2>&1
+			mv ~/.local/state/nvim{,.bak} >/dev/null 2>&1
+			mv ~/.cache/nvim{,.bak} >/dev/null 2>&1
+			echo "Downloaded neovim"
 
-      # These below ones are neovim dependencies
-      # Check and install lazygit if not installed
-      if ! command -v lazygit &>/dev/null; then
-        cd ~
-        echo "Installing lazygit..."
-        LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | grep -Po '"tag_name": "v\K[^"]*')
-        wget -O lazygit.tar.gz "https://github.com/jesseduffield/lazygit/releases/latest/download/lazygit_${LAZYGIT_VERSION}_Linux_x86_64.tar.gz" 2>&1 >/dev/null
-        tar xf lazygit.tar.gz lazygit
-        sudo install lazygit /usr/local/bin
-        rm -rf lazygit
-        rm lazygit.tar.gz
-        echo "Downloaded lazygit"
-      fi
+			# These below ones are neovim dependencies
+			# Check and install lazygit if not installed
+			if ! command -v lazygit &>/dev/null; then
+				cd ~
+				echo "Installing lazygit..."
+				LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | grep -Po '"tag_name": "v\K[^"]*')
+				wget -O lazygit.tar.gz "https://github.com/jesseduffield/lazygit/releases/latest/download/lazygit_${LAZYGIT_VERSION}_Linux_x86_64.tar.gz" 2>&1 >/dev/null
+				tar xf lazygit.tar.gz lazygit
+				sudo install lazygit /usr/local/bin
+				rm -rf lazygit
+				rm lazygit.tar.gz
+				echo "Downloaded lazygit"
+			fi
 
-      # Check and install the C compiler (build-essential) if not installed
-      if ! gcc --version &>/dev/null; then
-        echo "Installing C compiler (build-essential) for nvim-treesitter..."
-        sudo apt install build-essential -y 2>&1 >/dev/null
-        echo "Installed C compiler"
-      fi
+			# Check and install the C compiler (build-essential) if not installed
+			if ! gcc --version &>/dev/null; then
+				echo "Installing C compiler (build-essential) for nvim-treesitter..."
+				sudo apt install build-essential -y 2>&1 >/dev/null
+				echo "Installed C compiler"
+			fi
 
-      # Check and install ripgrep if not installed
-      if ! command -v rg &>/dev/null; then
-        echo "Installing ripgrep..."
-        sudo apt-get install ripgrep -y 2>&1 >/dev/null
-        echo "Installed ripgrep"
-      fi
+			# Check and install ripgrep if not installed
+			if ! command -v rg &>/dev/null; then
+				echo "Installing ripgrep..."
+				sudo apt-get install ripgrep -y 2>&1 >/dev/null
+				echo "Installed ripgrep"
+			fi
 
-      # Check and install fd-find if not installed
-      if ! command -v fdfind &>/dev/null; then
-        echo "Installing fd-find..."
-        sudo apt-get install fd-find -y 2>&1 >/dev/null
-        echo "Installed fd_find"
-      fi
+			# Check and install fd-find if not installed
+			if ! command -v fdfind &>/dev/null; then
+				echo "Installing fd-find..."
+				sudo apt-get install fd-find -y 2>&1 >/dev/null
+				echo "Installed fd_find"
+			fi
 
-      # Check and install fuse if not installed
-      if ! command -v fusermount &>/dev/null; then
-        echo "Installing fuse..."
-        sudo apt install fuse -y 2>&1 >/dev/null
-        echo "Installed fuse"
-      fi
-    fi
-  fi
+			# Check and install fuse if not installed
+			if ! command -v fusermount &>/dev/null; then
+				echo "Installing fuse..."
+				sudo apt install fuse -y 2>&1 >/dev/null
+				echo "Installed fuse"
+			fi
+		fi
+	fi
 
-  # Initialize kubernetes kubectl completion if kubectl is installed
-  # https://kubernetes.io/docs/tasks/tools/install-kubectl-macos/#enable-shell-autocompletion
-  if command -v kubectl &>/dev/null; then
-    source <(kubectl completion zsh)
-  fi
+	# Initialize kubernetes kubectl completion if kubectl is installed
+	# https://kubernetes.io/docs/tasks/tools/install-kubectl-macos/#enable-shell-autocompletion
+	if command -v kubectl &>/dev/null; then
+		source <(kubectl completion zsh)
+	fi
 fi

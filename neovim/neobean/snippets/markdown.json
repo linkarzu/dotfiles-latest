@@ -41,6 +41,32 @@
     "description": "Insert a chirpy theme tip"
   },
 
+  "markdownlint": {
+    "prefix": "markdownlint",
+    "body": [
+      " ",
+      "<!-- markdownlint-disable -->",
+      " ",
+      "> $1",
+      " ",
+      "<!-- markdownlint-restore -->"
+    ],
+    "description": "Markdownlint disable range"
+  },
+
+  "prettier ignore": {
+    "prefix": "prettier-ignore",
+    "body": [
+      " ",
+      "<!-- prettier-ignore-start -->",
+      " ",
+      "> $1",
+      " ",
+      "<!-- prettier-ignore-end -->"
+    ],
+    "description": "Prettier ignore range"
+  },
+
   "regular link": {
     "prefix": "link",
     "body": ["[$1]($2)"],

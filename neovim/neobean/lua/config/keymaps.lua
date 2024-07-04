@@ -450,10 +450,8 @@ vim.keymap.set("n", "<leader>id", function()
 
     return image_path
   end
-
   -- Get the image path
   local image_path = get_image_path()
-
   if image_path then
     -- Check if the image path starts with "http" or "https"
     if string.sub(image_path, 1, 4) == "http" then
@@ -464,7 +462,6 @@ vim.keymap.set("n", "<leader>id", function()
       -- Construct absolute image path
       local current_file_path = vim.fn.expand("%:p:h")
       local absolute_image_path = current_file_path .. "/" .. image_path
-
       -- Check if trash utility is installed
       if vim.fn.executable("trash") == 0 then
         vim.api.nvim_echo({
@@ -473,7 +470,6 @@ vim.keymap.set("n", "<leader>id", function()
         }, false, {})
         return
       end
-
       -- Prompt for confirmation before deleting the image
       vim.ui.input({
         prompt = "Delete image file? (y/n) ",
@@ -483,7 +479,6 @@ vim.keymap.set("n", "<leader>id", function()
           local success, _ = pcall(function()
             vim.fn.system({ "trash", vim.fn.fnameescape(absolute_image_path) })
           end)
-
           if success then
             vim.api.nvim_echo({
               { "Image file deleted from disk:\n", "Normal" },
@@ -1100,61 +1095,6 @@ vim.keymap.set({ "n", "v" }, "gj", function()
   vim.cmd("nohlsearch")
 end, { desc = "[P]Go to next markdown header" })
 
-vim.keymap.set("n", "<leader>jj", function()
-  local date = os.date("%Y-%m-%d-%A")
-  local heading = "# " -- Heading with space for the cursor
-  local dateLine = "[[" .. date .. "]]" -- Formatted date line
-  local row, _ = unpack(vim.api.nvim_win_get_cursor(0)) -- Get the current row number
-  -- Insert both lines: heading and dateLine
-  vim.api.nvim_buf_set_lines(0, row, row, false, { heading, dateLine })
-  -- Move the cursor to the end of the heading
-  vim.api.nvim_win_set_cursor(0, { row + 1, 0 })
-  -- Enter insert mode at the end of the current line
-  vim.cmd("startinsert!")
-  -- vim.api.nvim_win_set_cursor(0, { row, #heading })
-end, { desc = "[P]H1 heading and date" })
-
-vim.keymap.set("n", "<leader>kk", function()
-  local date = os.date("%Y-%m-%d-%A")
-  local heading = "## " -- Heading with space for the cursor
-  local dateLine = "[[" .. date .. "]]" -- Formatted date line
-  local row, _ = unpack(vim.api.nvim_win_get_cursor(0)) -- Get the current row number
-  -- Insert both lines: heading and dateLine
-  vim.api.nvim_buf_set_lines(0, row, row, false, { heading, dateLine })
-  -- Move the cursor to the end of the heading
-  vim.api.nvim_win_set_cursor(0, { row + 1, 0 })
-  -- Enter insert mode at the end of the current line
-  vim.cmd("startinsert!")
-  -- vim.api.nvim_win_set_cursor(0, { row, #heading })
-end, { desc = "[P]H2 heading and date" })
-
-vim.keymap.set("n", "<leader>ll", function()
-  local date = os.date("%Y-%m-%d-%A")
-  local heading = "### " -- Heading with space for the cursor
-  local dateLine = "[[" .. date .. "]]" -- Formatted date line
-  local row, _ = unpack(vim.api.nvim_win_get_cursor(0)) -- Get the current row number
-  -- Insert both lines: heading and dateLine
-  vim.api.nvim_buf_set_lines(0, row, row, false, { heading, dateLine })
-  -- Move the cursor to the end of the heading
-  vim.api.nvim_win_set_cursor(0, { row + 1, 0 })
-  -- Enter insert mode at the end of the current line
-  vim.cmd("startinsert!")
-  -- vim.api.nvim_win_set_cursor(0, { row, #heading })
-end, { desc = "[P]H3 heading and date" })
-
-vim.keymap.set("n", "<leader>;;", function()
-  local date = os.date("%Y-%m-%d-%A")
-  local heading = "#### " -- Heading with space for the cursor
-  local dateLine = "[[" .. date .. "]]" -- Formatted date line
-  local row, _ = unpack(vim.api.nvim_win_get_cursor(0)) -- Get the current row number
-  -- Insert both lines: heading and dateLine
-  vim.api.nvim_buf_set_lines(0, row, row, false, { heading, dateLine })
-  -- Move the cursor to the end of the heading
-  vim.api.nvim_win_set_cursor(0, { row + 1, 0 })
-  -- Enter insert mode at the end of the current line
-  vim.cmd("startinsert!")
-  -- vim.api.nvim_win_set_cursor(0, { row, #heading })
-end, { desc = "[P]H4 heading and date" })
 -- Function to delete the current file with confirmation
 local function delete_current_file()
   local current_file = vim.fn.expand("%:p")
@@ -1202,27 +1142,16 @@ local function delete_current_file()
   end
 end
 
-vim.keymap.set("n", "<leader>uu", function()
-  local date = os.date("%Y-%m-%d-%A")
-  local heading = "##### " -- Heading with space for the cursor
-  local dateLine = "[[" .. date .. "]]" -- Formatted date line
-  local row, _ = unpack(vim.api.nvim_win_get_cursor(0)) -- Get the current row number
-  -- Insert both lines: heading and dateLine
-  vim.api.nvim_buf_set_lines(0, row, row, false, { heading, dateLine })
-  -- Move the cursor to the end of the heading
-  vim.api.nvim_win_set_cursor(0, { row + 1, 0 })
-  -- Enter insert mode at the end of the current line
-  vim.cmd("startinsert!")
-  -- vim.api.nvim_win_set_cursor(0, { row, #heading })
-end, { desc = "[P]H5 heading and date" })
 -- Keymap to delete the current file
 vim.keymap.set("n", "<leader>fD", function()
   delete_current_file()
 end, { desc = "[P]Delete current file" })
 
-vim.keymap.set("n", "<leader>ii", function()
+-- These create the a markdown heading based on the level specified, and also
+-- dynamically add the date below in the [[2024-03-01-Friday]] format
+local function insert_heading_and_date(level)
   local date = os.date("%Y-%m-%d-%A")
-  local heading = "###### " -- Heading with space for the cursor
+  local heading = string.rep("#", level) .. " " -- Generate heading based on the level
   local dateLine = "[[" .. date .. "]]" -- Formatted date line
   local row, _ = unpack(vim.api.nvim_win_get_cursor(0)) -- Get the current row number
   -- Insert both lines: heading and dateLine
@@ -1231,8 +1160,9 @@ vim.keymap.set("n", "<leader>ii", function()
   vim.api.nvim_win_set_cursor(0, { row + 1, 0 })
   -- Enter insert mode at the end of the current line
   vim.cmd("startinsert!")
+  return dateLine
   -- vim.api.nvim_win_set_cursor(0, { row, #heading })
-end, { desc = "[P]H6 heading and date" })
+end
 
 -- Create or find a daily note based on a date line format and open it in Neovim
 -- This is used in obsidian markdown files that have the "Link to non-existent
@@ -1273,6 +1203,48 @@ local function create_daily_note(date_line)
   end
 end
 
+-- These create the the markdown heading
+-- H1
+vim.keymap.set("n", "<leader>jj", function()
+  local date_line = insert_heading_and_date(1)
+  -- If you just want to add the heading, comment the line below
+  create_daily_note(date_line)
+end, { desc = "[P]H1 heading and date" })
+
+-- H2
+vim.keymap.set("n", "<leader>kk", function()
+  local date_line = insert_heading_and_date(2)
+  -- If you just want to add the heading, comment the line below
+  create_daily_note(date_line)
+end, { desc = "[P]H2 heading and date" })
+
+-- H3
+vim.keymap.set("n", "<leader>ll", function()
+  local date_line = insert_heading_and_date(3)
+  -- If you just want to add the heading, comment the line below
+  create_daily_note(date_line)
+end, { desc = "[P]H3 heading and date" })
+
+-- H4
+vim.keymap.set("n", "<leader>;;", function()
+  local date_line = insert_heading_and_date(4)
+  -- If you just want to add the heading, comment the line below
+  create_daily_note(date_line)
+end, { desc = "[P]H4 heading and date" })
+
+-- H5
+vim.keymap.set("n", "<leader>uu", function()
+  local date_line = insert_heading_and_date(5)
+  -- If you just want to add the heading, comment the line below
+  create_daily_note(date_line)
+end, { desc = "[P]H5 heading and date" })
+
+-- H6
+vim.keymap.set("n", "<leader>ii", function()
+  local date_line = insert_heading_and_date(6)
+  -- If you just want to add the heading, comment the line below
+  create_daily_note(date_line)
+end, { desc = "[P]H6 heading and date" })
 
 -- Create or find a daily note
 vim.keymap.set("n", "<leader>fC", function()

@@ -3,7 +3,7 @@
 <!-- toc -->
 
 - [Which one am I using](#which-one-am-i-using)
-- [View and paste images in neovim](#view-and-paste-images-in-neovim)
+- [View and paste images in neovim (YouTube video)](#view-and-paste-images-in-neovim-youtube-video)
 - [Link to my blog with instructions](#link-to-my-blog-with-instructions)
 
 <!-- tocstop -->
@@ -13,7 +13,9 @@
 - As of July 2024 I'm using the one in the dir called "neobean"
 - kickstart and quarto are here for learning and testing purposes
 
-## View and paste images in neovim
+## View and paste images in neovim (YouTube video)
+
+- Click on the image below to go to the YouTube video
 
 <div align="center">
     <a href="https://youtu.be/0O3kqGwNzTI">

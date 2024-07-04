@@ -1367,7 +1367,7 @@ end, { desc = "[P]Decrease headings without confirmation" })
 -- This deletes all marks in the current buffer, including lowercase, uppercase, and numbered marks
 -- Fix should be applied on April 2024
 -- https://github.com/chentoast/marks.nvim/issues/13
-vim.keymap.set("n", "<leader>md", function()
+vim.keymap.set("n", "<leader>mD", function()
   -- Delete all marks in the current buffer
   vim.cmd("delmarks!")
   print("All marks deleted.")

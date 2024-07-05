@@ -658,12 +658,12 @@ vim.keymap.set("n", "<leader>mb", function()
     local text_lines = vim.api.nvim_buf_get_lines(current_buffer, start_row, end_row + 1, false)
     local text = table.concat(text_lines, "\n")
     -- Calculate positions to correctly remove '**'
-    vim.notify("bold_start: " .. bold_start .. ", bold_end: " .. bold_end)
+    -- vim.notify("bold_start: " .. bold_start .. ", bold_end: " .. bold_end)
     local new_text = text:sub(1, bold_start - 1) .. text:sub(bold_start + 2, bold_end - 1) .. text:sub(bold_end + 2)
     local new_lines = vim.split(new_text, "\n")
     -- Set new lines in buffer
     vim.api.nvim_buf_set_lines(current_buffer, start_row, end_row + 1, false, new_lines)
-    vim.notify("Unbolded text", vim.log.levels.INFO)
+    -- vim.notify("Unbolded text", vim.log.levels.INFO)
   else
     -- Bold the word at the cursor position if no bold markers are found
     local before = line:sub(1, col)
@@ -910,7 +910,7 @@ end, { desc = "[P]TODO toggle item done or not" })
 -- Generate/update a Markdown TOC
 -- To generate the TOC I use the markdown-toc plugin
 -- https://github.com/jonschlinkert/markdown-toc
--- I install it with mason, go see my 'mason-nvim' plugin file
+-- And the markdown-toc plugin installed as a LazyExtra
 vim.keymap.set("n", "<leader>mt", function()
   local path = vim.fn.expand("%") -- Expands the current file name to a full path
   local bufnr = 0 -- The current buffer number, 0 references the current active buffer

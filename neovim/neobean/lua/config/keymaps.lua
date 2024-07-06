@@ -1385,6 +1385,9 @@ vim.keymap.set("n", "<leader>fO", function()
   end
 end, { desc = "[P]Open current file in Finder" })
 
+-- Keymap to toggle the stay-centered plugin
+vim.keymap.set({ "n", "v" }, "<leader>mc", require("stay-centered").toggle, { desc = "[P]Toggle stay-centered.nvim" })
+
 -- -- From Primeagen's tmux-sessionizer
 -- -- ctrl+f in normal mode will silently run a command to create a new tmux window and execute the tmux-sessionizer.
 -- -- Allowing quick creation and navigation of tmux sessions directly from the editor.

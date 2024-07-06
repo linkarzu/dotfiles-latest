@@ -38,8 +38,8 @@ if command -v sketchybar &>/dev/null; then
     yabai -m config left_padding 20
     yabai -m config right_padding 20
     # For youtube thumbnails
-    # yabai -m config right_padding 400
-    # For youtube posts
+    # yabai -m config right_padding 500
+    # For youtube posts and neomemes
     # yabai -m config right_padding 800
   fi
 else
@@ -88,7 +88,7 @@ yabai -m signal --add event=window_focused app!="^${apps_transparent}$" action="
 # davinci resolve and other apps where their floating windows would show on top
 # of other apps
 
-yabai -m rule --add app=".*" sub-layer=normal
+# yabai -m rule --add app=".*" sub-layer=normal
 
 ###############################################################################
 #                              Excluded apps

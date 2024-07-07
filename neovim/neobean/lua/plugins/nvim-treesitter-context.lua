@@ -8,7 +8,7 @@
 -- Really useful to know where you're at
 --
 -- This plugin used to be enabled by default in lazyvim, but it was moved to
--- extras
+-- extras lamw25wmal
 --
 -- I just copied Folke's config here
 -- https://www.lazyvim.org/extras/ui/treesitter-context#nvim-treesitter-context

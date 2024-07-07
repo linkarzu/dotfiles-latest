@@ -83,5 +83,11 @@
     "prefix": "todo",
     "body": ["<!-- TODO: $1 -->"],
     "description": "Create a todo item"
+  },
+
+  "markdown workflow 25": {
+    "prefix": "lam",
+    "body": ["lamw25wmal"],
+    "description": "markdown workflow 25"
   }
 }

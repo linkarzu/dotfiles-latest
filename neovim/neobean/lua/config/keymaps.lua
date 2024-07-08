@@ -571,6 +571,32 @@ wk.register({
   },
 })
 
+-- In visual mode, delete all newlines within selected text
+-- I like keeping my bulletpoints one after the next, sometimes formatting gets
+-- in the way and they mess up, so this allows me to select all of them and just
+-- delete newlines in between lamw25wmal
+vim.keymap.set("v", "<leader>mj", function()
+  -- Get the visual selection range
+  local start_row = vim.fn.line("v")
+  local end_row = vim.fn.line(".")
+  -- Ensure start_row is less than or equal to end_row
+  if start_row > end_row then
+    start_row, end_row = end_row, start_row
+  end
+  -- Loop through each line in the selection
+  local current_row = start_row
+  while current_row <= end_row do
+    local line = vim.api.nvim_buf_get_lines(0, current_row - 1, current_row, false)[1]
+    -- vim.notify("Checking line " .. current_row .. ": " .. (line or ""), vim.log.levels.INFO)
+    -- If the line is empty, delete it and adjust end_row
+    if line == "" then
+      vim.cmd(current_row .. "delete")
+      end_row = end_row - 1
+    else
+      current_row = current_row + 1
+    end
+  end
+end, { desc = "[P]Delete newlines in selected text (join)" })
 -- Show spelling suggestions / spell suggestions
 vim.keymap.set("n", "<leader>mss", function()
   -- Simulate pressing "z=" with "m" option using feedkeys

@@ -597,6 +597,82 @@ vim.keymap.set("v", "<leader>mj", function()
     end
   end
 end, { desc = "[P]Delete newlines in selected text (join)" })
+
+-- Toggle bullet point at the beginning of the current line in normal mode
+-- If in a multiline paragraph, make sure the cursor is on the line at the top
+-- "d" is for "dash" lamw25wmal
+vim.keymap.set("n", "<leader>md", function()
+  -- Get the current cursor position
+  local cursor_pos = vim.api.nvim_win_get_cursor(0)
+  local current_buffer = vim.api.nvim_get_current_buf()
+  local start_row = cursor_pos[1] - 1
+  local col = cursor_pos[2]
+  -- Get the current line
+  local line = vim.api.nvim_buf_get_lines(current_buffer, start_row, start_row + 1, false)[1]
+  -- Check if the line already starts with a bullet point
+  if line:match("^%s*%-") then
+    -- Remove the bullet point from the start of the line
+    line = line:gsub("^%s*%-", "")
+    vim.api.nvim_buf_set_lines(current_buffer, start_row, start_row + 1, false, { line })
+    return
+  end
+  -- Search for newline to the left of the cursor position
+  local left_text = line:sub(1, col)
+  local bullet_start = left_text:reverse():find("\n")
+  if bullet_start then
+    bullet_start = col - bullet_start
+  end
+  -- Search for newline to the right of the cursor position and in following lines
+  local right_text = line:sub(col + 1)
+  local bullet_end = right_text:find("\n")
+  local end_row = start_row
+  while not bullet_end and end_row < vim.api.nvim_buf_line_count(current_buffer) - 1 do
+    end_row = end_row + 1
+    local next_line = vim.api.nvim_buf_get_lines(current_buffer, end_row, end_row + 1, false)[1]
+    if next_line == "" then
+      break
+    end
+    right_text = right_text .. "\n" .. next_line
+    bullet_end = right_text:find("\n")
+  end
+  if bullet_end then
+    bullet_end = col + bullet_end
+  end
+  -- Extract lines
+  local text_lines = vim.api.nvim_buf_get_lines(current_buffer, start_row, end_row + 1, false)
+  local text = table.concat(text_lines, "\n")
+  -- Add bullet point at the start of the text
+  local new_text = "- " .. text
+  local new_lines = vim.split(new_text, "\n")
+  -- Set new lines in buffer
+  vim.api.nvim_buf_set_lines(current_buffer, start_row, end_row + 1, false, new_lines)
+end, { desc = "[P]Toggle bullet point (dash)" })
+
+-- -- Toggle bullet point at the beginning of the current line in normal mode
+-- vim.keymap.set("n", "<leader>ml", function()
+--   -- Notify that the function is being executed
+--   vim.notify("Executing bullet point toggle function", vim.log.levels.INFO)
+--   -- Get the current cursor position
+--   local cursor_pos = vim.api.nvim_win_get_cursor(0)
+--   vim.notify("Cursor position: row " .. cursor_pos[1] .. ", col " .. cursor_pos[2], vim.log.levels.INFO)
+--   local current_buffer = vim.api.nvim_get_current_buf()
+--   local row = cursor_pos[1] - 1
+--   -- Get the current line
+--   local line = vim.api.nvim_buf_get_lines(current_buffer, row, row + 1, false)[1]
+--   vim.notify("Current line: " .. line, vim.log.levels.INFO)
+--   if line:match("^%s*%-") then
+--     -- If the line already starts with a bullet point, remove it
+--     vim.notify("Bullet point detected, removing it", vim.log.levels.INFO)
+--     line = line:gsub("^%s*%-", "", 1)
+--     vim.api.nvim_buf_set_lines(current_buffer, row, row + 1, false, { line })
+--   else
+--     -- Otherwise, delete the line, add a bullet point, and paste the text
+--     vim.notify("No bullet point detected, adding it", vim.log.levels.INFO)
+--     line = "- " .. line
+--     vim.api.nvim_buf_set_lines(current_buffer, row, row + 1, false, { line })
+--   end
+-- end, { desc = "Toggle bullet point at the beginning of the current line" })
+
 -- Show spelling suggestions / spell suggestions
 vim.keymap.set("n", "<leader>mss", function()
   -- Simulate pressing "z=" with "m" option using feedkeys

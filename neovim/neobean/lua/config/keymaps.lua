@@ -547,19 +547,24 @@ wk.register({
       mode = { "v", "n" },
       name = "+[P]markdown",
       h = {
+        -- <leader>mh
         name = "+[P]headings increase/decrease",
       },
       l = {
+        -- <leader>ml
         name = "+[P]links",
       },
       s = {
+        -- <leader>ms
         name = "+[P]spell",
       },
       f = {
+        -- <leader>mf
         name = "+[P]fold",
       },
     },
     t = {
+      -- <leader>t
       mode = { "n" },
       name = "+[P]todo",
     },

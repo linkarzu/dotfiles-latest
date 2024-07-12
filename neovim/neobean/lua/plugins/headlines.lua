@@ -12,12 +12,12 @@ return {
   config = function()
     -- -- Define custom highlight groups using Vimscript
     -- -- Theme below is Eldritch
-    vim.cmd([[highlight Headline1 guibg=#f1fc79  guifg=#323449]])
+    vim.cmd([[highlight Headline1 guibg=#f265b5 guifg=#323449]])
     vim.cmd([[highlight Headline2 guibg=#37f499 guifg=#323449]])
     vim.cmd([[highlight Headline3 guibg=#04d1f9 guifg=#323449]])
-    vim.cmd([[highlight Headline4 guibg=#f16c75 guifg=#323449]])
-    vim.cmd([[highlight Headline5 guibg=#7081d0 guifg=#323449]])
-    vim.cmd([[highlight Headline6 guibg=#f265b5 guifg=#323449]])
+    vim.cmd([[highlight Headline4 guibg=#a48cf2 guifg=#323449]])
+    vim.cmd([[highlight Headline5 guibg=#f1fc79 guifg=#323449]])
+    vim.cmd([[highlight Headline6 guibg=#f7c67f guifg=#323449]])
 
     -- -- This is for eldritch as well, dim background
     -- vim.cmd([[highlight Headline1 guifg=#f1fc79 guibg=#606430]])

@@ -214,7 +214,8 @@ alias coverage='go test -coverprofile=coverage.out && go tool cover -html=covera
 # echo
 # echo "2"
 # #############################################################################
-#
+#                       DISABLE AUTO-PULL SECTION
+# #############################################################################
 # Instead of directly cloning my repo, to avoid my changes being applied, I
 # instead recommend you fork it, and clone that fork to your local machine
 # That way, my changes won't affect you.

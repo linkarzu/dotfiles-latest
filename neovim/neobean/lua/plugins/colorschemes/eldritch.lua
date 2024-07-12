@@ -16,7 +16,7 @@ return {
 
       -- horizontal line that goes across where cursor is
       highlights.CursorLine = { bg = "#3f404f" }
-      highlights.Comment = { fg = "#a5afc2" }
+      -- highlights.Comment = { fg = "#a5afc2", italic = true }
 
       -- I do the line below to change the color of bold text
       highlights["@markup.strong"] = { fg = "#f265b5", bold = true }
@@ -51,6 +51,17 @@ return {
       -- These colors are used by mini-files.lua to show git changes
       highlights.MiniDiffSignAdd = { fg = "#f1fc79", bold = true }
       highlights.MiniDiffSignChange = { fg = "#37f499", bold = true }
+
+      -- highlights.Normal = { bg = "#09090d", fg = "#ebfafa" }
+    end,
+    -- Overriding colors globally
+    -- These colors can be found in the palette.lua file
+    -- https://github.com/eldritch-theme/eldritch.nvim/blob/master/lua/eldritch/palette.lua
+    on_colors = function(colors)
+      -- This is in case you want to change the background color (where you type
+      -- text in neovim)
+      -- colors.bg = "#09090d"
+      colors.comment = "#a5afc2"
     end,
   },
 }

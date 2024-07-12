@@ -378,9 +378,9 @@ set -g @catppuccin_pane_border_style "fg=#a5afc2"
 # name has color
 # set -g @catppuccin_status_fill "icon"
 set -g @catppuccin_status_fill "all"
-# If you set this, you will see the classic colored tmux line that goes across
-# the entire screen
-set -g @catppuccin_status_background "theme"
+# This is the classic colored tmux bar that goes across the entire screen
+# set -g @catppuccin_status_background "theme"
+set -g @catppuccin_status_background "#212337"
 # If you set this to off, the tmux line completely dissappears
 set -g @catppuccin_status_default "on"
 

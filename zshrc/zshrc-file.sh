@@ -96,6 +96,12 @@ create_symlink ~/github/dotfiles-latest/neovim/lazyvim/ ~/.config/lazyvim
 create_symlink ~/github/dotfiles-latest/hammerspoon/ ~/.hammerspoon
 create_symlink ~/github/dotfiles-latest/karabiner/mxstbr/ ~/.config/karabiner
 create_symlink ~/github/dotfiles-latest/sketchybar/felixkratz-linkarzu/ ~/.config/sketchybar
+# Notice I also have the "nvim" directory below and I have it pointing to my
+# "neobean" config.
+# If I don't do this, my daily note with hyper+t+r won't work
+# If you want to open the daily note with a different distro, update the "nvim"
+# symlink, for example you can change it from "neobean" to "lazyvim"
+create_symlink ~/github/dotfiles-latest/neovim/neobean/ ~/.config/nvim
 # create_symlink ~/github/dotfiles-latest/sketchybar/felixkratz ~/.config/sketchybar
 # create_symlink ~/github/dotfiles-latest/sketchybar/default ~/.config/sketchybar
 # create_symlink ~/github/dotfiles-latest/sketchybar/neutonfoo ~/.config/sketchybar
@@ -196,10 +202,16 @@ alias history='history -30'
 # Notice that both "v" and "nvim" start "neobean"
 # "vk" opens kickstart and "vl" opens lazyvim
 alias v='export NVIM_APPNAME="neobean" && /opt/homebrew/bin/nvim'
-alias nvim='export NVIM_APPNAME="neobean" && /opt/homebrew/bin/nvim'
 alias vq='export NVIM_APPNAME="quarto-nvim-kickstarter" && /opt/homebrew/bin/nvim'
 alias vk='export NVIM_APPNAME="kickstart.nvim" && /opt/homebrew/bin/nvim'
 alias vl='export NVIM_APPNAME="lazyvim" && /opt/homebrew/bin/nvim'
+# I'm also leaving this "nvim" alias, which points to the "nvim" APPNAME, but
+# that APPNAME in fact points to my "neobean" config in the symlinks section
+# If I don't do this, my daily note doesn't work
+#
+# If you want to open the daily note with a different distro, update the "nvim"
+# symlink in the symlinks section
+alias nvim='export NVIM_APPNAME="nvim" && /opt/homebrew/bin/nvim'
 
 # kubernetes, if you need help, just run 'kgp --help' for example
 alias k='kubectl'

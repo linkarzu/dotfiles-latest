@@ -1387,7 +1387,6 @@ vim.keymap.set("n", "gsu", function()
   local col = vim.api.nvim_win_get_cursor(0)[2] + 1 -- Adjust for 0-index in Lua
   -- This makes the `s` optional so it matches both http and https
   local pattern = "https?://[^ ,;'\"<>%s)]*"
-
   -- Find the starting and ending positions of the URL
   local s, e = string.find(line, pattern)
   while s and e do
@@ -1491,9 +1490,61 @@ vim.keymap.set("n", "<leader>fO", function()
     print("No file is currently open")
   end
 end, { desc = "[P]Open current file in Finder" })
-
 -- Keymap to toggle the stay-centered plugin
 vim.keymap.set({ "n", "v" }, "<leader>mc", require("stay-centered").toggle, { desc = "[P]Toggle stay-centered.nvim" })
+
+-- Keymap to create a GitHub repository
+-- It uses the github CLI, which in macOS is installed with:
+-- brew install gh
+vim.keymap.set("n", "<leader>gC", function()
+  -- Check if GitHub CLI is installed
+  local gh_installed = vim.fn.system("command -v gh")
+  if gh_installed == "" then
+    print("GitHub CLI is not installed. Please install it using 'brew install gh'.")
+    return
+  end
+  -- Get the current working directory and extract the repository name
+  local cwd = vim.fn.getcwd()
+  local repo_name = vim.fn.fnamemodify(cwd, ":t")
+  if repo_name == "" then
+    print("Failed to extract repository name from the current directory.")
+    return
+  end
+  -- Display the message and ask for confirmation
+  local confirmation = vim.fn.input('The name of the repo will be: "' .. repo_name .. '"\nType "yes" to continue: ')
+  if confirmation:lower() ~= "yes" then
+    print("Operation canceled.")
+    return
+  end
+  -- Check if the repository already exists on GitHub
+  local check_repo_command =
+    string.format("gh repo view %s/%s", vim.fn.system("gh api user --jq '.login'"):gsub("%s+", ""), repo_name)
+  local check_repo_result = vim.fn.systemlist(check_repo_command)
+  if not string.find(table.concat(check_repo_result), "Could not resolve to a Repository") then
+    print("Repository '" .. repo_name .. "' already exists on GitHub.")
+    return
+  end
+  -- Prompt for repository type
+  local repo_type = vim.fn.input("Enter the repository type (private/public): "):lower()
+  if repo_type ~= "private" and repo_type ~= "public" then
+    print("Invalid repository type. Please enter 'private' or 'public'.")
+    return
+  end
+  -- Set the repository type flag
+  local repo_type_flag = repo_type == "private" and "--private" or "--public"
+  -- Initialize the git repository and create the GitHub repository
+  local init_command = string.format("cd %s && git init", vim.fn.shellescape(cwd))
+  vim.fn.system(init_command)
+  local create_command =
+    string.format("cd %s && gh repo create %s %s --source=.", vim.fn.shellescape(cwd), repo_name, repo_type_flag)
+  local create_result = vim.fn.system(create_command)
+  -- Print the result of the repository creation command
+  if string.find(create_result, "https://github.com") then
+    print("Repository '" .. repo_name .. "' created successfully.")
+  else
+    print("Failed to create the repository: " .. create_result)
+  end
+end, { desc = "[P]Create GitHub repository" })
 
 -- -- From Primeagen's tmux-sessionizer
 -- -- ctrl+f in normal mode will silently run a command to create a new tmux window and execute the tmux-sessionizer.

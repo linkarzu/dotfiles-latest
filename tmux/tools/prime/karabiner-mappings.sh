@@ -19,7 +19,7 @@
 username_suffix="h"
 
 dotfiles_latest="j"
-dotfiles_public="k"
+watusy="k"
 linkarzu_github_io="l"
 scripts="\;"
 obsidian_main="u"

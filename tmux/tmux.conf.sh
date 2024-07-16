@@ -127,29 +127,6 @@ bind C-l run-shell ~/github/dotfiles-latest/tmux/layouts/2x3/apply_layout.sh
 # I don't really care what these mappings are, pressing ctrl+* doesn't make any
 # sense whatsoever, because it's not ergonomic, but I call them from
 # bettertouchtool, and BTT is called from karabiner-elements
-unbind C-u
-unbind C-i
-unbind C-o
-unbind C-p
-unbind C-y
-unbind C-t
-unbind C-h
-unbind C-g
-
-unbind C-w
-unbind C-q
-unbind C-a
-unbind C-d
-unbind C-f
-unbind C-x
-unbind C-c
-unbind f
-unbind C-v
-unbind C-n
-unbind C-m
-unbind 1
-unbind 2
-unbind 3
 
 tmux_sessionizer="~/github/dotfiles-latest/tmux/tools/prime/tmux-sessionizer.sh"
 tmux_sshonizer_agen="~/github/dotfiles-latest/tmux/tools/linkarzu/tmux-sshonizer-agen.sh"
@@ -166,30 +143,52 @@ karabiner_rules="~/github/scripts/macos/mac/301-openKarabinerRules.sh"
 # Don't use C-e because I'm already using it for sending command to all panes/windows in current session
 # Don't use C-s because Its used to save the session
 # Don't use C-z, not sure what its for
+unbind C-u
 bind-key -r C-u run-shell "$tmux_sessionizer ~/github/dotfiles-latest"
-bind-key -r C-i run-shell "$tmux_sessionizer ~/github/dotfiles-public"
+unbind C-i
+bind-key -r C-i run-shell "$tmux_sessionizer ~/github/watusy"
+unbind C-o
 bind-key -r C-o run-shell "$tmux_sessionizer ~/github/linkarzu.github.io"
+unbind C-p
 bind-key -r C-p run-shell "$tmux_sessionizer ~/github/scripts"
+unbind C-t
 bind-key -r C-t run-shell "$tmux_sessionizer ~/github/obsidian_main"
+unbind C-y
 bind-key -r C-y run-shell "$tmux_sessionizer ~/github/containerdata"
+unbind C-h
 bind-key -r C-h run-shell "$tmux_sessionizer ~"
+unbind C-m
 bind-key -r C-m run-shell "$tmux_sessionizer ~/github/containerdata-public"
+unbind 3
 bind-key -r 3 run-shell "$tmux_sessionizer ~/github/go"
 # Leaving this in quotes because iCloud dir has a white space
+unbind C-g
 bind-key -r C-g run-shell "$tmux_sessionizer '$HOME/Library/Mobile Documents/com~apple~CloudDocs/github/macos-setup'"
 
+unbind C-w
 bind-key -r C-w run-shell "$tmux_sshonizer_agen docker3"
+unbind C-q
 bind-key -r C-q run-shell "$tmux_sshonizer_agen prodkubecp3"
+unbind C-a
 bind-key -r C-a run-shell "$tmux_sshonizer_agen dns3"
+unbind C-d
 bind-key -r C-d run-shell "$tmux_sshonizer_agen lb3"
+unbind C-f
 bind-key -r C-f run-shell "$tmux_sshonizer_agen prodkubew3"
+unbind C-x
 bind-key -r C-x run-shell "$tmux_sshonizer_agen storage3"
+unbind C-c
 bind-key -r C-c run-shell "$tmux_sshonizer_agen xocli3"
 
+unbind f
 bind-key -r f run-shell "tmux neww $tmux_sessionizer"
+unbind C-v
 bind-key -r C-v run-shell "tmux neww $ssh_select"
+unbind C-n
 bind-key -r C-n run-shell "tmux neww $ssh_config_select"
+unbind 1
 bind-key -r 1 run-shell "tmux neww $daily_note"
+unbind 2
 bind-key -r 2 run-shell "tmux neww $karabiner_rules"
 
 ###############################################################################

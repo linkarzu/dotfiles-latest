@@ -131,10 +131,10 @@ const rules: KarabinerRules[] = [
       j: open(
         "btt://execute_assigned_actions_for_trigger/?uuid=E2BEB425-38A3-46D8-AAF8-067CA979D4FB"
       ),
-      // dotfiles-public
-      // k: open(
-      //   "btt://execute_assigned_actions_for_trigger/?uuid=96E9BDEC-F0C5-4E77-AF1F-1EF5914BFDDF"
-      // ),
+      // watusy
+      k: open(
+        "btt://execute_assigned_actions_for_trigger/?uuid=7B386F00-BDBD-448F-A413-E37952E219A7"
+      ),
       // linkarzu.github.io
       l: open(
         "btt://execute_assigned_actions_for_trigger/?uuid=1893BEBE-DC99-41CC-9BE6-74B66E3BBB2C"

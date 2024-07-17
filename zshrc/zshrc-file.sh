@@ -276,6 +276,13 @@ if [ "$OS" = 'Mac' ]; then
 
   export PATH="/opt/homebrew/opt/libpq/bin:$PATH"
 
+  # Add templ to PATH if it is installed
+  # templ is installed with
+  # go install github.com/a-h/templ/cmd/templ@latest
+  if [ -x "$HOME/go/bin/templ" ]; then
+    export PATH=$PATH:$HOME/go/bin
+  fi
+
   # sketchybar
   # This will update the brew package count after running a brew upgrade, brew
   # update or brew outdated command

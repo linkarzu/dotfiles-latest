@@ -479,6 +479,11 @@ if [ "$OS" = 'Linux' ]; then
   # Add Debian-specific configurations here
   # For example, you can add z.lua config for Linux here, if not installed will install them
 
+  # Using xterm-kitty as in macOS on my Debian servers is a nightmare
+  # If I hit backspace I see extra characters, if I type its all buggy, testing
+  # if this will fix it
+  export TERM=xterm-256color
+
   alias ls='ls --color=auto'
 
   echo "Updating packages, please wait (wont upgrade)..."

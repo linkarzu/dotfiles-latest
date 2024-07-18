@@ -28,6 +28,7 @@ return {
         "dockerfile",
         "html",
         "css",
+        "templ",
       },
     },
   },

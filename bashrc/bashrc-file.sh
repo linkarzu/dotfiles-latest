@@ -23,8 +23,8 @@ HISTSIZE=10000
 SAVEHIST=10000
 # Check if the history file exists, if not, create it
 if [[ ! -f $HISTFILE ]]; then
-	touch $HISTFILE
-	chmod 600 $HISTFILE
+  touch $HISTFILE
+  chmod 600 $HISTFILE
 fi
 
 # Common settings and plugins
@@ -48,103 +48,110 @@ alias coverage='go test -coverprofile=coverage.out && go tool cover -html=covera
 # Detect OS
 case "$(uname -s)" in
 Darwin)
-	OS='Mac'
-	;;
+  OS='Mac'
+  ;;
 Linux)
-	OS='Linux'
-	;;
+  OS='Linux'
+  ;;
 *)
-	OS='Other'
-	;;
+  OS='Other'
+  ;;
 esac
 
 # macOS-specific configurations
 if [ "$OS" = 'Mac' ]; then
 
-	# Set JAVA_HOME to the OpenJDK installation managed by Homebrew
-	export JAVA_HOME="/opt/homebrew/opt/openjdk"
-	# Add JAVA_HOME/bin to the beginning of the PATH
-	export PATH="$JAVA_HOME/bin:$PATH"
+  # Set JAVA_HOME to the OpenJDK installation managed by Homebrew
+  export JAVA_HOME="/opt/homebrew/opt/openjdk"
+  # Add JAVA_HOME/bin to the beginning of the PATH
+  export PATH="$JAVA_HOME/bin:$PATH"
 
-	# https://github.com/antlr/antlr4/blob/master/doc/getting-started.md#unix
-	# Add antlr-4.13.1-complete.jar to your CLASSPATH
-	export CLASSPATH=".:/usr/local/lib/antlr-4.13.1-complete.jar:$CLASSPATH"
-	# Create an alias for running ANTLR's TestRig
-	alias antlr4='java -Xmx500M -cp "/usr/local/lib/antlr-4.13.1-complete.jar:$CLASSPATH" org.antlr.v4.Tool'
-	alias grun='java -Xmx500M -cp "/usr/local/lib/antlr-4.13.1-complete.jar:$CLASSPATH" org.antlr.v4.gui.TestRig'
+  # https://github.com/antlr/antlr4/blob/master/doc/getting-started.md#unix
+  # Add antlr-4.13.1-complete.jar to your CLASSPATH
+  export CLASSPATH=".:/usr/local/lib/antlr-4.13.1-complete.jar:$CLASSPATH"
+  # Create an alias for running ANTLR's TestRig
+  alias antlr4='java -Xmx500M -cp "/usr/local/lib/antlr-4.13.1-complete.jar:$CLASSPATH" org.antlr.v4.Tool'
+  alias grun='java -Xmx500M -cp "/usr/local/lib/antlr-4.13.1-complete.jar:$CLASSPATH" org.antlr.v4.gui.TestRig'
 
-	export PATH="/opt/homebrew/opt/libpq/bin:$PATH"
-	export LDFLAGS="-L/opt/homebrew/opt/libpq/lib"
-	export CPPFLAGS="-I/opt/homebrew/opt/libpq/include"
+  export PATH="/opt/homebrew/opt/libpq/bin:$PATH"
+  export LDFLAGS="-L/opt/homebrew/opt/libpq/lib"
+  export CPPFLAGS="-I/opt/homebrew/opt/libpq/include"
 
-	# Starship
-	# https://starship.rs/config/#prompt
-	if command -v starship &>/dev/null; then
-		export STARSHIP_CONFIG=$HOME/github/dotfiles-latest/starship-config/starship.toml
-		eval "$(starship init bash)" >/dev/null 2>&1
-	fi
+  # Add templ to PATH if it is installed
+  # templ is installed with
+  # go install github.com/a-h/templ/cmd/templ@latest
+  if [ -x "$HOME/go/bin/templ" ]; then
+    export PATH=$PATH:$HOME/go/bin
+  fi
 
-	# ls replacement
-	# exa is unmaintained, so now using eza
-	# https://github.com/ogham/exa
-	if command -v eza &>/dev/null; then
-		alias ls='eza'
-		alias ll='eza -lhg'
-		alias lla='eza -alhg'
-		alias tree='eza --tree'
-	fi
+  # Starship
+  # https://starship.rs/config/#prompt
+  if command -v starship &>/dev/null; then
+    export STARSHIP_CONFIG=$HOME/github/dotfiles-latest/starship-config/starship.toml
+    eval "$(starship init bash)" >/dev/null 2>&1
+  fi
 
-	# Bat -> Cat with wings
-	# https://github.com/sharkdp/bat
-	if command -v bat &>/dev/null; then
-		# --style=plain - removes line numbers and got modifications
-		# --paging=never - doesnt pipe it through less
-		alias cat='bat --paging=never --style=plain'
-		alias catt='bat'
-		alias cata='bat --show-all --paging=never'
-	fi
+  # ls replacement
+  # exa is unmaintained, so now using eza
+  # https://github.com/ogham/exa
+  if command -v eza &>/dev/null; then
+    alias ls='eza'
+    alias ll='eza -lhg'
+    alias lla='eza -alhg'
+    alias tree='eza --tree'
+  fi
 
-	# Changed from z.lua to zoxide, as it's more maintaned
-	# smarter cd command, it remembers which directories you use most
-	# frequently, so you can "jump" to them in just a few keystrokes.
-	# https://github.com/ajeetdsouza/zoxide
-	# https://github.com/skywind3000/z.lua
-	if command -v zoxide &>/dev/null; then
-		eval "$(zoxide init bash)"
+  # Bat -> Cat with wings
+  # https://github.com/sharkdp/bat
+  if command -v bat &>/dev/null; then
+    # --style=plain - removes line numbers and got modifications
+    # --paging=never - doesnt pipe it through less
+    alias cat='bat --paging=never --style=plain'
+    alias catt='bat'
+    alias cata='bat --show-all --paging=never'
+  fi
 
-		alias cd='z'
-		# Alias below is same as 'cd -', takes to the previous directory
-		alias cdd='z -'
+  # Changed from z.lua to zoxide, as it's more maintaned
+  # smarter cd command, it remembers which directories you use most
+  # frequently, so you can "jump" to them in just a few keystrokes.
+  # https://github.com/ajeetdsouza/zoxide
+  # https://github.com/skywind3000/z.lua
+  if command -v zoxide &>/dev/null; then
+    eval "$(zoxide init bash)"
 
-		#Since I migrated from z.lua, I can import my data
-		# zoxide import --from=z "$HOME/.zlua" --merge
+    alias cd='z'
+    # Alias below is same as 'cd -', takes to the previous directory
+    alias cdd='z -'
 
-		# Useful commands
-		# z foo<SPACE><TAB>  # show interactive completions
-	fi
+    #Since I migrated from z.lua, I can import my data
+    # zoxide import --from=z "$HOME/.zlua" --merge
 
-	# Initialize fzf if installed
-	# https://github.com/junegunn/fzf
-	# Useful commands
-	# ctrl+r - command history
-	# ctrl+t - search for files
-	# ssh ::<tab><name> - shows you list of hosts in case don't remember exact name
-	# kill -9 ::<tab><name> - find and kill a process
-	# telnet ::<TAB>
-	if [ -f ~/.fzf.bash ]; then
+    # Useful commands
+    # z foo<SPACE><TAB>  # show interactive completions
+  fi
 
-		# After installing fzf with brew, you have to run the install script
-		# echo -e "y\ny\nn" | /opt/homebrew/opt/fzf/install
+  # Initialize fzf if installed
+  # https://github.com/junegunn/fzf
+  # Useful commands
+  # ctrl+r - command history
+  # ctrl+t - search for files
+  # ssh ::<tab><name> - shows you list of hosts in case don't remember exact name
+  # kill -9 ::<tab><name> - find and kill a process
+  # telnet ::<TAB>
+  if [ -f ~/.fzf.bash ]; then
 
-		source ~/.fzf.bash
+    # After installing fzf with brew, you have to run the install script
+    # echo -e "y\ny\nn" | /opt/homebrew/opt/fzf/install
 
-		# Preview file content using bat
-		export FZF_CTRL_T_OPTS="
+    source ~/.fzf.bash
+
+    # Preview file content using bat
+    export FZF_CTRL_T_OPTS="
     --preview 'bat -n --color=always {}'
     --bind 'ctrl-/:change-preview-window(down|hidden|)'"
 
-		# Use :: as the trigger sequence instead of the default **
-		export FZF_COMPLETION_TRIGGER='::'
-	fi
+    # Use :: as the trigger sequence instead of the default **
+    export FZF_COMPLETION_TRIGGER='::'
+  fi
 
 fi

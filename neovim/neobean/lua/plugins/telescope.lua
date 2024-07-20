@@ -1,8 +1,7 @@
 -- Filename: ~/github/dotfiles-latest/neovim/neobean/lua/plugins/telescope.lua
 -- ~/github/dotfiles-latest/neovim/neobean/lua/plugins/telescope.lua
-
+--
 -- https://github.com/nvim-telescope/telescope.nvim
--- http://www.lazyvim.org/extras/editor/telescope#telescopenvim
 
 return {
   {
@@ -33,8 +32,11 @@ return {
       --
       -- I also tried overwriting this keymap in keymaps.lua but it was always
       -- overriden by this telescope.lua file
+      -- http://www.lazyvim.org/extras/editor/telescope#telescopenvim
       { "<leader>fF", LazyVim.pick("auto"), desc = "Find Files (cwd)" },
       { "<leader>ff", LazyVim.pick("auto", { root = false }), desc = "Find Files (Root Dir)" },
+      { "<leader>sG", LazyVim.pick("live_grep"), desc = "Grep (cwd)" },
+      { "<leader>sg", LazyVim.pick("live_grep", { root = false }), desc = "Grep (Root Dir)" },
       {
         "<leader><space>",
         "<cmd>e #<cr>",

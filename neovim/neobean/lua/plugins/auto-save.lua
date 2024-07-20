@@ -27,7 +27,11 @@ return {
         cleaning_interval = 1250, -- (milliseconds) automatically clean MsgArea after displaying `message`. See :h MsgArea
       },
       trigger_events = { -- See :h events
-        immediate_save = { "BufLeave", "FocusLost" }, -- vim events that trigger an immediate save
+        -- -- vim events that trigger an immediate save
+        -- immediate_save = { "BufLeave", "FocusLost" },
+        -- -- I'm disabling this, as it's autosaving when I leave the buffer and
+        -- -- that's autoformatting stuff if on insert mode and following a tutorial
+        immediate_save = { nil },
         defer_save = { "InsertLeave", "TextChanged" }, -- vim events that trigger a deferred save (saves after `debounce_delay`)
         cancel_defered_save = { "InsertEnter" }, -- vim events that cancel a pending deferred save
       },

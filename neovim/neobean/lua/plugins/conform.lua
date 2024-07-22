@@ -4,10 +4,10 @@
 -- https://github.com/stevearc/conform.nvim
 
 return {
-  {
-    "stevearc/conform.nvim",
-    opts = function(_, opts)
-      opts.formatters_by_ft = opts.formatters_by_ft or {}
+  "stevearc/conform.nvim",
+  optional = true,
+  opts = {
+    formatters_by_ft = {
       -- I was having issues formatting .templ files, all the lines were aligned
       -- to the left.
       -- When I ran :ConformInfo I noticed that 2 formatters showed up:
@@ -16,7 +16,8 @@ return {
       -- are formatted correctly and :ConformInfo shows:
       -- "LSP: html, templ"
       -- "templ ready (templ) /Users/linkarzu/.local/share/neobean/mason/bin/templ"
-      opts.formatters_by_ft.templ = { "templ" }
-    end,
+      templ = { "templ" },
+      php = { "php_cs_fixer" },
+    },
   },
 }

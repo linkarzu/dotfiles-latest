@@ -29,6 +29,7 @@ return {
         "html",
         "css",
         "templ",
+        "php",
       },
     },
   },

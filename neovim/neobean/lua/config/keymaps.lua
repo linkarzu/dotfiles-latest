@@ -212,7 +212,6 @@ vim.keymap.set("n", "<leader>f.", function()
   local pane_width = 60
   local right_pane_id =
     vim.fn.system("tmux list-panes -F '#{pane_id} #{pane_width}' | awk '$2 == " .. pane_width .. " {print $1}'")
-
   if right_pane_id ~= "" then
     -- If the right pane exists, close it
     vim.fn.system("tmux kill-pane -t " .. right_pane_id)
@@ -1505,6 +1504,7 @@ vim.keymap.set("n", "<leader>fO", function()
     print("No file is currently open")
   end
 end, { desc = "[P]Open current file in Finder" })
+
 -- Keymap to toggle the stay-centered plugin
 vim.keymap.set({ "n", "v" }, "<leader>mc", require("stay-centered").toggle, { desc = "[P]Toggle stay-centered.nvim" })
 

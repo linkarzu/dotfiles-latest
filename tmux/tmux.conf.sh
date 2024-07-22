@@ -163,7 +163,8 @@ unbind 3
 bind-key -r 3 run-shell "$tmux_sessionizer ~/github/go"
 # Leaving this in quotes because iCloud dir has a white space
 unbind C-g
-bind-key -r C-g run-shell "$tmux_sessionizer '$HOME/Library/Mobile Documents/com~apple~CloudDocs/github/macos-setup'"
+bind-key -r C-g run-shell "$tmux_sessionizer ~/github/php"
+# bind-key -r C-g run-shell "$tmux_sessionizer '$HOME/Library/Mobile Documents/com~apple~CloudDocs/github/macos-setup'"
 
 unbind C-w
 bind-key -r C-w run-shell "$tmux_sshonizer_agen docker3"

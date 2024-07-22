@@ -149,9 +149,9 @@ const rules: KarabinerRules[] = [
       ),
       // obsidian_main
       u: open(
-        "btt://execute_assigned_actions_for_trigger/?uuid=6AACE82D-F9C7-403D-9B27-B758CD1B9E1B"
+        "btt://execute_assigned_actions_for_trigger/?uuid=2FF1FD5D-72C2-42CA-B6AD-05A4DC3CEE0C"
       ),
-      // iCloud scripts
+      // php
       i: open(
         "btt://execute_assigned_actions_for_trigger/?uuid=03F1E256-FF80-43BA-873C-195628FA5996"
       ),

@@ -1023,10 +1023,10 @@
               {
                 "to": [
                   {
-                    "shell_command": "open btt://execute_assigned_actions_for_trigger/?uuid=6AACE82D-F9C7-403D-9B27-B758CD1B9E1B"
+                    "shell_command": "open btt://execute_assigned_actions_for_trigger/?uuid=2FF1FD5D-72C2-42CA-B6AD-05A4DC3CEE0C"
                   }
                 ],
-                "description": "Open btt://execute_assigned_actions_for_trigger/?uuid=6AACE82D-F9C7-403D-9B27-B758CD1B9E1B",
+                "description": "Open btt://execute_assigned_actions_for_trigger/?uuid=2FF1FD5D-72C2-42CA-B6AD-05A4DC3CEE0C",
                 "type": "basic",
                 "from": {
                   "key_code": "u",

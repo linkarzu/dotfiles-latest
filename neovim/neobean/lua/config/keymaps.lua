@@ -536,37 +536,23 @@ end, { desc = "[P]Clear images" })
 --                         Begin of markdown section
 -- ############################################################################
 
+-- Mappings for creating new groups that don't exist
 -- When I press leader, I want to modify the name of the options shown
 -- "m" is for "markdown" and "t" is for "todo"
 -- https://github.com/folke/which-key.nvim?tab=readme-ov-file#%EF%B8%8F-mappings
 local wk = require("which-key")
-wk.register({
-  ["<leader>"] = {
-    m = {
-      mode = { "v", "n" },
-      name = "+[P]markdown",
-      h = {
-        -- <leader>mh
-        name = "+[P]headings increase/decrease",
-      },
-      l = {
-        -- <leader>ml
-        name = "+[P]links",
-      },
-      s = {
-        -- <leader>ms
-        name = "+[P]spell",
-      },
-      f = {
-        -- <leader>mf
-        name = "+[P]fold",
-      },
-    },
-    t = {
-      -- <leader>t
-      mode = { "n" },
-      name = "+[P]todo",
-    },
+wk.add({
+  {
+    mode = { "n" },
+    { "<leader>t", group = "[P]todo" },
+  },
+  {
+    mode = { "n", "v" },
+    { "<leader>m", group = "[P]markdown" },
+    { "<leader>mf", group = "[P]fold" },
+    { "<leader>mh", group = "[P]headings increase/decrease" },
+    { "<leader>ml", group = "[P]links" },
+    { "<leader>ms", group = "[P]spell" },
   },
 })
 

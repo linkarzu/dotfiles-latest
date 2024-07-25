@@ -59,3 +59,23 @@ vim.opt.colorcolumn = "80"
 --     vim.opt.textwidth = 80
 --   end,
 -- })
+
+-- I added `localoptions` to save the language settings
+-- See the help for `sessionoptions`
+-- `localoptions`: options and mappings local to a window or buffer
+-- (not global values for local options)
+--
+-- The plugin that saves the session information is
+-- https://github.com/folke/persistence.nvim and comes enabled in the
+-- lazyvim.org distro lamw25wmal
+vim.opt.sessionoptions = {
+  "buffers",
+  "curdir",
+  "tabpages",
+  "winsize",
+  "help",
+  "globals",
+  "skiprtp",
+  "folds",
+  "localoptions",
+}

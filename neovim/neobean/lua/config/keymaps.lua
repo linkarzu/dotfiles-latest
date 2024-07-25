@@ -1562,30 +1562,6 @@ vim.keymap.set("n", "<leader>gC", function()
   end
 end, { desc = "[P]Create GitHub repository" })
 
--- ############################################################################
---                             Neovide section
--- ############################################################################
-
--- The copy and paste sections were found on:
--- https://neovide.dev/faq.html#how-can-i-use-cmd-ccmd-v-to-copy-and-paste
-if vim.g.neovide then
-  vim.keymap.set("n", "<D-s>", ":w<CR>") -- Save
-  vim.keymap.set("v", "<D-c>", '"+y') -- Copy
-  vim.keymap.set("n", "<D-v>", '"+P') -- Paste normal mode
-  vim.keymap.set("v", "<D-v>", '"+P') -- Paste visual mode
-  vim.keymap.set("c", "<D-v>", "<C-R>+") -- Paste command mode
-  vim.keymap.set("i", "<D-v>", '<ESC>l"+Pli') -- Paste insert mode
-end
--- Allow clipboard copy paste in neovim
-vim.api.nvim_set_keymap("", "<D-v>", "+p<CR>", { noremap = true, silent = true })
-vim.api.nvim_set_keymap("!", "<D-v>", "<C-R>+", { noremap = true, silent = true })
-vim.api.nvim_set_keymap("t", "<D-v>", "<C-R>+", { noremap = true, silent = true })
-vim.api.nvim_set_keymap("v", "<D-v>", "<C-R>+", { noremap = true, silent = true })
-
--- ############################################################################
---                           End of Neovide section
--- ############################################################################
-
 -- -- From Primeagen's tmux-sessionizer
 -- -- ctrl+f in normal mode will silently run a command to create a new tmux window and execute the tmux-sessionizer.
 -- -- Allowing quick creation and navigation of tmux sessions directly from the editor.

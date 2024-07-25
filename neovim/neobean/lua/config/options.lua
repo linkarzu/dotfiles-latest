@@ -79,3 +79,48 @@ vim.opt.sessionoptions = {
   "folds",
   "localoptions",
 }
+
+-- ############################################################################
+--                             Neovide section
+-- ############################################################################
+
+-- The copy and paste sections were found on:
+-- https://neovide.dev/faq.html#how-can-i-use-cmd-ccmd-v-to-copy-and-paste
+if vim.g.neovide then
+  vim.keymap.set("n", "<D-s>", ":w<CR>") -- Save
+  vim.keymap.set("v", "<D-c>", '"+y') -- Copy
+  vim.keymap.set("n", "<D-v>", '"+P') -- Paste normal mode
+  vim.keymap.set("v", "<D-v>", '"+P') -- Paste visual mode
+  vim.keymap.set("c", "<D-v>", "<C-R>+") -- Paste command mode
+  vim.keymap.set("i", "<D-v>", '<ESC>l"+Pli') -- Paste insert mode
+
+  -- Specify the font used by Neovide
+  vim.o.guifont = "MesloLGM_Nerd_Font:h14"
+  -- This is limited by the refresh rate of your physical hardware, but can be
+  -- lowered to increase battery life
+  -- This setting is only effective when not using vsync,
+  -- for example by passing --no-vsync on the commandline.
+  vim.g.neovide_refresh_rate = 60
+  -- This is how fast the cursor animation "moves", default 0.06
+  vim.g.neovide_cursor_animation_length = 0.04
+  -- Default 0.7
+  vim.g.neovide_cursor_trail_size = 0.7
+
+  -- produce particles behind the cursor, if want to disable them, set it to ""
+  -- vim.g.neovide_cursor_vfx_mode = "railgun"
+  -- vim.g.neovide_cursor_vfx_mode = "torpedo"
+  -- vim.g.neovide_cursor_vfx_mode = "pixiedust"
+  vim.g.neovide_cursor_vfx_mode = "sonicboom"
+  -- vim.g.neovide_cursor_vfx_mode = "ripple"
+  -- vim.g.neovide_cursor_vfx_mode = "wireframe"
+  -- vim.g.neovide_cursor_vfx_mode = "wireframe"
+end
+
+-- Allow clipboard copy paste in neovim vim.api.nvim_set_keymap("", "<D-v>", "+p<CR>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap("!", "<D-v>", "<C-R>+", { noremap = true, silent = true })
+vim.api.nvim_set_keymap("t", "<D-v>", "<C-R>+", { noremap = true, silent = true })
+vim.api.nvim_set_keymap("v", "<D-v>", "<C-R>+", { noremap = true, silent = true })
+
+-- ############################################################################
+--                           End of Neovide section
+-- ############################################################################

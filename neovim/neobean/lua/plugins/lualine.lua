@@ -109,7 +109,14 @@ return {
     -- Function to check spelling status and determine background color
     local function spell_status()
       if vim.wo.spell then
-        return "Spell: On"
+        -- When spell is on, show the language name
+        local lang = vim.bo.spelllang
+        if lang == "en" then
+          lang = "English"
+        elseif lang == "es" then
+          lang = "Spanish"
+        end
+        return "Spell: " .. lang
       else
         return "Spell: Off"
       end

@@ -553,6 +553,7 @@ wk.add({
     { "<leader>mh", group = "[P]headings increase/decrease" },
     { "<leader>ml", group = "[P]links" },
     { "<leader>ms", group = "[P]spell" },
+    { "<leader>msl", group = "[P]language" },
   },
 })
 
@@ -657,6 +658,20 @@ end, { desc = "[P]Toggle bullet point (dash)" })
 --     vim.api.nvim_buf_set_lines(current_buffer, row, row + 1, false, { line })
 --   end
 -- end, { desc = "Toggle bullet point at the beginning of the current line" })
+
+-- Keymap to switch spelling language to English lamw25wmal
+-- To save the language settings configured on each buffer, you need to add
+-- "localoptions" to vim.opt.sessionoptions in the `lua/config/options.lua` file
+vim.keymap.set("n", "<leader>msle", function()
+  vim.opt.spelllang = "en"
+  vim.cmd("echo 'Spell language set to English'")
+end, { desc = "[P]Spelling language English" })
+
+-- Keymap to switch spelling language to Spanish lamw25wmal
+vim.keymap.set("n", "<leader>msls", function()
+  vim.opt.spelllang = "es"
+  vim.cmd("echo 'Spell language set to Spanish'")
+end, { desc = "[P]Spelling language Spanish" })
 
 -- Show spelling suggestions / spell suggestions
 vim.keymap.set("n", "<leader>mss", function()

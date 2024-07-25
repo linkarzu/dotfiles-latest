@@ -92,7 +92,7 @@ const rules: KarabinerRules[] = [
       o: app("Preview"),
       p: app("Brave Browser"),
       open_bracket: app("Reminders"),
-      n: app("Visual Studio Code"),
+      n: app("Neovide"),
       a: app("Mail"),
       s: app("Udemy Business"),
       d: app("1Password"),

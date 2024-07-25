@@ -445,10 +445,10 @@
               {
                 "to": [
                   {
-                    "shell_command": "open -a 'Visual Studio Code.app'"
+                    "shell_command": "open -a 'Neovide.app'"
                   }
                 ],
-                "description": "Open -a 'Visual Studio Code.app'",
+                "description": "Open -a 'Neovide.app'",
                 "type": "basic",
                 "from": {
                   "key_code": "n",

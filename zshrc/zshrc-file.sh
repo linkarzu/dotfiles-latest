@@ -25,6 +25,7 @@ mkdir -p ~/.config/kitty/
 # Creating obsidian directory
 # Even if you don't use obsidian, don't remove this dir to avoid warnings
 mkdir -p ~/github/obsidian_main
+mkdir -p ~/.config/neovide
 
 # Create the symlinks I normally use
 # ~/.config dir holds nvim, neofetch, alacritty configs
@@ -96,6 +97,7 @@ create_symlink ~/github/dotfiles-latest/neovim/lazyvim/ ~/.config/lazyvim
 create_symlink ~/github/dotfiles-latest/hammerspoon/ ~/.hammerspoon
 create_symlink ~/github/dotfiles-latest/karabiner/mxstbr/ ~/.config/karabiner
 create_symlink ~/github/dotfiles-latest/sketchybar/felixkratz-linkarzu/ ~/.config/sketchybar
+create_symlink ~/github/dotfiles-latest/neovide/ ~/.config/neovide
 # Notice I also have the "nvim" directory below and I have it pointing to my
 # "neobean" config.
 # If I don't do this, my daily note with hyper+t+r won't work

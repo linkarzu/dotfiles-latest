@@ -6,6 +6,22 @@
 return {
   {
     "nvim-telescope/telescope.nvim",
+    opts = function()
+      return {
+        defaults = {
+          -- When I search for stuff in telescope, I want the path to be shown
+          -- first, this helps in files that are very deep in the tree and I
+          -- cannot see their name.
+          -- Also notice the "reverse_directories" option which will show the
+          -- closest dir right after the filename
+          path_display = {
+            filename_first = {
+              reverse_directories = true,
+            },
+          },
+        },
+      }
+    end,
     keys = {
       -- I swapped ff and fF because I normally use ff
       -- fF is NOT working properly as it only finds sibling files of current file, but I don't care

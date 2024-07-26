@@ -1506,9 +1506,6 @@ vim.keymap.set("n", "<leader>fO", function()
   end
 end, { desc = "[P]Open current file in Finder" })
 
--- Keymap to toggle the stay-centered plugin
-vim.keymap.set({ "n", "v" }, "<leader>mc", require("stay-centered").toggle, { desc = "[P]Toggle stay-centered.nvim" })
-
 -- Keymap to create a GitHub repository
 -- It uses the github CLI, which in macOS is installed with:
 -- brew install gh

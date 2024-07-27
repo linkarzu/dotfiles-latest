@@ -205,10 +205,10 @@
               {
                 "to": [
                   {
-                    "shell_command": "open -a 'Safari.app'"
+                    "shell_command": "open -a 'Google Chrome.app'"
                   }
                 ],
-                "description": "Open -a 'Safari.app'",
+                "description": "Open -a 'Google Chrome.app'",
                 "type": "basic",
                 "from": {
                   "key_code": "k",

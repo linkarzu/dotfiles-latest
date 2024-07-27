@@ -80,6 +80,11 @@ vim.opt.sessionoptions = {
   "localoptions",
 }
 
+-- Most of my files have 2 languages, spanish and english, so even if I set the
+-- language to spanish, I always add some words in English to my documents, so
+-- it's annoying to be adding those to the spanish dictionary
+vim.opt.spelllang = { "en,es" }
+
 -- ############################################################################
 --                             Neovide section
 -- ############################################################################

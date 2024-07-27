@@ -673,6 +673,12 @@ vim.keymap.set("n", "<leader>msls", function()
   vim.cmd("echo 'Spell language set to Spanish'")
 end, { desc = "[P]Spelling language Spanish" })
 
+-- Keymap to switch spelling language to both spanish and english lamw25wmal
+vim.keymap.set("n", "<leader>mslb", function()
+  vim.opt.spelllang = "en,es"
+  vim.cmd("echo 'Spell language set to Spanish and English'")
+end, { desc = "[P]Spelling language Spanish" })
+
 -- Show spelling suggestions / spell suggestions
 vim.keymap.set("n", "<leader>mss", function()
   -- Simulate pressing "z=" with "m" option using feedkeys

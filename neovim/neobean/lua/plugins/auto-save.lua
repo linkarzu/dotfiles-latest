@@ -39,7 +39,18 @@ return {
       -- return true: if buffer is ok to be saved
       -- return false: if it's not ok to be saved
       -- if set to `nil` then no specific condition is applied
-      condition = nil,
+      condition = function(buf)
+        local fn = vim.fn
+        local utils = require("auto-save.utils.data")
+        -- don't save for `sql` file types
+        -- I do this so when working with dadbod the file is not saved every time
+        -- I make a change, and a SQL query executed
+        -- Run `:set filetype?` on a dadbod query to make sure of the filetype
+        if utils.not_in(fn.getbufvar(buf, "&filetype"), { "mysql" }) then
+          return true
+        end
+        return false
+      end,
       write_all_buffers = false, -- write all buffers when the current one meets `condition`
       -- Do not execute autocmds when saving
       -- This is what fixed the issues with undo/redo that I had

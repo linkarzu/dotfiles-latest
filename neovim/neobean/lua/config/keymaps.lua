@@ -13,7 +13,15 @@
 -- I don't want to switch between buffers anymore, instead I'll use BufExplorer
 -- For this to work, make sure you have the plugin installed
 vim.keymap.set("n", "<S-h>", "<cmd>BufExplorer<cr>", { desc = "[P]Open bufexplorer" })
-vim.keymap.set("n", "<S-l>", "<cmd>BufExplorer<cr>", { desc = "[P]Open bufexplorer" })
+-- vim.keymap.del("n", "<S-l>")
+
+vim.keymap.set("n", "<S-l>", function()
+  local toggle = require("snipe").create_buffer_menu_toggler({
+    -- Limit the width of path buffer names
+    max_path_width = 1,
+  })
+  toggle()
+end, { desc = "[P]Snipe" })
 
 -- -- use kj to exit insert mode
 -- -- I auto save with

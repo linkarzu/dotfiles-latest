@@ -685,7 +685,7 @@ end, { desc = "[P]Spelling language Spanish" })
 vim.keymap.set("n", "<leader>mslb", function()
   vim.opt.spelllang = "en,es"
   vim.cmd("echo 'Spell language set to Spanish and English'")
-end, { desc = "[P]Spelling language Spanish" })
+end, { desc = "[P]Spelling language Spanish and English" })
 
 -- Show spelling suggestions / spell suggestions
 vim.keymap.set("n", "<leader>mss", function()

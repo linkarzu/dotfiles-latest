@@ -49,8 +49,19 @@ return {
       -- I also tried overwriting this keymap in keymaps.lua but it was always
       -- overriden by this telescope.lua file
       -- http://www.lazyvim.org/extras/editor/telescope#telescopenvim
-      { "<leader>fF", LazyVim.pick("auto"), desc = "Find Files (cwd)" },
-      { "<leader>ff", LazyVim.pick("auto", { root = false }), desc = "Find Files (Root Dir)" },
+      -- { "<leader>fF", LazyVim.pick("auto"), desc = "Find Files (cwd)" },
+      { "<leader>fz", LazyVim.pick("auto", { root = false }), desc = "Find Files (Root Dir)" },
+      { "<leader>fF", "<cmd>Telescope frecency<cr>", desc = "Find Files (cwd)" },
+      -- {
+      --   "<leader>ff",
+      --   "<cmd>Telescope frecency workspace=CWD path_display={'shorten'} theme=ivy<cr>",
+      --   desc = "Find Files (Root Dir)",
+      -- },
+      {
+        "<leader>ff",
+        "<cmd>Telescope frecency workspace=CWD theme=ivy<cr>",
+        desc = "Find Files (Root Dir)",
+      },
       { "<leader>sG", LazyVim.pick("live_grep"), desc = "Grep (cwd)" },
       { "<leader>sg", LazyVim.pick("live_grep", { root = false }), desc = "Grep (Root Dir)" },
       {

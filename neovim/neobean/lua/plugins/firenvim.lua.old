@@ -1,0 +1,42 @@
+-- Filename: ~/github/dotfiles-latest/neovim/neobean/lua/plugins/firenvim.lua
+-- ~/github/dotfiles-latest/neovim/neobean/lua/plugins/firenvim.lua
+
+--[=====[
+
+https://github.com/glacambre/firenvim
+
+Safari is not compatible, as it doesn't support Webextensions
+
+This plugin file will install the plugin and run the built-in post-install script
+
+After installing the plugin, I was getting the error "Unknown function: firenvim#install"
+
+https://github.com/glacambre/firenvim/blob/master/TROUBLESHOOTING.md#make-sure-the-firenvim-script-has-been-created
+Run this command to make sure that the firenvim script was created:
+  echo 'abcde{}' | ${XDG_DATA_HOME:-${HOME}/.local/share}/firenvim/firenvim
+I was getting this error:
+  zsh: no such file or directory: /Users/linkarzu/.local/share/firenvim/firenvim
+
+By looking at :Lazy, the plugin was installed at ~/.local/share/neobean/lazy/firenvim
+So I built firenvim using the instructions here:
+  https://github.com/glacambre/firenvim/blob/master/CONTRIBUTING.md#building-firenvim
+The "npm run install_manifests" is the one that creates the firenvim script in ~/.local/share/firenvim
+
+  cd ~/.local/share/neobean/lazy/firenvim
+  npm install
+  npm run build
+  npm run install_manifests
+
+After doing this, get the chrome extension
+https://chromewebstore.google.com/detail/firenvim/egpjdkipkomnmjhjmdamaniclmdlobbo
+--]=====]
+
+return {
+  "glacambre/firenvim",
+  -- Lazy load firenvim
+  -- Explanation: https://github.com/folke/lazy.nvim/discussions/463#discussioncomment-4819297
+  lazy = not vim.g.started_by_firenvim,
+  build = function()
+    vim.fn["firenvim#install"](0)
+  end,
+}

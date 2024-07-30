@@ -17,7 +17,7 @@ return {
       -- "LSP: html, templ"
       -- "templ ready (templ) /Users/linkarzu/.local/share/neobean/mason/bin/templ"
       templ = { "templ" },
-      php = { "php_cs_fixer" },
+      -- php = { nil },
     },
   },
 }

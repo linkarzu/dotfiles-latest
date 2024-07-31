@@ -452,6 +452,10 @@ const rules: KarabinerRules[] = [
       r: {
         to: [{ key_code: "r", modifiers: ["left_control"] }],
       },
+      t: {
+        to: [{ key_code: "t", modifiers: ["left_control"] }],
+      },
+
       // Slack go to all unreads
       a: {
         to: [{ key_code: "a", modifiers: ["left_command", "left_shift"] }],

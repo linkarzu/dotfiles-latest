@@ -331,7 +331,7 @@ if [ "$OS" = 'Mac' ]; then
   # Starship
   # https://starship.rs/config/#prompt
   if command -v starship &>/dev/null; then
-    export STARSHIP_CONFIG=$HOME/github/dotfiles-latest/starship-config/starship.toml
+    export STARSHIP_CONFIG=$HOME/github/dotfiles-latest/starship-config/starship-eldritch.toml
     eval "$(starship init zsh)" >/dev/null 2>&1
   fi
 
@@ -389,6 +389,10 @@ if [ "$OS" = 'Mac' ]; then
 
     # Use :: as the trigger sequence instead of the default **
     export FZF_COMPLETION_TRIGGER='::'
+
+    # Eldritch Colorscheme / theme
+    # https://github.com/eldritch-theme/fzf
+    export FZF_DEFAULT_OPTS='--color=fg:#ebfafa,bg:#09090d,hl:#37f499 --color=fg+:#ebfafa,bg+:#212337,hl+:#37f499 --color=info:#04d1f9,prompt:#04d1f9,pointer:#7081d0 --color=marker:#7081d0,spinner:#f7c67f,header:#323449'
   fi
 
   # vi(vim) mode plugin for ZSH

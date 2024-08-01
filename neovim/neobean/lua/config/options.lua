@@ -16,7 +16,24 @@
 -- Using different colors, defining the colors in this file
 vim.cmd([[highlight WinBar1 guifg=#04d1f9]])
 vim.cmd([[highlight WinBar2 guifg=#37f499]])
-vim.opt.winbar = "%#WinBar1#%m %f%*%=%#WinBar2#" .. vim.fn.systemlist("hostname")[1]
+-- Function to get the full path and replace the home directory with ~
+local function get_winbar_path()
+  local full_path = vim.fn.expand("%:p")
+  return full_path:gsub(vim.fn.expand("$HOME"), "~")
+end
+-- Function to update the winbar
+local function update_winbar()
+  local home_replaced = get_winbar_path()
+  vim.opt.winbar = "%#WinBar1#%m " .. home_replaced .. "%*%=%#WinBar2#" .. vim.fn.systemlist("hostname")[1]
+end
+-- Autocmd to update the winbar on BufEnter and WinEnter events
+vim.api.nvim_create_autocmd({ "BufEnter", "WinEnter" }, {
+  callback = update_winbar,
+})
+
+-- -- This is my old way of updating the winbar but it stopped working, it
+-- -- wasn't showing the entire path, it was being truncated in some dirs
+-- vim.opt.winbar = "%#WinBar1#%m %f%*%=%#WinBar2#" .. vim.fn.systemlist("hostname")[1]
 
 -- If set to 0 it shows all the symbols in a file, like bulletpoints and
 -- codeblock languages, obsidian.nvim works better with 1 or 2

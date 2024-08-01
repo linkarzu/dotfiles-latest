@@ -11,6 +11,7 @@
 -- after the config.lazy in the init.lua file lamw25wmal
 
 -- Define color variables
+-- These are the colors for the eldritch colorscheme
 local color1_bg = "#f265b5"
 local color2_bg = "#37f499"
 local color3_bg = "#04d1f9"

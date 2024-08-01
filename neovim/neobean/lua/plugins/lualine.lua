@@ -37,10 +37,11 @@ return {
     opts.sections.lualine_z = {}
 
     -- Function to determine file permissions and appropriate background color
+    -- Colors below are for the eldritch theme
     local function get_permissions_color()
       local file = vim.fn.expand("%:p")
       if file == "" or file == nil then
-        return "No File", "#0099ff" -- Default blue for no or non-existing file
+        return "No File", "#04d1f9" -- Default blue for no or non-existing file
       else
         local permissions = vim.fn.getfperm(file)
         -- Check only the first three characters for 'rwx' to determine owner permissions

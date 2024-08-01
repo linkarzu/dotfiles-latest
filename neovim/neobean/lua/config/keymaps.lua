@@ -695,9 +695,9 @@ vim.keymap.set("n", "<leader>mss", function()
   -- If {mode} is absent, keys are remapped.
   --
   -- I tried this keymap as usually with
-  -- vim.cmd("normal! z=")
+  vim.cmd("normal! 1z=")
   -- But didn't work, only with nvim_feedkeys
-  vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("z=", true, false, true), "m", true)
+  -- vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("z=", true, false, true), "m", true)
 end, { desc = "[P]Spelling suggestions" })
 
 -- markdown good, accept spell suggestion

@@ -100,7 +100,12 @@ vim.opt.sessionoptions = {
 -- Most of my files have 2 languages, spanish and english, so even if I set the
 -- language to spanish, I always add some words in English to my documents, so
 -- it's annoying to be adding those to the spanish dictionary
-vim.opt.spelllang = { "en,es" }
+-- vim.opt.spelllang = { "en,es" }
+
+-- I mainly type in english, if I set it to both above, files in English get a
+-- bit confused and recognize words in spanish, just for spanish files I need to
+-- set it to both
+vim.opt.spelllang = { "en" }
 
 -- ############################################################################
 --                             Neovide section

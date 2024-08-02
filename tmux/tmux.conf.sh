@@ -154,7 +154,8 @@ bind-key -r C-p run-shell "$tmux_sessionizer ~/github/scripts"
 unbind C-t
 bind-key -r C-t run-shell "$tmux_sessionizer ~/github/obsidian_main"
 unbind C-y
-bind-key -r C-y run-shell "$tmux_sessionizer ~/github/containerdata"
+# bind-key -r C-y run-shell "$tmux_sessionizer ~/github/containerdata"
+bind-key -r C-y run-shell "$tmux_sessionizer /System/Volumes/Data/mnt/containerdata"
 unbind C-h
 bind-key -r C-h run-shell "$tmux_sessionizer ~"
 unbind C-m

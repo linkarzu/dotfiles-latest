@@ -173,3 +173,8 @@ swapon
 filesystems
 passno
 fsck
+traefik
+Mariadb
+zabbix
+mariadb
+healthcheck

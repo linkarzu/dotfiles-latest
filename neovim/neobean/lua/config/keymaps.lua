@@ -1520,6 +1520,18 @@ vim.keymap.set("n", "<leader>fO", function()
   end
 end, { desc = "[P]Open current file in Finder" })
 
+-- Open current file in Neovide
+vim.keymap.set("n", "<leader>fN", function()
+  local file_path = vim.fn.expand("%:p")
+  if file_path ~= "" then
+    local command = "open -a Neovide " .. vim.fn.shellescape(file_path)
+    vim.fn.system(command)
+    print("Opened file in Neovide: " .. file_path)
+  else
+    print("No file is currently open")
+  end
+end, { desc = "[N]Open current file in Neovide" })
+
 -- Keymap to create a GitHub repository
 -- It uses the github CLI, which in macOS is installed with:
 -- brew install gh

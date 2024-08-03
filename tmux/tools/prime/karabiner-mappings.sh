@@ -20,7 +20,7 @@ username_suffix="h"
 
 dotfiles_latest="j"
 watusy="k"
-linkarzu_github_io="l"
+github="l"
 scripts="\;"
 obsidian_main="u"
 php="i"

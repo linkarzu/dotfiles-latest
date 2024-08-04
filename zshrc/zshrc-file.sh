@@ -192,29 +192,6 @@ alias python='python3'
 # Shows the last 30 entries, default is 15
 alias history='history -30'
 
-# You can use NVIM_APPNAME=nvim-NAME to maintain multiple configurations.
-#
-# NVIM_APPNAME is the name of the directory inside ~/.config
-# For example, you can install the kickstart configuration
-# in ~/.config/nvim-kickstart, the NVIM_APPNAME would be "nvim-kickstart"
-#
-# In my case, the neovim directories inside ~/.config/ are symlinks that point
-# to their respective neovim directories stored in my $my_working_directory
-#
-# Notice that both "v" and "nvim" start "neobean"
-# "vk" opens kickstart and "vl" opens lazyvim
-alias v='export NVIM_APPNAME="neobean" && /opt/homebrew/bin/nvim'
-alias vq='export NVIM_APPNAME="quarto-nvim-kickstarter" && /opt/homebrew/bin/nvim'
-alias vk='export NVIM_APPNAME="kickstart.nvim" && /opt/homebrew/bin/nvim'
-alias vl='export NVIM_APPNAME="lazyvim" && /opt/homebrew/bin/nvim'
-# I'm also leaving this "nvim" alias, which points to the "nvim" APPNAME, but
-# that APPNAME in fact points to my "neobean" config in the symlinks section
-# If I don't do this, my daily note doesn't work
-#
-# If you want to open the daily note with a different distro, update the "nvim"
-# symlink in the symlinks section
-alias nvim='export NVIM_APPNAME="nvim" && /opt/homebrew/bin/nvim'
-
 # kubernetes, if you need help, just run 'kgp --help' for example
 alias k='kubectl'
 alias kga='kubectl get all'
@@ -268,6 +245,29 @@ if [ "$OS" = 'Mac' ]; then
   export JAVA_HOME="/opt/homebrew/opt/openjdk"
   # Add JAVA_HOME/bin to the beginning of the PATH
   export PATH="$JAVA_HOME/bin:$PATH"
+
+  # You can use NVIM_APPNAME=nvim-NAME to maintain multiple configurations.
+  #
+  # NVIM_APPNAME is the name of the directory inside ~/.config
+  # For example, you can install the kickstart configuration
+  # in ~/.config/nvim-kickstart, the NVIM_APPNAME would be "nvim-kickstart"
+  #
+  # In my case, the neovim directories inside ~/.config/ are symlinks that point
+  # to their respective neovim directories stored in my $my_working_directory
+  #
+  # Notice that both "v" and "nvim" start "neobean"
+  # "vk" opens kickstart and "vl" opens lazyvim
+  alias v='export NVIM_APPNAME="neobean" && /opt/homebrew/bin/nvim'
+  alias vq='export NVIM_APPNAME="quarto-nvim-kickstarter" && /opt/homebrew/bin/nvim'
+  alias vk='export NVIM_APPNAME="kickstart.nvim" && /opt/homebrew/bin/nvim'
+  alias vl='export NVIM_APPNAME="lazyvim" && /opt/homebrew/bin/nvim'
+  # I'm also leaving this "nvim" alias, which points to the "nvim" APPNAME, but
+  # that APPNAME in fact points to my "neobean" config in the symlinks section
+  # If I don't do this, my daily note doesn't work
+  #
+  # If you want to open the daily note with a different distro, update the "nvim"
+  # symlink in the symlinks section
+  alias nvim='export NVIM_APPNAME="nvim" && /opt/homebrew/bin/nvim'
 
   # https://github.com/antlr/antlr4/blob/master/doc/getting-started.md#unix
   # Add antlr-4.13.1-complete.jar to your CLASSPATH

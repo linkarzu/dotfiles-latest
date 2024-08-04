@@ -197,3 +197,4 @@ STONITH
 Brewfile
 sudo
 homelab
+ceph

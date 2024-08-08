@@ -337,7 +337,7 @@ set -g @plugin 'tmux-plugins/tpm'
 # Catppuccin theme
 # https://github.com/catppuccin/tmux
 # Cons:
-# - Doesn't have a synch panes like dracula
+# - Doesn't have a sync panes like dracula
 #   - Actually I was able to implement this, see below
 # Pros:
 # - I feel my terminal waaaaay smoother/faster, not completely sure about this

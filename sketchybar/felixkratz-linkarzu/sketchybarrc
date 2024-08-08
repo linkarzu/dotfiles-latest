@@ -27,45 +27,45 @@ launchctl unload -F /System/Library/LaunchAgents/com.apple.OSDUIHelper.plist >/d
 
 # Setting up the general bar appearance of the bar
 bar=(
-	height=45
-	color=$BAR_COLOR
-	border_width=2
-	border_color=$BAR_BORDER_COLOR
-	shadow=off
-	position=top
-	sticky=on
-	padding_right=10
-	padding_left=10
-	y_offset=-5
-	margin=-2
-	topmost=window
+  height=45
+  color=$BAR_COLOR
+  border_width=2
+  border_color=$BAR_BORDER_COLOR
+  shadow=off
+  position=top
+  sticky=on
+  padding_right=10
+  padding_left=10
+  y_offset=-5
+  margin=-2
+  topmost=window
 )
 
 sketchybar --bar "${bar[@]}"
 
 # Setting up default values
 defaults=(
-	updates=when_shown
-	icon.font="$FONT:Bold:14.0"
-	icon.color=$ICON_COLOR
-	icon.padding_left=$PADDINGS
-	icon.padding_right=$PADDINGS
-	label.font="$FONT:Semibold:13.0"
-	label.color=$LABEL_COLOR
-	label.padding_left=$PADDINGS
-	label.padding_right=$PADDINGS
-	padding_right=$PADDINGS
-	padding_left=$PADDINGS
-	background.height=26
-	background.corner_radius=9
-	background.border_width=2
-	popup.background.border_width=2
-	popup.background.corner_radius=9
-	popup.background.border_color=$POPUP_BORDER_COLOR
-	popup.background.color=$POPUP_BACKGROUND_COLOR
-	popup.blur_radius=20
-	popup.background.shadow.drawing=on
-	scroll_texts=on
+  updates=when_shown
+  icon.font="$FONT:Bold:14.0"
+  icon.color=$ICON_COLOR
+  icon.padding_left=$PADDINGS
+  icon.padding_right=$PADDINGS
+  label.font="$FONT:Semibold:13.0"
+  label.color=$LABEL_COLOR
+  label.padding_left=$PADDINGS
+  label.padding_right=$PADDINGS
+  padding_right=$PADDINGS
+  padding_left=$PADDINGS
+  background.height=26
+  background.corner_radius=9
+  background.border_width=2
+  popup.background.border_width=2
+  popup.background.corner_radius=9
+  popup.background.border_color=$POPUP_BORDER_COLOR
+  popup.background.color=$POPUP_BACKGROUND_COLOR
+  popup.blur_radius=20
+  popup.background.shadow.drawing=on
+  scroll_texts=on
 )
 
 sketchybar --default "${defaults[@]}"
@@ -146,6 +146,8 @@ source "$ITEM_DIR/cpu.sh"
 # If you right click it you can change the mic.
 # Shows you the value of the input volume level
 source "$ITEM_DIR/mic.sh"
+
+source "$ITEM_DIR/custom_text.sh"
 
 ###############################################################################
 

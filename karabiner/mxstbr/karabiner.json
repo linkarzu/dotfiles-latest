@@ -125,7 +125,7 @@
                   },
                   {
                     "type": "variable_if",
-                    "name": "hyper_sublayer_b",
+                    "name": "hyper_sublayer_q",
                     "value": 0
                   }
                 ]
@@ -871,7 +871,7 @@
                   },
                   {
                     "type": "variable_if",
-                    "name": "hyper_sublayer_b",
+                    "name": "hyper_sublayer_q",
                     "value": 0
                   }
                 ]
@@ -1281,7 +1281,7 @@
                   },
                   {
                     "type": "variable_if",
-                    "name": "hyper_sublayer_b",
+                    "name": "hyper_sublayer_q",
                     "value": 0
                   }
                 ]
@@ -1595,7 +1595,7 @@
                   },
                   {
                     "type": "variable_if",
-                    "name": "hyper_sublayer_b",
+                    "name": "hyper_sublayer_q",
                     "value": 0
                   }
                 ]
@@ -1957,7 +1957,7 @@
                   },
                   {
                     "type": "variable_if",
-                    "name": "hyper_sublayer_b",
+                    "name": "hyper_sublayer_q",
                     "value": 0
                   }
                 ]
@@ -2488,7 +2488,7 @@
                   },
                   {
                     "type": "variable_if",
-                    "name": "hyper_sublayer_b",
+                    "name": "hyper_sublayer_q",
                     "value": 0
                   }
                 ]
@@ -2706,7 +2706,7 @@
                   },
                   {
                     "type": "variable_if",
-                    "name": "hyper_sublayer_b",
+                    "name": "hyper_sublayer_q",
                     "value": 0
                   }
                 ]
@@ -3016,7 +3016,7 @@
                   },
                   {
                     "type": "variable_if",
-                    "name": "hyper_sublayer_b",
+                    "name": "hyper_sublayer_q",
                     "value": 0
                   }
                 ]
@@ -3271,7 +3271,7 @@
             ]
           },
           {
-            "description": "Hyper Key + b",
+            "description": "Hyper Key + q",
             "manipulators": [
               {
                 "to": [
@@ -3284,7 +3284,7 @@
                 ],
                 "type": "basic",
                 "from": {
-                  "key_code": "b",
+                  "key_code": "q",
                   "modifiers": {
                     "mandatory": [
                       "left_command",

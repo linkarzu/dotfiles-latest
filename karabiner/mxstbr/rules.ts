@@ -517,7 +517,7 @@ const rules: KarabinerRules[] = [
       to: [{ key_code: "right_arrow" }],
     },
     // Map hyper+b to ctrl+b for tmux
-    b: {
+    q: {
       to: [{ key_code: "b", modifiers: ["left_control"] }],
     },
   }),

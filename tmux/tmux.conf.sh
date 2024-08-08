@@ -352,8 +352,11 @@ set -g @catppuccin_window_middle_separator " █"
 set -g @catppuccin_window_number_position "right"
 
 set -g @catppuccin_status_modules_left "session"
-set -g @catppuccin_status_modules_right "none"
-# set -g @catppuccin_status_modules_right "directory"
+# set -g @catppuccin_status_modules_right "none"
+set -g @catppuccin_status_modules_right "directory"
+set -g @catppuccin_directory_text " linkarzu   If you like the video like it  , and remember to subscribe   "
+set -g @catppuccin_directory_color "#04d1f9"
+set -g @catppuccin_directory_icon "null"
 # `user` and `host` are kind of useless, dont change when you ssh to devices
 # set -g @catppuccin_status_modules_right "directory user host"
 set -g @catppuccin_status_left_separator " "

@@ -3,6 +3,8 @@
 # Filename: ~/github/dotfiles-latest/sketchybar/felixkratz-linkarzu/items/custom_text.sh
 # ~/github/dotfiles-latest/sketchybar/felixkratz-linkarzu/items/custom_text.sh
 
+youtube_banner="$HOME/github/dotfiles-latest/youtube-banner.txt"
+
 custom_text=(
   updates=on
   update_freq=3
@@ -13,5 +15,9 @@ custom_text=(
   script="$PLUGIN_DIR/custom_text.sh"
 )
 
-sketchybar --add item custom_text right \
-  --set custom_text "${custom_text[@]}"
+if [ -f "$youtube_banner" ]; then
+  sketchybar --add item custom_text right \
+    --set custom_text "${custom_text[@]}"
+else
+  sketchybar --remove custom_text
+fi

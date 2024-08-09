@@ -198,7 +198,8 @@ bind-key -r 2 run-shell "tmux neww $karabiner_rules"
 
 # Reload the tmux configuration, display a 2 second message
 unbind r
-bind r source-file ~/.tmux.conf \; display-message -d 2000 "Configuration reloaded!"
+bind r source-file ~/.tmux.conf
+# bind r source-file ~/.tmux.conf \; display-message -d 2000 "Configuration reloaded!"
 
 # Bind pane synchronization to Ctrl-b s
 unbind Q
@@ -352,11 +353,22 @@ set -g @catppuccin_window_middle_separator " █"
 set -g @catppuccin_window_number_position "right"
 
 set -g @catppuccin_status_modules_left "session"
-# set -g @catppuccin_status_modules_right "none"
-set -g @catppuccin_status_modules_right "directory"
-set -g @catppuccin_directory_text " linkarzu   If you like the video like it  , and remember to subscribe   "
-set -g @catppuccin_directory_color "#04d1f9"
-set -g @catppuccin_directory_icon "null"
+
+# # set -g @catppuccin_status_modules_right "none"
+# set -g @catppuccin_status_modules_right "directory"
+# set -g @catppuccin_directory_text " linkarzu   If you like the video like it  , and remember to subscribe   "
+# set -g @catppuccin_directory_color "#04d1f9"
+# set -g @catppuccin_directory_icon "null"
+
+if-shell 'test -f ~/github/dotfiles-latest/youtube-banner.txt' {
+    set -g @catppuccin_status_modules_right "directory"
+    set -g @catppuccin_directory_text " linkarzu   If you like the video like it  , and remember to subscribe   "
+    set -g @catppuccin_directory_color "#04d1f9"
+    set -g @catppuccin_directory_icon "null"
+} {
+    set -g @catppuccin_status_modules_right "null"
+}
+
 # `user` and `host` are kind of useless, dont change when you ssh to devices
 # set -g @catppuccin_status_modules_right "directory user host"
 set -g @catppuccin_status_left_separator " "

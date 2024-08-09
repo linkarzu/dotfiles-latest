@@ -2352,6 +2352,54 @@
               {
                 "to": [
                   {
+                    "shell_command": "open btt://execute_assigned_actions_for_trigger/?uuid=4A96B03E-D791-46AD-9B02-7FC9E75B208C"
+                  }
+                ],
+                "description": "Open btt://execute_assigned_actions_for_trigger/?uuid=4A96B03E-D791-46AD-9B02-7FC9E75B208C",
+                "type": "basic",
+                "from": {
+                  "key_code": "open_bracket",
+                  "modifiers": {
+                    "mandatory": [
+                      "any"
+                    ]
+                  }
+                },
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "hyper_sublayer_s",
+                    "value": 1
+                  }
+                ]
+              },
+              {
+                "to": [
+                  {
+                    "shell_command": "open btt://execute_assigned_actions_for_trigger/?uuid=93EDAFA4-0043-4945-8242-082DCC7788BC"
+                  }
+                ],
+                "description": "Open btt://execute_assigned_actions_for_trigger/?uuid=93EDAFA4-0043-4945-8242-082DCC7788BC",
+                "type": "basic",
+                "from": {
+                  "key_code": "close_bracket",
+                  "modifiers": {
+                    "mandatory": [
+                      "any"
+                    ]
+                  }
+                },
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "hyper_sublayer_s",
+                    "value": 1
+                  }
+                ]
+              },
+              {
+                "to": [
+                  {
                     "shell_command": "/opt/homebrew/bin/SwitchAudioSource -s \"Mac mini Speakers\"; /opt/homebrew/bin/SwitchAudioSource -t input -s \"C922 Pro Stream Webcam\""
                   }
                 ],

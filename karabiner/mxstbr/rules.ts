@@ -348,6 +348,14 @@ const rules: KarabinerRules[] = [
       9: open(
         "btt://execute_assigned_actions_for_trigger/?uuid=762AF6E2-41EE-4B74-A2D3-9B96C3D777B5"
       ),
+      // Tmux Banner on
+      open_bracket: open(
+        "btt://execute_assigned_actions_for_trigger/?uuid=4A96B03E-D791-46AD-9B02-7FC9E75B208C"
+      ),
+      // Tmux Banner off
+      close_bracket: open(
+        "btt://execute_assigned_actions_for_trigger/?uuid=93EDAFA4-0043-4945-8242-082DCC7788BC"
+      ),
       // comma: {
       //   to: [
       //     {

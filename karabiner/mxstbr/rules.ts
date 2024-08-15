@@ -144,6 +144,10 @@ const rules: KarabinerRules[] = [
         "btt://execute_assigned_actions_for_trigger/?uuid=9E98F83C-C4C4-4B9B-AFF7-03AAAF2939A5"
       ),
       // containerdata
+      y: open(
+        "btt://execute_assigned_actions_for_trigger/?uuid=27E17BF8-1B16-41BF-A7C1-3DAF6B706340"
+      ),
+      // containerdata_nfs
       p: open(
         "btt://execute_assigned_actions_for_trigger/?uuid=55A10BEE-B776-4D93-B5ED-024A58595D93"
       ),

@@ -149,14 +149,15 @@ unbind C-i
 bind-key -r C-i run-shell "$tmux_sessionizer ~/github/watusy"
 unbind C-o
 # bind-key -r C-o run-shell "$tmux_sessionizer ~/github/linkarzu.github.io"
-bind-key -r C-o run-shell "$tmux_sessionizer /System/Volumes/Data/mnt/github"
+bind-key -r C-o run-shell "$tmux_sessionizer /System/Volumes/Data/mnt/github_nfs"
 unbind C-p
 bind-key -r C-p run-shell "$tmux_sessionizer ~/github/scripts"
 unbind C-t
 bind-key -r C-t run-shell "$tmux_sessionizer ~/github/obsidian_main"
+unbind 4
+bind-key -r 4 run-shell "$tmux_sessionizer ~/github/containerdata"
 unbind C-y
-# bind-key -r C-y run-shell "$tmux_sessionizer ~/github/containerdata"
-bind-key -r C-y run-shell "$tmux_sessionizer /System/Volumes/Data/mnt/containerdata"
+bind-key -r C-y run-shell "$tmux_sessionizer /System/Volumes/Data/mnt/containerdata_nfs"
 unbind C-h
 bind-key -r C-h run-shell "$tmux_sessionizer ~"
 unbind C-m
@@ -360,6 +361,8 @@ set -g @catppuccin_status_modules_left "session"
 # set -g @catppuccin_directory_color "#04d1f9"
 # set -g @catppuccin_directory_icon "null"
 
+# As 'man tmux' specifies:
+# Execute the first command if shell-command (run with /bin/sh) returns success or the second command otherwise
 if-shell 'test -f ~/github/dotfiles-latest/youtube-banner.txt' {
     set -g @catppuccin_status_modules_right "directory"
     set -g @catppuccin_directory_text " linkarzu   If you like the video like it  , and remember to subscribe   "

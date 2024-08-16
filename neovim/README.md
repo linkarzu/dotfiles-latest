@@ -18,7 +18,7 @@
 
 - Click on the image below to go to the YouTube video
 
-<div align="center">
+<div align="left">
     <a href="https://youtu.be/c0cuvzK1SDo">
         <img
           src="https://res.cloudinary.com/daqwsgmx6/image/upload/q_75/v1717456413/youtube/neovim/markdown-setup-2024.avif"
@@ -32,7 +32,7 @@
 
 - Click on the image below to go to the YouTube video
 
-<div align="center">
+<div align="left">
     <a href="https://youtu.be/0O3kqGwNzTI">
         <img
           src="https://res.cloudinary.com/daqwsgmx6/image/upload/q_75/v1717456413/youtube/neovim/view-paste-images.avif"

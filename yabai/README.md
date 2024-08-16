@@ -9,7 +9,7 @@
 
 ## My Youtube video that explain this
 
-<div align="center">
+<div align="left">
     <a href="https://youtu.be/IRL-ueXXnWM">
         <img src="https://res.cloudinary.com/daqwsgmx6/image/upload/v1706358848/youtube/2024-macos-workflow/09-yabai" alt="09 - Transparent terminal with yabai in macOS" width="600"/>
     </a>

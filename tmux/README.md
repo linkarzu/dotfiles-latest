@@ -9,7 +9,7 @@
 
 ## My Youtube video that explain this
 
-<div align="center">
+<div align="left">
     <a href="https://youtu.be/0aD7-EBnULc">
         <img src="https://res.cloudinary.com/daqwsgmx6/image/upload/v1706358848/youtube/2024-macos-workflow/08-tmux" alt="08 - What is tmux and how to use it in macOS" width="600"/>
     </a>

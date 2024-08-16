@@ -13,7 +13,7 @@
 
 ### [Video 1 (link)](https://youtu.be/BEB7X78ivNM)
 
-<div align="center">
+<div align="left">
     <a href="https://youtu.be/BEB7X78ivNM">
         <img
           src="https://res.cloudinary.com/daqwsgmx6/image/upload/v1706358848/youtube/2024-macos-workflow/02-what-is-brew"
@@ -25,7 +25,7 @@
 
 ### [Video 2 (link)](https://youtu.be/e7Bb1uUHpa8)
 
-<div align="center">
+<div align="left">
     <a href="https://youtu.be/e7Bb1uUHpa8">
         <img
           src="https://res.cloudinary.com/daqwsgmx6/image/upload/v1706358848/youtube/2024-macos-workflow/03-Install-mult-apps-brew"

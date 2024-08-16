@@ -9,7 +9,7 @@
 
 ## My Youtube video that explains this
 
-<div align="center">
+<div align="left">
     <a href="https://youtube.com/watch?v=CY0gU_iPRTk">
         <img
           src="https://res.cloudinary.com/daqwsgmx6/image/upload/v1706358848/youtube/2024-macos-workflow/10-sketchybar-youtube"

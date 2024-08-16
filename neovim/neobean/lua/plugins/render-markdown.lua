@@ -22,8 +22,7 @@ local color_fg = "#323449"
 -- local color_sign = "#ebfafa"
 
 return {
-  "MeanderingProgrammer/markdown.nvim",
-  enabled = false,
+  "MeanderingProgrammer/render-markdown.nvim",
   opts = {
     heading = {
       sign = false,

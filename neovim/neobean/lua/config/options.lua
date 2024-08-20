@@ -161,6 +161,11 @@ if vim.g.neovide then
   -- vim.g.neovide_cursor_vfx_mode = "ripple"
   -- vim.g.neovide_cursor_vfx_mode = "wireframe"
   -- vim.g.neovide_cursor_vfx_mode = "wireframe"
+
+  -- Really weird issue in which my winbar would be drawn multiple times as I
+  -- scrolled down the file, this fixed it, found in:
+  -- https://github.com/neovide/neovide/issues/1550
+  vim.g.neovide_scroll_animation_length = 0
 end
 
 -- Allow clipboard copy paste in neovim

@@ -42,6 +42,11 @@ return {
           -- So if I'm in the `dotfiles-latest` directory it will show me that
           -- before the name of the file
           show_filter_column = false, -- Default: true
+          -- I declare a workspace which I will use when calling frecency if I
+          -- want to search for files in a specific path
+          workspaces = {
+            ["neobean_plugins"] = "$HOME/github/dotfiles-latest/neovim/neobean/lua/plugins",
+          },
         },
       },
     })

@@ -1525,6 +1525,9 @@ vim.keymap.set("n", "<leader>fN", function()
   local file_path = vim.fn.expand("%:p")
   if file_path ~= "" then
     local command = "open -a Neovide " .. vim.fn.shellescape(file_path)
+    -- -- I'm not using the --no-tabs arg, because if I do, my alternate neovim
+    -- -- buffer doesn't work
+    -- local command = "open -a Neovide --args --no-tabs " .. vim.fn.shellescape(file_path)
     vim.fn.system(command)
     print("Opened file in Neovide: " .. file_path)
   else

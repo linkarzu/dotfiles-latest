@@ -60,8 +60,8 @@ return {
       -- overriden by this telescope.lua file
       -- http://www.lazyvim.org/extras/editor/telescope#telescopenvim
       -- { "<leader>fF", LazyVim.pick("auto"), desc = "Find Files (cwd)" },
-      { "<leader>fz", LazyVim.pick("auto", { root = false }), desc = "Find Files (Root Dir)" },
-      { "<leader>fF", "<cmd>Telescope frecency<cr>", desc = "Find Files (cwd)" },
+      --
+      { "<leader>fF", "<cmd>Telescope frecency theme=ivy<cr>", desc = "Find Files" },
       -- {
       --   "<leader>ff",
       --   "<cmd>Telescope frecency workspace=CWD path_display={'shorten'} theme=ivy<cr>",
@@ -72,8 +72,24 @@ return {
         "<cmd>Telescope frecency workspace=CWD theme=ivy<cr>",
         desc = "Find Files (Root Dir)",
       },
-      { "<leader>sG", LazyVim.pick("live_grep"), desc = "Grep (cwd)" },
-      { "<leader>sg", LazyVim.pick("live_grep", { root = false }), desc = "Grep (Root Dir)" },
+      --
+      -- { "<leader>sG", LazyVim.pick("live_grep"), desc = "Grep (cwd)" },
+      {
+        "<leader>sG",
+        function()
+          require("telescope.builtin").live_grep(require("telescope.themes").get_ivy())
+        end,
+        desc = "Grep (cwd)",
+      },
+      --
+      -- { "<leader>sg", LazyVim.pick("live_grep", { root = false, theme = "ivy" }), desc = "Grep (Root Dir)" },
+      {
+        "<leader>sg",
+        function()
+          require("telescope.builtin").live_grep(require("telescope.themes").get_ivy({ root = false }))
+        end,
+        desc = "Grep (Root Dir)",
+      },
       {
         "<leader><space>",
         "<cmd>e #<cr>",

@@ -26,6 +26,8 @@ return {
     file_explorer = function(dir) --custom file explorer set by user
       vim.cmd("Neotree close")
       require("mini.files").open(dir, true)
+      -- -- By default it uses neotree but I changed it for mini.files
+      -- vim.cmd("Neotree " .. dir)
     end,
     -- Or for oil.nvim:
     -- file_explorer = function(dir)

@@ -54,7 +54,10 @@ export BG0O50=0x801e1e2e
 export BG0O60=0x991e1e2e
 export BG0O70=0xB21e1e2e
 export BG0O80=0xCC1e1e2e
-export BG0O85=0xD91e1e2e
+# export BG0O85=0xD91e1e2e
+# export BG0O85=0xD9212337
+# This sets the color of the bar
+export BG0O85=0xCF212337
 export BG1=0x603c3e4f
 export BG2=0x60494d64
 

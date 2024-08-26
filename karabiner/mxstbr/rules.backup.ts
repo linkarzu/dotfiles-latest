@@ -3,18 +3,14 @@ import { KarabinerRules } from "./types";
 import { createHyperSubLayers, app, open } from "./utils";
 
 const rules: KarabinerRules[] = [
+  // Define the Hyper key itself
   {
     description: "Hyper Key (⌃⌥⇧⌘)",
     manipulators: [
-      // I've been using my pinky way too often for all they keyboard
-      // shortcuts and after months, my hand is starting to hurt, moving the
-      // hyper key from caps_lock to my thumb
-      //
-      // I tried using spacebar as the hyper key but cannot type well
       {
-        description: "right_command -> Hyper Key",
+        description: "Caps Lock -> Hyper Key",
         from: {
-          key_code: "right_command",
+          key_code: "caps_lock",
         },
         to: [
           {
@@ -29,100 +25,6 @@ const rules: KarabinerRules[] = [
         ],
         type: "basic",
       },
-
-      // // In case you also want to leave this other key as a hyper backup
-      // {
-      //   description: "Caps Lock -> Hyper Key",
-      //   from: {
-      //     key_code: "caps_lock",
-      //   },
-      //   to: [
-      //     {
-      //       key_code: "left_shift",
-      //       modifiers: ["left_command", "left_control", "left_option"],
-      //     },
-      //   ],
-      //   to_if_alone: [
-      //     {
-      //       key_code: "escape",
-      //     },
-      //   ],
-      //   type: "basic",
-      // },
-
-      // When I press caps_lock I want it to hit escape
-      {
-        description: "caps_lock -> escape",
-        from: {
-          key_code: "caps_lock",
-        },
-        to: [
-          {
-            key_code: "escape",
-          },
-        ],
-        type: "basic",
-      },
-
-      // sometimes I press shift+caps_lock by mistake and caps lock turn on,
-      // and I don't want that
-      // I can still enable caps_lock with cmd+caps_lock
-      {
-        description: "shift+caps_lock -> escape",
-        from: {
-          key_code: "caps_lock",
-          modifiers: {
-            mandatory: ["shift"],
-          },
-        },
-        to: [
-          {
-            key_code: "escape",
-          },
-        ],
-        type: "basic",
-      },
-
-      // When left_command is pressed alone, send Command+C
-      {
-        description: "left_command -> Command+C if pressed alone",
-        from: {
-          key_code: "left_command",
-        },
-        to: [
-          {
-            key_code: "left_command",
-          },
-        ],
-        to_if_alone: [
-          {
-            key_code: "c",
-            modifiers: ["command"],
-          },
-        ],
-        type: "basic",
-      },
-
-      // When left_option is pressed alone, send Command+V
-      {
-        description: "left_option -> Command+V if pressed alone",
-        from: {
-          key_code: "left_option",
-        },
-        to: [
-          {
-            key_code: "left_option",
-          },
-        ],
-        to_if_alone: [
-          {
-            key_code: "v",
-            modifiers: ["command"],
-          },
-        ],
-        type: "basic",
-      },
-
       //      {
       //        type: "basic",
       //        description: "Disable CMD + Tab to force Hyper Key usage",
@@ -176,7 +78,7 @@ const rules: KarabinerRules[] = [
 
   ...createHyperSubLayers({
     // I use spacebar as the app launcher
-    a: {
+    spacebar: {
       h: app("Spotify"),
       // j: app("Alacritty"),
       j: app("kitty"),
@@ -191,7 +93,7 @@ const rules: KarabinerRules[] = [
       p: app("Brave Browser"),
       open_bracket: app("Reminders"),
       n: app("Neovide"),
-      m: app("Mail"),
+      a: app("Mail"),
       s: app("Udemy Business"),
       d: app("1Password"),
       f: app("Finder"),
@@ -408,6 +310,15 @@ const rules: KarabinerRules[] = [
           },
         ],
       },
+      // Lock screen
+      d: {
+        to: [
+          {
+            key_code: "q",
+            modifiers: ["right_control", "right_command"],
+          },
+        ],
+      },
       // Close browser tab
       e: {
         to: [
@@ -429,6 +340,10 @@ const rules: KarabinerRules[] = [
           },
         ],
       },
+      // Restart yabai
+      0: open(
+        "btt://execute_assigned_actions_for_trigger/?uuid=5EC0D2D3-869C-4284-B063-B53A17BF7C4C"
+      ),
       // Start video recording
       8: open(
         "btt://execute_assigned_actions_for_trigger/?uuid=24E07831-252B-4EB6-B6C4-5E1CDB742BF9"
@@ -471,22 +386,6 @@ const rules: KarabinerRules[] = [
       // n: open(
       //   "raycast://extensions/VladCuciureanu/toothpick/connect-favorite-device-1"
       // ),
-    },
-
-    u: {
-      // Lock screen
-      i: {
-        to: [
-          {
-            key_code: "q",
-            modifiers: ["right_control", "right_command"],
-          },
-        ],
-      },
-      // Restart yabai
-      0: open(
-        "btt://execute_assigned_actions_for_trigger/?uuid=5EC0D2D3-869C-4284-B063-B53A17BF7C4C"
-      ),
     },
 
     // For betterTouchTool
@@ -561,13 +460,14 @@ const rules: KarabinerRules[] = [
 
     // copy, paste and other stuff
     right_command: {
-      // // I use this for fzf
-      // r: {
-      //   to: [{ key_code: "r", modifiers: ["left_control"] }],
-      // },
-      // t: {
-      //   to: [{ key_code: "t", modifiers: ["left_control"] }],
-      // },
+      // I use this for fzf
+      r: {
+        to: [{ key_code: "r", modifiers: ["left_control"] }],
+      },
+      t: {
+        to: [{ key_code: "t", modifiers: ["left_control"] }],
+      },
+
       // Slack go to all unreads
       a: {
         to: [{ key_code: "a", modifiers: ["left_command", "left_shift"] }],
@@ -631,15 +531,6 @@ const rules: KarabinerRules[] = [
     // Map hyper+b to ctrl+b for tmux
     q: {
       to: [{ key_code: "b", modifiers: ["left_control"] }],
-    },
-    // copy, paste and other stuff
-    y: {
-      // Switch between windows of same app, normally cmd+~
-      to: [{ key_code: "tab", modifiers: ["left_command"] }],
-    },
-    6: {
-      // Switch between windows of same app, normally cmd+~
-      to: [{ key_code: "grave_accent_and_tilde", modifiers: ["left_command"] }],
     },
   }),
 ];

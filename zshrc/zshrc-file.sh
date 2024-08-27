@@ -241,6 +241,11 @@ esac
 # macOS-specific configurations
 if [ "$OS" = 'Mac' ]; then
 
+  # Stuff that I want to load, but not to have visible in my public dotfiles
+  if [ -f "$HOME/Library/Mobile Documents/com~apple~CloudDocs/github/.zshrc_local" ]; then
+    source "$HOME/Library/Mobile Documents/com~apple~CloudDocs/github/.zshrc_local"
+  fi
+
   # Set JAVA_HOME to the OpenJDK installation managed by Homebrew
   export JAVA_HOME="/opt/homebrew/opt/openjdk"
   # Add JAVA_HOME/bin to the beginning of the PATH

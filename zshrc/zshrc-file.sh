@@ -241,6 +241,9 @@ esac
 # macOS-specific configurations
 if [ "$OS" = 'Mac' ]; then
 
+  # disable auto-update when running 'brew something'
+  export HOMEBREW_NO_AUTO_UPDATE="1"
+
   # Stuff that I want to load, but not to have visible in my public dotfiles
   if [ -f "$HOME/Library/Mobile Documents/com~apple~CloudDocs/github/.zshrc_local" ]; then
     source "$HOME/Library/Mobile Documents/com~apple~CloudDocs/github/.zshrc_local"

@@ -123,6 +123,23 @@ const rules: KarabinerRules[] = [
         type: "basic",
       },
 
+      // If I press left_option + delete_forward I want to hit enter
+      // this is useful to hit enter after pasting text using the left hand
+      {
+        description: "left_option + delete_forward -> enter",
+        from: {
+          key_code: "delete_forward",
+          modifiers: {
+            mandatory: ["left_option"],
+          },
+        },
+        to: [
+          {
+            key_code: "return_or_enter",
+          },
+        ],
+        type: "basic",
+      },
       //      {
       //        type: "basic",
       //        description: "Disable CMD + Tab to force Hyper Key usage",

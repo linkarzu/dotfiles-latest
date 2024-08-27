@@ -365,7 +365,7 @@ set -g @catppuccin_status_modules_left "session"
 # Execute the first command if shell-command (run with /bin/sh) returns success or the second command otherwise
 if-shell 'test -f ~/github/dotfiles-latest/youtube-banner.txt' {
     set -g @catppuccin_status_modules_right "directory"
-    set -g @catppuccin_directory_text " linkarzu   If you like the video like it  , and remember to subscribe   "
+    set -g @catppuccin_directory_text " linkarzu   like the video   and subscribe   "
     set -g @catppuccin_directory_color "#04d1f9"
     set -g @catppuccin_directory_icon "null"
 } {

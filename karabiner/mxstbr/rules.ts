@@ -516,7 +516,7 @@ const rules: KarabinerRules[] = [
     },
 
     // shift+arrows to select stuff
-    f: {
+    v: {
       h: {
         to: [{ key_code: "left_arrow", modifiers: ["left_shift"] }],
       },
@@ -628,8 +628,8 @@ const rules: KarabinerRules[] = [
     l: {
       to: [{ key_code: "right_arrow" }],
     },
-    // Map hyper+b to ctrl+b for tmux
-    q: {
+    // Map hyper+f to ctrl+b for tmux
+    f: {
       to: [{ key_code: "b", modifiers: ["left_control"] }],
     },
     // copy, paste and other stuff

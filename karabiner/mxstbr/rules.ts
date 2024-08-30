@@ -50,13 +50,19 @@ const rules: KarabinerRules[] = [
       //   type: "basic",
       // },
 
-      // When I press caps_lock I want it to hit escape
+      // When I press caps_lock I want it to hit escape, but if I leave it
+      // pressed, it will be used as shift
       {
-        description: "caps_lock -> escape",
+        description: "caps_lock -> shift and escape",
         from: {
           key_code: "caps_lock",
         },
         to: [
+          {
+            key_code: "left_shift",
+          },
+        ],
+        to_if_alone: [
           {
             key_code: "escape",
           },
@@ -66,20 +72,39 @@ const rules: KarabinerRules[] = [
 
       // sometimes I press shift+caps_lock by mistake and caps lock turn on,
       // and I don't want that
-      // I can still enable caps_lock with cmd+caps_lock
       {
-        description: "shift+caps_lock -> escape",
+        description: "left_command+caps_lock -> null",
+        from: {
+          key_code: "caps_lock",
+          modifiers: {
+            mandatory: ["left_command"],
+          },
+        },
+        to: [],
+        // to: [
+        //   {
+        //     key_code: "escape",
+        //   },
+        // ],
+        type: "basic",
+      },
+
+      // sometimes I press left_command+caps_lock by mistake and caps lock turn on,
+      // and I don't want that
+      {
+        description: "shift+caps_lock -> null",
         from: {
           key_code: "caps_lock",
           modifiers: {
             mandatory: ["shift"],
           },
         },
-        to: [
-          {
-            key_code: "escape",
-          },
-        ],
+        to: [],
+        // to: [
+        //   {
+        //     key_code: "escape",
+        //   },
+        // ],
         type: "basic",
       },
 
@@ -128,7 +153,7 @@ const rules: KarabinerRules[] = [
       {
         description: "left_option + delete_forward -> enter",
         from: {
-          key_code: "delete_forward",
+          key_code: "spacebar",
           modifiers: {
             mandatory: ["left_option"],
           },

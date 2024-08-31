@@ -258,6 +258,7 @@ const rules: KarabinerRules[] = [
       // hyper+` - cleanshot x record screen
       // hyper+2 - betterdisplay fav res 1
       // hyper+3 - betterdisplay fav res 2
+      // hyper+tab - cleanshot capture history
     },
 
     // t = "tmux" - video that explains how this works below
@@ -599,6 +600,25 @@ const rules: KarabinerRules[] = [
       // s: {
       //   to: [{ key_code: "j", modifiers: ["right_control"] }],
       // },
+    },
+
+    left_command: {
+      // Change mouse to mac mini
+      4: {
+        to: [
+          {
+            shell_command: `~/github/dotfiles-latest/hidapitester/hidapitester --vidpid 046D:B020 --usagePage 0xFF43 --usage 0x0202 --open --length 20 --send-output 0x11,0x00,0x0C,0x1C,0x00`,
+          },
+        ],
+      },
+      // Change mouse to macbook pro
+      5: {
+        to: [
+          {
+            shell_command: `~/github/dotfiles-latest/hidapitester/hidapitester --vidpid 046D:B020 --usagePage 0xFF43 --usage 0x0202 --open --length 20 --send-output 0x11,0x00,0x0C,0x1C,0x01`,
+          },
+        ],
+      },
     },
 
     // copy, paste and other stuff

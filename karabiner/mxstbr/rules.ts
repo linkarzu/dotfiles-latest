@@ -89,14 +89,29 @@ const rules: KarabinerRules[] = [
         type: "basic",
       },
 
-      // sometimes I press left_command+caps_lock by mistake and caps lock turn on,
-      // and I don't want that
       {
         description: "shift+caps_lock -> null",
         from: {
           key_code: "caps_lock",
           modifiers: {
             mandatory: ["shift"],
+          },
+        },
+        to: [],
+        // to: [
+        //   {
+        //     key_code: "escape",
+        //   },
+        // ],
+        type: "basic",
+      },
+
+      {
+        description: "right_command+caps_lock -> null",
+        from: {
+          key_code: "caps_lock",
+          modifiers: {
+            mandatory: ["right_command"],
           },
         },
         to: [],
@@ -603,7 +618,7 @@ const rules: KarabinerRules[] = [
     },
 
     left_command: {
-      // Change mouse to mac mini
+      // Change MX Vertical mouse to mac mini
       4: {
         to: [
           {
@@ -611,7 +626,7 @@ const rules: KarabinerRules[] = [
           },
         ],
       },
-      // Change mouse to macbook pro
+      // Change MX Vertical  mouse to macbook pro
       5: {
         to: [
           {

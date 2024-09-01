@@ -76,6 +76,19 @@
                 "type": "basic"
               },
               {
+                "description": "right_command+caps_lock -> null",
+                "from": {
+                  "key_code": "caps_lock",
+                  "modifiers": {
+                    "mandatory": [
+                      "right_command"
+                    ]
+                  }
+                },
+                "to": [],
+                "type": "basic"
+              },
+              {
                 "description": "left_command -> Command+C if pressed alone",
                 "from": {
                   "key_code": "left_command"

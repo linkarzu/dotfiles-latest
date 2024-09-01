@@ -63,12 +63,25 @@
                 "type": "basic"
               },
               {
-                "description": "shift+caps_lock -> null",
+                "description": "left_shift+caps_lock -> null",
                 "from": {
                   "key_code": "caps_lock",
                   "modifiers": {
                     "mandatory": [
-                      "shift"
+                      "left_shift"
+                    ]
+                  }
+                },
+                "to": [],
+                "type": "basic"
+              },
+              {
+                "description": "right_option+caps_lock -> null",
+                "from": {
+                  "key_code": "caps_lock",
+                  "modifiers": {
+                    "mandatory": [
+                      "right_option"
                     ]
                   }
                 },
@@ -81,7 +94,10 @@
                   "key_code": "caps_lock",
                   "modifiers": {
                     "mandatory": [
-                      "right_command"
+                      "left_command",
+                      "left_control",
+                      "left_option",
+                      "left_shift"
                     ]
                   }
                 },

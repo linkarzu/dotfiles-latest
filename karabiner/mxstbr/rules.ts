@@ -90,11 +90,11 @@ const rules: KarabinerRules[] = [
       },
 
       {
-        description: "shift+caps_lock -> null",
+        description: "left_shift+caps_lock -> null",
         from: {
           key_code: "caps_lock",
           modifiers: {
-            mandatory: ["shift"],
+            mandatory: ["left_shift"],
           },
         },
         to: [],
@@ -107,11 +107,39 @@ const rules: KarabinerRules[] = [
       },
 
       {
+        description: "right_option+caps_lock -> null",
+        from: {
+          key_code: "caps_lock",
+          modifiers: {
+            mandatory: ["right_option"],
+          },
+        },
+        to: [],
+        // to: [
+        //   {
+        //     key_code: "escape",
+        //   },
+        // ],
+        type: "basic",
+      },
+
+      // sometimes I press right_command+caps_lock by mistake and caps lock turn on,
+      // and I don't want that
+      // Notice that I set the modifier keys to all the keys that right_command
+      // represents, tried using right_command and it never worked, even if I
+      // put this above the hyper declaration
+      {
         description: "right_command+caps_lock -> null",
         from: {
           key_code: "caps_lock",
           modifiers: {
-            mandatory: ["right_command"],
+            // All of these are right_command
+            mandatory: [
+              "left_command",
+              "left_control",
+              "left_option",
+              "left_shift",
+            ],
           },
         },
         to: [],

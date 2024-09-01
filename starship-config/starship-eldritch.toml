@@ -43,12 +43,15 @@ time_format = '%y/%m/%d'
 # For this to show up correcly, you need to have cluster access
 # So your ~/.kube/config needs to be configured on the local machine
 [kubernetes]
-disabled = true
+disabled = false
 # context = user@cluster
-format = '[$user@$cluster \($namespace\)](#f265b5) '
+# format = '[$user@$cluster \($namespace\)](#f265b5) '
+# format = '[$cluster \($namespace\)](#f7c67f) '
+# Apply separate colors for cluster and namespace
+format = '[$cluster](#f7c67f bold) [\($namespace\)](#37f499 bold) '
 # format = 'on [⛵ ($user on )($cluster in )$context \($namespace\)](dimmed green) '
 # Only dirs that have this file inside will show the kubernetes prompt
-detect_files = ['900-detectkubernetes.sh']
+# detect_files = ['900-detectkubernetes.sh']
 # detect_env_vars = ['STAR_USE_KUBE']
 # contexts = [
 #   { context_pattern = "dev.local.cluster.k8s", style = "green", symbol = "💔 " },

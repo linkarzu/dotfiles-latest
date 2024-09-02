@@ -3572,6 +3572,29 @@
                     "value": 1
                   }
                 ]
+              },
+              {
+                "to": [
+                  {
+                    "shell_command": "~/github/scripts/macos/mac/360-pullGitRepos.sh"
+                  }
+                ],
+                "type": "basic",
+                "from": {
+                  "key_code": "6",
+                  "modifiers": {
+                    "mandatory": [
+                      "any"
+                    ]
+                  }
+                },
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "hyper_sublayer_left_command",
+                    "value": 1
+                  }
+                ]
               }
             ]
           },

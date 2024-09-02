@@ -662,6 +662,14 @@ const rules: KarabinerRules[] = [
           },
         ],
       },
+      // Pull github repos
+      6: {
+        to: [
+          {
+            shell_command: `~/github/scripts/macos/mac/360-pullGitRepos.sh`,
+          },
+        ],
+      },
     },
 
     // copy, paste and other stuff

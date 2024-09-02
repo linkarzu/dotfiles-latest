@@ -3581,7 +3581,7 @@
                 ],
                 "type": "basic",
                 "from": {
-                  "key_code": "6",
+                  "key_code": "j",
                   "modifiers": {
                     "mandatory": [
                       "any"

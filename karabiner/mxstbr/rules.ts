@@ -663,7 +663,9 @@ const rules: KarabinerRules[] = [
         ],
       },
       // Pull github repos
-      6: {
+      // I tried with the number 6 instead of "J" but didn't work, seems to have been a
+      // conflict maybe with another app
+      j: {
         to: [
           {
             shell_command: `~/github/scripts/macos/mac/360-pullGitRepos.sh`,

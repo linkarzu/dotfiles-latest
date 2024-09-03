@@ -63,3 +63,6 @@ karabiner/mxstbr/yarn.lock
 brew/10-essential/Brewfile.lock.json
 server exited unexpectedly
 youtube-banner.txt
+
+*.DS_Store
+*server exited unexpectedly

@@ -151,9 +151,29 @@ const rules: KarabinerRules[] = [
         type: "basic",
       },
 
-      // When left_command is pressed alone, send Command+C
+      //      {
+      //        type: "basic",
+      //        description: "Disable CMD + Tab to force Hyper Key usage",
+      //        from: {
+      //          key_code: "tab",
+      //          modifiers: {
+      //            mandatory: ["left_command"],
+      //          },
+      //        },
+      //        to: [
+      //          {
+      //            key_code: "tab",
+      //          },
+      //        ],
+      //      },
+    ],
+  },
+
+  // When left_command is pressed alone, send Command+C
+  {
+    description: "left_command -> Command+C if pressed alone",
+    manipulators: [
       {
-        description: "left_command -> Command+C if pressed alone",
         from: {
           key_code: "left_command",
         },
@@ -166,14 +186,22 @@ const rules: KarabinerRules[] = [
           {
             key_code: "c",
             modifiers: ["command"],
+            // or if instead you want to execute a script or command
+            // shell_command: `/opt/homebrew/bin/SwitchAudioSource -s "AirPods Pro"; /opt/homebrew/bin/SwitchAudioSource -t input -s "AirPods Pro"`,
+            //
+            // You could also call a betterTouchTool action
           },
         ],
         type: "basic",
       },
+    ],
+  },
 
-      // When left_option is pressed alone, send Command+V
+  // When left_option is pressed alone, send Command+V
+  {
+    description: "left_option -> Command+V if pressed alone",
+    manipulators: [
       {
-        description: "left_option -> Command+V if pressed alone",
         from: {
           key_code: "left_option",
         },
@@ -190,11 +218,15 @@ const rules: KarabinerRules[] = [
         ],
         type: "basic",
       },
+    ],
+  },
 
-      // If I press left_option + delete_forward I want to hit enter
-      // this is useful to hit enter after pasting text using the left hand
+  // If I press left_option + delete_forward I want to hit enter
+  // this is useful to hit enter after pasting text using the left hand
+  {
+    description: "left_option + delete_forward -> enter",
+    manipulators: [
       {
-        description: "left_option + delete_forward -> enter",
         from: {
           key_code: "spacebar",
           modifiers: {
@@ -208,21 +240,6 @@ const rules: KarabinerRules[] = [
         ],
         type: "basic",
       },
-      //      {
-      //        type: "basic",
-      //        description: "Disable CMD + Tab to force Hyper Key usage",
-      //        from: {
-      //          key_code: "tab",
-      //          modifiers: {
-      //            mandatory: ["left_command"],
-      //          },
-      //        },
-      //        to: [
-      //          {
-      //            key_code: "tab",
-      //          },
-      //        ],
-      //      },
     ],
   },
 

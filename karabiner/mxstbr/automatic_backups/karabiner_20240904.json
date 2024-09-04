@@ -103,13 +103,9 @@
                 },
                 "to": [],
                 "type": "basic"
-              }
-            ]
-          },
-          {
-            "description": "left_command -> Command+C if pressed alone",
-            "manipulators": [
+              },
               {
+                "description": "left_command -> Command+C if pressed alone",
                 "from": {
                   "key_code": "left_command"
                 },
@@ -127,13 +123,9 @@
                   }
                 ],
                 "type": "basic"
-              }
-            ]
-          },
-          {
-            "description": "left_option -> Command+V if pressed alone",
-            "manipulators": [
+              },
               {
+                "description": "left_option -> Command+V if pressed alone",
                 "from": {
                   "key_code": "left_option"
                 },
@@ -151,13 +143,9 @@
                   }
                 ],
                 "type": "basic"
-              }
-            ]
-          },
-          {
-            "description": "left_option + delete_forward -> enter",
-            "manipulators": [
+              },
               {
+                "description": "left_option + delete_forward -> enter",
                 "from": {
                   "key_code": "spacebar",
                   "modifiers": {

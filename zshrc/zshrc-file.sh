@@ -244,6 +244,17 @@ esac
 # macOS-specific configurations
 if [ "$OS" = 'Mac' ]; then
 
+  # Add SSH keys to the agent as these keys won't persist after the computer is restarted
+  # Check and add the personal GitHub key
+  if [ -f ~/.ssh/key-github-pers ]; then
+    ssh-add ~/.ssh/key-github-pers >/dev/null 2>&1
+  fi
+
+  # Check and add the work GitHub key
+  if [ -f ~/.ssh/id_rsa ]; then
+    ssh-add ~/.ssh/id_rsa >/dev/null 2>&1
+  fi
+
   # disable auto-update when running 'brew something'
   export HOMEBREW_NO_AUTO_UPDATE="1"
 

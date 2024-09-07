@@ -372,6 +372,15 @@ const rules: KarabinerRules[] = [
       r: open(
         "btt://execute_assigned_actions_for_trigger/?uuid=9B82DF9D-2DE2-4872-903A-D3C17EE9D555"
       ),
+      // // I tried to replace BetterTouchTool by directly calling the script,
+      // // but couldn't make it work
+      // r: {
+      //   to: [
+      //     {
+      //       shell_command: `~/github/dotfiles-latest/scripts/macos/mac/300-dailyNote.sh`,
+      //     },
+      //   ],
+      // },
       // open karabiner rules.ts file
       e: open(
         "btt://execute_assigned_actions_for_trigger/?uuid=3DEAE844-CD5B-4695-A58D-AC7CFA935D46"

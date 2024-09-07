@@ -3,6 +3,17 @@
 # Filename: ~/github/dotfiles-latest/scripts/macos/mac/300-dailyNote.sh
 # ~/github/dotfiles-latest/scripts/macos/mac/300-dailyNote.sh
 
+# # I tried replacing BetterTouchTool with this, never worked, so fuck it
+# # Bring the app to the foreground if it is already open. If not open, launch it
+# osascript -e 'tell application "kitty" to activate'
+# sleep 0.3
+# # Then when I'm in kitty, I need to press ctrl+b and then the number 1 by itself
+# # That will execute the tmux command that I need
+# osascript -e 'tell application "System Events" to keystroke "b" using {control down}'
+# sleep 0.3
+# osascript -e 'tell application "System Events" to keystroke "1"'
+# sleep 0.3
+
 # Specify below the directory in which you want to create your daily note
 main_note_dir=~/github/obsidian_main/250-daily
 

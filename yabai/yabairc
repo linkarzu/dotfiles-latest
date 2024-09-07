@@ -41,6 +41,8 @@ if command -v sketchybar &>/dev/null; then
     # yabai -m config right_padding 500
     # For youtube posts and neomemes
     # yabai -m config right_padding 800
+    # For shorts
+    # yabai -m config bottom_padding 400
   fi
 else
   yabai -m config top_padding 02
@@ -96,7 +98,7 @@ yabai -m signal --add event=window_focused app!="^${apps_transparent}$" action="
 
 # Apps excluded from window management, so you can resize them and move them around
 
-apps_mgoff_normal="(Calculator|iStat Menus|Hammerspoon|BetterDisplay|GIMP|Notes|System Preferences|System Settings|Activity Monitor|App StoreSoftware Update|CleanShot X|Karabiner-Elements|TestRig|Gemini|Raycast)"
+apps_mgoff_normal="(Calculator|iStat Menus|Hammerspoon|BetterDisplay|GIMP|Notes|System Preferences|System Settings|Activity Monitor|App StoreSoftware Update|CleanShot X|Karabiner-Elements|TestRig|Gemini|Raycast|OBS Studio)"
 # This keeps apps always below
 apps_mgoff_below="()"
 # This keeps apps always on the top

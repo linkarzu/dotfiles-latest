@@ -27,16 +27,16 @@ elif [[ $# -eq 2 ]]; then
   if [[ -d "$dir_to_search" ]]; then
     selected=$(find "$dir_to_search" -mindepth 1 -maxdepth 1 -type d | fzf)
   else
-    tmux display-message -d 500 "Directory does not exist: $dir_to_search"
+    tmux display-message -d 3000 "Directory does not exist: $dir_to_search"
     exit 1
   fi
 else
   # This will hopefully catch your attention
-  tmux display-message -d 500 "This script expects zero, one or two arguments."
+  tmux display-message -d 1000 "This script expects zero, one or two arguments."
   sleep 1
-  tmux display-message -d 500 "This script expects zero  one or two arguments."
+  tmux display-message -d 1000 "This script expects zero  one or two arguments."
   sleep 1
-  tmux display-message -d 500 "This script expects zero  one or two arguments."
+  tmux display-message -d 3000 "This script expects zero  one or two arguments."
   exit 1
 fi
 

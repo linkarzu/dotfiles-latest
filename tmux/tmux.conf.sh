@@ -186,6 +186,9 @@ bind-key -r C-c run-shell "$tmux_sshonizer_agen xocli3"
 
 unbind f
 bind-key -r f run-shell "tmux neww $tmux_sessionizer"
+unbind 5
+# Notice I'm passing 2 arguments, it's going to fzf inside that 2nd argument
+bind-key -r 5 run-shell "tmux neww $tmux_sessionizer irrelevant-arg ~/github/goto"
 unbind C-v
 bind-key -r C-v run-shell "tmux neww $ssh_select"
 unbind C-n

@@ -20,13 +20,24 @@ elif [[ $# -eq 0 ]]; then
 
   # Debugging, uncomment below if you need to see what's being selected
   # tmux display-message -d 10000 "Directory selected via fzf: $selected"
+elif [[ $# -eq 2 ]]; then
+  # Use the second argument as the directory path for the find command
+  dir_to_search="$2"
+  # Make sure the directory exists
+  if [[ -d "$dir_to_search" ]]; then
+    selected=$(find "$dir_to_search" -mindepth 1 -maxdepth 1 -type d | fzf)
+  else
+    tmux display-message -d 500 "Directory does not exist: $dir_to_search"
+    exit 1
+  fi
 else
   # This will hopefully catch your attention
-  tmux display-message -d 500 "This script expects zero or one argument."
+  tmux display-message -d 500 "This script expects zero, one or two arguments."
   sleep 1
-  tmux display-message -d 500 "This script expects zero or one argument."
+  tmux display-message -d 500 "This script expects zero  one or two arguments."
   sleep 1
-  tmux display-message -d 5000 "This script expects zero or one argument."
+  tmux display-message -d 500 "This script expects zero  one or two arguments."
+  exit 1
 fi
 
 # Exit the script if no directory is selected

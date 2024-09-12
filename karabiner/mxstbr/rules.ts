@@ -368,6 +368,10 @@ const rules: KarabinerRules[] = [
       n: open(
         "btt://execute_assigned_actions_for_trigger/?uuid=92398D5C-B95F-4E31-9CB9-1E3E732AF1C0"
       ),
+      // Find goto
+      m: open(
+        "btt://execute_assigned_actions_for_trigger/?uuid=88FB8FF9-6237-45FE-8717-675540891749"
+      ),
       // daily note
       r: open(
         "btt://execute_assigned_actions_for_trigger/?uuid=9B82DF9D-2DE2-4872-903A-D3C17EE9D555"

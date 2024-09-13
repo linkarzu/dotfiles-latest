@@ -391,7 +391,7 @@ set -g @catppuccin_window_current_color "#04d1f9"
 
 # Color of the rest of the windows that are not active
 set -g @catppuccin_window_default_color "#02687c"
-set -g @catppuccin_window_default_background "#212337"
+set -g @catppuccin_window_default_background "#0D1116"
 
 # The following 2 colors are for the lines that separate tmux splits
 set -g @catppuccin_pane_active_border_style "fg=#04d1f9"
@@ -403,7 +403,7 @@ set -g @catppuccin_pane_border_style "fg=#a5afc2"
 set -g @catppuccin_status_fill "all"
 # This is the classic colored tmux bar that goes across the entire screen
 # set -g @catppuccin_status_background "theme"
-set -g @catppuccin_status_background "#212337"
+set -g @catppuccin_status_background "#0D1116"
 # If you set this to off, the tmux line completely dissappears
 set -g @catppuccin_status_default "on"
 

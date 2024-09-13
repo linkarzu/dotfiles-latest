@@ -15,7 +15,9 @@ return {
       highlights.DiffDelete = { bg = "#f265b5", fg = "black" }
 
       -- horizontal line that goes across where cursor is
-      highlights.CursorLine = { bg = "#3f404f" }
+      -- highlights.CursorLine = { bg = "#3f404f" }
+      highlights.CursorLine = { bg = "#000000" }
+
       -- highlights.Comment = { fg = "#a5afc2", italic = true }
 
       -- I do the line below to change the color of bold text
@@ -53,6 +55,61 @@ return {
       highlights.MiniDiffSignChange = { fg = "#37f499", bold = true }
 
       -- highlights.Normal = { bg = "#09090d", fg = "#ebfafa" }
+
+      -- Code blocks for the render-markdown plugin
+      highlights.RenderMarkdownCode = { bg = "#1c242f" }
+
+      -------------------------------------------------------------------------
+      --       Comment this entire section to use the default #212337        --
+      -------------------------------------------------------------------------
+
+      -- This is the plugin that shows you where you are at the top
+      highlights.TreesitterContext = { sp = "#0D1116" }
+      highlights.MiniFilesNormal = { sp = "#0D1116" }
+      highlights.MiniFilesBorder = { sp = "#0D1116" }
+      highlights.MiniFilesTitle = { sp = "#0D1116" }
+      highlights.MiniFilesTitleFocused = { sp = "#0D1116" }
+
+      highlights.NormalFloat = { bg = "#0D1116" }
+      highlights.FloatBorder = { bg = "#0D1116" }
+      highlights.FloatTitle = { bg = "#0D1116" }
+      highlights.NotifyBackground = { bg = "#0D1116" }
+      highlights.NeoTreeNormalNC = { bg = "#0D1116" }
+      highlights.NeoTreeNormal = { bg = "#0D1116" }
+      highlights.NvimTreeWinSeparator = { fg = "#0D1116", bg = "#0D1116" }
+      highlights.NvimTreeNormalNC = { bg = "#0D1116" }
+      highlights.NvimTreeNormal = { bg = "#0D1116" }
+      highlights.TroubleNormal = { bg = "#0D1116" }
+      highlights.NoiceCmdlinePopupBorder = { bg = "#0D1116" }
+      highlights.NoiceCmdlinePopupTitle = { bg = "#0D1116" }
+      highlights.NoiceCmdlinePopupBorderFilter = { bg = "#0D1116" }
+      highlights.NoiceCmdlineIconFilter = { bg = "#0D1116" }
+      highlights.NoiceCmdlinePopupTitleFilter = { bg = "#0D1116" }
+      highlights.NoiceCmdlineIcon = { bg = "#0D1116" }
+      highlights.NoiceCmdlineIconCmdline = { bg = "#0D1116" }
+      highlights.NoiceCmdlinePopupBorderCmdline = { bg = "#0D1116" }
+      highlights.NoiceCmdlinePopupTitleCmdline = { bg = "#0D1116" }
+      highlights.NoiceCmdlineIconSearch = { bg = "#0D1116" }
+      highlights.NoiceCmdlinePopupBorderSearch = { bg = "#0D1116" }
+      highlights.NoiceCmdlinePopupTitleSearch = { bg = "#0D1116" }
+      highlights.NoiceCmdlineIconLua = { bg = "#0D1116" }
+      highlights.NoiceCmdlinePopupBorderLua = { bg = "#0D1116" }
+      highlights.NoiceCmdlinePopupTitleLua = { bg = "#0D1116" }
+      highlights.NoiceCmdlineIconHelp = { bg = "#0D1116" }
+      highlights.NoiceCmdlinePopupBorderHelp = { bg = "#0D1116" }
+      highlights.NoiceCmdlinePopupTitleHelp = { bg = "#0D1116" }
+      highlights.NoiceCmdlineIconInput = { bg = "#0D1116" }
+      highlights.NoiceCmdlinePopupBorderInput = { bg = "#0D1116" }
+      highlights.NoiceCmdlinePopupTitleInput = { bg = "#0D1116" }
+      highlights.NoiceCmdlineIconCalculator = { bg = "#0D1116" }
+      highlights.NoiceCmdlinePopupBorderCalculator = { bg = "#0D1116" }
+      highlights.NoiceCmdlinePopupTitleCalculator = { bg = "#0D1116" }
+      highlights.NoiceCompletionItemKindDefault = { bg = "#0D1116" }
+      -- this is the noice popup menu
+      highlights.NoiceMini = { bg = "#0D1116" }
+      -- This sets the color of the winbar at the top
+      highlights.StatusLine = { bg = "#0D1116" }
+      -------------------------------------------------------------------------
     end,
     -- Overriding colors globally
     -- These colors can be found in the palette.lua file
@@ -60,7 +117,7 @@ return {
     on_colors = function(colors)
       -- This is in case you want to change the background color (where you type
       -- text in neovim)
-      -- colors.bg = "#09090d"
+      colors.bg = "#0D1116"
       colors.comment = "#a5afc2"
     end,
   },

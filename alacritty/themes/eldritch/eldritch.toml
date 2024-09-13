@@ -13,12 +13,12 @@ cursor = "#37f499"
 text = "#f8f8f2"
 
 [colors.hints.end]
-background = "#212337"
+background = "#0D1116"
 foreground = "#f1fc79"
 
 [colors.hints.start]
 background = "#f1fc79"
-foreground = "#212337"
+foreground = "#0D1116"
 
 [colors.line_indicator]
 background = "None"
@@ -35,21 +35,21 @@ white = "#ebfafa"
 yellow = "#e9f941"
 
 [colors.primary]
-background = "#212337"
+background = "#0D1116"
 bright_foreground = "#ebfafa"
 foreground = "#ebfafa"
 
 [colors.search.focused_match]
 background = "#f16c75"
-foreground = "#212337"
+foreground = "#0D1116"
 
 # [colors.search."footer.bar"]
-# background = "#212337"
+# background = "#0D1116"
 # foreground = "#ebfafa"
 
 [colors.search.matches]
 background = "#37f499"
-foreground = "#212337"
+foreground = "#0D1116"
 
 [colors.selection]
 background = "#bf4f8e"

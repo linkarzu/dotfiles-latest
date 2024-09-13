@@ -387,11 +387,11 @@ set -g @catppuccin_status_connect_separator "no"
 ## ELDRITCH COLORS
 # Color of the ACTIVE window, windows are opened with ctrl+b c
 set -g @catppuccin_window_current_color "#04d1f9"
-# set -g @catppuccin_window_current_background ""
+set -g @catppuccin_window_current_background "#000000"
 
 # Color of the rest of the windows that are not active
-set -g @catppuccin_window_default_color "#02687c"
-set -g @catppuccin_window_default_background "#0D1116"
+set -g @catppuccin_window_default_color "#015363"
+set -g @catppuccin_window_default_background "#000000"
 
 # The following 2 colors are for the lines that separate tmux splits
 set -g @catppuccin_pane_active_border_style "fg=#04d1f9"

@@ -109,6 +109,8 @@ return {
       highlights.NoiceMini = { bg = "#0D1116" }
       -- This sets the color of the winbar at the top
       highlights.StatusLine = { bg = "#0D1116" }
+      -- When headings are folded, this is the color in the background
+      highlights.Folded = { bg = "#0D1116" }
       -------------------------------------------------------------------------
     end,
     -- Overriding colors globally

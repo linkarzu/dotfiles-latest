@@ -3,14 +3,14 @@ import { KarabinerRules } from "./types";
 import { createHyperSubLayers, app, open } from "./utils";
 
 const rules: KarabinerRules[] = [
+  // I've been using my pinky way too often for all they keyboard
+  // shortcuts and after months, my hand is starting to hurt, moving the
+  // hyper key from caps_lock to my thumb
+  //
+  // I tried using spacebar as the hyper key but cannot type well
   {
     description: "Hyper Key (⌃⌥⇧⌘)",
     manipulators: [
-      // I've been using my pinky way too often for all they keyboard
-      // shortcuts and after months, my hand is starting to hurt, moving the
-      // hyper key from caps_lock to my thumb
-      //
-      // I tried using spacebar as the hyper key but cannot type well
       {
         description: "right_command -> Hyper Key",
         from: {
@@ -40,31 +40,40 @@ const rules: KarabinerRules[] = [
         ],
         type: "basic",
       },
+    ],
+  },
 
-      // // In case you also want to leave this other key as a hyper backup
-      // {
-      //   description: "Caps Lock -> Hyper Key",
-      //   from: {
-      //     key_code: "caps_lock",
-      //   },
-      //   to: [
-      //     {
-      //       key_code: "left_shift",
-      //       modifiers: ["left_command", "left_control", "left_option"],
-      //     },
-      //   ],
-      //   to_if_alone: [
-      //     {
-      //       key_code: "escape",
-      //     },
-      //   ],
-      //   type: "basic",
-      // },
+  // // In case you want to use caps_lock as hyper
+  // // This is the way I did it before
+  // {
+  //   description: "Caps Lock -> Hyper Key",
+  //   manipulators: [
+  //     {
+  //       from: {
+  //         key_code: "caps_lock",
+  //       },
+  //       to: [
+  //         {
+  //           key_code: "left_shift",
+  //           modifiers: ["left_command", "left_control", "left_option"],
+  //         },
+  //       ],
+  //       to_if_alone: [
+  //         {
+  //           key_code: "escape",
+  //         },
+  //       ],
+  //       type: "basic",
+  //     },
+  //   ],
+  // },
 
-      // When I press caps_lock I want it to hit escape, but if I leave it
-      // pressed, it will be used as shift
+  // When I press caps_lock I want it to hit escape, but if I leave it
+  // pressed, it will be used as shift
+  {
+    description: "caps_lock -> shift and escape",
+    manipulators: [
       {
-        description: "caps_lock -> shift and escape",
         from: {
           key_code: "caps_lock",
         },
@@ -80,50 +89,18 @@ const rules: KarabinerRules[] = [
         ],
         type: "basic",
       },
+    ],
+  },
 
-      // sometimes I press shift+caps_lock by mistake and caps lock turn on,
-      // and I don't want that
+  // sometimes I press right_command+caps_lock by mistake and caps lock turn on,
+  // and I don't want that
+  // Notice that I set the modifier keys to all the keys that right_command
+  // represents, tried using right_command and it never worked, even if I
+  // put this above the hyper declaration
+  {
+    description: "right_command+caps_lock -> null",
+    manipulators: [
       {
-        description: "left_command+caps_lock -> null",
-        from: {
-          key_code: "caps_lock",
-          modifiers: {
-            mandatory: ["left_command"],
-          },
-        },
-        to: [],
-        // to: [
-        //   {
-        //     key_code: "escape",
-        //   },
-        // ],
-        type: "basic",
-      },
-
-      {
-        description: "left_shift+caps_lock -> null",
-        from: {
-          key_code: "caps_lock",
-          modifiers: {
-            mandatory: ["left_shift"],
-          },
-        },
-        to: [],
-        // to: [
-        //   {
-        //     key_code: "escape",
-        //   },
-        // ],
-        type: "basic",
-      },
-
-      // sometimes I press right_command+caps_lock by mistake and caps lock turn on,
-      // and I don't want that
-      // Notice that I set the modifier keys to all the keys that right_command
-      // represents, tried using right_command and it never worked, even if I
-      // put this above the hyper declaration
-      {
-        description: "right_command+caps_lock -> null",
         from: {
           key_code: "caps_lock",
           modifiers: {
@@ -144,22 +121,50 @@ const rules: KarabinerRules[] = [
         // ],
         type: "basic",
       },
+    ],
+  },
 
-      //      {
-      //        type: "basic",
-      //        description: "Disable CMD + Tab to force Hyper Key usage",
-      //        from: {
-      //          key_code: "tab",
-      //          modifiers: {
-      //            mandatory: ["left_command"],
-      //          },
-      //        },
-      //        to: [
-      //          {
-      //            key_code: "tab",
-      //          },
-      //        ],
-      //      },
+  {
+    description: "left_shift+caps_lock -> null",
+    manipulators: [
+      {
+        from: {
+          key_code: "caps_lock",
+          modifiers: {
+            mandatory: ["left_shift"],
+          },
+        },
+        to: [],
+        // to: [
+        //   {
+        //     key_code: "escape",
+        //   },
+        // ],
+        type: "basic",
+      },
+    ],
+  },
+
+  // sometimes I press shift+caps_lock by mistake and caps lock turn on,
+  // and I don't want that
+  {
+    description: "left_command+caps_lock -> null",
+    manipulators: [
+      {
+        from: {
+          key_code: "caps_lock",
+          modifiers: {
+            mandatory: ["left_command"],
+          },
+        },
+        to: [],
+        // to: [
+        //   {
+        //     key_code: "escape",
+        //   },
+        // ],
+        type: "basic",
+      },
     ],
   },
 

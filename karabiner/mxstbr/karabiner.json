@@ -37,9 +37,13 @@
                   }
                 ],
                 "type": "basic"
-              },
+              }
+            ]
+          },
+          {
+            "description": "caps_lock -> shift and escape",
+            "manipulators": [
               {
-                "description": "caps_lock -> shift and escape",
                 "from": {
                   "key_code": "caps_lock"
                 },
@@ -54,35 +58,13 @@
                   }
                 ],
                 "type": "basic"
-              },
+              }
+            ]
+          },
+          {
+            "description": "right_command+caps_lock -> null",
+            "manipulators": [
               {
-                "description": "left_command+caps_lock -> null",
-                "from": {
-                  "key_code": "caps_lock",
-                  "modifiers": {
-                    "mandatory": [
-                      "left_command"
-                    ]
-                  }
-                },
-                "to": [],
-                "type": "basic"
-              },
-              {
-                "description": "left_shift+caps_lock -> null",
-                "from": {
-                  "key_code": "caps_lock",
-                  "modifiers": {
-                    "mandatory": [
-                      "left_shift"
-                    ]
-                  }
-                },
-                "to": [],
-                "type": "basic"
-              },
-              {
-                "description": "right_command+caps_lock -> null",
                 "from": {
                   "key_code": "caps_lock",
                   "modifiers": {
@@ -91,6 +73,40 @@
                       "left_control",
                       "left_option",
                       "left_shift"
+                    ]
+                  }
+                },
+                "to": [],
+                "type": "basic"
+              }
+            ]
+          },
+          {
+            "description": "left_shift+caps_lock -> null",
+            "manipulators": [
+              {
+                "from": {
+                  "key_code": "caps_lock",
+                  "modifiers": {
+                    "mandatory": [
+                      "left_shift"
+                    ]
+                  }
+                },
+                "to": [],
+                "type": "basic"
+              }
+            ]
+          },
+          {
+            "description": "left_command+caps_lock -> null",
+            "manipulators": [
+              {
+                "from": {
+                  "key_code": "caps_lock",
+                  "modifiers": {
+                    "mandatory": [
+                      "left_command"
                     ]
                   }
                 },

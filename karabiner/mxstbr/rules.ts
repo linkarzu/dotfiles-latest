@@ -22,10 +22,21 @@ const rules: KarabinerRules[] = [
             modifiers: ["left_command", "left_control", "left_option"],
           },
         ],
+        // If right_command is pressed by itself, homerow will show up
+        // Homerow configured under `Clicking - Shorctut`
         to_if_alone: [
           {
-            key_code: "escape",
+            key_code: "6",
+            modifiers: [
+              "left_command",
+              "left_control",
+              "left_option",
+              "left_shift",
+            ],
           },
+          // {
+          //   key_code: "escape",
+          // },
         ],
         type: "basic",
       },
@@ -95,23 +106,6 @@ const rules: KarabinerRules[] = [
           key_code: "caps_lock",
           modifiers: {
             mandatory: ["left_shift"],
-          },
-        },
-        to: [],
-        // to: [
-        //   {
-        //     key_code: "escape",
-        //   },
-        // ],
-        type: "basic",
-      },
-
-      {
-        description: "right_option+caps_lock -> null",
-        from: {
-          key_code: "caps_lock",
-          modifiers: {
-            mandatory: ["right_option"],
           },
         },
         to: [],
@@ -243,6 +237,74 @@ const rules: KarabinerRules[] = [
     ],
   },
 
+  // This is used as a homerow app shortcut
+  {
+    description: "right_control -> homerow 2",
+    manipulators: [
+      {
+        from: {
+          key_code: "right_control",
+        },
+        to: [
+          {
+            key_code: "right_control",
+          },
+        ],
+        to_if_alone: [
+          {
+            key_code: "spacebar",
+            modifiers: ["left_command", "left_option"],
+          },
+        ],
+        type: "basic",
+      },
+    ],
+  },
+
+  // This is used as a homerow app shortcut
+  {
+    description: "right_option -> homerow 3",
+    manipulators: [
+      {
+        from: {
+          key_code: "right_option",
+        },
+        to: [
+          {
+            key_code: "right_option",
+          },
+        ],
+        to_if_alone: [
+          {
+            key_code: "delete_or_backspace",
+            modifiers: ["left_command", "left_option"],
+          },
+        ],
+        type: "basic",
+      },
+    ],
+  },
+
+  {
+    description: "right_option+caps_lock -> null",
+    manipulators: [
+      {
+        from: {
+          key_code: "caps_lock",
+          modifiers: {
+            mandatory: ["right_option"],
+          },
+        },
+        to: [],
+        // to: [
+        //   {
+        //     key_code: "escape",
+        //   },
+        // ],
+        type: "basic",
+      },
+    ],
+  },
   // I couldn't get this work with the magic mouse because it only detects button1 in the karabiner event viewer
   // You need to enable pro mode in karabiner for the work with the apple mouse
   // It works with the logitech mouse tough
@@ -318,6 +380,7 @@ const rules: KarabinerRules[] = [
       // hyper+` - cleanshot x record screen
       // hyper+2 - betterdisplay fav res 1
       // hyper+3 - betterdisplay fav res 2
+      // hyper+6 - homerow clicking shortcut
       // hyper+tab - cleanshot capture history
     },
 
@@ -786,14 +849,14 @@ const rules: KarabinerRules[] = [
       to: [{ key_code: "b", modifiers: ["left_control"] }],
     },
     // copy, paste and other stuff
-    y: {
-      // Switch between windows of same app, normally cmd+~
-      to: [{ key_code: "tab", modifiers: ["left_command"] }],
-    },
-    6: {
-      // Switch between windows of same app, normally cmd+~
-      to: [{ key_code: "grave_accent_and_tilde", modifiers: ["left_command"] }],
-    },
+    // y: {
+    //   // Switch between windows of same app, normally cmd+~
+    //   to: [{ key_code: "tab", modifiers: ["left_command"] }],
+    // },
+    // 6: {
+    //   // Switch between windows of same app, normally cmd+~
+    //   to: [{ key_code: "grave_accent_and_tilde", modifiers: ["left_command"] }],
+    // },
   }),
 ];
 

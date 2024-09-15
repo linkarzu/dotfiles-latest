@@ -679,6 +679,10 @@ const rules: KarabinerRules[] = [
           },
         ],
       },
+      // Dismiss notifications on macos
+      k: open(
+        "btt://execute_assigned_actions_for_trigger/?uuid=92B63395-5930-463A-9301-57BA344D6981"
+      ),
     },
 
     // For betterTouchTool

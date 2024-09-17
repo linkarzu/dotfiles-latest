@@ -15,6 +15,8 @@
 vim.keymap.set("n", "<S-h>", "<cmd>BufExplorer<cr>", { desc = "[P]Open bufexplorer" })
 -- vim.keymap.del("n", "<S-l>")
 
+vim.keymap.set("n", "<leader>uk", '<cmd>lua require("kubectl").toggle()<cr>', { noremap = true, silent = true })
+
 vim.keymap.set("n", "<S-l>", function()
   local toggle = require("snipe").create_buffer_menu_toggler({
     -- Limit the width of path buffer names

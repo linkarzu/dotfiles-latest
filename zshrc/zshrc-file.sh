@@ -244,6 +244,8 @@ esac
 # macOS-specific configurations
 if [ "$OS" = 'Mac' ]; then
 
+  my_own_colorscheme="eldritch-dark-winter"
+
   # Add SSH keys to the agent as these keys won't persist after the computer is restarted
   # Check and add the personal GitHub key
   if [ -f ~/.ssh/key-github-pers ]; then

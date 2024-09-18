@@ -4,12 +4,14 @@
 -- I think I grabbed the config from this plugin using Folke's lazyvim.org and
 -- just made some changes on the top
 -- http://www.lazyvim.org/plugins/ui#lualinenvim
+--
+local colors = require("config.colors").load_colors()
 
 return {
   "nvim-lualine/lualine.nvim",
   event = "VeryLazy",
   opts = function(_, opts)
-    local fg_color = "#212337" -- Foreground color for the text
+    local fg_color = colors["linkarzu_color07"] -- Foreground color for the text
 
     local icons = LazyVim.config.icons
     opts.sections.lualine_c = {
@@ -41,13 +43,13 @@ return {
     local function get_permissions_color()
       local file = vim.fn.expand("%:p")
       if file == "" or file == nil then
-        return "No File", "#04d1f9" -- Default blue for no or non-existing file
+        return "No File", colors["linkarzu_color03"] -- Default blue for no or non-existing file
       else
         local permissions = vim.fn.getfperm(file)
         -- Check only the first three characters for 'rwx' to determine owner permissions
         local owner_permissions = permissions:sub(1, 3)
         -- green for owner 'rwx', blue otherwise
-        return permissions, owner_permissions == "rwx" and "#37f499" or "#04d1f9"
+        return permissions, owner_permissions == "rwx" and colors["linkarzu_color02"] or colors["linkarzu_color03"]
       end
     end
 
@@ -56,14 +58,14 @@ return {
     local function decide_color()
       local hostname = vim.fn.systemlist("hostname")[1]
       local last_char = hostname:sub(-1)
-      local bg_color = "#a48cf2" -- Default pink
+      local bg_color = colors["linkarzu_color04"]
 
       if last_char == "1" then
-        bg_color = "#37f499"
+        bg_color = colors["linkarzu_color02"]
       elseif last_char == "2" then
-        bg_color = "#f16c75"
+        bg_color = colors["linkarzu_color08"]
       elseif last_char == "3" then
-        bg_color = "#f7c67f"
+        bg_color = colors["linkarzu_color06"]
       end
 
       return bg_color
@@ -126,9 +128,9 @@ return {
     -- Function to determine the background color based on spelling status
     local function spell_bg_color()
       if vim.wo.spell then
-        return "#37f499" -- Green for spell on
+        return colors["linkarzu_color02"] -- Color for spell on
       else
-        return "#f16c75" -- Red for spell off
+        return colors["linkarzu_color08"] -- Color for spell off
       end
     end
 

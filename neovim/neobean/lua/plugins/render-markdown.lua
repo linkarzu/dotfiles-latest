@@ -10,6 +10,8 @@
 -- so the inly way is the only way I was able to make it work was loading it
 -- after the config.lazy in the init.lua file lamw25wmal
 
+local colors = require("config.colors").load_colors()
+
 return {
   "MeanderingProgrammer/render-markdown.nvim",
   -- Moved highlight creation out of opts as suggested by plugin maintainer
@@ -18,14 +20,13 @@ return {
   -- https://github.com/MeanderingProgrammer/render-markdown.nvim/issues/138#issuecomment-2295422741
   init = function()
     -- Define color variables
-    -- These are the colors for the eldritch colorscheme
-    local color1_bg = "#f265b5"
-    local color2_bg = "#37f499"
-    local color3_bg = "#04d1f9"
-    local color4_bg = "#a48cf2"
-    local color5_bg = "#f1fc79"
-    local color6_bg = "#f7c67f"
-    local color_fg = "#323449"
+    local color1_bg = colors["linkarzu_color04"]
+    local color2_bg = colors["linkarzu_color02"]
+    local color3_bg = colors["linkarzu_color03"]
+    local color4_bg = colors["linkarzu_color01"]
+    local color5_bg = colors["linkarzu_color05"]
+    local color6_bg = colors["linkarzu_color08"]
+    local color_fg = colors["linkarzu_color10"]
     -- local color_sign = "#ebfafa"
 
     -- Heading colors (when not hovered over), extends through the entire line

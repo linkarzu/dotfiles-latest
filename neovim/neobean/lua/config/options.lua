@@ -14,8 +14,9 @@
 -- vim.opt.winbar = "%m %f%=" .. vim.fn.systemlist("hostname")[1]
 --
 -- Using different colors, defining the colors in this file
-vim.cmd([[highlight WinBar1 guifg=#04d1f9]])
-vim.cmd([[highlight WinBar2 guifg=#37f499]])
+local colors = require("config.colors").load_colors()
+vim.cmd(string.format([[highlight WinBar1 guifg=%s]], colors["linkarzu_color03"]))
+vim.cmd(string.format([[highlight WinBar2 guifg=%s]], colors["linkarzu_color02"]))
 -- Function to get the full path and replace the home directory with ~
 local function get_winbar_path()
   local full_path = vim.fn.expand("%:p")

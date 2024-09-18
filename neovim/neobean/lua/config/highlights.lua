@@ -1,11 +1,16 @@
--- Custom highlight settings for markdown headers
-local color1_bg = "#f265b5"
-local color2_bg = "#37f499"
-local color3_bg = "#04d1f9"
-local color4_bg = "#a48cf2"
-local color5_bg = "#f1fc79"
-local color6_bg = "#f7c67f"
-local color_fg = "#323449"
+-- Filename: ~/github/dotfiles-latest/neovim/neobean/lua/config/highlights.lua
+-- ~/github/dotfiles-latest/neovim/neobean/lua/config/highlights.lua
+
+local colors = require("config.colors").load_colors()
+
+local color1_bg = colors["linkarzu_color04"]
+local color2_bg = colors["linkarzu_color02"]
+local color3_bg = colors["linkarzu_color03"]
+local color4_bg = colors["linkarzu_color01"]
+local color5_bg = colors["linkarzu_color05"]
+local color6_bg = colors["linkarzu_color08"]
+local color_fg = colors["linkarzu_color07"]
+
 vim.cmd(
   string.format([[highlight @markup.heading.1.markdown cterm=bold gui=bold guifg=%s guibg=%s]], color_fg, color1_bg)
 )

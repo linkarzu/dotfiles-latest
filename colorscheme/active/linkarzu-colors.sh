@@ -1,4 +1,7 @@
-# ~/github/dotfiles-latest/colorscheme/active/colors.sh
+#!/bin/env/bash
+
+# Filename: ~/github/dotfiles-latest/colorscheme/list/linkarzu-colors.sh
+# ~/github/dotfiles-latest/colorscheme/list/linkarzu-colors.sh
 
 linkarzu_color01="#949ae5"
 linkarzu_color02="#37f499"
@@ -23,4 +26,5 @@ linkarzu_color13="#314154"
 linkarzu_color14="#ebfafa"
 # Tmux inactive windows
 linkarzu_color15="#013e4a"
+# Selected text
 linkarzu_color16="#d99ffd"

@@ -3,8 +3,19 @@
 # Filename: ~/github/dotfiles-latest/tmux/tools/linkarzu/set_tmux_colors.sh
 # ~/github/dotfiles-latest/tmux/tools/linkarzu/set_tmux_colors.sh
 
-# Load colors from colors.sh
-source "$HOME/github/dotfiles-latest/colorscheme/active/colors.sh"
+# Define the active folder
+active_folder="$HOME/github/dotfiles-latest/colorscheme/active"
+
+# Get the active file (assuming there's only one file in the active folder)
+active_file=$(ls "$active_folder" | head -n 1)
+if [ -z "$active_file" ]; then
+  echo "Error: No colorscheme active file found in $active_folder."
+  exit 1
+fi
+active_file="$active_folder/$active_file"
+
+# Load colors from the active colors file
+source "$active_file"
 
 # Output tmux set commands
 # I use this for my custom tmux banner on the right side
@@ -31,9 +42,9 @@ tmux set -g @catppuccin_status_background "$linkarzu_color10"
 tmux set -g @catppuccin_session_color "#{?client_prefix,$linkarzu_color04,$linkarzu_color02}"
 
 # This sets the color of the window text, #W shows the application name
-set -g @catppuccin_window_default_fill "number"
+tmux set -g @catppuccin_window_default_fill "number"
 tmux set -g @catppuccin_window_default_text "#[fg=$linkarzu_color14]#W"
-set -g @catppuccin_window_current_fill "number"
+tmux set -g @catppuccin_window_current_fill "number"
 tmux set -g @catppuccin_window_current_text "#[fg=$linkarzu_color14]#W"
 
 # Put this option below the '@catppuccin_window_current_text' option for it to

@@ -91,7 +91,20 @@ return {
       highlights.DiagnosticError = { fg = colors_from_file["linkarzu_color05"] }
       highlights.RenderMarkdownQuote = { fg = colors_from_file["linkarzu_color12"] }
 
+      -- visual mode selection
       highlights.Visual = { bg = colors_from_file["linkarzu_color16"], fg = colors_from_file["linkarzu_color10"] }
+
+      highlights.KubectlHeader = { fg = colors_from_file["linkarzu_color04"] }
+      highlights.KubectlWarning = { fg = colors_from_file["linkarzu_color03"] }
+      highlights.KubectlError = { fg = colors_from_file["linkarzu_color01"] }
+      highlights.KubectlInfo = { fg = colors_from_file["linkarzu_color02"] }
+      highlights.KubectlDebug = { fg = colors_from_file["linkarzu_color05"] }
+      highlights.KubectlSuccess = { fg = colors_from_file["linkarzu_color06"] }
+      highlights.KubectlPending = { fg = colors_from_file["linkarzu_color07"] }
+      highlights.KubectlDeprecated = { fg = colors_from_file["linkarzu_color08"] }
+      highlights.KubectlExperimental = { fg = colors_from_file["linkarzu_color11"] }
+      highlights.KubectlNote = { fg = colors_from_file["linkarzu_color10"] }
+      highlights.KubectlGray = { fg = colors_from_file["linkarzu_color09"] }
     end,
     -- Overriding colors globally
     on_colors = function(global_colors)

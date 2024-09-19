@@ -1,4 +1,4 @@
-#!/bin/env/bash
+#!/usr/bin/env bash
 
 # Filename: ~/github/dotfiles-latest/colorscheme/list/linkarzu-colors.sh
 # ~/github/dotfiles-latest/colorscheme/list/linkarzu-colors.sh

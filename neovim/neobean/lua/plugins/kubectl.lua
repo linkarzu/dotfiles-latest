@@ -33,7 +33,7 @@ return {
       },
       obj_fresh = 0, -- highlight if creation newer than number (in minutes)
       mappings = {
-        exit = "<leader>uk",
+        -- exit = "<leader>uk",
       },
     })
   end,

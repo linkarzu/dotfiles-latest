@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Filename: ~/github/dotfiles-latest/tmux/tools/linkarzu/set_tmux_colors.sh
 # ~/github/dotfiles-latest/tmux/tools/linkarzu/set_tmux_colors.sh

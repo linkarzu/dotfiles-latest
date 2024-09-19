@@ -409,7 +409,7 @@ set -g @catppuccin_status_default "on"
 
 # default for catppuccin_session_color is #{?client_prefix,$thm_red,$thm_green}
 # https://github.com/catppuccin/tmux/issues/140#issuecomment-1956204278
-set -g @catppuccin_session_color "#{?client_prefix,#a48cf2,#37f499}"
+set -g @catppuccin_session_color "#{?client_prefix,#987afb,#37f499}"
 
 # This sets the color of the window text, #W shows the application name
 set -g @catppuccin_window_default_fill "number"
@@ -424,7 +424,7 @@ set -g @catppuccin_window_current_text "#[fg=#ebfafa]#W"
 # https://youtu.be/GH3kpsbbERo?si=4ZoV090qVbble7np
 #
 # Second option shows a message when panes are syncronized
-set -g @catppuccin_window_current_text "#W#{?window_zoomed_flag,#[fg=#a48cf2] (   ),}#{?pane_synchronized,#[fg=#a48cf2] SYNCHRONIZED-PANES,}"
+set -g @catppuccin_window_current_text "#W#{?window_zoomed_flag,#[fg=#987afb] (   ),}#{?pane_synchronized,#[fg=#987afb] SYNCHRONIZED-PANES,}"
 
 # ----------------------------------------------------------------------------
 

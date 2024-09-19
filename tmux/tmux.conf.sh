@@ -351,11 +351,12 @@ set -g @plugin 'tmux-plugins/tpm'
 set -g @plugin 'catppuccin/tmux'
 set -g @catppuccin_flavour 'mocha' # or frappe, macchiato, mocha
 
+run-shell ~/github/dotfiles-latest/tmux/tools/linkarzu/set_tmux_colors.sh
+
 set -g @catppuccin_window_left_separator ""
 set -g @catppuccin_window_right_separator " "
 set -g @catppuccin_window_middle_separator " █"
 set -g @catppuccin_window_number_position "right"
-
 set -g @catppuccin_status_modules_left "session"
 
 # # set -g @catppuccin_status_modules_right "none"
@@ -369,7 +370,6 @@ set -g @catppuccin_status_modules_left "session"
 if-shell 'test -f ~/github/dotfiles-latest/youtube-banner.txt' {
     set -g @catppuccin_status_modules_right "directory"
     set -g @catppuccin_directory_text " linkarzu   like the video   and subscribe   "
-    set -g @catppuccin_directory_color "#04d1f9"
     set -g @catppuccin_directory_icon "null"
 } {
     set -g @catppuccin_status_modules_right "null"
@@ -384,47 +384,13 @@ set -g @catppuccin_status_connect_separator "no"
 
 # set -g @catppuccin_directory_text "#{pane_current_path}"
 
-## ELDRITCH COLORS
-# Color of the ACTIVE window, windows are opened with ctrl+b c
-set -g @catppuccin_window_current_color "#04d1f9"
-set -g @catppuccin_window_current_background "#314154"
-
-# Color of the rest of the windows that are not active
-set -g @catppuccin_window_default_color "#013e4a"
-set -g @catppuccin_window_default_background "#0D1116"
-
-# The following 2 colors are for the lines that separate tmux splits
-set -g @catppuccin_pane_active_border_style "fg=#04d1f9"
-set -g @catppuccin_pane_border_style "fg=#a5afc2"
-
 # This can be set to "icon" or "all" if set to "all" the entire tmux session
 # name has color
 # set -g @catppuccin_status_fill "icon"
 set -g @catppuccin_status_fill "all"
-# This is the classic colored tmux bar that goes across the entire screen
-# set -g @catppuccin_status_background "theme"
-set -g @catppuccin_status_background "#0D1116"
+
 # If you set this to off, the tmux line completely dissappears
 set -g @catppuccin_status_default "on"
-
-# default for catppuccin_session_color is #{?client_prefix,$thm_red,$thm_green}
-# https://github.com/catppuccin/tmux/issues/140#issuecomment-1956204278
-set -g @catppuccin_session_color "#{?client_prefix,#987afb,#37f499}"
-
-# This sets the color of the window text, #W shows the application name
-set -g @catppuccin_window_default_fill "number"
-set -g @catppuccin_window_default_text "#[fg=#ebfafa]#W"
-
-set -g @catppuccin_window_current_fill "number"
-set -g @catppuccin_window_current_text "#[fg=#ebfafa]#W"
-
-# Put this option below the '@catppuccin_window_current_text' option for it to
-# override it, otherwise it won't work
-# I got the 'window_zoomed_flag' tip from 'DevOps Toolbox' youtuber
-# https://youtu.be/GH3kpsbbERo?si=4ZoV090qVbble7np
-#
-# Second option shows a message when panes are syncronized
-set -g @catppuccin_window_current_text "#W#{?window_zoomed_flag,#[fg=#987afb] (   ),}#{?pane_synchronized,#[fg=#987afb] SYNCHRONIZED-PANES,}"
 
 # ----------------------------------------------------------------------------
 

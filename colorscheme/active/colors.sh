@@ -23,3 +23,4 @@ linkarzu_color13="#314154"
 linkarzu_color14="#ebfafa"
 # Tmux inactive windows
 linkarzu_color15="#013e4a"
+linkarzu_color16="#d99ffd"

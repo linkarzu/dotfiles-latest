@@ -90,6 +90,8 @@ return {
       highlights.DiagnosticOk = { fg = colors_from_file["linkarzu_color04"] }
       highlights.DiagnosticError = { fg = colors_from_file["linkarzu_color05"] }
       highlights.RenderMarkdownQuote = { fg = colors_from_file["linkarzu_color12"] }
+
+      highlights.Visual = { bg = colors_from_file["linkarzu_color16"], fg = colors_from_file["linkarzu_color10"] }
     end,
     -- Overriding colors globally
     on_colors = function(global_colors)

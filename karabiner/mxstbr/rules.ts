@@ -168,9 +168,8 @@ const rules: KarabinerRules[] = [
     ],
   },
 
-  // When left_command is pressed alone, send Command+C
   {
-    description: "left_command -> Command+C if pressed alone",
+    description: "left_command -> cmd+c if pressed alone",
     manipulators: [
       {
         from: {
@@ -196,9 +195,8 @@ const rules: KarabinerRules[] = [
     ],
   },
 
-  // When left_option is pressed alone, send Command+V
   {
-    description: "left_option -> Command+V if pressed alone",
+    description: "left_option -> cmd+v if pressed alone",
     manipulators: [
       {
         from: {
@@ -212,6 +210,29 @@ const rules: KarabinerRules[] = [
         to_if_alone: [
           {
             key_code: "v",
+            modifiers: ["command"],
+          },
+        ],
+        type: "basic",
+      },
+    ],
+  },
+
+  {
+    description: "left_ctrl -> cmd+tab if pressed alone",
+    manipulators: [
+      {
+        from: {
+          key_code: "left_control",
+        },
+        to: [
+          {
+            key_code: "left_control",
+          },
+        ],
+        to_if_alone: [
+          {
+            key_code: "tab",
             modifiers: ["command"],
           },
         ],

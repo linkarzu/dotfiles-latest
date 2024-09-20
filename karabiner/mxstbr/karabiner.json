@@ -116,7 +116,7 @@
             ]
           },
           {
-            "description": "left_command -> Command+C if pressed alone",
+            "description": "left_command -> cmd+c if pressed alone",
             "manipulators": [
               {
                 "from": {
@@ -140,7 +140,7 @@
             ]
           },
           {
-            "description": "left_option -> Command+V if pressed alone",
+            "description": "left_option -> cmd+v if pressed alone",
             "manipulators": [
               {
                 "from": {
@@ -154,6 +154,30 @@
                 "to_if_alone": [
                   {
                     "key_code": "v",
+                    "modifiers": [
+                      "command"
+                    ]
+                  }
+                ],
+                "type": "basic"
+              }
+            ]
+          },
+          {
+            "description": "left_ctrl -> cmd+tab if pressed alone",
+            "manipulators": [
+              {
+                "from": {
+                  "key_code": "left_control"
+                },
+                "to": [
+                  {
+                    "key_code": "left_control"
+                  }
+                ],
+                "to_if_alone": [
+                  {
+                    "key_code": "tab",
                     "modifiers": [
                       "command"
                     ]

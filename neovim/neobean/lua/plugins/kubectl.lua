@@ -1,3 +1,5 @@
+-- https://github.com/Ramilito/kubectl.nvim
+
 return {
   "ramilito/kubectl.nvim",
   config = function()

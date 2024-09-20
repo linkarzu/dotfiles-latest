@@ -3,7 +3,7 @@
 -- Filename: ~/github/dotfiles-latest/neovim/neobean/lua/plugins/colorschemes/eldritch.lua
 -- ~/github/dotfiles-latest/neovim/neobean/lua/plugins/colorschemes/eldritch.lua
 
-local colors_from_file = require("config.colors").load_colors()
+local colors = require("config.colors").load_colors()
 
 return {
   "eldritch-theme/eldritch.nvim",
@@ -12,109 +12,121 @@ return {
   opts = {
     -- This function is found in the documentation
     on_highlights = function(highlights)
-      -- nvim-spectre highlight colors
-      highlights.DiffChange = { bg = colors_from_file["linkarzu_color02"], fg = "black" }
-      highlights.DiffDelete = { bg = colors_from_file["linkarzu_color01"], fg = "black" }
+      local highlight_definitions = {
+        -- nvim-spectre highlight colors
+        DiffChange = { bg = colors["linkarzu_color02"], fg = "black" },
+        DiffDelete = { bg = colors["linkarzu_color01"], fg = "black" },
+        TelescopeResultsDiffDelete = { bg = colors["linkarzu_color01"], fg = "black" },
 
-      -- horizontal line that goes across where cursor is
-      highlights.CursorLine = { bg = colors_from_file["linkarzu_color13"] }
+        -- horizontal line that goes across where cursor is
+        CursorLine = { bg = colors["linkarzu_color13"] },
 
-      -- highlights.Comment = { fg = colors_from_file["linkarzu_color09"], italic = true }
+        -- I do the line below to change the color of bold text
+        ["@markup.strong"] = { fg = colors["linkarzu_color04"], bold = true },
 
-      -- I do the line below to change the color of bold text
-      highlights["@markup.strong"] = { fg = colors_from_file["linkarzu_color04"], bold = true }
+        -- Change the spell underline color
+        SpellBad = { sp = colors["linkarzu_color11"], undercurl = true, bold = true, italic = true },
+        SpellCap = { sp = colors["linkarzu_color12"], undercurl = true, bold = true, italic = true },
+        SpellLocal = { sp = colors["linkarzu_color12"], undercurl = true, bold = true, italic = true },
+        SpellRare = { sp = colors["linkarzu_color04"], undercurl = true, bold = true, italic = true },
 
-      -- Change the spell underline color
-      highlights.SpellBad = { sp = colors_from_file["linkarzu_color11"], undercurl = true, bold = true, italic = true }
-      highlights.SpellCap = { sp = colors_from_file["linkarzu_color12"], undercurl = true, bold = true, italic = true }
-      highlights.SpellLocal =
-        { sp = colors_from_file["linkarzu_color12"], undercurl = true, bold = true, italic = true }
-      highlights.SpellRare = { sp = colors_from_file["linkarzu_color04"], undercurl = true, bold = true, italic = true }
+        MiniDiffSignAdd = { fg = colors["linkarzu_color05"], bold = true },
+        MiniDiffSignChange = { fg = colors["linkarzu_color02"], bold = true },
 
-      highlights.MiniDiffSignAdd = { fg = colors_from_file["linkarzu_color05"], bold = true }
-      highlights.MiniDiffSignChange = { fg = colors_from_file["linkarzu_color02"], bold = true }
+        -- Codeblocks for the render-markdown plugin
+        RenderMarkdownCode = { bg = colors["linkarzu_color07"] },
 
-      -- Codeblocks for the render-markdown plugin
-      highlights.RenderMarkdownCode = { bg = colors_from_file["linkarzu_color07"] }
+        -- This is the plugin that shows you where you are at the top
+        TreesitterContext = { sp = colors["linkarzu_color10"] },
+        MiniFilesNormal = { sp = colors["linkarzu_color10"] },
+        MiniFilesBorder = { sp = colors["linkarzu_color10"] },
+        MiniFilesTitle = { sp = colors["linkarzu_color10"] },
+        MiniFilesTitleFocused = { sp = colors["linkarzu_color10"] },
 
-      -- This is the plugin that shows you where you are at the top
-      highlights.TreesitterContext = { sp = colors_from_file["linkarzu_color10"] }
-      highlights.MiniFilesNormal = { sp = colors_from_file["linkarzu_color10"] }
-      highlights.MiniFilesBorder = { sp = colors_from_file["linkarzu_color10"] }
-      highlights.MiniFilesTitle = { sp = colors_from_file["linkarzu_color10"] }
-      highlights.MiniFilesTitleFocused = { sp = colors_from_file["linkarzu_color10"] }
+        NormalFloat = { bg = colors["linkarzu_color10"] },
+        FloatBorder = { bg = colors["linkarzu_color10"] },
+        FloatTitle = { bg = colors["linkarzu_color10"] },
+        NotifyBackground = { bg = colors["linkarzu_color10"] },
+        NeoTreeNormalNC = { bg = colors["linkarzu_color10"] },
+        NeoTreeNormal = { bg = colors["linkarzu_color10"] },
+        NvimTreeWinSeparator = { fg = colors["linkarzu_color10"], bg = colors["linkarzu_color10"] },
+        NvimTreeNormalNC = { bg = colors["linkarzu_color10"] },
+        NvimTreeNormal = { bg = colors["linkarzu_color10"] },
+        TroubleNormal = { bg = colors["linkarzu_color10"] },
+        NoiceCmdlinePopupBorder = { bg = colors["linkarzu_color10"] },
+        NoiceCmdlinePopupTitle = { bg = colors["linkarzu_color10"] },
+        NoiceCmdlinePopupBorderFilter = { bg = colors["linkarzu_color10"] },
+        NoiceCmdlineIconFilter = { bg = colors["linkarzu_color10"] },
+        NoiceCmdlinePopupTitleFilter = { bg = colors["linkarzu_color10"] },
+        NoiceCmdlineIcon = { bg = colors["linkarzu_color10"] },
+        NoiceCmdlineIconCmdline = { bg = colors["linkarzu_color10"] },
+        NoiceCmdlinePopupBorderCmdline = { bg = colors["linkarzu_color10"] },
+        NoiceCmdlinePopupTitleCmdline = { bg = colors["linkarzu_color10"] },
+        NoiceCmdlineIconSearch = { bg = colors["linkarzu_color10"] },
+        NoiceCmdlinePopupBorderSearch = { bg = colors["linkarzu_color10"] },
+        NoiceCmdlinePopupTitleSearch = { bg = colors["linkarzu_color10"] },
+        NoiceCmdlineIconLua = { bg = colors["linkarzu_color10"] },
+        NoiceCmdlinePopupBorderLua = { bg = colors["linkarzu_color10"] },
+        NoiceCmdlinePopupTitleLua = { bg = colors["linkarzu_color10"] },
+        NoiceCmdlineIconHelp = { bg = colors["linkarzu_color10"] },
+        NoiceCmdlinePopupBorderHelp = { bg = colors["linkarzu_color10"] },
+        NoiceCmdlinePopupTitleHelp = { bg = colors["linkarzu_color10"] },
+        NoiceCmdlineIconInput = { bg = colors["linkarzu_color10"] },
+        NoiceCmdlinePopupBorderInput = { bg = colors["linkarzu_color10"] },
+        NoiceCmdlinePopupTitleInput = { bg = colors["linkarzu_color10"] },
+        NoiceCmdlineIconCalculator = { bg = colors["linkarzu_color10"] },
+        NoiceCmdlinePopupBorderCalculator = { bg = colors["linkarzu_color10"] },
+        NoiceCmdlinePopupTitleCalculator = { bg = colors["linkarzu_color10"] },
+        NoiceCompletionItemKindDefault = { bg = colors["linkarzu_color10"] },
+        NoiceMini = { bg = colors["linkarzu_color10"] },
+        StatusLine = { bg = colors["linkarzu_color10"] },
+        Folded = { bg = colors["linkarzu_color10"] },
 
-      highlights.NormalFloat = { bg = colors_from_file["linkarzu_color10"] }
-      highlights.FloatBorder = { bg = colors_from_file["linkarzu_color10"] }
-      highlights.FloatTitle = { bg = colors_from_file["linkarzu_color10"] }
-      highlights.NotifyBackground = { bg = colors_from_file["linkarzu_color10"] }
-      highlights.NeoTreeNormalNC = { bg = colors_from_file["linkarzu_color10"] }
-      highlights.NeoTreeNormal = { bg = colors_from_file["linkarzu_color10"] }
-      highlights.NvimTreeWinSeparator =
-        { fg = colors_from_file["linkarzu_color10"], bg = colors_from_file["linkarzu_color10"] }
-      highlights.NvimTreeNormalNC = { bg = colors_from_file["linkarzu_color10"] }
-      highlights.NvimTreeNormal = { bg = colors_from_file["linkarzu_color10"] }
-      highlights.TroubleNormal = { bg = colors_from_file["linkarzu_color10"] }
-      highlights.NoiceCmdlinePopupBorder = { bg = colors_from_file["linkarzu_color10"] }
-      highlights.NoiceCmdlinePopupTitle = { bg = colors_from_file["linkarzu_color10"] }
-      highlights.NoiceCmdlinePopupBorderFilter = { bg = colors_from_file["linkarzu_color10"] }
-      highlights.NoiceCmdlineIconFilter = { bg = colors_from_file["linkarzu_color10"] }
-      highlights.NoiceCmdlinePopupTitleFilter = { bg = colors_from_file["linkarzu_color10"] }
-      highlights.NoiceCmdlineIcon = { bg = colors_from_file["linkarzu_color10"] }
-      highlights.NoiceCmdlineIconCmdline = { bg = colors_from_file["linkarzu_color10"] }
-      highlights.NoiceCmdlinePopupBorderCmdline = { bg = colors_from_file["linkarzu_color10"] }
-      highlights.NoiceCmdlinePopupTitleCmdline = { bg = colors_from_file["linkarzu_color10"] }
-      highlights.NoiceCmdlineIconSearch = { bg = colors_from_file["linkarzu_color10"] }
-      highlights.NoiceCmdlinePopupBorderSearch = { bg = colors_from_file["linkarzu_color10"] }
-      highlights.NoiceCmdlinePopupTitleSearch = { bg = colors_from_file["linkarzu_color10"] }
-      highlights.NoiceCmdlineIconLua = { bg = colors_from_file["linkarzu_color10"] }
-      highlights.NoiceCmdlinePopupBorderLua = { bg = colors_from_file["linkarzu_color10"] }
-      highlights.NoiceCmdlinePopupTitleLua = { bg = colors_from_file["linkarzu_color10"] }
-      highlights.NoiceCmdlineIconHelp = { bg = colors_from_file["linkarzu_color10"] }
-      highlights.NoiceCmdlinePopupBorderHelp = { bg = colors_from_file["linkarzu_color10"] }
-      highlights.NoiceCmdlinePopupTitleHelp = { bg = colors_from_file["linkarzu_color10"] }
-      highlights.NoiceCmdlineIconInput = { bg = colors_from_file["linkarzu_color10"] }
-      highlights.NoiceCmdlinePopupBorderInput = { bg = colors_from_file["linkarzu_color10"] }
-      highlights.NoiceCmdlinePopupTitleInput = { bg = colors_from_file["linkarzu_color10"] }
-      highlights.NoiceCmdlineIconCalculator = { bg = colors_from_file["linkarzu_color10"] }
-      highlights.NoiceCmdlinePopupBorderCalculator = { bg = colors_from_file["linkarzu_color10"] }
-      highlights.NoiceCmdlinePopupTitleCalculator = { bg = colors_from_file["linkarzu_color10"] }
-      highlights.NoiceCompletionItemKindDefault = { bg = colors_from_file["linkarzu_color10"] }
-      highlights.NoiceMini = { bg = colors_from_file["linkarzu_color10"] }
-      highlights.StatusLine = { bg = colors_from_file["linkarzu_color10"] }
-      highlights.Folded = { bg = colors_from_file["linkarzu_color10"] }
+        DiagnosticInfo = { fg = colors["linkarzu_color03"] },
+        DiagnosticHint = { fg = colors["linkarzu_color02"] },
+        DiagnosticWarn = { fg = colors["linkarzu_color08"] },
+        DiagnosticOk = { fg = colors["linkarzu_color04"] },
+        DiagnosticError = { fg = colors["linkarzu_color05"] },
+        RenderMarkdownQuote = { fg = colors["linkarzu_color12"] },
 
-      highlights.DiagnosticInfo = { fg = colors_from_file["linkarzu_color03"] }
-      highlights.DiagnosticHint = { fg = colors_from_file["linkarzu_color02"] }
-      highlights.DiagnosticWarn = { fg = colors_from_file["linkarzu_color08"] }
-      highlights.DiagnosticOk = { fg = colors_from_file["linkarzu_color04"] }
-      highlights.DiagnosticError = { fg = colors_from_file["linkarzu_color05"] }
-      highlights.RenderMarkdownQuote = { fg = colors_from_file["linkarzu_color12"] }
+        -- visual mode selection
+        Visual = { bg = colors["linkarzu_color16"], fg = colors["linkarzu_color10"] },
 
-      -- visual mode selection
-      highlights.Visual = { bg = colors_from_file["linkarzu_color16"], fg = colors_from_file["linkarzu_color10"] }
+        KubectlHeader = { fg = colors["linkarzu_color04"] },
+        KubectlWarning = { fg = colors["linkarzu_color03"] },
+        KubectlError = { fg = colors["linkarzu_color01"] },
+        KubectlInfo = { fg = colors["linkarzu_color02"] },
+        KubectlDebug = { fg = colors["linkarzu_color05"] },
+        KubectlSuccess = { fg = colors["linkarzu_color06"] },
+        KubectlPending = { fg = colors["linkarzu_color07"] },
+        KubectlDeprecated = { fg = colors["linkarzu_color08"] },
+        KubectlExperimental = { fg = colors["linkarzu_color09"] },
+        KubectlNote = { fg = colors["linkarzu_color10"] },
+        KubectlGray = { fg = colors["linkarzu_color10"] },
+      }
 
-      highlights.KubectlHeader = { fg = colors_from_file["linkarzu_color04"] }
-      highlights.KubectlWarning = { fg = colors_from_file["linkarzu_color03"] }
-      highlights.KubectlError = { fg = colors_from_file["linkarzu_color01"] }
-      highlights.KubectlInfo = { fg = colors_from_file["linkarzu_color02"] }
-      highlights.KubectlDebug = { fg = colors_from_file["linkarzu_color05"] }
-      highlights.KubectlSuccess = { fg = colors_from_file["linkarzu_color06"] }
-      highlights.KubectlPending = { fg = colors_from_file["linkarzu_color07"] }
-      highlights.KubectlDeprecated = { fg = colors_from_file["linkarzu_color08"] }
-      highlights.KubectlExperimental = { fg = colors_from_file["linkarzu_color11"] }
-      highlights.KubectlNote = { fg = colors_from_file["linkarzu_color10"] }
-      highlights.KubectlGray = { fg = colors_from_file["linkarzu_color09"] }
+      -- Apply all highlight definitions at once
+      for group, props in pairs(highlight_definitions) do
+        highlights[group] = props
+      end
     end,
-    -- Overriding colors globally
+    -- Overriding colors globally using a definitions table
     on_colors = function(global_colors)
-      global_colors.bg = colors_from_file["linkarzu_color10"]
-      global_colors.comment = colors_from_file["linkarzu_color09"]
-      global_colors.yellow = colors_from_file["linkarzu_color05"] -- default #f1fc79
-      global_colors.pink = colors_from_file["linkarzu_color01"] -- default #f265b5
-      global_colors.red = colors_from_file["linkarzu_color08"] -- default #f16c75
-      global_colors.orange = colors_from_file["linkarzu_color06"] -- default #f7c67f
-      global_colors.purple = colors_from_file["linkarzu_color04"] -- default #a48cf2
+      -- Define all color overrides in a single table
+      local color_definitions = {
+        bg = colors["linkarzu_color10"],
+        comment = colors["linkarzu_color09"],
+        yellow = colors["linkarzu_color05"], -- default #f1fc79
+        pink = colors["linkarzu_color01"], -- default #f265b5
+        red = colors["linkarzu_color08"], -- default #f16c75
+        orange = colors["linkarzu_color06"], -- default #f7c67f
+        purple = colors["linkarzu_color04"], -- default #a48cf2
+      }
+
+      -- Apply each color definition to global_colors
+      for key, value in pairs(color_definitions) do
+        global_colors[key] = value
+      end
     end,
   },
 }

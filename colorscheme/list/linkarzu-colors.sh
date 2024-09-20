@@ -8,7 +8,7 @@ linkarzu_color02="#37f499"
 linkarzu_color03="#04d1f9"
 linkarzu_color04="#987afb"
 linkarzu_color05="#19dfcf"
-linkarzu_color06="#13f64d"
+linkarzu_color06="#12f24e"
 # Markdown codeblock
 linkarzu_color07="#002931"
 linkarzu_color08="#5fa9f4"
@@ -27,4 +27,4 @@ linkarzu_color14="#ebfafa"
 # Tmux inactive windows
 linkarzu_color15="#013e4a"
 # Selected text
-linkarzu_color16="#d99ffd"
+linkarzu_color16="#e9b3fd"

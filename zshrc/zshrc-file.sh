@@ -13,6 +13,9 @@ boldPurple="\033[1;35m"
 boldBlue="\033[1;34m"
 noColor="\033[0m"
 
+colorscheme_profile="linkarzu-colors.sh"
+# colorscheme_profile="eldritch-colors.sh"
+
 # Run a clear command right after I log in to any host
 clear
 
@@ -247,9 +250,6 @@ if [ "$OS" = 'Mac' ]; then
   #############################################################################
   #                        Colorscheme configuration
   #############################################################################
-
-  colorscheme_profile="linkarzu-colors.sh"
-  # colorscheme_profile="eldritch-colors.sh"
 
   ~/github/dotfiles-latest/zshrc/colorscheme-set.sh "$colorscheme_profile"
 

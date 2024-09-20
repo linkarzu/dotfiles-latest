@@ -3,16 +3,9 @@
 # Filename: ~/github/dotfiles-latest/tmux/tools/linkarzu/set_tmux_colors.sh
 # ~/github/dotfiles-latest/tmux/tools/linkarzu/set_tmux_colors.sh
 
-# Define the active folder
+# Define the active folder and file
 active_folder="$HOME/github/dotfiles-latest/colorscheme/active"
-
-# Get the active file (assuming there's only one file in the active folder)
-active_file=$(ls "$active_folder" | head -n 1)
-if [ -z "$active_file" ]; then
-  echo "Error: No colorscheme active file found in $active_folder."
-  exit 1
-fi
-active_file="$active_folder/$active_file"
+active_file="$active_folder/active-colorscheme.sh"
 
 # Load colors from the active colors file
 source "$active_file"

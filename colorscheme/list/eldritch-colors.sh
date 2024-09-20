@@ -10,7 +10,7 @@ linkarzu_color04="#a48cf2"
 linkarzu_color05="#f1fc79"
 linkarzu_color06="#f7c67f"
 # Markdown codeblock
-linkarzu_color07="#002931"
+linkarzu_color07="#314154"
 linkarzu_color08="#f16c75"
 # Comments
 linkarzu_color09="#a5afc2"

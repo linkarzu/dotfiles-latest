@@ -389,7 +389,7 @@ const rules: KarabinerRules[] = [
       q: app("Setapp"),
       w: app("Microsoft Word"),
       e: app("Microsoft Excel"),
-      r: app("Microsoft Remote Desktop"),
+      r: app("Windows App"),
       t: app("Claude"),
       5: app("DaVinci Resolve"),
       x: app("GoTo"),

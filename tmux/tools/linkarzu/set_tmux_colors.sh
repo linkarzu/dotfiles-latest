@@ -3,12 +3,8 @@
 # Filename: ~/github/dotfiles-latest/tmux/tools/linkarzu/set_tmux_colors.sh
 # ~/github/dotfiles-latest/tmux/tools/linkarzu/set_tmux_colors.sh
 
-# Define the active folder and file
-active_folder="$HOME/github/dotfiles-latest/colorscheme/active"
-active_file="$active_folder/active-colorscheme.sh"
-
-# Load colors from the active colors file
-source "$active_file"
+# Source the colorscheme file
+source "$HOME/github/dotfiles-latest/colorscheme/active/active-colorscheme.sh"
 
 # Output tmux set commands
 # I use this for my custom tmux banner on the right side

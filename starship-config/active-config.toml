@@ -13,7 +13,7 @@ disabled = true
 disabled = true
 
 [time]
-style = '#a48cf2 bold'
+style = '#987afb bold'
 disabled = false
 format = '[\[$time\]]($style) '
 # https://docs.rs/chrono/0.4.7/chrono/format/strftime/index.html
@@ -26,10 +26,10 @@ time_format = '%y/%m/%d'
 [kubernetes]
 disabled = false
 # context = user@cluster
-# format = '[$user@$cluster \($namespace\)](#f1fc79) '
-# format = '[$cluster \($namespace\)](#f1fc79) '
+# format = '[$user@$cluster \($namespace\)](#19dfcf) '
+# format = '[$cluster \($namespace\)](#19dfcf) '
 # Apply separate colors for cluster and namespace
-format = '[$cluster](#f1fc79 bold) [\($namespace\)](#37f499 bold) '
+format = '[$cluster](#19dfcf bold) [\($namespace\)](#37f499 bold) '
 # format = 'on [⛵ ($user on )($cluster in )$context \($namespace\)](dimmed green) '
 # Only dirs that have this file inside will show the kubernetes prompt
 # detect_files = ['900-detectkubernetes.sh']
@@ -39,7 +39,7 @@ format = '[$cluster](#f1fc79 bold) [\($namespace\)](#37f499 bold) '
 # ]
 
 [username]
-style_user = '#a48cf2 bold'
+style_user = '#987afb bold'
 style_root = 'white bold'
 format = '[$user]($style)'
 show_always = true

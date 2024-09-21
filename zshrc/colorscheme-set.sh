@@ -21,12 +21,7 @@ colorscheme_profile="$1"
 
 # Define paths
 colorscheme_file="$HOME/github/dotfiles-latest/colorscheme/list/$colorscheme_profile"
-active_folder="$HOME/github/dotfiles-latest/colorscheme/active"
-active_file="$active_folder/active-colorscheme.sh"
-kitty_conf_file="$HOME/github/dotfiles-latest/kitty/active-theme.conf"
-tmux_set_colors_script="$HOME/github/dotfiles-latest/tmux/tools/linkarzu/set_tmux_colors.sh"
-
-mkdir -p "$active_folder"
+active_file="$HOME/github/dotfiles-latest/colorscheme/active/active-colorscheme.sh"
 
 # Check if the colorscheme file exists
 if [ ! -f "$colorscheme_file" ]; then
@@ -47,18 +42,9 @@ else
   fi
 fi
 
-# If there's an update, replace the active colorscheme and perform necessary actions
-if [ "$UPDATED" = true ]; then
-  echo "Updating active colorscheme to '$colorscheme_profile'."
+generate_kitty_config() {
+  kitty_conf_file="$HOME/github/dotfiles-latest/kitty/active-theme.conf"
 
-  # Replace the contents of active-colorscheme.sh
-  cp "$colorscheme_file" "$active_file"
-
-  # Source the active colorscheme to load variables
-  # shellcheck source=/dev/null
-  source "$active_file"
-
-  # Generate the Kitty configuration file
   cat >"$kitty_conf_file" <<EOF
 foreground            $linkarzu_color14
 background            $linkarzu_color10
@@ -106,14 +92,100 @@ inactive_border_color  $linkarzu_color10
 EOF
 
   echo "Kitty configuration updated at '$kitty_conf_file'."
+}
+
+generate_starship_config() {
+  # Define the path to the active-config.toml
+  starship_conf_file="$HOME/github/dotfiles-latest/starship-config/active-config.toml"
+
+  # Generate the Starship configuration file
+  cat >"$starship_conf_file" <<EOF
+# This will show the time on a 2nd line
+# Add a "\\" at the end of an item, if you want the next item to show on the same line
+format = """
+\$all\\
+\$kubernetes
+\$character
+"""
+
+[battery]
+disabled = true
+
+[gcloud]
+disabled = true
+
+[time]
+style = '${linkarzu_color04} bold'
+disabled = false
+format = '[\[\$time\]](\$style) '
+# https://docs.rs/chrono/0.4.7/chrono/format/strftime/index.html
+# %T	00:34:60	Hour-minute-second format. Same to %H:%M:%S.
+# time_format = '%y/%m/%d %T'
+time_format = '%y/%m/%d'
+
+# For this to show up correctly, you need to have cluster access
+# So your ~/.kube/config needs to be configured on the local machine
+[kubernetes]
+disabled = false
+# context = user@cluster
+# format = '[\$user@\$cluster \(\$namespace\)](${linkarzu_color05}) '
+# format = '[\$cluster \(\$namespace\)](${linkarzu_color05}) '
+# Apply separate colors for cluster and namespace
+format = '[\$cluster](${linkarzu_color05} bold) [\(\$namespace\)](${linkarzu_color02} bold) '
+# format = 'on [⛵ (\$user on )(\$cluster in )\$context \(\$namespace\)](dimmed green) '
+# Only dirs that have this file inside will show the kubernetes prompt
+# detect_files = ['900-detectkubernetes.sh']
+# detect_env_vars = ['STAR_USE_KUBE']
+# contexts = [
+#   { context_pattern = "dev.local.cluster.k8s", style = "green", symbol = "💔 " },
+# ]
+
+[username]
+style_user = '${linkarzu_color04} bold'
+style_root = 'white bold'
+format = '[\$user](\$style)'
+show_always = true
+
+[hostname]
+ssh_only = false
+format = '[.@.](white bold)[\$hostname](${linkarzu_color02} bold)'
+
+[directory]
+style = '${linkarzu_color03} bold'
+truncation_length = 0
+truncate_to_repo = false
+
+[ruby]
+detect_variables = []
+detect_files = ['Gemfile', '.ruby-version']
+EOF
+
+  echo "Starship configuration updated at '$starship_conf_file'."
+}
+
+# If there's an update, replace the active colorscheme and perform necessary actions
+if [ "$UPDATED" = true ]; then
+  echo "Updating active colorscheme to '$colorscheme_profile'."
+
+  # Replace the contents of active-colorscheme.sh
+  cp "$colorscheme_file" "$active_file"
+
+  # Source the active colorscheme to load variables
+  source "$active_file"
+
+  # Generate the Kitty configuration file
+  generate_kitty_config
 
   # Set the tmux colors
-  if [ -x "$tmux_set_colors_script" ]; then
-    "$tmux_set_colors_script"
-    tmux source-file ~/.tmux.conf
-    echo "Tmux colors set and tmux configuration reloaded."
-  else
-    echo "Warning: Tmux set colors script '$tmux_set_colors_script' not found or not executable."
-  fi
-  echo "Restart the terminal for the colors to be applied."
+  $HOME/github/dotfiles-latest/tmux/tools/linkarzu/set_tmux_colors.sh
+  tmux source-file ~/.tmux.conf
+  echo "Tmux colors set and tmux configuration reloaded."
+
+  # Set sketchybar colors
+  sketchybar --reload
+
+  generate_starship_config
+
+  # This reloads kitty config without closing and re-opening
+  kill -SIGUSR1 "$(pgrep -x kitty)"
 fi

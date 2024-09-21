@@ -1590,6 +1590,26 @@ vim.keymap.set("n", "<leader>gC", function()
   end
 end, { desc = "[P]Create GitHub repository" })
 
+-- Reload zsh configuration by sourcing ~/.zshrc in a separate shell
+vim.keymap.set("n", "<leader>fz", function()
+  -- Define the command to source zshrc
+  local command = "source ~/.zshrc"
+  -- Execute the command in a new Zsh shell
+  local full_command = "zsh -c '" .. command .. "'"
+  -- Run the command and capture the output
+  local output = vim.fn.system(full_command)
+  -- Check the exit status of the command
+  local exit_code = vim.v.shell_error
+  if exit_code == 0 then
+    vim.api.nvim_echo({ { "Successfully sourced ~/.zshrc", "NormalMsg" } }, false, {})
+  else
+    vim.api.nvim_echo({
+      { "Failed to source ~/.zshrc:", "ErrorMsg" },
+      { output, "ErrorMsg" },
+    }, false, {})
+  end
+end, { desc = "[P]source ~/.zshrc" })
+
 -- -- From Primeagen's tmux-sessionizer
 -- -- ctrl+f in normal mode will silently run a command to create a new tmux window and execute the tmux-sessionizer.
 -- -- Allowing quick creation and navigation of tmux sessions directly from the editor.

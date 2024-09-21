@@ -97,11 +97,11 @@ return {
         KubectlError = { fg = colors["linkarzu_color01"] },
         KubectlInfo = { fg = colors["linkarzu_color02"] },
         KubectlDebug = { fg = colors["linkarzu_color05"] },
-        KubectlSuccess = { fg = colors["linkarzu_color06"] },
-        KubectlPending = { fg = colors["linkarzu_color07"] },
+        KubectlSuccess = { fg = colors["linkarzu_color02"] },
+        KubectlPending = { fg = colors["linkarzu_color03"] },
         KubectlDeprecated = { fg = colors["linkarzu_color08"] },
         KubectlExperimental = { fg = colors["linkarzu_color09"] },
-        KubectlNote = { fg = colors["linkarzu_color10"] },
+        KubectlNote = { fg = colors["linkarzu_color03"] },
         KubectlGray = { fg = colors["linkarzu_color10"] },
       }
 

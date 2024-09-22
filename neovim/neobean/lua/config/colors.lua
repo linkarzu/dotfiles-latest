@@ -28,6 +28,7 @@ local function load_colors()
   return colors
 end
 
+-- This return makes the load_colors function accessible from other files
 return {
   load_colors = load_colors,
 }

@@ -17,6 +17,7 @@ colorscheme_profile="linkarzu-colors.sh"
 # colorscheme_profile="eldritch-colors.sh"
 # colorscheme_profile="catppuccin-mocha.sh"
 # colorscheme_profile="catppuccin-macchiato.sh"
+# colorscheme_profile="darkppuccin.sh"
 
 # Run a clear command right after I log in to any host
 clear

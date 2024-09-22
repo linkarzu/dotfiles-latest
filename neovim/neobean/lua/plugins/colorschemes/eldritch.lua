@@ -10,6 +10,68 @@ return {
   lazy = true,
   name = "eldritch",
   opts = {
+    -- Overriding colors globally using a definitions table
+    on_colors = function(global_colors)
+      -- Define all color overrides in a single table
+      local color_definitions = {
+        -- https://github.com/eldritch-theme/eldritch.nvim/blob/master/lua/eldritch/colors.lua
+        bg = colors["linkarzu_color10"],
+        fg = colors["linkarzu_color14"],
+        selection = colors["linkarzu_color16"],
+        comment = colors["linkarzu_color09"],
+        red = colors["linkarzu_color08"], -- default #f16c75
+        orange = colors["linkarzu_color06"], -- default #f7c67f
+        yellow = colors["linkarzu_color05"], -- default #f1fc79
+        green = colors["linkarzu_color02"],
+        purple = colors["linkarzu_color04"], -- default #a48cf2
+        cyan = colors["linkarzu_color03"],
+        pink = colors["linkarzu_color01"], -- default #f265b5
+        bright_red = colors["linkarzu_color08"],
+        bright_green = colors["linkarzu_color02"],
+        bright_yellow = colors["linkarzu_color05"],
+        bright_blue = colors["linkarzu_color04"],
+        bright_magenta = colors["linkarzu_color01"],
+        bright_cyan = colors["linkarzu_color03"],
+        bright_white = colors["linkarzu_color14"],
+        menu = colors["linkarzu_color10"],
+        visual = colors["linkarzu_color16"],
+        gutter_fg = colors["linkarzu_color16"],
+        nontext = colors["linkarzu_color16"],
+        white = colors["linkarzu_color14"],
+        black = colors["linkarzu_color10"],
+        git = {
+          change = colors["linkarzu_color03"],
+          add = colors["linkarzu_color02"],
+          delete = colors["linkarzu_color11"],
+        },
+        gitSigns = {
+          change = colors["linkarzu_color03"],
+          add = colors["linkarzu_color02"],
+          delete = colors["linkarzu_color11"],
+        },
+        bg_dark = colors["linkarzu_color13"],
+        -- Lualine line across
+        bg_highlight = colors["linkarzu_color17"],
+        terminal_black = colors["linkarzu_color13"],
+        fg_dark = colors["linkarzu_color14"],
+        fg_gutter = colors["linkarzu_color13"],
+        dark3 = colors["linkarzu_color13"],
+        dark5 = colors["linkarzu_color13"],
+        bg_visual = colors["linkarzu_color16"],
+        dark_cyan = colors["linkarzu_color03"],
+        magenta = colors["linkarzu_color01"],
+        magenta2 = colors["linkarzu_color01"],
+        magenta3 = colors["linkarzu_color01"],
+        dark_yellow = colors["linkarzu_color05"],
+        dark_green = colors["linkarzu_color02"],
+      }
+
+      -- Apply each color definition to global_colors
+      for key, value in pairs(color_definitions) do
+        global_colors[key] = value
+      end
+    end,
+
     -- This function is found in the documentation
     on_highlights = function(highlights)
       local highlight_definitions = {
@@ -91,6 +153,8 @@ return {
 
         -- visual mode selection
         Visual = { bg = colors["linkarzu_color16"], fg = colors["linkarzu_color10"] },
+        PreProc = { fg = colors["linkarzu_color06"] },
+        ["@operator"] = { fg = colors["linkarzu_color02"] },
 
         KubectlHeader = { fg = colors["linkarzu_color04"] },
         KubectlWarning = { fg = colors["linkarzu_color03"] },
@@ -108,24 +172,6 @@ return {
       -- Apply all highlight definitions at once
       for group, props in pairs(highlight_definitions) do
         highlights[group] = props
-      end
-    end,
-    -- Overriding colors globally using a definitions table
-    on_colors = function(global_colors)
-      -- Define all color overrides in a single table
-      local color_definitions = {
-        bg = colors["linkarzu_color10"],
-        comment = colors["linkarzu_color09"],
-        yellow = colors["linkarzu_color05"], -- default #f1fc79
-        pink = colors["linkarzu_color01"], -- default #f265b5
-        red = colors["linkarzu_color08"], -- default #f16c75
-        orange = colors["linkarzu_color06"], -- default #f7c67f
-        purple = colors["linkarzu_color04"], -- default #a48cf2
-      }
-
-      -- Apply each color definition to global_colors
-      for key, value in pairs(color_definitions) do
-        global_colors[key] = value
       end
     end,
   },

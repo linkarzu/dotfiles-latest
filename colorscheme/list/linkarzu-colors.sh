@@ -8,9 +8,9 @@ linkarzu_color02="#37f499"
 linkarzu_color03="#04d1f9"
 linkarzu_color04="#987afb"
 linkarzu_color05="#19dfcf"
-linkarzu_color06="#12f24e"
+linkarzu_color06="#1682ef"
 # Markdown codeblock
-linkarzu_color07="#002931"
+linkarzu_color07="#1c242f"
 linkarzu_color08="#5fa9f4"
 # Comments
 linkarzu_color09="#a5afc2"

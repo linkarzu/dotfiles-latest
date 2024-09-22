@@ -17,7 +17,7 @@ linkarzu_color05="#b4befe"
 linkarzu_color06="#74c7ec"
 # Surface 0
 # Markdown codeblock
-linkarzu_color07="#1e1e2e"
+linkarzu_color07="#26263a"
 # Peach
 linkarzu_color08="#fab387"
 # Subtext0
@@ -25,7 +25,7 @@ linkarzu_color08="#fab387"
 linkarzu_color09="#a6adc8"
 # Base
 # Terminal and neovim background
-linkarzu_color10="#0f0f16"
+linkarzu_color10="#161622"
 # Red
 # Underline spellbad
 linkarzu_color11="#f38ba8"
@@ -34,7 +34,7 @@ linkarzu_color11="#f38ba8"
 linkarzu_color12="#f9e2af"
 # Surface2
 # line across cursor
-linkarzu_color13="#353552"
+linkarzu_color13="#3d3d5d"
 # Text
 # Cursor and tmux windows text
 linkarzu_color14="#cdd6f4"
@@ -45,4 +45,13 @@ linkarzu_color15="#353552"
 # Selected text
 linkarzu_color16="#f2cdcd"
 # Lualine across
-linkarzu_color17="#161622"
+linkarzu_color17="#1e1e2e"
+# https://www.colorhexa.com/1e1e2e
+# #0f0f16
+# #161622
+# #1e1e2e
+# #26263a
+# #2d2d46
+# #353552
+# #3d3d5d
+# #454569

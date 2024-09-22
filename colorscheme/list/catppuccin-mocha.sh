@@ -46,3 +46,12 @@ linkarzu_color15="#45475a"
 linkarzu_color16="#f2cdcd"
 # Lualine across
 linkarzu_color17="#313244"
+# https://www.colorhexa.com/1e1e2e
+# #0f0f16
+# #161622
+# #1e1e2e
+# #26263a
+# #2d2d46
+# #353552
+# #3d3d5d
+# #454569

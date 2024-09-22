@@ -9,7 +9,7 @@ linkarzu_color03="#04d1f9"
 linkarzu_color04="#a48cf2"
 linkarzu_color05="#f1fc79"
 linkarzu_color06="#f7c67f"
-# Markdown codeblock
+# Markdown codeblock, lualine color across
 linkarzu_color07="#314154"
 linkarzu_color08="#f16c75"
 # Comments
@@ -28,3 +28,5 @@ linkarzu_color14="#ebfafa"
 linkarzu_color15="#013e4a"
 # Selected text
 linkarzu_color16="#d99ffd"
+# Lualine across
+linkarzu_color17="#282b43"

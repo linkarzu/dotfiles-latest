@@ -28,3 +28,5 @@ linkarzu_color14="#ebfafa"
 linkarzu_color15="#013e4a"
 # Selected text
 linkarzu_color16="#e9b3fd"
+# Lualine across
+linkarzu_color17="#141b22"

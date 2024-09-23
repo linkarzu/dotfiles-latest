@@ -12,10 +12,19 @@
 
 -- I don't want to switch between buffers anymore, instead I'll use BufExplorer
 -- For this to work, make sure you have the plugin installed
-vim.keymap.set("n", "<S-h>", "<cmd>BufExplorer<cr>", { desc = "[P]Open bufexplorer" })
--- vim.keymap.del("n", "<S-l>")
+-- vim.keymap.set("n", "<S-h>", "<cmd>BufExplorer<cr>", { desc = "[P]Open bufexplorer" })
 
-vim.keymap.set("n", "<leader>uk", '<cmd>lua require("kubectl").toggle()<cr>', { noremap = true, silent = true })
+-- I'm switching from bufexplorer to telescope buffers as I get a file preview,
+-- that's basically the main benefit lamw25wmal
+vim.keymap.set(
+  "n",
+  "<S-h>",
+  -- Notice that I start it in normal mode to navigate similarly to bufexplorer,
+  -- the ivy theme is also similar to bufexplorer and tmux sessions
+  "<cmd>Telescope buffers sort_mru=true sort_lastused=true initial_mode=normal theme=ivy<cr>",
+  { desc = "[P]Open telescope buffers" }
+)
+-- vim.keymap.del("n", "<S-l>")
 
 vim.keymap.set("n", "<S-l>", function()
   local toggle = require("snipe").create_buffer_menu_toggler({
@@ -24,6 +33,8 @@ vim.keymap.set("n", "<S-l>", function()
   })
   toggle()
 end, { desc = "[P]Snipe" })
+
+vim.keymap.set("n", "<leader>uk", '<cmd>lua require("kubectl").toggle()<cr>', { noremap = true, silent = true })
 
 -- -- use kj to exit insert mode
 -- -- I auto save with

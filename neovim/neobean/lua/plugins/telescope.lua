@@ -29,6 +29,14 @@ return {
               reverse_directories = true,
             },
           },
+          mappings = {
+            n = {
+              -- I'm used to closing buffers with "d" from bufexplorer
+              ["d"] = require("telescope.actions").delete_buffer,
+              -- I'm also used to quitting bufexplorer with q instead of escape
+              ["q"] = require("telescope.actions").close,
+            },
+          },
         },
       }
     end,
@@ -72,7 +80,7 @@ return {
         "<cmd>Telescope frecency workspace=CWD theme=ivy<cr>",
         desc = "Find Files (Root Dir)",
       },
-      --
+
       -- { "<leader>sG", LazyVim.pick("live_grep"), desc = "Grep (cwd)" },
       {
         "<leader>sG",
@@ -81,7 +89,7 @@ return {
         end,
         desc = "Grep (cwd)",
       },
-      --
+
       -- { "<leader>sg", LazyVim.pick("live_grep", { root = false, theme = "ivy" }), desc = "Grep (Root Dir)" },
       {
         "<leader>sg",
@@ -90,16 +98,19 @@ return {
         end,
         desc = "Grep (Root Dir)",
       },
+
       {
         "<leader><space>",
         "<cmd>e #<cr>",
         desc = "Alternate buffer",
       },
+
       {
         "<leader>tl",
         "<cmd>TodoTelescope keywords=TODO<cr>",
         desc = "[P]TODO list (Telescope)",
       },
+
       {
         "<leader>ta",
         "<cmd>TodoTelescope keywords=PERF,HACK,TODO,NOTE,FIX<cr>",

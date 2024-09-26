@@ -7,7 +7,7 @@ https://github.com/mfussenegger/nvim-lint
 This plugin allows you to globally set the .markdownlint.yaml file instead of 
 doing it on a per :pwd directory
 
-If you add the ifle to the :pwd directory, that file will take precedence
+If you add the file to the :pwd directory, that file will take precedence
 instead of the --config file specified below lamw25wmal
 
 This suggestion came from one of my youtube videos from user @killua_148

@@ -3,6 +3,10 @@
 #
 # https://github.com/DavidAnson/markdownlint
 #
+# New method:
+# Use the mfussenegger/nvim-lint plugin and point to this file
+#
+# Old method:
 # Copy this file to each dir in which you want the settings to be applied, for
 # example, I copied it to my 'github/obsidian_main' and
 # 'github/linkarzu.github.io' dir.

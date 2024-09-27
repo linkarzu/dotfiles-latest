@@ -43,6 +43,13 @@ if command -v sketchybar &>/dev/null; then
     # yabai -m config right_padding 800
     # For shorts
     # yabai -m config bottom_padding 400
+    #
+    # For videos
+    # yabai -m config top_padding 300
+    # yabai -m config bottom_padding 20
+    # yabai -m config left_padding 200
+    # yabai -m config right_padding 200
+
   fi
 else
   yabai -m config top_padding 02

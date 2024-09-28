@@ -494,10 +494,8 @@ vim.keymap.set("n", "<leader>id", function()
         return
       end
       -- Prompt for confirmation before deleting the image
-      vim.ui.input({
-        prompt = "Delete image file? (y/n) ",
-      }, function(input)
-        if input == "y" or input == "Y" then
+      vim.ui.select({ "yes", "no" }, { prompt = "Delete image file? " }, function(choice)
+        if choice == "yes" then
           -- Delete the image file using trash app
           local success, _ = pcall(function()
             vim.fn.system({ "trash", vim.fn.fnameescape(absolute_image_path) })
@@ -512,6 +510,8 @@ vim.keymap.set("n", "<leader>id", function()
             vim.cmd([[lua require("image").clear()]])
             -- Reloads the file to reflect the changes
             vim.cmd("edit!")
+            -- Delete the line the cursor is at
+            vim.cmd("normal! dd")
           else
             vim.api.nvim_echo({
               { "Failed to delete image file:\n", "ErrorMsg" },

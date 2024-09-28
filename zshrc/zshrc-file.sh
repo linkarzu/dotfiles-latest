@@ -364,7 +364,48 @@ if [ "$OS" = 'Mac' ]; then
   # Line below won't work with zsh, there's no zsh completions I guess
   # [ -s ~/.luaver/completions/luaver.bash ] && . ~/.luaver/completions/luaver.bash
 
+  #############################################################################
+  #                       Command line tools
+  #############################################################################
+
+  # Tool that I use the most and the #1 in my heart is tmux
+
+  # Initialize fzf if installed
+  # https://github.com/junegunn/fzf
+  # The following are custom fzf menus I configured
+  # hyper+e+n tmux-sshonizer-agen
+  # hyper+t+n prime's tmux-sessionizer
+  # hyper+c+n colorscheme selector
+  #
+  # Useful commands
+  # ctrl+r - command history
+  # ctrl+t - search for files
+  # ssh ::<tab><name> - shows you list of hosts in case don't remember exact name
+  # kill -9 ::<tab><name> - find and kill a process
+  # telnet ::<TAB>
+  #
+  if [ -f ~/.fzf.zsh ]; then
+
+    # After installing fzf with brew, you have to run the install script
+    # echo -e "y\ny\nn" | /opt/homebrew/opt/fzf/install
+
+    source ~/.fzf.zsh
+
+    # Preview file content using bat
+    export FZF_CTRL_T_OPTS="
+    --preview 'bat -n --color=always {}'
+    --bind 'ctrl-/:change-preview-window(down|hidden|)'"
+
+    # Use :: as the trigger sequence instead of the default **
+    export FZF_COMPLETION_TRIGGER='::'
+
+    # Eldritch Colorscheme / theme
+    # https://github.com/eldritch-theme/fzf
+    export FZF_DEFAULT_OPTS='--color=fg:#ebfafa,bg:#09090d,hl:#37f499 --color=fg+:#ebfafa,bg+:#0D1116,hl+:#37f499 --color=info:#04d1f9,prompt:#04d1f9,pointer:#7081d0 --color=marker:#7081d0,spinner:#f7c67f,header:#323449'
+  fi
+
   # Starship
+  # Not sure if counts a CLI tool, because it only makes my prompt more useful
   # https://starship.rs/config/#prompt
   if command -v starship &>/dev/null; then
     export STARSHIP_CONFIG=$HOME/github/dotfiles-latest/starship-config/active-config.toml
@@ -386,6 +427,8 @@ if [ "$OS" = 'Mac' ]; then
   # exa is unmaintained, so now using eza
   # https://github.com/ogham/exa
   # https://github.com/eza-community/eza
+  # uses colours to distinguish file types and metadata. It knows about
+  # symlinks, extended attributes, and Git.
   if command -v eza &>/dev/null; then
     alias ls='eza'
     alias ll='eza -lhg'
@@ -395,40 +438,13 @@ if [ "$OS" = 'Mac' ]; then
 
   # Bat -> Cat with wings
   # https://github.com/sharkdp/bat
+  # Supports syntax highlighting for a large number of programming and markup languages
   if command -v bat &>/dev/null; then
     # --style=plain - removes line numbers and got modifications
     # --paging=never - doesnt pipe it through less
     alias cat='bat --paging=never --style=plain'
     alias catt='bat'
     alias cata='bat --show-all --paging=never'
-  fi
-
-  # Initialize fzf if installed
-  # https://github.com/junegunn/fzf
-  # Useful commands
-  # ctrl+r - command history
-  # ctrl+t - search for files
-  # ssh ::<tab><name> - shows you list of hosts in case don't remember exact name
-  # kill -9 ::<tab><name> - find and kill a process
-  # telnet ::<TAB>
-  if [ -f ~/.fzf.zsh ]; then
-
-    # After installing fzf with brew, you have to run the install script
-    # echo -e "y\ny\nn" | /opt/homebrew/opt/fzf/install
-
-    source ~/.fzf.zsh
-
-    # Preview file content using bat
-    export FZF_CTRL_T_OPTS="
-    --preview 'bat -n --color=always {}'
-    --bind 'ctrl-/:change-preview-window(down|hidden|)'"
-
-    # Use :: as the trigger sequence instead of the default **
-    export FZF_COMPLETION_TRIGGER='::'
-
-    # Eldritch Colorscheme / theme
-    # https://github.com/eldritch-theme/fzf
-    export FZF_DEFAULT_OPTS='--color=fg:#ebfafa,bg:#09090d,hl:#37f499 --color=fg+:#ebfafa,bg+:#0D1116,hl+:#37f499 --color=info:#04d1f9,prompt:#04d1f9,pointer:#7081d0 --color=marker:#7081d0,spinner:#f7c67f,header:#323449'
   fi
 
   # vi(vim) mode plugin for ZSH
@@ -479,6 +495,8 @@ if [ "$OS" = 'Mac' ]; then
     # Useful commands
     # z foo<SPACE><TAB>  # show interactive completions
   fi
+
+  #############################################################################
 
   # Add MySQL client to PATH, if it exists
   if [ -d "/opt/homebrew/opt/mysql-client/bin" ]; then

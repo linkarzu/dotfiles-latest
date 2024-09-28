@@ -359,8 +359,11 @@ vim.keymap.set({ "n", "v", "i" }, "<C-a>", function()
     vim.cmd([[lua require("image").clear()]])
     -- Reloads the file to reflect the changes
     vim.cmd("edit!")
+    -- Switch to the line below
+    vim.cmd("normal! o")
     -- Switch back to command mode or normal mode
-    vim.cmd("stopinsert")
+    vim.cmd("startinsert")
+    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("- ", true, false, true), "i", true)
   else
     print("No image pasted. File not updated.")
   end

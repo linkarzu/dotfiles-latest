@@ -706,6 +706,14 @@ const rules: KarabinerRules[] = [
       ),
     },
 
+    // c = "colorscheme selector"
+    c: {
+      // execute the colorscheme selector script
+      n: open(
+        "btt://execute_assigned_actions_for_trigger/?uuid=6793CE15-C70A-43E7-ADA9-479DF1539A39"
+      ),
+    },
+
     // For betterTouchTool
     d: {
       // Select text from alacritty

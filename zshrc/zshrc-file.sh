@@ -303,6 +303,10 @@ if [ "$OS" = 'Mac' ]; then
   #
   # If you want to open the daily note with a different distro, update the "nvim"
   # symlink in the symlinks section
+  #
+  # If you don't understand what I mean by "daily note" go and watch my daily
+  # note video
+  # https://youtu.be/W3hgsMoUcqo
   alias nvim='export NVIM_APPNAME="nvim" && /opt/homebrew/bin/nvim'
 
   # https://github.com/antlr/antlr4/blob/master/doc/getting-started.md#unix
@@ -364,6 +368,17 @@ if [ "$OS" = 'Mac' ]; then
   # Line below won't work with zsh, there's no zsh completions I guess
   # [ -s ~/.luaver/completions/luaver.bash ] && . ~/.luaver/completions/luaver.bash
 
+  # Brew autocompletion settings
+  # https://docs.brew.sh/Shell-Completion#configuring-completions-in-zsh
+  # -v makes command display a description of how the shell would
+  # invoke the command, so you're checking if the command exists and is executable.
+  if command -v brew &>/dev/null; then
+    FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
+
+    autoload -Uz compinit
+    compinit
+  fi
+
   #############################################################################
   #                       Command line tools
   #############################################################################
@@ -412,17 +427,7 @@ if [ "$OS" = 'Mac' ]; then
     eval "$(starship init zsh)" >/dev/null 2>&1
   fi
 
-  # Brew autocompletion settings
-  # https://docs.brew.sh/Shell-Completion#configuring-completions-in-zsh
-  # -v makes command display a description of how the shell would
-  # invoke the command, so you're checking if the command exists and is executable.
-  if command -v brew &>/dev/null; then
-    FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
-
-    autoload -Uz compinit
-    compinit
-  fi
-
+  # eza
   # ls replacement
   # exa is unmaintained, so now using eza
   # https://github.com/ogham/exa
@@ -440,18 +445,19 @@ if [ "$OS" = 'Mac' ]; then
   # https://github.com/sharkdp/bat
   # Supports syntax highlighting for a large number of programming and markup languages
   if command -v bat &>/dev/null; then
-    # --style=plain - removes line numbers and got modifications
+    # --style=plain - removes line numbers and git modifications
     # --paging=never - doesnt pipe it through less
     alias cat='bat --paging=never --style=plain'
     alias catt='bat'
     alias cata='bat --show-all --paging=never'
   fi
 
+  # Zsh Vi Mode
   # vi(vim) mode plugin for ZSH
   # https://github.com/jeffreytse/zsh-vi-mode
   # Insert mode to type and edit text
   # Normal mode to use vim commands
-  # tets {really} long (command) using a { lot } of symbols {page} and {abc} and other ones [find] () "test page" {'command 2'}
+  # test {really} long (command) using a { lot } of symbols {page} and {abc} and other ones [find] () "test page" {'command 2'}
   if [ -f "$(brew --prefix)/opt/zsh-vi-mode/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh" ]; then
     source $(brew --prefix)/opt/zsh-vi-mode/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh
     # Following 4 lines modify the escape key to `kj`

@@ -66,6 +66,10 @@ bind-key Space switch-client -l
 # https://unix.stackexchange.com/questions/608268/how-can-i-force-tmux-to-sort-my-sessions-alphabetically
 bind s choose-tree -Zs -O time
 
+# Bind 'd' to perform the 'x' action when in choose-tree mode
+# In other words, this allows you to close sessions with "d" when in the session
+# navigator "choose-tree" that comes up with prefix+s
+bind -n d if -F '#{==:#{pane_mode},tree-mode}' 'send x' 'send d'
 
 # Create vertical split
 unbind '|'

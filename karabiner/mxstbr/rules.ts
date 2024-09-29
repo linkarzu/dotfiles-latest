@@ -125,6 +125,27 @@ const rules: KarabinerRules[] = [
   },
 
   {
+    description: "right_option+caps_lock -> null",
+    manipulators: [
+      {
+        from: {
+          key_code: "caps_lock",
+          modifiers: {
+            mandatory: ["right_option"],
+          },
+        },
+        to: [],
+        // to: [
+        //   {
+        //     key_code: "escape",
+        //   },
+        // ],
+        type: "basic",
+      },
+    ],
+  },
+
+  {
     description: "left_shift+caps_lock -> null",
     manipulators: [
       {
@@ -145,8 +166,6 @@ const rules: KarabinerRules[] = [
     ],
   },
 
-  // sometimes I press shift+caps_lock by mistake and caps lock turn on,
-  // and I don't want that
   {
     description: "left_command+caps_lock -> null",
     manipulators: [
@@ -241,10 +260,9 @@ const rules: KarabinerRules[] = [
     ],
   },
 
-  // If I press left_option + delete_forward I want to hit enter
   // this is useful to hit enter after pasting text using the left hand
   {
-    description: "left_option + delete_forward -> enter",
+    description: "left_option + spacebar -> enter",
     manipulators: [
       {
         from: {
@@ -311,26 +329,6 @@ const rules: KarabinerRules[] = [
     ],
   },
 
-  {
-    description: "right_option+caps_lock -> null",
-    manipulators: [
-      {
-        from: {
-          key_code: "caps_lock",
-          modifiers: {
-            mandatory: ["right_option"],
-          },
-        },
-        to: [],
-        // to: [
-        //   {
-        //     key_code: "escape",
-        //   },
-        // ],
-        type: "basic",
-      },
-    ],
-  },
   // I couldn't get this work with the magic mouse because it only detects button1 in the karabiner event viewer
   // You need to enable pro mode in karabiner for the work with the apple mouse
   // It works with the logitech mouse tough
@@ -365,13 +363,13 @@ const rules: KarabinerRules[] = [
   // },
 
   ...createHyperSubLayers({
-    // I use spacebar as the app launcher
+    // All the following combinations require the "hyper" key as well
     a: {
       h: app("Spotify"),
       // j: app("Alacritty"),
       j: app("kitty"),
       k: app("Google Chrome"),
-      l: app("Obsidian"),
+      // l: app("Obsidian"),
       semicolon: app("ChatGPT"),
       quote: app("System Settings"),
       y: app("YouTube"),
@@ -390,7 +388,7 @@ const rules: KarabinerRules[] = [
       w: app("Microsoft Word"),
       e: app("Microsoft Excel"),
       r: app("Windows App"),
-      t: app("Claude"),
+      // t: app("Claude"),
       5: app("DaVinci Resolve"),
       x: app("GoTo"),
       c: app("Microsoft Outlook"),
@@ -406,11 +404,14 @@ const rules: KarabinerRules[] = [
       // hyper+` - cleanshot x record screen
       // hyper+2 - betterdisplay fav res 1
       // hyper+3 - betterdisplay fav res 2
+      // hyper+4 - betterdisplay input hdmi
+      // hyper+5 - betterdisplay input usbc
       // hyper+6 - homerow clicking shortcut
       // hyper+tab - cleanshot capture history
     },
 
-    // t = "tmux" - video that explains how this works below
+    // t = "tmux" - I use these to navigate to my different tmux sessions
+    // video that explains how this works using prime's tmux-sessionizer script
     // https://youtu.be/MCbEPylDEWU
     t: {
       // home
@@ -478,13 +479,14 @@ const rules: KarabinerRules[] = [
       e: open(
         "btt://execute_assigned_actions_for_trigger/?uuid=3DEAE844-CD5B-4695-A58D-AC7CFA935D46"
       ),
-      // Go github dir
+      // Golang dir
       open_bracket: open(
         "btt://execute_assigned_actions_for_trigger/?uuid=70963A3C-7982-4BB4-A8E0-5181EC216383"
       ),
     },
 
-    // e = "etmux" - This is to SSH to devices - video that explains how this works below
+    // e = "etmux" - This is to SSH to devices
+    // video that explains how this works below
     // https://youtu.be/MCbEPylDEWU
     e: {
       // xocli3
@@ -529,7 +531,7 @@ const rules: KarabinerRules[] = [
     r: {
       j: open("raycast://extensions/lardissone/raindrop-io/search"),
       k: open("raycast://extensions/mblode/google-search/index"),
-      l: open("raycast://extensions/KevinBatdorf/obsidian/searchNoteCommand"),
+      // l: open("raycast://extensions/KevinBatdorf/obsidian/searchNoteCommand"),
       semicolon: open("raycast://extensions/vishaltelangre/google-drive/index"),
       quote: open("raycast://extensions/mathieudutour/wolfram-alpha/index"),
       y: open(
@@ -813,32 +815,32 @@ const rules: KarabinerRules[] = [
       },
     },
 
-    // copy, paste and other stuff
-    right_command: {
-      // // I use this for fzf
-      // r: {
-      //   to: [{ key_code: "r", modifiers: ["left_control"] }],
-      // },
-      // t: {
-      //   to: [{ key_code: "t", modifiers: ["left_control"] }],
-      // },
-      // Slack go to all unreads
-      a: {
-        to: [{ key_code: "a", modifiers: ["left_command", "left_shift"] }],
-      },
-      h: {
-        to: [{ key_code: "delete_or_backspace" }],
-      },
-      l: {
-        to: [{ key_code: "delete_forward" }],
-      },
-      // Switch between windows of same app, normally cmd+~
-      spacebar: {
-        to: [
-          { key_code: "grave_accent_and_tilde", modifiers: ["left_command"] },
-        ],
-      },
-    },
+    // // copy, paste and other stuff
+    // g: {
+    //   // // I use this for fzf
+    //   // r: {
+    //   //   to: [{ key_code: "r", modifiers: ["left_control"] }],
+    //   // },
+    //   // t: {
+    //   //   to: [{ key_code: "t", modifiers: ["left_control"] }],
+    //   // },
+    //   // Slack go to all unreads
+    //   a: {
+    //     to: [{ key_code: "a", modifiers: ["left_command", "left_shift"] }],
+    //   },
+    //   h: {
+    //     to: [{ key_code: "delete_or_backspace" }],
+    //   },
+    //   l: {
+    //     to: [{ key_code: "delete_forward" }],
+    //   },
+    //   // Switch between windows of same app, normally cmd+~
+    //   spacebar: {
+    //     to: [
+    //       { key_code: "grave_accent_and_tilde", modifiers: ["left_command"] },
+    //     ],
+    //   },
+    // },
 
     // // 'e' for extra tools
     // e: {

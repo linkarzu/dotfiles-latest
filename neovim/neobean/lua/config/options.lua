@@ -98,7 +98,9 @@ vim.opt.colorcolumn = "80"
 --   end,
 -- })
 
--- I added `localoptions` to save the language settings
+-- I added `localoptions` to save the language spell settings, otherwise, the
+-- language of my markdown documents was not remembered if I set it to spanish
+-- or to both en,es
 -- See the help for `sessionoptions`
 -- `localoptions`: options and mappings local to a window or buffer
 -- (not global values for local options)
@@ -106,6 +108,9 @@ vim.opt.colorcolumn = "80"
 -- The plugin that saves the session information is
 -- https://github.com/folke/persistence.nvim and comes enabled in the
 -- lazyvim.org distro lamw25wmal
+--
+-- These sessionoptions come from the lazyvim distro, I just added localoptions
+-- https://www.lazyvim.org/configuration/general
 vim.opt.sessionoptions = {
   "buffers",
   "curdir",

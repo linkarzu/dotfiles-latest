@@ -31,25 +31,27 @@ if command -v sketchybar &>/dev/null; then
     yabai -m config left_padding 10
     yabai -m config right_padding 10
   else
-    # This matches my asus 27 inch monitor
-    # yabai -m config top_padding 39
+    # # This matches my asus 27 inch monitor
+    # # yabai -m config top_padding 39
     yabai -m config top_padding 59
     yabai -m config bottom_padding 20
     yabai -m config left_padding 20
     yabai -m config right_padding 20
+
+    # # For videos thumbnails
+    # yabai -m config top_padding 400
+    # yabai -m config bottom_padding 20
+    # yabai -m config left_padding 500
+    # yabai -m config right_padding 100
+
     # For youtube thumbnails
     # yabai -m config right_padding 500
+    
     # For youtube posts and neomemes
     # yabai -m config right_padding 800
+    
     # For shorts
     # yabai -m config bottom_padding 400
-    #
-    # For videos
-    # yabai -m config top_padding 300
-    # yabai -m config bottom_padding 20
-    # yabai -m config left_padding 200
-    # yabai -m config right_padding 200
-
   fi
 else
   yabai -m config top_padding 02

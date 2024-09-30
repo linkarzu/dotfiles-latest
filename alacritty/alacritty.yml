@@ -37,7 +37,7 @@ scrolling:
 
 font:
   normal:
-    family: MesloLGM Nerd Font Mono
+    family: JetBrainsMono Nerd Font Mono
     style: Regular
   size: 14
 

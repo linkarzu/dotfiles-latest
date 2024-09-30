@@ -4,7 +4,7 @@
 
 front_app=(
 	label.padding_left=4
-	# Using "MesloLGM Nerd Font"
+	# Using "JetBrainsMono Nerd Font"
 	label.font="$FONT:Bold:14.0"
 	# Using default "SF Pro"
 	# label.font="$FONT:Black:13.0"

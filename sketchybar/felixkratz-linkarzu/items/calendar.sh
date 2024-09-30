@@ -4,7 +4,7 @@
 
 calendar=(
 	icon=cal
-	# Using "MesloLGM Nerd Font"
+	# Using "JetBrainsMono Nerd Font"
 	icon.font="$FONT:Black:14.0"
 	# Using default "SF Pro"
 	# icon.font="$FONT:Black:12.0"

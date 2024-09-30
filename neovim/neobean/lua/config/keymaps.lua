@@ -1112,6 +1112,7 @@ local function update_markdown_toc(heading2, heading3)
       end
     end
     -- Insert the specified headings and <!-- toc --> without blank lines
+    -- Insert the TOC inside a H2 and H3 heading right below the main H1 at the top lamw25wmal
     vim.api.nvim_buf_set_lines(bufnr, insertion_line, insertion_line, false, { heading2, heading3, "<!-- toc -->" })
   end
   -- Silently save the file, in case TOC is being created for the first time
@@ -1147,7 +1148,7 @@ vim.keymap.set("n", "<leader>mtt", function()
   update_markdown_toc("## Contents", "### Table of contents")
 end, { desc = "[P]Insert/update Markdown TOC (English)" })
 
--- Keymap for Spanish TOC
+-- Keymap for Spanish TOC lamw25wmal
 vim.keymap.set("n", "<leader>mts", function()
   update_markdown_toc("## Contenido", "### Tabla de contenido")
 end, { desc = "[P]Insert/update Markdown TOC (Spanish)" })

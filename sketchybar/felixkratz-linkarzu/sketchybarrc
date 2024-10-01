@@ -10,7 +10,8 @@ PLUGIN_DIR="$CONFIG_DIR/plugins" # Directory where all the plugin scripts are st
 
 # Needs to have Regular, Bold, Semibold, Heavy and Black variants
 # FONT="SF Pro"
-FONT="JetBrainsMono Nerd Font"
+# FONT="JetBrainsMono Nerd Font"
+FONT="MesloLGM Nerd Font"
 
 # All paddings use this value (icon, label, background), default is 3 but I
 # decreased it

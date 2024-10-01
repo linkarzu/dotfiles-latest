@@ -148,7 +148,8 @@ if vim.g.neovide then
   vim.keymap.set("i", "<D-v>", '<ESC>l"+Pli') -- Paste insert mode
 
   -- Specify the font used by Neovide
-  vim.o.guifont = "MesloLGM_Nerd_Font:h14"
+  -- vim.o.guifont = "MesloLGM_Nerd_Font:h14"
+  vim.o.guifont = "JetBrainsMono Nerd Font:h14.5"
   -- This is limited by the refresh rate of your physical hardware, but can be
   -- lowered to increase battery life
   -- This setting is only effective when not using vsync,

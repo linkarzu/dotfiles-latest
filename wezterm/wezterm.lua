@@ -40,6 +40,11 @@ config = {
 
 	window_close_confirmation = "NeverPrompt",
 
+	-- I don't like the the "Linear", which gives it a fade effect between blinks
+	cursor_blink_ease_out = "Constant",
+	cursor_blink_ease_in = "Constant",
+	cursor_blink_rate = 400,
+
 	window_padding = {
 		left = 2,
 		right = 2,
@@ -54,9 +59,9 @@ config = {
 		background = colors["linkarzu_color10"],
 
 		-- Overrides the cell background color when the current cell is occupied by the cursor
-		cursor_bg = colors["linkarzu_color02"],
+		cursor_bg = colors["linkarzu_color14"],
 		-- Overrides the text color when the current cell is occupied by the cursor
-		cursor_fg = colors["linkarzu_color14"],
+		cursor_fg = colors["linkarzu_color10"],
 		-- Specifies the border color of the cursor when the cursor style is set to Block
 		cursor_border = colors["linkarzu_color02"],
 

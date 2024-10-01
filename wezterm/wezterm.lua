@@ -31,6 +31,7 @@ config = {
 
 	-- Removes the macos bar at the top with the 3 buttons
 	window_decorations = "RESIZE",
+
 	font = wezterm.font("JetBrains Mono"),
 	font_size = 14.5,
 
@@ -38,6 +39,14 @@ config = {
 	enable_tab_bar = false,
 
 	window_close_confirmation = "NeverPrompt",
+
+	window_padding = {
+		left = 2,
+		right = 2,
+		top = 15,
+		bottom = 0,
+	},
+
 	colors = {
 		-- The default text color
 		foreground = colors["linkarzu_color14"],

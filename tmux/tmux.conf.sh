@@ -13,12 +13,12 @@ set -g prefix C-b
 # "xterm-256color" in alacritty and "screen-256color" in tmux doesnt have paste issues in neovim
 # "checkhealth" command in neovim shows no color warnings
 # set -g default-terminal "screen-256color"
-#
+
 # "xterm-256color" in alacritty and "xterm-256color" in tmux gives me truecolor
 # warnings in neovim
 # set -g default-terminal "xterm-256color"
-#
 # When using "alacritty" in alacritty and "tmux-256color" in tmux, I was having paste
+
 # issues when I pasted over text highlighted in visual mode, spaces were removed
 # at the end of the text. This happened in NEOVIM specifically
 # "checkhealth" command in neovim shows no color warnings
@@ -38,6 +38,7 @@ set -sg terminal-overrides ",*:RGB"
 # After reloading the configuration, you also have to kill the tmux session for
 # these changes to take effect
 set -g default-terminal "${TERM}"
+
 # undercurl support
 set -as terminal-overrides ',*:Smulx=\E[4::%p1%dm'
 # underscore colours - needs tmux-3.0
@@ -362,7 +363,7 @@ set -g @plugin 'tmux-plugins/tpm'
 set -g @plugin 'catppuccin/tmux#v0.3.0'
 # set -g @plugin 'catppuccin/tmux#latest'
 # or frappe, macchiato, mocha
-set -g @catppuccin_flavour 'mocha'
+set -g @catppuccin_flavor 'mocha'
 
 run-shell "~/github/dotfiles-latest/tmux/tools/linkarzu/set_tmux_colors.sh"
 

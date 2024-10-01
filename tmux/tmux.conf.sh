@@ -144,7 +144,7 @@ daily_note="~/github/dotfiles-latest/scripts/macos/mac/300-dailyNote.sh"
 # session
 karabiner_rules="~/github/scripts/macos/mac/301-openKarabinerRules.sh"
 
-colorscheme_selector="~/github/dotfiles-latest/colorscheme/colorscheme-selector.sh" 
+colorscheme_selector="~/github/dotfiles-latest/colorscheme/colorscheme-selector.sh"
 
 # Don't use C-r because it's used by tmux-resurrect
 # Don't use C-e because I'm already using it for sending command to all panes/windows in current session
@@ -357,13 +357,17 @@ set -g @plugin 'tmux-plugins/tpm'
 # - I feel my terminal waaaaay smoother/faster, not completely sure about this
 #   But could be due to all the refreshing and polling of data Dracula had to do
 
-set -g @plugin 'catppuccin/tmux'
-set -g @catppuccin_flavour 'mocha' # or frappe, macchiato, mocha
+# I pinned to 0.3.0 beacuse a new version had breaking changes and my tmux bar
+# looked like crap, spent hours trying to figure it out
+set -g @plugin 'catppuccin/tmux#v0.3.0'
+# set -g @plugin 'catppuccin/tmux#latest'
+# or frappe, macchiato, mocha
+set -g @catppuccin_flavour 'mocha'
 
-run-shell ~/github/dotfiles-latest/tmux/tools/linkarzu/set_tmux_colors.sh
+run-shell "~/github/dotfiles-latest/tmux/tools/linkarzu/set_tmux_colors.sh"
 
 set -g @catppuccin_window_left_separator ""
-set -g @catppuccin_window_right_separator " "
+set -g @catppuccin_window_right_separator " "
 set -g @catppuccin_window_middle_separator " █"
 set -g @catppuccin_window_number_position "right"
 set -g @catppuccin_status_modules_left "session"

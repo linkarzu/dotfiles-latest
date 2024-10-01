@@ -432,10 +432,10 @@
               {
                 "to": [
                   {
-                    "shell_command": "open -a 'kitty.app'"
+                    "shell_command": "open -a 'WezTerm.app'"
                   }
                 ],
-                "description": "Open -a 'kitty.app'",
+                "description": "Open -a 'WezTerm.app'",
                 "type": "basic",
                 "from": {
                   "key_code": "j",

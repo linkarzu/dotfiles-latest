@@ -367,7 +367,7 @@ const rules: KarabinerRules[] = [
     a: {
       h: app("Spotify"),
       // j: app("Alacritty"),
-      j: app("kitty"),
+      j: app("WezTerm"),
       k: app("Google Chrome"),
       // l: app("Obsidian"),
       semicolon: app("ChatGPT"),

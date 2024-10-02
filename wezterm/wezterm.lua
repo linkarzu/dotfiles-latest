@@ -13,6 +13,25 @@ local config = wezterm.config_builder()
 
 -- This is where you actually apply your config choices
 config = {
+
+	--[=====[
+	Setting the term to wezterm is what allows support for undercurl
+
+	BEFORE you can set the term to wezterm, you need to install a copy of the
+	wezterm TERM definition
+	https://wezfurlong.org/wezterm/config/lua/config/term.html?h=term
+
+	If you're using tmux, set your tmux.conf file to:
+	set -g default-terminal "${TERM}"
+	So that it picks up the wezterm TERM we're defining here
+
+	When inside neovim, run a `checkhealth` and under `tmux` you will see that
+	the term is set to `wezterm`. If the term is set to something else:
+	Reload your tmux configuration, then close all your tmux sessions to quit the
+	terminal and re-open it
+  --]=====]
+	term = "wezterm",
+
 	default_prog = {
 		"/bin/zsh",
 		"--login",
@@ -32,8 +51,11 @@ config = {
 	-- Removes the macos bar at the top with the 3 buttons
 	window_decorations = "RESIZE",
 
+	-- https://wezfurlong.org/wezterm/config/lua/wezterm/font.html
+	-- font = wezterm.font("JetBrains Mono", { weight = "Bold" }),
 	font = wezterm.font("JetBrains Mono"),
-	font_size = 14.5,
+	-- font_size = 14.5,
+	font_size = 15,
 
 	-- I don't use tabs
 	enable_tab_bar = false,

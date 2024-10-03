@@ -248,6 +248,13 @@ bind-key -T copy-mode-vi 'v' send -X begin-selection
 # copy text with "y"
 bind-key -T copy-mode-vi 'y' send -X copy-selection
 
+# don't exit copy mode when dragging with mouse
+unbind -T copy-mode-vi MouseDragEnd1Pane
+
+# Change the keybinding to enter copy mode from 'prefix + [' to 'prefix + v'
+unbind [
+bind v copy-mode
+
 # https://github.com/leelavg/dotfiles/blob/897aa883a/config/tmux.conf#L30-L39
 # https://scripter.co/command-to-every-pane-window-session-in-tmux/
 # Send the same command to all panes/windows in current session
@@ -291,9 +298,6 @@ set -g mouse on
 # I had to set this to on for osc52 to work
 # https://github.com/ojroques/nvim-osc52
 set -s set-clipboard on
-
-# don't exit copy mode when dragging with mouse
-unbind -T copy-mode-vi MouseDragEnd1Pane
 
 # If I'm in insert mode typing text, and press escape, it will wait this amount
 # of time to switch to normal mode when I press escape

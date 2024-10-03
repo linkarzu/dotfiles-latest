@@ -253,6 +253,47 @@ esac
 if [ "$OS" = 'Mac' ]; then
 
   #############################################################################
+  #                        Cursor configuration
+  #############################################################################
+
+  # https://unix.stackexchange.com/questions/433273/changing-cursor-style-based-on-mode-in-both-zsh-and-vim
+  # You can customise the type of cursor you want (blinking or not, |, rectangle or _)
+  # by changing the numbers in the following sequences \e[5 q (5 is for beam, 1 is for block) as follows:
+  #  Set cursor style (DECSCUSR), VT520.
+  # 0  ⇒  blinking block.
+  # 1  ⇒  blinking block (default).
+  # 2  ⇒  steady block.
+  # 3  ⇒  blinking underline.
+  # 4  ⇒  steady underline.
+  # 5  ⇒  blinking bar, xterm.
+  # 6  ⇒  steady bar, xterm.
+
+  # vi mode
+  bindkey -v
+  export KEYTIMEOUT=1
+
+  # Change cursor shape for different vi modes.
+  function zle-keymap-select {
+    if [[ ${KEYMAP} == vicmd ]] ||
+      [[ $1 = 'block' ]]; then
+      echo -ne '\e[1 q'
+    elif [[ ${KEYMAP} == main ]] ||
+      [[ ${KEYMAP} == viins ]] ||
+      [[ ${KEYMAP} = '' ]] ||
+      [[ $1 = 'beam' ]]; then
+      echo -ne '\e[5 q'
+    fi
+  }
+  zle -N zle-keymap-select
+  zle-line-init() {
+    zle -K viins # initiate `vi insert` as keymap (can be removed if `bindkey -V` has been set elsewhere)
+    echo -ne "\e[5 q"
+  }
+  zle -N zle-line-init
+  echo -ne '\e[5 q'                # Use beam shape cursor on startup.
+  preexec() { echo -ne '\e[5 q'; } # Use beam shape cursor for each new prompt.
+
+  #############################################################################
   #                        Colorscheme configuration
   #############################################################################
 
@@ -474,6 +515,11 @@ if [ "$OS" = 'Mac' ]; then
       # Remap to go to the end of the line
       zvm_bindkey vicmd 'gl' end-of-line
     }
+
+    # Disable the cursor style feature
+    # I my cursor above in the cursor section
+    # https://github.com/jeffreytse/zsh-vi-mode?tab=readme-ov-file#custom-cursor-style
+    ZVM_CURSOR_STYLE_ENABLED=false
 
     # Source .fzf.zsh so that the ctrl+r bindkey is given back fzf
     zvm_after_init_commands+=('[ -f $HOME/.fzf.zsh ] && source $HOME/.fzf.zsh')

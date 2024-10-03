@@ -67,10 +67,14 @@ bind-key Space switch-client -l
 # https://unix.stackexchange.com/questions/608268/how-can-i-force-tmux-to-sort-my-sessions-alphabetically
 bind s choose-tree -Zs -O time
 
-# Bind 'd' to perform the 'x' action when in choose-tree mode
-# In other words, this allows you to close sessions with "d" when in the session
-# navigator "choose-tree" that comes up with prefix+s
-bind -n d if -F '#{==:#{pane_mode},tree-mode}' 'send x' 'send d'
+# # Bind 'd' to perform the 'x' action when in choose-tree mode
+# # In other words, this allows you to close sessions with "d" when in the session
+# # navigator "choose-tree" that comes up with prefix+s
+# bind -n d if -F '#{==:#{pane_mode},tree-mode}' 'send x' 'send d'
+
+# 'd' will tag panes that I want to delete, and then I delete them all with 'D' 
+bind -n d if -F '#{==:#{pane_mode},tree-mode}' 'send t' 'send d'
+bind -n D if -F '#{==:#{pane_mode},tree-mode}' 'send X' 'send D'
 
 # Create vertical split
 unbind '|'

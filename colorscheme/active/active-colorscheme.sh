@@ -30,3 +30,16 @@ linkarzu_color15="#013e4a"
 linkarzu_color16="#e9b3fd"
 # Lualine across
 linkarzu_color17="#141b22"
+# Lighter markdown headings
+# Markdown heading 1 - color04
+linkarzu_color18="#5b4996"
+# Markdown heading 2 - color02
+linkarzu_color19="#21925b"
+# Markdown heading 3 - color03
+linkarzu_color20="#027d95"
+# Markdown heading 4 - color01
+linkarzu_color21="#585c89"
+# Markdown heading 5 - color05
+linkarzu_color22="#0f857c"
+# Markdown heading 6 - color08
+linkarzu_color23="#396592"

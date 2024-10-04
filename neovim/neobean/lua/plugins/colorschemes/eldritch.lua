@@ -86,6 +86,9 @@ return {
         -- I do the line below to change the color of bold text
         ["@markup.strong"] = { fg = colors["linkarzu_color04"], bold = true },
 
+        -- Inline code in markdown
+        ["@markup.raw.markdown_inline"] = { fg = colors["linkarzu_color02"] },
+
         -- Change the spell underline color
         SpellBad = { sp = colors["linkarzu_color11"], undercurl = true, bold = true, italic = true },
         SpellCap = { sp = colors["linkarzu_color12"], undercurl = true, bold = true, italic = true },

@@ -52,12 +52,12 @@ config = {
 		"--login",
 		"-c",
 		[[
-    if command -v tmux >/dev/null 2>&1; then
-      tmux attach || tmux new;
-    else
-      exec zsh;
-    fi
-    ]],
+	   if command -v tmux >/dev/null 2>&1; then
+	     tmux attach || tmux new;
+	   else
+	     exec zsh;
+	   fi
+	   ]],
 	},
 
 	-- For example, changing the color scheme:

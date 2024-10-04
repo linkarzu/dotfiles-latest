@@ -32,6 +32,21 @@ config = {
   --]=====]
 	term = "wezterm",
 
+	-- I got the GPU settings below from a comment by user @anthonyknowles
+	-- In my wezterm video and will test them out
+	-- https://youtu.be/ibCPb4tSRXM
+	-- https://wezfurlong.org/wezterm/config/lua/config/animation_fps.html?h=animation
+	-- animation_fps = 60,
+
+	-- https://wezfurlong.org/wezterm/config/lua/config/front_end.html?h=front_
+	-- front_end = "WebGpu",
+
+	-- https://wezfurlong.org/wezterm/config/lua/config/webgpu_preferred_adapter.html?h=webgpu_preferred_adapter
+	-- webgpu_preferred_adapter
+
+	-- webgpu_power_preference = "LowPower"
+	-- https://wezfurlong.org/wezterm/config/lua/config/webgpu_power_preference.html
+
 	default_prog = {
 		"/bin/zsh",
 		"--login",

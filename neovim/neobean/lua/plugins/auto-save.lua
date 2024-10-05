@@ -40,6 +40,11 @@ return {
       -- return false: if it's not ok to be saved
       -- if set to `nil` then no specific condition is applied
       condition = function(buf)
+        -- Disable auto-save for the harpoon plugin, otherwise it just opens and closes
+        -- https://github.com/ThePrimeagen/harpoon/issues/434
+        if vim.bo[buf].filetype == "harpoon" then
+          return false
+        end
         local fn = vim.fn
         local utils = require("auto-save.utils.data")
         -- don't save for `sql` file types

@@ -3,7 +3,8 @@
 --
 -- https://github.com/leath-dub/snipe.nvim
 return {
-  "linkarzu/snipe.nvim",
+  -- "linkarzu/snipe.nvim",
+  "leath-dub/snipe.nvim",
   config = function()
     local snipe = require("snipe")
     snipe.setup({
@@ -20,11 +21,18 @@ return {
         -- cancel_snipe = "<esc>",
         cancel_snipe = "q",
 
-        -- Close the buffer under the cursor
         -- Remove "j" and "k" from your dictionary to navigate easier to delete
+        -- Close the buffer under the cursor
         -- NOTE: Make sure you don't use the character below on your dictionary
-        close_buffer = "d",
+        -- close_buffer = "d",
       },
+      -- Define the way buffers are sorted by default
+      -- Can be any of "default" (sort buffers by their number) or "last" (sort buffers by last accessed)
+      -- If you choose "last", it will be modifying sorting the boffers by last
+      -- accessed, so the "a" will always be assigned to your latest accessed
+      -- buffer
+      -- If you want the letters not to change, leave the sorting at default
+      sort = "default",
     })
     -- vim.keymap.set(
     --   "n",

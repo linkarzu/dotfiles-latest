@@ -356,7 +356,8 @@ vim.keymap.set({ "n", "v", "i" }, "<C-a>", function()
     print("Image pasted and file saved")
     -- Only if updated I'll refresh the images by clearing them first
     -- I'm using [[ ]] to escape the special characters in a command
-    vim.cmd([[lua require("image").clear()]])
+    require("image").clear()
+    -- vim.cmd([[lua require("image").clear()]])
     -- Reloads the file to reflect the changes
     vim.cmd("edit!")
     -- Switch to the line below
@@ -506,8 +507,9 @@ vim.keymap.set("n", "<leader>id", function()
               { absolute_image_path, "Normal" },
             }, false, {})
             -- I'll refresh the images, but will clear them first
+            require("image").clear()
             -- I'm using [[ ]] to escape the special characters in a command
-            vim.cmd([[lua require("image").clear()]])
+            -- vim.cmd([[lua require("image").clear()]])
             -- Reloads the file to reflect the changes
             vim.cmd("edit!")
             -- Delete the line the cursor is at
@@ -539,8 +541,9 @@ end, { desc = "[P](macOS) Delete image file under cursor" })
 -- without having to re-open neovim
 vim.keymap.set("n", "<leader>ir", function()
   -- First I clear the images
+  require("image").clear()
   -- I'm using [[ ]] to escape the special characters in a command
-  vim.cmd([[lua require("image").clear()]])
+  -- vim.cmd([[lua require("image").clear()]])
   -- Reloads the file to reflect the changes
   vim.cmd("edit!")
   print("Images refreshed")
@@ -551,8 +554,9 @@ end, { desc = "[P]Refresh images" })
 -- Set up a keymap to clear all images in the current buffer
 vim.keymap.set("n", "<leader>ic", function()
   -- This is the command that clears the images
+  require("image").clear()
   -- I'm using [[ ]] to escape the special characters in a command
-  vim.cmd([[lua require("image").clear()]])
+  -- vim.cmd([[lua require("image").clear()]])
   print("Images cleared")
 end, { desc = "[P]Clear images" })
 

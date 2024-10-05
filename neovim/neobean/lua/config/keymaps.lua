@@ -994,14 +994,16 @@ local function fold_markdown_headings(levels)
 end
 
 -- Keymap for unfolding markdown headings of level 2 or above
-vim.keymap.set("n", "<leader>mfu", function()
+vim.keymap.set("n", "zu", function()
+  -- vim.keymap.set("n", "<leader>mfu", function()
   -- Reloads the file to reflect the changes
   vim.cmd("edit!")
   vim.cmd("normal! zR") -- Unfold all headings
 end, { desc = "[P]Unfold all headings level 2 or above" })
 
 -- Keymap for folding markdown headings of level 1 or above
-vim.keymap.set("n", "<leader>mfj", function()
+vim.keymap.set("n", "zj", function()
+  -- vim.keymap.set("n", "<leader>mfj", function()
   -- Reloads the file to refresh folds, otherwise you have to re-open neovim
   vim.cmd("edit!")
   -- Unfold everything first or I had issues
@@ -1011,7 +1013,8 @@ end, { desc = "[P]Fold all headings level 1 or above" })
 
 -- Keymap for folding markdown headings of level 2 or above
 -- I know, it reads like "madafaka" but "k" for me means "2"
-vim.keymap.set("n", "<leader>mfk", function()
+vim.keymap.set("n", "zk", function()
+  -- vim.keymap.set("n", "<leader>mfk", function()
   -- Reloads the file to refresh folds, otherwise you have to re-open neovim
   vim.cmd("edit!")
   -- Unfold everything first or I had issues
@@ -1020,7 +1023,8 @@ vim.keymap.set("n", "<leader>mfk", function()
 end, { desc = "[P]Fold all headings level 2 or above" })
 
 -- Keymap for folding markdown headings of level 3 or above
-vim.keymap.set("n", "<leader>mfl", function()
+vim.keymap.set("n", "zl", function()
+  -- vim.keymap.set("n", "<leader>mfl", function()
   -- Reloads the file to refresh folds, otherwise you have to re-open neovim
   vim.cmd("edit!")
   -- Unfold everything first or I had issues
@@ -1029,7 +1033,8 @@ vim.keymap.set("n", "<leader>mfl", function()
 end, { desc = "[P]Fold all headings level 3 or above" })
 
 -- Keymap for folding markdown headings of level 4 or above
-vim.keymap.set("n", "<leader>mf;", function()
+vim.keymap.set("n", "z;", function()
+  -- vim.keymap.set("n", "<leader>mf;", function()
   -- Reloads the file to refresh folds, otherwise you have to re-open neovim
   vim.cmd("edit!")
   -- Unfold everything first or I had issues

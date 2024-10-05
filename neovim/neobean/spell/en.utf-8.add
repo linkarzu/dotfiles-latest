@@ -286,3 +286,4 @@ DPC
 prometheus
 vmalertmanager
 wezterm
+terminfo

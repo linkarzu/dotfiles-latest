@@ -32,6 +32,7 @@ the term is set to `wezterm`. If the term is set to something else:
 - re-open wezterm
 
 --]=====]
+
 	-- term = "wezterm",
 
 	--[=====[
@@ -61,6 +62,7 @@ the term is set to `xterm-kitty`. If the term is set to something else:
 Then you'll be able to set your terminal to `xterm-kitty` as seen below
 
 --]=====]
+
 	term = "xterm-kitty",
 
 	-- To enable kitty graphics

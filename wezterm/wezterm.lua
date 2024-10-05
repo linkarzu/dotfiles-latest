@@ -15,51 +15,52 @@ local config = wezterm.config_builder()
 config = {
 
 	--[=====[
-  Setting the term to wezterm is what allows support for undercurl
+Setting the term to wezterm is what allows support for undercurl
 
-  BEFORE you can set the term to wezterm, you need to install a copy of the
-  wezterm TERM definition
-  https://wezfurlong.org/wezterm/config/lua/config/term.html?h=term
+BEFORE you can set the term to wezterm, you need to install a copy of the
+wezterm TERM definition
+https://wezfurlong.org/wezterm/config/lua/config/term.html?h=term
 
-  If you're using tmux, set your tmux.conf file to:
-  set -g default-terminal "${TERM}"
-  So that it picks up the wezterm TERM we're defining here
+If you're using tmux, set your tmux.conf file to:
+set -g default-terminal "${TERM}"
+So that it picks up the wezterm TERM we're defining here
 
-  NOTE: When inside neovim, run a `checkhealth` and under `tmux` you will see that
-  the term is set to `wezterm`. If the term is set to something else:
-  - Reload your tmux configuration,
-  - Then close all your tmux sessions, one at a time and quit wezterm
-  - re-open wezterm
+NOTE: When inside neovim, run a `checkhealth` and under `tmux` you will see that
+the term is set to `wezterm`. If the term is set to something else:
+- Reload your tmux configuration,
+- Then close all your tmux sessions, one at a time and quit wezterm
+- re-open wezterm
 
-  --]=====]
+--]=====]
 	-- term = "wezterm",
 
 	--[=====[
-  When using the wezterm terminfo file, I had issues with images in neovim, images
-  were shown like split in half, and some part of the image always stayed on the
-  screen until I quit neovim
+When using the wezterm terminfo file, I had issues with images in neovim, images
+were shown like split in half, and some part of the image always stayed on the
+screen until I quit neovim
 
-  Images are working wonderfully in kitty, so decided to try the kitty.terminfo file
-  https://github.com/kovidgoyal/kitty/blob/master/terminfo/kitty.terminfo
+Images are working wonderfully in kitty, so decided to try the kitty.terminfo file
+https://github.com/kovidgoyal/kitty/blob/master/terminfo/kitty.terminfo
 
-  NOTE: I added a modified version of this in my zshrc file, so if the kitty terminfo 
-  file is not present it will be downloaded and installed automatically
+NOTE: I added a modified version of this in my zshrc file, so if the kitty terminfo 
+file is not present it will be downloaded and installed automatically
 
-  But if you want to manually download and install the kitty terminfo file 
-  run the commands below on your terminal:
-  tempfile=$(mktemp) \
-  && curl -o "$tempfile" https://raw.githubusercontent.com/kovidgoyal/kitty/master/terminfo/kitty.terminfo \
-  && tic -x -o ~/.terminfo "$tempfile" \
-  && rm "$tempfile"
+But if you want to manually download and install the kitty terminfo file 
+run the commands below on your terminal:
+tempfile=$(mktemp) \
+&& curl -o "$tempfile" https://raw.githubusercontent.com/kovidgoyal/kitty/master/terminfo/kitty.terminfo \
+&& tic -x -o ~/.terminfo "$tempfile" \
+&& rm "$tempfile"
 
-  NOTE: When inside neovim, run a `checkhealth` and under `tmux` you will see that
-  the term is set to `xterm-kitty`. If the term is set to something else:
-  - Reload your tmux configuration,
-  - Then close all your tmux sessions, one at a time and quit wezterm
-  - re-open wezterm
+NOTE: When inside neovim, run a `checkhealth` and under `tmux` you will see that
+the term is set to `xterm-kitty`. If the term is set to something else:
+- Reload your tmux configuration,
+- Then close all your tmux sessions, one at a time and quit wezterm
+- re-open wezterm
 
-  Then you'll be able to set your terminal to `xterm-kitty` as seen below
-  --]=====]
+Then you'll be able to set your terminal to `xterm-kitty` as seen below
+
+--]=====]
 	term = "xterm-kitty",
 
 	-- To enable kitty graphics

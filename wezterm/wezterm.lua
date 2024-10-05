@@ -25,12 +25,49 @@ config = {
 	set -g default-terminal "${TERM}"
 	So that it picks up the wezterm TERM we're defining here
 
-	When inside neovim, run a `checkhealth` and under `tmux` you will see that
+  NOTE: When inside neovim, run a `checkhealth` and under `tmux` you will see that
 	the term is set to `wezterm`. If the term is set to something else:
-	Reload your tmux configuration, then close all your tmux sessions to quit the
-	terminal and re-open it
+	- Reload your tmux configuration,
+  - Then close all your tmux sessions, one at a time and quit wezterm
+  - re-open wezterm
+
   --]=====]
-	term = "wezterm",
+	-- term = "wezterm",
+
+	--[=====[
+  When using the wezterm terminfo file, I had issues with images in neovim, images
+  were shown like split in half, and some part of the image always stayed on the
+  screen until I quit neovim
+
+  Images are working wonderfully in kitty, so decided to try the kitty.terminfo file
+  https://github.com/kovidgoyal/kitty/blob/master/terminfo/kitty.terminfo
+
+  NOTE: I added a modified version of this in my zshrc file, so if the kitty terminfo 
+  file is not present it will be downloaded and installed automatically
+
+  But if you want to manually download and install the kitty terminfo file 
+  run the commands below on your terminal:
+  tempfile=$(mktemp) \
+    && curl -o "$tempfile" https://raw.githubusercontent.com/kovidgoyal/kitty/master/terminfo/kitty.terminfo \
+    && tic -x -o ~/.terminfo "$tempfile" \
+    && rm "$tempfile"
+
+  NOTE: When inside neovim, run a `checkhealth` and under `tmux` you will see that
+	the term is set to `xterm-kitty`. If the term is set to something else:
+	- Reload your tmux configuration,
+  - Then close all your tmux sessions, one at a time and quit wezterm
+  - re-open wezterm
+
+  Then you'll be able to set your terminal to `xterm-kitty` as seen below
+  --]=====]
+	term = "xterm-kitty",
+
+	-- To enable kitty graphics
+	-- https://github.com/wez/wezterm/issues/986
+	-- It seems that kitty graphics is not enabled by default according to this
+	-- Not sure, so I'm enabling it just in case
+	-- https://github.com/wez/wezterm/issues/1406#issuecomment-996253377
+	enable_kitty_graphics = true,
 
 	-- I got the GPU settings below from a comment by user @anthonyknowles
 	-- In my wezterm video and will test them out

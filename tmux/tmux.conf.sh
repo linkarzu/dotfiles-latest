@@ -96,6 +96,15 @@ bind s choose-tree -Zs -O time -F "#{session_windows}"
 # bind s choose-tree -Zs -O time -F "#{?session_attached,#[fg=$linkarzu_color02],#[fg=$linkarzu_color03]}#{session_name}#[default]" -y
 # bind s choose-tree -Zs -O time -F "#{?session_attached,#[fg=$linkarzu_color02],#[fg=$linkarzu_color03]}" -y
 
+# Search sessions using an fzf menu
+# Found this gem down here:
+# https://github.com/majjoha/dotfiles/blob/cd6f966d359e16b3a7c149f96d4edb8a83e769db/.config/tmux/tmux.conf#L41
+bind S display-popup -E -w 75% -h 75% "\
+  tmux list-sessions -F '#{?session_attached,,#{session_name}}' |\
+  sed '/^$/d' |\
+  fzf --reverse --header jump-to-session --preview 'tmux capture-pane -pt {}'  |\
+  xargs tmux switch-client -t"
+
 
 # # Bind 'd' to perform the 'x' action when in choose-tree mode
 # # In other words, this allows you to close sessions with "d" when in the session

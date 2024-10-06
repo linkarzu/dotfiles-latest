@@ -89,7 +89,13 @@ set -wF mode-style "fg=$linkarzu_color02,bg=$linkarzu_color13"
 # -Z zooms the pane (don't uderstand what this does)
 # -O specifies the initial sort field: one of ‘index’, ‘name’, or ‘time’ (activity).
 # https://unix.stackexchange.com/questions/608268/how-can-i-force-tmux-to-sort-my-sessions-alphabetically
-bind s choose-tree -Zs -O time
+# bind s choose-tree -Zs -O time
+# bind s choose-tree -Zs -O time -y
+bind s choose-tree -Zs -O time -F "#{session_windows}"
+# bind s choose-tree -Zs -O time -F "#{session_windows}" -y
+# bind s choose-tree -Zs -O time -F "#{?session_attached,#[fg=$linkarzu_color02],#[fg=$linkarzu_color03]}#{session_name}#[default]" -y
+# bind s choose-tree -Zs -O time -F "#{?session_attached,#[fg=$linkarzu_color02],#[fg=$linkarzu_color03]}" -y
+
 
 # # Bind 'd' to perform the 'x' action when in choose-tree mode
 # # In other words, this allows you to close sessions with "d" when in the session

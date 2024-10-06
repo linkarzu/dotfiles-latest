@@ -346,8 +346,8 @@ set-option -sg escape-time 100
 # window gains or looses focus
 set-option -g focus-events on
 
-#I just realized that my eyes are normally on the top left corner on the
-#screen, so moving the tmux bar to the top instead of bottom
+# I just realized that my eyes are normally on the top left corner on the
+# screen, so moving the tmux bar to the top instead of bottom
 set -g status-position top
 # set -g status-position bottom
 

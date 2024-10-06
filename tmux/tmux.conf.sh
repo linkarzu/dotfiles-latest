@@ -105,6 +105,13 @@ bind S display-popup -E -w 75% -h 75% "\
   fzf --reverse --header jump-to-session --preview 'tmux capture-pane -pt {}'  |\
   xargs tmux switch-client -t"
 
+# fzf menu to kill sessions
+# Credit: video below by Waylon Walker
+# https://www.youtube.com/watch?v=QWPyYx54JbE
+bind D display-popup -E "\
+    tmux list-sessions -F '#{?session_attached,,#{session_name}}' |\
+    fzf --reverse -m --header=kill-session |\
+    xargs -I {} tmux kill-session -t {}"
 
 # # Bind 'd' to perform the 'x' action when in choose-tree mode
 # # In other words, this allows you to close sessions with "d" when in the session

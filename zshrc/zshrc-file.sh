@@ -277,6 +277,12 @@ if [ "$OS" = 'Mac' ]; then
   }
   install_xterm_kitty_terminfo
 
+  # Open man pages in neovim, if neovim is installed
+  if command -v nvim &>/dev/null; then
+    export MANPAGER='nvim +Man!'
+    export MANWIDTH=999
+  fi
+
   #############################################################################
   #                        Cursor configuration
   #############################################################################

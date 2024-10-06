@@ -46,6 +46,10 @@ set -as terminal-overrides ',*:Smulx=\E[4::%p1%dm'
 # underscore colours - needs tmux-3.0
 set -as terminal-overrides ',*:Setulc=\E[58::2::%p1%{65536}%/%d::%p1%{256}%/%{255}%&%d::%p1%{255}%&%d%;m'
 
+# Change the keybinding to enter copy mode from 'prefix + [' to 'prefix + v'
+unbind v
+bind v copy-mode
+
 # https://github.com/3rd/image.nvim/?tab=readme-ov-file#tmux
 # This is needed by the image.nvim plugin
 set -gq allow-passthrough on
@@ -60,6 +64,11 @@ set -g visual-activity off
 # -l stands for `last session`, see `man tmux`
 unbind Space
 bind-key Space switch-client -l
+
+# This enables vim nagivation
+# If for example I'm in the scrolling mode (yellow) can navigate with vim motions
+# search with /, using v for visual mode, etc
+set -g mode-keys vi
 
 # This changes the colors of visual selection
 # https://unix.stackexchange.com/questions/141311/tmux-hightlight-colour-setting

@@ -70,12 +70,12 @@ source "$HOME/github/dotfiles-latest/colorscheme/active/active-colorscheme.sh"
 # Linkarzu Theme
 export BLACK=0xff${linkarzu_color10#\#}
 export WHITE=0xff${linkarzu_color14#\#}
-export RED=0xff${linkarzu_color08#\#}
+export RED=0xff${linkarzu_color11#\#}
 export GREEN=0xff${linkarzu_color02#\#}
 export BLUE=0xff${linkarzu_color03#\#}
-export YELLOW=0xff${linkarzu_color05#\#}
-export ORANGE=0xff${linkarzu_color06#\#}
-export MAGENTA=0xff${linkarzu_color04#\#}
+export YELLOW=0xff${linkarzu_color12#\#}
+export ORANGE=0xff${linkarzu_color04#\#}
+export MAGENTA=0xff${linkarzu_color01#\#}
 export GREY=0xff${linkarzu_color09#\#}
 export TRANSPARENT=0x00000000
 export BG0=0xff${linkarzu_color10#\#}

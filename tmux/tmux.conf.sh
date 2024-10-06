@@ -269,11 +269,6 @@ bind r source-file ~/.tmux.conf
 unbind Q
 bind Q setw synchronize-panes
 
-# This enables vim nagivation
-# If for example I'm in the scrolling mode (yellow) can navigate with vim motions
-# search with /, using v for visual mode, etc
-set-window-option -g mode-keys vi
-
 # Go to previous window, I'm using 'p' to change to window 4
 unbind m
 bind m previous-window
@@ -296,10 +291,6 @@ bind-key -T copy-mode-vi 'y' send -X copy-selection
 
 # don't exit copy mode when dragging with mouse
 unbind -T copy-mode-vi MouseDragEnd1Pane
-
-# Change the keybinding to enter copy mode from 'prefix + [' to 'prefix + v'
-unbind [
-bind v copy-mode
 
 # https://github.com/leelavg/dotfiles/blob/897aa883a/config/tmux.conf#L30-L39
 # https://scripter.co/command-to-every-pane-window-session-in-tmux/

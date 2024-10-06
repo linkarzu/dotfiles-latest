@@ -70,7 +70,7 @@ bind-key Space switch-client -l
 # search with /, using v for visual mode, etc
 set -g mode-keys vi
 
-# This changes the colors of visual selection
+# This changes the colors of visual selection and choose-tree
 # https://unix.stackexchange.com/questions/141311/tmux-hightlight-colour-setting
 # set -g mode-style "fg=$linkarzu_color13,bg=$linkarzu_color03"
 # set -g mode-style "fg=#04d1f9,bg=#314154"
@@ -80,7 +80,8 @@ set -g mode-keys vi
 # The color was applied, but then it was overriden
 # Since I'm using the catppuccin theme, found this in the catpucchin tmux repo and that did it
 # https://github.com/catppuccin/tmux/blob/fe0d245e1c971789d87ab80f492a20709af91c91/catppuccin_tmux.conf#L308-L310
-set -wF mode-style "fg=$linkarzu_color13,bg=$linkarzu_color03"
+# set -wF mode-style "fg=$linkarzu_color13,bg=$linkarzu_color02"
+set -wF mode-style "fg=$linkarzu_color02,bg=$linkarzu_color13"
 
 # When pressing prefix+s to list sessions, I want them sorted by time
 # That way my latest used sessions show at the top of the list

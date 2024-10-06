@@ -1,6 +1,8 @@
 # Filename: ~/github/dotfiles-latest/tmux/tmux.conf.sh
 # ~/github/dotfiles-latest/tmux/tmux.conf.sh
 
+source "$HOME/github/dotfiles-latest/colorscheme/active/active-colorscheme.sh"
+
 # #############################################################################
 # Do not delete the `UNIQUE_ID` line below, I use it to backup original files
 # so they're not lost when my symlinks are applied
@@ -58,6 +60,18 @@ set -g visual-activity off
 # -l stands for `last session`, see `man tmux`
 unbind Space
 bind-key Space switch-client -l
+
+# This changes the colors of visual selection
+# https://unix.stackexchange.com/questions/141311/tmux-hightlight-colour-setting
+# set -g mode-style "fg=$linkarzu_color13,bg=$linkarzu_color03"
+# set -g mode-style "fg=#04d1f9,bg=#314154"
+# set -g mode-style "fg=blue,bg=red"
+#
+# set -g never worked for me
+# The color was applied, but then it was overriden
+# Since I'm using the catppuccin theme, found this in the catpucchin tmux repo and that did it
+# https://github.com/catppuccin/tmux/blob/fe0d245e1c971789d87ab80f492a20709af91c91/catppuccin_tmux.conf#L308-L310
+set -wF mode-style "fg=$linkarzu_color13,bg=$linkarzu_color03"
 
 # When pressing prefix+s to list sessions, I want them sorted by time
 # That way my latest used sessions show at the top of the list

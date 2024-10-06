@@ -116,10 +116,12 @@ bind D display-popup -E "\
 # # Bind 'd' to perform the 'x' action when in choose-tree mode
 # # In other words, this allows you to close sessions with "d" when in the session
 # # navigator "choose-tree" that comes up with prefix+s
-# bind -n d if -F '#{==:#{pane_mode},tree-mode}' 'send x' 'send d'
+bind -n d if -F '#{==:#{pane_mode},tree-mode}' 'send x' 'send d'
 
-# 'd' will tag panes that I want to delete, and then I delete them all with 'D' 
-bind -n d if -F '#{==:#{pane_mode},tree-mode}' 'send t' 'send d'
+# Use 'd' instead of 't' to tag panes that I want to delete
+# bind -n d if -F '#{==:#{pane_mode},tree-mode}' 'send t' 'send d'
+
+# Use 'D' instead of 'X' to delete all tagged panes
 bind -n D if -F '#{==:#{pane_mode},tree-mode}' 'send X' 'send D'
 
 # Create vertical split

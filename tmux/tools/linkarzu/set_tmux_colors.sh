@@ -12,7 +12,7 @@ tmux set -g @catppuccin_directory_color "$linkarzu_color03"
 
 # Color of the ACTIVE window, windows are opened with ctrl+b c
 tmux set -g @catppuccin_window_current_color "$linkarzu_color03"
-tmux set -g @catppuccin_window_current_background "$linkarzu_color13"
+tmux set -g @catppuccin_window_current_background "$linkarzu_color10"
 
 # Color of the rest of the windows that are not active
 tmux set -g @catppuccin_window_default_color "$linkarzu_color15"

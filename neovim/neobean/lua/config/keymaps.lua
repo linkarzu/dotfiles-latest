@@ -79,9 +79,21 @@ vim.keymap.set("v", "gl", "$h", { desc = "[P]Go to the end of the line" })
 -- With bat I printed all the characters in a file (cata is an alias in my zshrc)
 -- cata ~/github/obsidian_main/999-test/test-markdown.md | head -70
 -- So this give me something like:
---
+-- ␊
 -- -·This·file·is·to·test·**different·markdown·functionality**,·like·headings,␊
 -- ··indentation,·code·blocks,·icons,·etc␊
+-- -·This·is·just·a·`second`·paragraph·to·demonstrate·how·bullet·points·show,␊
+-- ··notice·they·have·the·same·indentation␊
+-- -·Now·what·is·this·new·thing:␊
+-- ··-·testing·new·line␊
+-- ··-·another·one␊
+-- -·Below·here·I·have·a·codeblock␊
+-- ␊
+-- ```bash␊
+-- testing·bash·code·testing·something·else·testing·bash·code·testing·something·else·testing·bash␊
+-- code·testing·something·else·testing·bash·code·testing·something·else␊
+-- ```␊
+-- ␊
 --
 -- Notice that it shows me newlines (line feed (LF)) characters, so  had to
 -- come up with a keymap that:

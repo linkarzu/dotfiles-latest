@@ -152,10 +152,10 @@ bind p select-window -t 4
 # ctrl+b : -> new -s 0 -> new session with name '0'
 # ctrl+b $ -> rename current session
 # ctrl+b s -> show list of sessions
-bind 7 switch-client -t 1
-bind 8 switch-client -t 2
-bind 9 switch-client -t 3
-bind 0 switch-client -t 4
+# bind 7 switch-client -t 1
+# bind 8 switch-client -t 2
+# bind 9 switch-client -t 3
+# bind 0 switch-client -t 4
 
 # If you want to use the default meta key, which is 'option' in macos, you have to
 # configure the alacritty 'option_as_alt' option, but that messed up my hyper key,

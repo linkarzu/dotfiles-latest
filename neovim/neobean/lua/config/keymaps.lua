@@ -67,14 +67,89 @@ vim.keymap.set({ "n", "v" }, "gl", "$", { desc = "[P]go to the end of the line" 
 -- In visual mode, after going to the end of the line, come back 1 character
 vim.keymap.set("v", "gl", "$h", { desc = "[P]Go to the end of the line" })
 
--- yank selected text into system clipboard
--- Vim/Neovim has two clipboards: unnamed register (default) and system clipboard.
+-- -- yank selected text into system clipboard
+-- -- Vim/Neovim has two clipboards: unnamed register (default) and system clipboard.
+-- --
+-- -- Yanking with `y` goes to the unnamed register, accessible only within Vim.
+-- -- The system clipboard allows sharing data between Vim and other applications.
+-- -- Yanking with `"+y` copies text to both the unnamed register and system clipboard.
+-- -- The `"+` register represents the system clipboard.
+-- vim.keymap.set({ "n", "v" }, "<leader>y", [["+y]], { desc = "[P]Yank to system clipboard" })
+
+-- With bat I printed all the characters in a file (cata is an alias in my zshrc)
+-- cata ~/github/obsidian_main/999-test/test-markdown.md | head -70
+-- So this give me something like:
 --
--- Yanking with `y` goes to the unnamed register, accessible only within Vim.
--- The system clipboard allows sharing data between Vim and other applications.
--- Yanking with `"+y` copies text to both the unnamed register and system clipboard.
--- The `"+` register represents the system clipboard.
-vim.keymap.set({ "n", "v" }, "<leader>y", [["+y]], { desc = "[P]Yank to system clipboard" })
+-- -·This·file·is·to·test·**different·markdown·functionality**,·like·headings,␊
+-- ··indentation,·code·blocks,·icons,·etc␊
+--
+-- Notice that it shows me newlines (line feed (LF)) characters, so  had to
+-- come up with a keymap that:
+-- Identifies lines ending with a line feed (LF) character.
+-- If the next line does not start with a '-' (bullet point), it joins the lines
+-- Empty lines (paragraph breaks) are preserved
+-- Lines starting with '-' are treated as bullet points and not merged
+-- Code blocks delimited by ``` are ignored and not modified
+-- Leading and trailing spaces are trimmed from each line
+-- Multiple spaces within lines are reduced to a single space
+-- The processed text is copied to the system clipboard
+vim.keymap.set("v", "y", function()
+  -- Yank the selected text into a temporary register
+  vim.cmd('normal! "zy')
+  -- Get the yanked text from register 'z'
+  local text = vim.fn.getreg("z")
+  -- Remove carriage returns
+  text = text:gsub("\r", "")
+  -- Split the text into lines
+  local lines = vim.split(text, "\n", { plain = true })
+  local processed_lines = {}
+  local i = 1
+  local in_code_block = false
+  while i <= #lines do
+    local line = lines[i]
+    if line:match("^%s*```") then
+      -- Toggle code block state
+      in_code_block = not in_code_block
+      -- Add the line as is
+      table.insert(processed_lines, line)
+      i = i + 1
+    elseif in_code_block then
+      -- Inside a code block, add the line as is
+      table.insert(processed_lines, line)
+      i = i + 1
+    elseif line == "" then
+      -- Empty line, paragraph break
+      table.insert(processed_lines, "")
+      i = i + 1
+    elseif i < #lines and lines[i + 1]:match("^%s*%-") then
+      -- Next line starts with '-', do not merge
+      table.insert(processed_lines, line)
+      i = i + 1
+    else
+      -- Merge lines until the next empty line, line starting with '-', or code block
+      local paragraph = {}
+      -- Trim spaces from the current line
+      local trimmed_line = line:gsub("^%s*(.-)%s*$", "%1")
+      table.insert(paragraph, trimmed_line)
+      i = i + 1
+      while i <= #lines and lines[i] ~= "" and not lines[i]:match("^%s*%-") and not lines[i]:match("^%s*```") do
+        -- Trim spaces from the line before adding
+        trimmed_line = lines[i]:gsub("^%s*(.-)%s*$", "%1")
+        table.insert(paragraph, trimmed_line)
+        i = i + 1
+      end
+      -- Concatenate the paragraph lines with a single space
+      local merged_line = table.concat(paragraph, " ")
+      -- Replace multiple spaces with a single space
+      merged_line = merged_line:gsub("%s+", " ")
+      table.insert(processed_lines, merged_line)
+    end
+  end
+  -- Reconstruct the text
+  text = table.concat(processed_lines, "\n")
+  -- Copy the processed text to the system clipboard
+  vim.fn.setreg("+", text)
+end, { desc = "Copy selection without line breaks", noremap = true, silent = true })
 
 -- yank/copy to end of line
 vim.keymap.set("n", "Y", "y$", { desc = "[P]Yank to end of line" })

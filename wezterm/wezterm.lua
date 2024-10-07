@@ -106,6 +106,14 @@ config = {
 
 	window_close_confirmation = "NeverPrompt",
 
+	-- -- NOTE: My cursor was not blinking when using wezterm with the "wezterm" terminfo
+	-- -- Setting my term to "xterm-kitty" fixed the issue
+	-- -- I also use the zsh-vi-mode plugin, I had to set up the blinking cursor
+	-- -- for that in my zshrc file
+	-- -- Neovim didn't need cursor changes, worked by setting it to "xterm-kitty"
+	-- --
+	-- default_cursor_style = "BlinkingBlock",
+
 	-- I don't like the the "Linear", which gives it a fade effect between blinks
 	cursor_blink_ease_out = "Constant",
 	cursor_blink_ease_in = "Constant",

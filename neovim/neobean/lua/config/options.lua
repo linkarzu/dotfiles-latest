@@ -133,8 +133,16 @@ vim.opt.sessionoptions = {
 -- set it to both
 vim.opt.spelllang = { "en" }
 
--- My cursor was working fine, not  sure why it stopped working in wezterm, so this fixed it
-vim.opt.guicursor = "n-v-c-sm:block,i-ci-ve:ver25,r-cr-o:hor20,a:blinkwait700-blinkoff400-blinkon250-Cursor/lCursor"
+-- -- My cursor was working fine, not  sure why it stopped working in wezterm, so
+-- -- the config below fixed it
+-- --
+-- -- NOTE: I think the issues with my cursor started happening when I moved to wezterm
+-- -- and started using the "wezterm" terminfo file, when in wezterm, I switched to
+-- -- the "xterm-kitty" terminfo file, and the cursor is working great without
+-- -- the configuration below. Leaving the config here as reference in case it
+-- -- needs to be tested with another terminal emulator in the future
+-- --
+-- vim.opt.guicursor = "n-v-c-sm:block,i-ci-ve:ver25,r-cr-o:hor20,a:blinkwait700-blinkoff400-blinkon250-Cursor/lCursor"
 
 -- ############################################################################
 --                             Neovide section

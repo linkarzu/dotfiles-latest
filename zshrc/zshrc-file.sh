@@ -287,42 +287,48 @@ if [ "$OS" = 'Mac' ]; then
   #                        Cursor configuration
   #############################################################################
 
-  # https://unix.stackexchange.com/questions/433273/changing-cursor-style-based-on-mode-in-both-zsh-and-vim
-  # You can customise the type of cursor you want (blinking or not, |, rectangle or _)
-  # by changing the numbers in the following sequences \e[5 q (5 is for beam, 1 is for block) as follows:
-  #  Set cursor style (DECSCUSR), VT520.
-  # 0  ⇒  blinking block.
-  # 1  ⇒  blinking block (default).
-  # 2  ⇒  steady block.
-  # 3  ⇒  blinking underline.
-  # 4  ⇒  steady underline.
-  # 5  ⇒  blinking bar, xterm.
-  # 6  ⇒  steady bar, xterm.
+  # # NOTE: I think the issues with my cursor started happening when I moved to wezterm
+  # # and started using the "wezterm" terminfo file, when in wezterm, I switched to
+  # # the "xterm-kitty" terminfo file, and the cursor is working great without
+  # # the configuration below. Leaving the config here as reference in case it
+  # # needs to be tested with another terminal emulator in the future
 
-  # vi mode
-  bindkey -v
-  export KEYTIMEOUT=1
+  # # https://unix.stackexchange.com/questions/433273/changing-cursor-style-based-on-mode-in-both-zsh-and-vim
+  # # You can customise the type of cursor you want (blinking or not, |, rectangle or _)
+  # # by changing the numbers in the following sequences \e[5 q (5 is for beam, 1 is for block) as follows:
+  # #  Set cursor style (DECSCUSR), VT520.
+  # # 0  ⇒  blinking block.
+  # # 1  ⇒  blinking block (default).
+  # # 2  ⇒  steady block.
+  # # 3  ⇒  blinking underline.
+  # # 4  ⇒  steady underline.
+  # # 5  ⇒  blinking bar, xterm.
+  # # 6  ⇒  steady bar, xterm.
 
-  # Change cursor shape for different vi modes.
-  function zle-keymap-select {
-    if [[ ${KEYMAP} == vicmd ]] ||
-      [[ $1 = 'block' ]]; then
-      echo -ne '\e[1 q'
-    elif [[ ${KEYMAP} == main ]] ||
-      [[ ${KEYMAP} == viins ]] ||
-      [[ ${KEYMAP} = '' ]] ||
-      [[ $1 = 'beam' ]]; then
-      echo -ne '\e[5 q'
-    fi
-  }
-  zle -N zle-keymap-select
-  zle-line-init() {
-    zle -K viins # initiate `vi insert` as keymap (can be removed if `bindkey -V` has been set elsewhere)
-    echo -ne "\e[5 q"
-  }
-  zle -N zle-line-init
-  echo -ne '\e[5 q'                # Use beam shape cursor on startup.
-  preexec() { echo -ne '\e[5 q'; } # Use beam shape cursor for each new prompt.
+  # # vi mode
+  # bindkey -v
+  # export KEYTIMEOUT=1
+  #
+  # # Change cursor shape for different vi modes.
+  # function zle-keymap-select {
+  #   if [[ ${KEYMAP} == vicmd ]] ||
+  #     [[ $1 = 'block' ]]; then
+  #     echo -ne '\e[1 q'
+  #   elif [[ ${KEYMAP} == main ]] ||
+  #     [[ ${KEYMAP} == viins ]] ||
+  #     [[ ${KEYMAP} = '' ]] ||
+  #     [[ $1 = 'beam' ]]; then
+  #     echo -ne '\e[5 q'
+  #   fi
+  # }
+  # zle -N zle-keymap-select
+  # zle-line-init() {
+  #   zle -K viins # initiate `vi insert` as keymap (can be removed if `bindkey -V` has been set elsewhere)
+  #   echo -ne "\e[5 q"
+  # }
+  # zle -N zle-line-init
+  # echo -ne '\e[5 q'                # Use beam shape cursor on startup.
+  # preexec() { echo -ne '\e[5 q'; } # Use beam shape cursor for each new prompt.
 
   #############################################################################
   #                        Colorscheme configuration
@@ -550,7 +556,16 @@ if [ "$OS" = 'Mac' ]; then
     # Disable the cursor style feature
     # I my cursor above in the cursor section
     # https://github.com/jeffreytse/zsh-vi-mode?tab=readme-ov-file#custom-cursor-style
-    ZVM_CURSOR_STYLE_ENABLED=false
+    #
+    # NOTE: My cursor was not blinking when using wezterm with the "wezterm"
+    # terminfo, setting it to a blinking cursor below fixed that
+    # I also set my term to "xterm-kitty" for this to work
+    #
+    # This also specifies the blinking cursor
+    # ZVM_CURSOR_STYLE_ENABLED=false
+    ZVM_INSERT_MODE_CURSOR=$ZVM_CURSOR_BLINKING_BEAM
+    ZVM_NORMAL_MODE_CURSOR=$ZVM_CURSOR_BLINKING_BLOCK
+    ZVM_OPPEND_MODE_CURSOR=$ZVM_CURSOR_BLINKING_UNDERLINE
 
     # Source .fzf.zsh so that the ctrl+r bindkey is given back fzf
     zvm_after_init_commands+=('[ -f $HOME/.fzf.zsh ] && source $HOME/.fzf.zsh')

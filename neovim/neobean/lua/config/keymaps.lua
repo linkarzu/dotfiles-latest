@@ -104,7 +104,7 @@ vim.keymap.set("v", "gl", "$h", { desc = "[P]Go to the end of the line" })
 -- Code blocks delimited by ``` are ignored and not modified
 -- Leading and trailing spaces are trimmed from each line
 -- Multiple spaces within lines are reduced to a single space
--- The processed text is copied to the system clipboard
+-- The processed text is copied to the system clipboard lamw25wmal
 vim.keymap.set("v", "y", function()
   -- Yank the selected text into a temporary register
   vim.cmd('normal! "zy')
@@ -1081,6 +1081,8 @@ local function fold_markdown_headings(levels)
 end
 
 -- Keymap for unfolding markdown headings of level 2 or above
+-- Changed all the markdown folding and unfolding keymaps from <leader>mfj to
+-- zj, zk, zl, z; and zu respectively lamw25wmal
 vim.keymap.set("n", "zu", function()
   -- vim.keymap.set("n", "<leader>mfu", function()
   -- Reloads the file to reflect the changes

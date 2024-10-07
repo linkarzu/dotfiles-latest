@@ -1550,7 +1550,7 @@ vim.keymap.set("n", "<leader>fC", function()
 end, { desc = "[P]Create daily note" })
 
 -- Remap 'gss' to 'gsa`' in visual mode
--- This surrounds with inline code, that I use a lot
+-- This surrounds with inline code, that I use a lot lamw25wmal
 vim.keymap.set("v", "gss", function()
   -- Use nvim_replace_termcodes to handle special characters like backticks
   local keys = vim.api.nvim_replace_termcodes("gsa`", true, false, true)

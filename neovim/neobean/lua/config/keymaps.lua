@@ -1549,6 +1549,19 @@ vim.keymap.set("n", "<leader>fC", function()
   create_daily_note(current_line)
 end, { desc = "[P]Create daily note" })
 
+-- Remap 'gss' to 'gsa`' in visual mode
+-- This surrounds with inline code, that I use a lot
+vim.keymap.set("v", "gss", function()
+  -- Use nvim_replace_termcodes to handle special characters like backticks
+  local keys = vim.api.nvim_replace_termcodes("gsa`", true, false, true)
+  -- Feed the keys in visual mode ('x' for visual mode)
+  vim.api.nvim_feedkeys(keys, "x", false)
+  -- I tried these 3, but they didn't work, I assume because of the backtick character
+  -- vim.cmd("normal! gsa`")
+  -- vim.cmd([[normal! gsa`]])
+  -- vim.cmd("normal! gsa\\`")
+end, { desc = "[P] Surround selection with backticks (inline code)" })
+
 -- Surround the http:// url that the cursor is currently in with ``
 vim.keymap.set("n", "gsu", function()
   local line = vim.api.nvim_get_current_line()

@@ -161,7 +161,7 @@ vim.keymap.set("v", "y", function()
   text = table.concat(processed_lines, "\n")
   -- Copy the processed text to the system clipboard
   vim.fn.setreg("+", text)
-end, { desc = "Copy selection without line breaks", noremap = true, silent = true })
+end, { desc = "[P]Copy selection without line breaks", noremap = true, silent = true })
 
 -- yank/copy to end of line
 vim.keymap.set("n", "Y", "y$", { desc = "[P]Yank to end of line" })

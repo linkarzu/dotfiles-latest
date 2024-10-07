@@ -105,63 +105,70 @@ vim.keymap.set("v", "gl", "$h", { desc = "[P]Go to the end of the line" })
 -- Leading and trailing spaces are trimmed from each line
 -- Multiple spaces within lines are reduced to a single space
 -- The processed text is copied to the system clipboard lamw25wmal
-vim.keymap.set("v", "y", function()
-  -- Yank the selected text into a temporary register
-  vim.cmd('normal! "zy')
-  -- Get the yanked text from register 'z'
-  local text = vim.fn.getreg("z")
-  -- Remove carriage returns
-  text = text:gsub("\r", "")
-  -- Split the text into lines
-  local lines = vim.split(text, "\n", { plain = true })
-  local processed_lines = {}
-  local i = 1
-  local in_code_block = false
-  while i <= #lines do
-    local line = lines[i]
-    if line:match("^%s*```") then
-      -- Toggle code block state
-      in_code_block = not in_code_block
-      -- Add the line as is
-      table.insert(processed_lines, line)
-      i = i + 1
-    elseif in_code_block then
-      -- Inside a code block, add the line as is
-      table.insert(processed_lines, line)
-      i = i + 1
-    elseif line == "" then
-      -- Empty line, paragraph break
-      table.insert(processed_lines, "")
-      i = i + 1
-    elseif i < #lines and lines[i + 1]:match("^%s*%-") then
-      -- Next line starts with '-', do not merge
-      table.insert(processed_lines, line)
-      i = i + 1
-    else
-      -- Merge lines until the next empty line, line starting with '-', or code block
-      local paragraph = {}
-      -- Trim spaces from the current line
-      local trimmed_line = line:gsub("^%s*(.-)%s*$", "%1")
-      table.insert(paragraph, trimmed_line)
-      i = i + 1
-      while i <= #lines and lines[i] ~= "" and not lines[i]:match("^%s*%-") and not lines[i]:match("^%s*```") do
-        -- Trim spaces from the line before adding
-        trimmed_line = lines[i]:gsub("^%s*(.-)%s*$", "%1")
-        table.insert(paragraph, trimmed_line)
-        i = i + 1
+--
+-- CONFIGURED KEYMAP TO ONLY APPLY TO MARKDOWN FILES
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "markdown",
+  callback = function()
+    vim.keymap.set("v", "y", function()
+      -- Yank the selected text into a temporary register
+      vim.cmd('normal! "zy')
+      -- Get the yanked text from register 'z'
+      local text = vim.fn.getreg("z")
+      -- Remove carriage returns
+      text = text:gsub("\r", "")
+      -- Split the text into lines
+      local lines = vim.split(text, "\n", { plain = true })
+      local processed_lines = {}
+      local i = 1
+      local in_code_block = false
+      while i <= #lines do
+        local line = lines[i]
+        if line:match("^%s*```") then
+          -- Toggle code block state
+          in_code_block = not in_code_block
+          -- Add the line as is
+          table.insert(processed_lines, line)
+          i = i + 1
+        elseif in_code_block then
+          -- Inside a code block, add the line as is
+          table.insert(processed_lines, line)
+          i = i + 1
+        elseif line == "" then
+          -- Empty line, paragraph break
+          table.insert(processed_lines, "")
+          i = i + 1
+        elseif i < #lines and lines[i + 1]:match("^%s*%-") then
+          -- Next line starts with '-', do not merge
+          table.insert(processed_lines, line)
+          i = i + 1
+        else
+          -- Merge lines until the next empty line, line starting with '-', or code block
+          local paragraph = {}
+          -- Trim spaces from the current line
+          local trimmed_line = line:gsub("^%s*(.-)%s*$", "%1")
+          table.insert(paragraph, trimmed_line)
+          i = i + 1
+          while i <= #lines and lines[i] ~= "" and not lines[i]:match("^%s*%-") and not lines[i]:match("^%s*```") do
+            -- Trim spaces from the line before adding
+            trimmed_line = lines[i]:gsub("^%s*(.-)%s*$", "%1")
+            table.insert(paragraph, trimmed_line)
+            i = i + 1
+          end
+          -- Concatenate the paragraph lines with a single space
+          local merged_line = table.concat(paragraph, " ")
+          -- Replace multiple spaces with a single space
+          merged_line = merged_line:gsub("%s+", " ")
+          table.insert(processed_lines, merged_line)
+        end
       end
-      -- Concatenate the paragraph lines with a single space
-      local merged_line = table.concat(paragraph, " ")
-      -- Replace multiple spaces with a single space
-      merged_line = merged_line:gsub("%s+", " ")
-      table.insert(processed_lines, merged_line)
-    end
-  end
-  -- Reconstruct the text
-  text = table.concat(processed_lines, "\n")
-  -- Copy the processed text to the system clipboard
-  vim.fn.setreg("+", text)
-end, { desc = "[P]Copy selection without line breaks", noremap = true, silent = true })
+      -- Reconstruct the text
+      text = table.concat(processed_lines, "\n")
+      -- Copy the processed text to the system clipboard
+      vim.fn.setreg("+", text)
+    end, { desc = "[P]Copy selection without line breaks", noremap = true, silent = true, buffer = true })
+  end,
+})
 
 -- yank/copy to end of line
 vim.keymap.set("n", "Y", "y$", { desc = "[P]Yank to end of line" })

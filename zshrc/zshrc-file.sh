@@ -355,6 +355,8 @@ if [ "$OS" = 'Mac' ]; then
   # Stuff that I want to load, but not to have visible in my public dotfiles
   if [ -f "$HOME/Library/Mobile Documents/com~apple~CloudDocs/github/.zshrc_local" ]; then
     source "$HOME/Library/Mobile Documents/com~apple~CloudDocs/github/.zshrc_local"
+    # Configuration below is local only, not in icloud
+    source "$HOME/.zshrc_local/env-setup.sh"
   fi
 
   # Set JAVA_HOME to the OpenJDK installation managed by Homebrew

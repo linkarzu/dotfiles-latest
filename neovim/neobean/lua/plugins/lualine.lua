@@ -8,17 +8,15 @@
 -- Filename: ~/github/dotfiles-latest/neovim/neobean/lua/plugins/lualine.lua
 -- Description: Optimized Lualine configuration for Neovim.
 
-local colors = require("config.colors").load_colors()
-local icons = LazyVim.config.icons
-
 return {
   "nvim-lualine/lualine.nvim",
   event = "VeryLazy",
   opts = function(_, opts)
-    -- Foreground color for the text
+    local colors = require("config.colors").load_colors()
+    local icons = LazyVim.config.icons
+
     local fg_color = colors["linkarzu_color07"]
 
-    -- Function to determine background color based on the last character of the hostname
     local function get_hostname_bg_color()
       local hostname = vim.fn.hostname()
       local last_char = hostname:sub(-1)
@@ -30,7 +28,6 @@ return {
       return color_map[last_char] or colors["linkarzu_color04"]
     end
 
-    -- Function to retrieve file permissions and determine background color
     local function get_file_permissions()
       if vim.bo.filetype ~= "sh" then
         return "", colors["linkarzu_color03"]
@@ -48,7 +45,6 @@ return {
       return permissions, bg_color
     end
 
-    -- Condition to check if the permissions component should be displayed
     local function should_show_permissions()
       if vim.bo.filetype ~= "sh" then
         return false
@@ -57,34 +53,28 @@ return {
       return file_path and file_path ~= ""
     end
 
-    -- Function to determine background color based on spell checking status
     local function get_spell_bg_color()
       return vim.wo.spell and colors["linkarzu_color02"] or colors["linkarzu_color08"]
     end
 
-    -- Condition to check if the spell status component should be displayed
     local function should_show_spell_status()
       return vim.bo.filetype == "markdown" and vim.wo.spell
     end
 
-    -- Function to generate the spell status text
     local function get_spell_status()
       local lang_map = {
         en = "English",
         es = "Spanish",
-        -- Add more language mappings as needed
       }
       local lang = vim.bo.spelllang
-      lang = lang_map[lang] or lang -- Fallback to language code if not mapped
+      lang = lang_map[lang] or lang
       return "Spell: " .. lang
     end
 
-    -- Function to check if any additional components are active
     local function has_additional_components()
       return should_show_permissions() or should_show_spell_status()
     end
 
-    -- Function to create a hostname component with a specified right separator
     local function create_hostname_component(separator_right, condition)
       return {
         function()
@@ -97,17 +87,15 @@ return {
       }
     end
 
-    -- Function to get branch name and determine color
     local function get_branch_color()
       local branch = vim.fn.system("git rev-parse --abbrev-ref HEAD"):gsub("\n", "")
       if branch == "live" then
         return { fg = colors["linkarzu_color11"], gui = "bold" }
       else
-        return nil -- Use default color
+        return nil
       end
     end
 
-    -- Configure lualine_c with diagnostics
     opts.sections.lualine_c = {
       {
         "diagnostics",
@@ -118,19 +106,15 @@ return {
           hint = icons.diagnostics.Hint,
         },
       },
-      -- You can add more components here if needed
     }
 
-    -- Configure lualine_y with progress and location
     opts.sections.lualine_y = {
       { "progress", separator = " ", padding = { left = 1, right = 0 } },
       { "location", padding = { left = 0, right = 1 } },
     }
 
-    -- Disable lualine_z section which shows the time
     opts.sections.lualine_z = {}
 
-    -- Configure lualine_b with branch and color condition
     opts.sections.lualine_b = {
       {
         "branch",
@@ -138,9 +122,8 @@ return {
       },
     }
 
-    -- Add permissions component to lualine_x if conditions are met
     table.insert(opts.sections.lualine_x, 1, {
-      get_file_permissions, -- Display permissions text
+      get_file_permissions,
       cond = should_show_permissions,
       color = function()
         local _, bg_color = get_file_permissions()
@@ -150,9 +133,8 @@ return {
       padding = 0,
     })
 
-    -- Add spell status component to lualine_x if conditions are met
     table.insert(opts.sections.lualine_x, 1, {
-      get_spell_status, -- Display spell status text
+      get_spell_status,
       cond = should_show_spell_status,
       color = function()
         return { fg = fg_color, bg = get_spell_bg_color(), gui = "bold" }
@@ -161,7 +143,6 @@ return {
       padding = 0,
     })
 
-    -- Create and add hostname components based on the presence of additional components
     local hostname_with_others = create_hostname_component("█ ", has_additional_components)
     local hostname_simple = create_hostname_component("", function()
       return not has_additional_components()
@@ -169,5 +150,36 @@ return {
 
     table.insert(opts.sections.lualine_x, 1, hostname_with_others)
     table.insert(opts.sections.lualine_x, 1, hostname_simple)
+
+    local function should_disable_lualine()
+      local filetype = vim.bo.filetype
+      local buftype = vim.bo.buftype
+      return filetype == "neo-tree" or buftype == "terminal" or buftype == "nofile"
+    end
+
+    if should_disable_lualine() then
+      opts.winbar = nil
+      opts.tabline = nil
+    else
+      opts.winbar = {
+        lualine_a = {},
+        lualine_b = opts.sections.lualine_b,
+        lualine_c = opts.sections.lualine_c,
+        lualine_x = opts.sections.lualine_x,
+        lualine_y = opts.sections.lualine_y,
+        lualine_z = opts.sections.lualine_z,
+      }
+
+      opts.sections = {
+        lualine_a = {},
+        lualine_b = {},
+        lualine_c = {},
+        lualine_x = {},
+        lualine_y = {},
+        lualine_z = {},
+      }
+    end
+
+    opts.tabline = nil
   end,
 }

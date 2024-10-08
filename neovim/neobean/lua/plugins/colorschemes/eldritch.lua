@@ -170,6 +170,9 @@ return {
         KubectlExperimental = { fg = colors["linkarzu_color09"] },
         KubectlNote = { fg = colors["linkarzu_color03"] },
         KubectlGray = { fg = colors["linkarzu_color10"] },
+
+        -- Colorcolumn that helps me with markdown guidelines
+        ColorColumn = { bg = colors["linkarzu_color13"] },
       }
 
       -- Apply all highlight definitions at once

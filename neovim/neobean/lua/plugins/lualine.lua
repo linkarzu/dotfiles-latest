@@ -97,6 +97,16 @@ return {
       }
     end
 
+    -- Function to get branch name and determine color
+    local function get_branch_color()
+      local branch = vim.fn.system("git rev-parse --abbrev-ref HEAD"):gsub("\n", "")
+      if branch == "live" then
+        return { fg = colors["linkarzu_color11"], gui = "bold" }
+      else
+        return nil -- Use default color
+      end
+    end
+
     -- Configure lualine_c with diagnostics
     opts.sections.lualine_c = {
       {
@@ -119,6 +129,14 @@ return {
 
     -- Disable lualine_z section which shows the time
     opts.sections.lualine_z = {}
+
+    -- Configure lualine_b with branch and color condition
+    opts.sections.lualine_b = {
+      {
+        "branch",
+        color = get_branch_color,
+      },
+    }
 
     -- Add permissions component to lualine_x if conditions are met
     table.insert(opts.sections.lualine_x, 1, {

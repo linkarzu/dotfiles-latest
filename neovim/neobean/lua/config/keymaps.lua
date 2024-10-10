@@ -1292,7 +1292,11 @@ local function update_markdown_toc(heading2, heading3)
   -- Silently save the file, in case TOC is being created for the first time
   vim.cmd("silent write")
   -- Silently run markdown-toc to update the TOC without displaying command output
-  vim.fn.system("markdown-toc -i " .. path)
+  -- vim.fn.system("markdown-toc -i " .. path)
+  -- I want my bulletpoints to be created only as "-" so passing that option as
+  -- an argument according to the docs
+  -- https://github.com/jonschlinkert/markdown-toc?tab=readme-ov-file#optionsbullets
+  vim.fn.system('markdown-toc --bullets "-" -i ' .. path)
   vim.cmd("edit!") -- Reloads the file to reflect the changes made by markdown-toc
   vim.cmd("silent write") -- Silently save the file
   vim.notify("TOC updated and file saved", vim.log.levels.INFO)

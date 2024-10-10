@@ -14,6 +14,74 @@
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
 
+  // "markdown-header-coloring.userDefinedHeaderColor": {
+  //   "enabled": true,
+  //   "Header_1": {
+  //     "color": "#0D1116",
+  //     "backgroundColor": "background-color: #987afb;",
+  //     "textDecoration": ""
+  //   },
+  //   "Header_2": {
+  //     "color": "#0D1116",
+  //     "backgroundColor": "background-color: #37f499;",
+  //     "textDecoration": ""
+  //   },
+  //   "Header_3": {
+  //     "color": "#0D1116",
+  //     "backgroundColor": "background-color: #04d1f9;",
+  //     "textDecoration": ""
+  //   },
+  //   "Header_4": {
+  //     "color": "#0D1116",
+  //     "backgroundColor": "background-color: #949ae5;",
+  //     "textDecoration": ""
+  //   },
+  //   "Header_5": {
+  //     "color": "#0D1116",
+  //     "backgroundColor": "background-color: #19dfcf;",
+  //     "textDecoration": ""
+  //   },
+  //   "Header_6": {
+  //     "color": "#0D1116",
+  //     "backgroundColor": "background-color: #5fa9f4;",
+  //     "textDecoration": ""
+  //   }
+  // },
+
+  "markdown-header-coloring.userDefinedHeaderColor": {
+    "enabled": true,
+    "Header_1": {
+      "color": "#0D1116",
+      "backgroundColor": "background-color: #5b4996;",
+      "textDecoration": ""
+    },
+    "Header_2": {
+      "color": "#0D1116",
+      "backgroundColor": "background-color: #21925b;",
+      "textDecoration": ""
+    },
+    "Header_3": {
+      "color": "#0D1116",
+      "backgroundColor": "background-color: #027d95;",
+      "textDecoration": ""
+    },
+    "Header_4": {
+      "color": "#0D1116",
+      "backgroundColor": "background-color: #585c89;",
+      "textDecoration": ""
+    },
+    "Header_5": {
+      "color": "#0D1116",
+      "backgroundColor": "background-color: #0f857c;",
+      "textDecoration": ""
+    },
+    "Header_6": {
+      "color": "#0D1116",
+      "backgroundColor": "background-color: #396592;",
+      "textDecoration": ""
+    }
+  },
+
   // To enable key-repeating, run the commands that the vim plugin provides at the top of its instructions
   // After you run those commands, make sure to LOG OUT OF MACOS and then log back in
   "vim.leader": "<Space>",

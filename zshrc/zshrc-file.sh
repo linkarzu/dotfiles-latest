@@ -96,6 +96,7 @@ create_symlink ~/github/dotfiles-latest/kitty/kitty.conf ~/.config/kitty/kitty.c
 create_symlink ~/github/dotfiles-latest/wezterm/wezterm.lua ~/.config/wezterm/wezterm.lua
 create_symlink ~/github/dotfiles-latest/yabai/yabairc ~/.yabairc
 create_symlink ~/github/dotfiles-latest/.prettierrc.yaml ~/.prettierrc.yaml
+create_symlink ~/github/dotfiles-latest/vscode/settings.json "$HOME/Library/Application Support/Code/User/settings.json"
 
 # Creating symlinks for directories
 create_symlink ~/github/dotfiles-latest/neovim/neobean/ ~/.config/neobean

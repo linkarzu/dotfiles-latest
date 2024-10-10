@@ -14,6 +14,7 @@ local colors = require("config.colors").load_colors()
 
 return {
   "MeanderingProgrammer/render-markdown.nvim",
+  enabled = true,
   -- Moved highlight creation out of opts as suggested by plugin maintainer
   -- There was no issue, but it was creating unnecessary noise when ran
   -- :checkhealth render-markdown
@@ -47,6 +48,10 @@ return {
     vim.cmd(string.format([[highlight Headline6Fg cterm=bold gui=bold guifg=%s]], color6_bg))
   end,
   opts = {
+    bullet = {
+      -- Turn on / off list bullet rendering
+      enabled = true,
+    },
     heading = {
       sign = false,
       icons = { "󰎤 ", "󰎧 ", "󰎪 ", "󰎭 ", "󰎱 ", "󰎳 " },

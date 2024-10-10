@@ -1,0 +1,78 @@
+{
+  "editor.accessibilitySupport": "off",
+  // If you don't set this, you have to be manually autoformatting
+  "editor.formatOnSave": true,
+  "editor.minimap.enabled": false,
+  // I don't want a default formatter for any other file type
+  "editor.defaultFormatter": null,
+  // Specifically set Prettier as the formatter for jsonc
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  // Specifically set Prettier as the formatter for Markdown
+  "[markdown]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+
+  // To enable key-repeating, run the commands that the vim plugin provides at the top of its instructions
+  // After you run those commands, make sure to LOG OUT OF MACOS and then log back in
+  "vim.leader": "<Space>",
+  "vim.hlsearch": true,
+  "vim.easymotion": true,
+  "vim.incsearch": true,
+  "vim.useSystemClipboard": true,
+
+  "vim.insertModeKeyBindings": [
+    // I like going out of insert mode using kj
+    { "before": ["k", "j"], "after": ["<Esc>"] }
+  ],
+
+  "vim.normalModeKeyBindingsNonRecursive": [
+    // splits
+    { "before": ["leader", "|"], "commands": [":vsplit"] },
+    { "before": ["leader", "-"], "commands": [":split"] },
+    // Go to beginning and end of line with gh and gl
+    { "before": ["g", "h"], "commands": ["cursorHome"] },
+    { "before": ["g", "l"], "commands": ["cursorEnd"] }
+  ],
+  "vim.visualModeKeyBindings": [
+    // Stay in visual mode while indenting
+    { "before": ["<"], "commands": ["editor.action.outdentLines"] },
+    { "before": [">"], "commands": ["editor.action.indentLines"] },
+    // Move selected lines while staying in visual mode
+    { "before": ["J"], "commands": ["editor.action.moveLinesDownAction"] },
+    { "before": ["K"], "commands": ["editor.action.moveLinesUpAction"] },
+    // toggle comment selection
+    { "before": ["leader", "c"], "commands": ["editor.action.commentLine"] },
+    // When in visual mode, I want to select to the beginning of the line
+    {
+      "before": ["g", "h"],
+      "commands": [
+        {
+          "command": "cursorMove",
+          "args": {
+            "to": "wrappedLineStart",
+            "by": "line",
+            "value": 1,
+            "select": true
+          }
+        }
+      ]
+    },
+    // When in visual mode, I want to select to the end of the line
+    {
+      "before": ["g", "l"],
+      "commands": [
+        {
+          "command": "cursorMove",
+          "args": {
+            "to": "wrappedLineEnd",
+            "by": "line",
+            "value": 1,
+            "select": true
+          }
+        }
+      ]
+    }
+  ]
+}

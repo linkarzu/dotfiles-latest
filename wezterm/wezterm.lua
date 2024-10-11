@@ -30,6 +30,7 @@ config = {
 	-- -- - Then close all your tmux sessions, one at a time and quit wezterm
 	-- -- - re-open wezterm
 	-- term = "wezterm",
+	-- term = "xterm-256color",
 
 	-- When using the wezterm terminfo file, I had issues with images in neovim, images
 	-- were shown like split in half, and some part of the image always stayed on the

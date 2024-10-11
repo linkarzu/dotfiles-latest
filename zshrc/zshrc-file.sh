@@ -356,7 +356,10 @@ if [ "$OS" = 'Mac' ]; then
   # Stuff that I want to load, but not to have visible in my public dotfiles
   if [ -f "$HOME/Library/Mobile Documents/com~apple~CloudDocs/github/.zshrc_local" ]; then
     source "$HOME/Library/Mobile Documents/com~apple~CloudDocs/github/.zshrc_local"
-    # Configuration below is local only, not in icloud
+  fi
+
+  # Configuration below is local only, not in icloud
+  if [ -f "$HOME/.zshrc_local/env-setup.sh" ]; then
     source "$HOME/.zshrc_local/env-setup.sh"
   fi
 

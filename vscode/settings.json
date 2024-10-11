@@ -1,4 +1,16 @@
 {
+  "window.zoomLevel": 1,
+  "editor.fontFamily": "JetBrains Mono",
+  // This is how you change the bracket pair colors
+  "editor.bracketPairColorization.enabled": true,
+  "workbench.colorCustomizations": {
+    "editorBracketHighlight.foreground1": "#EBFAFA",
+    "editorBracketHighlight.foreground2": "#EBFAFA",
+    "editorBracketHighlight.foreground3": "#EBFAFA",
+    "editorBracketHighlight.foreground4": "#EBFAFA",
+    "editorBracketHighlight.foreground5": "#EBFAFA",
+    "editorBracketHighlight.foreground6": "#EBFAFA"
+  },
   "editor.accessibilitySupport": "off",
   // If you don't set this, you have to be manually autoformatting
   "editor.formatOnSave": true,

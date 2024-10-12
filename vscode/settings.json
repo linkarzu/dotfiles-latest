@@ -128,7 +128,7 @@
     {
       "before": ["leader", "s", "g"],
       "commands": ["workbench.action.findInFiles"]
-    }
+    },
     // This is the way I find files in neovim
     {
       "before": ["leader", "f", "f"],

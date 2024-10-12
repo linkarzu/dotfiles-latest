@@ -77,6 +77,11 @@ config = {
 	-- webgpu_power_preference = "LowPower"
 	-- https://wezfurlong.org/wezterm/config/lua/config/webgpu_power_preference.html
 
+	-- I use this for ñ and tildes in spanish á é í ó ú
+	-- If you're a gringo, you wouldn't understand :wink:
+	-- https://github.com/wez/wezterm/discussions/4650
+	send_composed_key_when_left_alt_is_pressed = true,
+
 	default_prog = {
 		"/bin/zsh",
 		"--login",

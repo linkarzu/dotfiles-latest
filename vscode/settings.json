@@ -114,7 +114,27 @@
     { "before": ["leader", "-"], "commands": [":split"] },
     // Go to beginning and end of line with gh and gl
     { "before": ["g", "h"], "commands": ["cursorHome"] },
-    { "before": ["g", "l"], "commands": ["cursorEnd"] }
+    { "before": ["g", "l"], "commands": ["cursorEnd"] },
+    // Show and hide the sidebar
+    {
+      "before": ["leader", "e"],
+      "commands": ["workbench.action.toggleSidebarVisibility"]
+    },
+    // Search in files
+    {
+      "before": ["leader", "s", "g"],
+      "commands": ["workbench.action.findInFiles"]
+    }
+    // This is the way I find files in neovim
+    {
+      "before": ["leader", "f", "f"],
+      "commands": ["workbench.action.quickOpen"]
+    },
+    // Close the current tab
+    {
+      "before": ["leader", "b", "d"],
+      "commands": ["workbench.action.closeActiveEditor"]
+    }
   ],
   "vim.visualModeKeyBindings": [
     // Stay in visual mode while indenting

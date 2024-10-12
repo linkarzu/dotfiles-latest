@@ -152,5 +152,6 @@
         }
       ]
     }
-  ]
+  ],
+  "workbench.colorTheme": "Linkarzu VScode theme"
 }

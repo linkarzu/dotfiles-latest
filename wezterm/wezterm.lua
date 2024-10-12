@@ -97,8 +97,8 @@ config = {
 	window_decorations = "RESIZE",
 
 	-- https://wezfurlong.org/wezterm/config/lua/wezterm/font.html
-	-- font = wezterm.font("JetBrains Mono", { weight = "Bold" }),
-	font = wezterm.font("JetBrains Mono"),
+	-- font = wezterm.font("JetBrainsMono Nerd Font", { weight = "Bold" }),
+	font = wezterm.font("JetBrainsMono Nerd Font"),
 	-- font_size = 14.5,
 	font_size = 15,
 

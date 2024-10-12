@@ -1,6 +1,7 @@
 {
   "window.zoomLevel": 1,
-  "editor.fontFamily": "JetBrains Mono",
+  "editor.fontFamily": "JetBrainsMono Nerd Font",
+  "editor.fontLigatures": true,
   // This is how you change the bracket pair colors
   "editor.bracketPairColorization.enabled": true,
   "workbench.colorCustomizations": {
@@ -153,5 +154,6 @@
       ]
     }
   ],
+  "git.autofetch": true,
   "workbench.colorTheme": "Linkarzu VScode theme"
 }

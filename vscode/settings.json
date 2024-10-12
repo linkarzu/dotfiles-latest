@@ -102,6 +102,8 @@
   "vim.easymotion": true,
   "vim.incsearch": true,
   "vim.useSystemClipboard": true,
+  // When I move down in folds through j and k I don't want the folds to expand
+  "vim.foldfix": true,
 
   "vim.insertModeKeyBindings": [
     // I like going out of insert mode using kj
@@ -109,6 +111,8 @@
   ],
 
   "vim.normalModeKeyBindingsNonRecursive": [
+    // Fold with enter
+    { "before": ["<Enter>"], "commands": ["editor.toggleFold"] },
     // splits
     { "before": ["leader", "|"], "commands": [":vsplit"] },
     { "before": ["leader", "-"], "commands": [":split"] },

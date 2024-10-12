@@ -1779,6 +1779,35 @@ vim.keymap.set("n", "<leader>fV", function()
   end
 end, { desc = "[C]Open current file's PWD in VSCode" })
 
+-- Open current file's GitHub repo link lamw25wmal
+vim.keymap.set("n", "<leader>fG", function()
+  local file_path = vim.fn.expand("%:p")
+  if file_path ~= "" then
+    -- Get the root directory of the git repository
+    local git_root = vim.fn.systemlist("git rev-parse --show-toplevel")[1]
+    if git_root and git_root ~= "" then
+      -- Get the origin URL of the git repository
+      local origin_url = vim.fn.systemlist("git config --get remote.origin.url")[1]
+      if origin_url and origin_url ~= "" then
+        -- Convert the origin URL to a GitHub URL
+        local repo_url = origin_url:gsub("git@github.com:", "https://github.com/"):gsub("%.git$", "")
+        -- Extract the relative path from the file path
+        local relative_path = file_path:sub(#git_root + 2)
+        local github_url = repo_url .. "/blob/main/" .. relative_path
+        local command = "open " .. vim.fn.shellescape(github_url)
+        vim.fn.system(command)
+        print("Opened GitHub link: " .. github_url)
+      else
+        print("Could not determine the origin URL for the GitHub repository")
+      end
+    else
+      print("Could not determine the root directory for the GitHub repository")
+    end
+  else
+    print("No file is currently open")
+  end
+end, { desc = "[G]Open current file's GitHub repo link" })
+
 -- Keymap to create a GitHub repository
 -- It uses the github CLI, which in macOS is installed with:
 -- brew install gh

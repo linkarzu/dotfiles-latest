@@ -113,6 +113,10 @@
   "vim.normalModeKeyBindingsNonRecursive": [
     // Fold with enter
     { "before": ["<Enter>"], "commands": ["editor.toggleFold"] },
+    {
+      "before": ["<Space>", "m", "p"],
+      "commands": ["markdown.showPreviewToSide"]
+    },
     // splits
     { "before": ["leader", "|"], "commands": [":vsplit"] },
     { "before": ["leader", "-"], "commands": [":split"] },

@@ -291,6 +291,9 @@ bind-key -T copy-mode-vi 'v' send -X begin-selection
 # copy text with "y"
 bind-key -T copy-mode-vi 'y' send -X copy-selection
 
+bind-key -T copy-mode-vi 'H' send -X start-of-line
+bind-key -T copy-mode-vi 'L' send -X end-of-line
+
 # don't exit copy mode when dragging with mouse
 unbind -T copy-mode-vi MouseDragEnd1Pane
 

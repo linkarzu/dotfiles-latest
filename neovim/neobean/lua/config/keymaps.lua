@@ -64,6 +64,11 @@ vim.keymap.set("i", "kj", "<ESC>", { desc = "[P]Exit insert mode with kj" })
 -- use gl to move to the end of the line in normal mode
 vim.keymap.set({ "n", "v" }, "gh", "^", { desc = "[P]Go to the beginning line" })
 vim.keymap.set({ "n", "v" }, "gl", "$", { desc = "[P]go to the end of the line" })
+--
+-- I'm switching from gh to H and gl to L so that I can also use the same
+-- bindings in tmux copy mode, because I can't use gh and gl there, I tried
+vim.keymap.set({ "n", "v" }, "H", "^", { desc = "[P]Go to the beginning line" })
+vim.keymap.set({ "n", "v" }, "L", "$", { desc = "[P]go to the end of the line" })
 -- In visual mode, after going to the end of the line, come back 1 character
 vim.keymap.set("v", "gl", "$h", { desc = "[P]Go to the end of the line" })
 

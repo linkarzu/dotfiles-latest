@@ -123,6 +123,8 @@
     // Go to beginning and end of line with gh and gl
     { "before": ["g", "h"], "commands": ["cursorHome"] },
     { "before": ["g", "l"], "commands": ["cursorEnd"] },
+    { "before": ["H"], "commands": ["cursorHome"] },
+    { "before": ["L"], "commands": ["cursorEnd"] },
     // Show and hide the sidebar
     {
       "before": ["leader", "e"],

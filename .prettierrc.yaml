@@ -39,7 +39,11 @@
 overrides:
   # Specific override for Markdown (.md) files
   - files: "*.md"
+    # https://prettier.io/docs/en/options
     options:
+      # "always" - Wrap prose if it exceeds the print width.
+      # "never" - Un-wrap each block of prose into one line.
+      # "preserve" - DEFAULT - Do nothing, leave prose as-is. First availi in v1.9.0
       proseWrap: "always"
       # The default for this value is 80 if not specified, if you increase it
       # lines will be longer

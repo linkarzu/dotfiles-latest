@@ -1,7 +1,40 @@
-# Contents
+# dotfiles-latest/neovim/neobean
+
+<a href="https://dotfyle.com/linkarzu/dotfiles-latest-neovim-neobean"><img src="https://dotfyle.com/linkarzu/dotfiles-latest-neovim-neobean/badges/plugins?style=flat" /></a>
+<a href="https://dotfyle.com/linkarzu/dotfiles-latest-neovim-neobean"><img src="https://dotfyle.com/linkarzu/dotfiles-latest-neovim-neobean/badges/leaderkey?style=flat" /></a>
+<a href="https://dotfyle.com/linkarzu/dotfiles-latest-neovim-neobean"><img src="https://dotfyle.com/linkarzu/dotfiles-latest-neovim-neobean/badges/plugin-manager?style=flat" /></a>
 
 <!-- toc -->
 
+- [Install Instructions](#install-instructions)
+- [Plugins](#plugins)
+  * [colorscheme](#colorscheme)
+  * [completion](#completion)
+  * [diagnostics](#diagnostics)
+  * [editing-support](#editing-support)
+  * [file-explorer](#file-explorer)
+  * [formatting](#formatting)
+  * [fuzzy-finder](#fuzzy-finder)
+  * [icon](#icon)
+  * [indent](#indent)
+  * [keybinding](#keybinding)
+  * [lsp](#lsp)
+  * [lsp-installer](#lsp-installer)
+  * [markdown-and-latex](#markdown-and-latex)
+  * [marks](#marks)
+  * [media](#media)
+  * [motion](#motion)
+  * [plugin-manager](#plugin-manager)
+  * [preconfigured](#preconfigured)
+  * [search](#search)
+  * [session](#session)
+  * [snippet](#snippet)
+  * [startup](#startup)
+  * [statusline](#statusline)
+  * [syntax](#syntax)
+  * [utility](#utility)
+  * [workflow](#workflow)
+- [Language Servers](#language-servers)
 - [Things to remember](#things-to-remember)
   * [Paste issues](#paste-issues)
   * [markdown-preview.nvim image size](#markdown-previewnvim-image-size)
@@ -34,6 +67,150 @@
   * [Install luarocks (optional)](#install-luarocks-optional)
 
 <!-- tocstop -->
+
+## Install Instructions
+
+> Install requires Neovim 0.9+. Always review the code before installing a
+> configuration.
+
+Clone the repository and install the plugins:
+
+```sh
+git clone git@github.com:linkarzu/dotfiles-latest ~/.config/linkarzu/dotfiles-latest
+```
+
+Open Neovim with this config:
+
+```sh
+NVIM_APPNAME=linkarzu/dotfiles-latest/neovim/neobean nvim
+```
+
+## Plugins
+
+### colorscheme
+
+- [eldritch-theme/eldritch.nvim](https://dotfyle.com/plugins/eldritch-theme/eldritch.nvim)
+
+### completion
+
+- [hrsh7th/nvim-cmp](https://dotfyle.com/plugins/hrsh7th/nvim-cmp)
+
+### diagnostics
+
+- [folke/trouble.nvim](https://dotfyle.com/plugins/folke/trouble.nvim)
+
+### editing-support
+
+- [nvim-treesitter/nvim-treesitter-context](https://dotfyle.com/plugins/nvim-treesitter/nvim-treesitter-context)
+- [okuuva/auto-save.nvim](https://dotfyle.com/plugins/okuuva/auto-save.nvim)
+
+### file-explorer
+
+- [echasnovski/mini.files](https://dotfyle.com/plugins/echasnovski/mini.files)
+- [nvim-neo-tree/neo-tree.nvim](https://dotfyle.com/plugins/nvim-neo-tree/neo-tree.nvim)
+- [stevearc/oil.nvim](https://dotfyle.com/plugins/stevearc/oil.nvim)
+
+### formatting
+
+- [stevearc/conform.nvim](https://dotfyle.com/plugins/stevearc/conform.nvim)
+
+### fuzzy-finder
+
+- [Rics-Dev/project-explorer.nvim](https://dotfyle.com/plugins/Rics-Dev/project-explorer.nvim)
+- [nvim-telescope/telescope.nvim](https://dotfyle.com/plugins/nvim-telescope/telescope.nvim)
+
+### icon
+
+- [nvim-tree/nvim-web-devicons](https://dotfyle.com/plugins/nvim-tree/nvim-web-devicons)
+
+### indent
+
+- [echasnovski/mini.indentscope](https://dotfyle.com/plugins/echasnovski/mini.indentscope)
+
+### keybinding
+
+- [folke/which-key.nvim](https://dotfyle.com/plugins/folke/which-key.nvim)
+
+### lsp
+
+- [jose-elias-alvarez/typescript.nvim](https://dotfyle.com/plugins/jose-elias-alvarez/typescript.nvim)
+- [simrat39/symbols-outline.nvim](https://dotfyle.com/plugins/simrat39/symbols-outline.nvim)
+- [neovim/nvim-lspconfig](https://dotfyle.com/plugins/neovim/nvim-lspconfig)
+- [mfussenegger/nvim-lint](https://dotfyle.com/plugins/mfussenegger/nvim-lint)
+- [hedyhli/outline.nvim](https://dotfyle.com/plugins/hedyhli/outline.nvim)
+
+### lsp-installer
+
+- [williamboman/mason.nvim](https://dotfyle.com/plugins/williamboman/mason.nvim)
+
+### markdown-and-latex
+
+- [iamcco/markdown-preview.nvim](https://dotfyle.com/plugins/iamcco/markdown-preview.nvim)
+- [MeanderingProgrammer/render-markdown.nvim](https://dotfyle.com/plugins/MeanderingProgrammer/render-markdown.nvim)
+
+### marks
+
+- [chentoast/marks.nvim](https://dotfyle.com/plugins/chentoast/marks.nvim)
+- [ThePrimeagen/harpoon](https://dotfyle.com/plugins/ThePrimeagen/harpoon)
+
+### media
+
+- [HakonHarnes/img-clip.nvim](https://dotfyle.com/plugins/HakonHarnes/img-clip.nvim)
+- [3rd/image.nvim](https://dotfyle.com/plugins/3rd/image.nvim)
+
+### motion
+
+- [ggandor/leap.nvim](https://dotfyle.com/plugins/ggandor/leap.nvim)
+
+### plugin-manager
+
+- [folke/lazy.nvim](https://dotfyle.com/plugins/folke/lazy.nvim)
+
+### preconfigured
+
+- [LazyVim/LazyVim](https://dotfyle.com/plugins/LazyVim/LazyVim)
+
+### search
+
+- [nvim-telescope/telescope-frecency.nvim](https://dotfyle.com/plugins/nvim-telescope/telescope-frecency.nvim)
+
+### session
+
+- [folke/persistence.nvim](https://dotfyle.com/plugins/folke/persistence.nvim)
+
+### snippet
+
+- [L3MON4D3/LuaSnip](https://dotfyle.com/plugins/L3MON4D3/LuaSnip)
+
+### startup
+
+- [nvimdev/dashboard-nvim](https://dotfyle.com/plugins/nvimdev/dashboard-nvim)
+
+### statusline
+
+- [nvim-lualine/lualine.nvim](https://dotfyle.com/plugins/nvim-lualine/lualine.nvim)
+
+### syntax
+
+- [nvim-treesitter/nvim-treesitter](https://dotfyle.com/plugins/nvim-treesitter/nvim-treesitter)
+- [echasnovski/mini.surround](https://dotfyle.com/plugins/echasnovski/mini.surround)
+
+### utility
+
+- [leath-dub/snipe.nvim](https://dotfyle.com/plugins/leath-dub/snipe.nvim)
+- [folke/noice.nvim](https://dotfyle.com/plugins/folke/noice.nvim)
+
+### workflow
+
+- [ramilito/kubectl.nvim](https://dotfyle.com/plugins/ramilito/kubectl.nvim)
+
+## Language Servers
+
+- html
+- intelephense
+- marksman
+- phpactor
+- zk
 
 ## Things to remember
 

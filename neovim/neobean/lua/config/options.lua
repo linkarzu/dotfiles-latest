@@ -96,8 +96,9 @@ vim.opt.textwidth = 80
 --   end,
 -- })
 
--- Shows colorcolumn that helps me with markdown guidelines. This applies to ALL
--- file types
+-- Shows colorcolumn that helps me with markdown guidelines.
+-- This is the vertical bar that shows the 80 character limit
+-- This applies to ALL file types
 vim.opt.colorcolumn = "80"
 
 -- -- To apply it to markdown files only

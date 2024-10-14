@@ -13,6 +13,9 @@
 -- This shows pathname on the left and hostname on the right
 -- vim.opt.winbar = "%m %f%=" .. vim.fn.systemlist("hostname")[1]
 
+-- Specify leader key, this is the default in lazyvim
+vim.g.mapleader = " "
+
 -- Using different colors, defining the colors in this file
 local colors = require("config.colors").load_colors()
 vim.cmd(string.format([[highlight WinBar1 guifg=%s]], colors["linkarzu_color03"]))

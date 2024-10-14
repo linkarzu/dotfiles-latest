@@ -1796,14 +1796,20 @@ vim.keymap.set("n", "<leader>fG", function()
       -- Get the origin URL of the git repository
       local origin_url = vim.fn.systemlist("git config --get remote.origin.url")[1]
       if origin_url and origin_url ~= "" then
-        -- Convert the origin URL to a GitHub URL
-        local repo_url = origin_url:gsub("git@github.com:", "https://github.com/"):gsub("%.git$", "")
-        -- Extract the relative path from the file path
-        local relative_path = file_path:sub(#git_root + 2)
-        local github_url = repo_url .. "/blob/main/" .. relative_path
-        local command = "open " .. vim.fn.shellescape(github_url)
-        vim.fn.system(command)
-        print("Opened GitHub link: " .. github_url)
+        -- Get the current branch name
+        local branch_name = vim.fn.systemlist("git rev-parse --abbrev-ref HEAD")[1]
+        if branch_name and branch_name ~= "" then
+          -- Convert the origin URL to a GitHub URL
+          local repo_url = origin_url:gsub("git@github.com[^:]*:", "https://github.com/"):gsub("%.git$", "")
+          -- Extract the relative path from the file path
+          local relative_path = file_path:sub(#git_root + 2)
+          local github_url = repo_url .. "/blob/" .. branch_name .. "/" .. relative_path
+          local command = "open " .. vim.fn.shellescape(github_url)
+          vim.fn.system(command)
+          print("Opened GitHub link: " .. github_url)
+        else
+          print("Could not determine the current branch name")
+        end
       else
         print("Could not determine the origin URL for the GitHub repository")
       end

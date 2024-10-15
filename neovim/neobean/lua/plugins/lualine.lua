@@ -191,7 +191,10 @@ return {
       return not has_additional_components()
     end)
 
-    table.insert(opts.sections.lualine_x, 1, hostname_with_others)
-    table.insert(opts.sections.lualine_x, 1, hostname_simple)
+    -- If this number is set to 1 `lualine_x, 1` the hostname will show to the
+    -- left of of permissions and hostname, but if set to 3, hostname will show
+    -- to the right of those 2
+    table.insert(opts.sections.lualine_x, 3, hostname_with_others)
+    table.insert(opts.sections.lualine_x, 3, hostname_simple)
   end,
 }

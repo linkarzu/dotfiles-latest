@@ -23,9 +23,6 @@ return {
   "nvim-lualine/lualine.nvim",
   event = "VeryLazy",
   opts = function(_, opts)
-    -- Foreground color for the text
-    local fg_color = colors["linkarzu_color07"]
-
     -- Function to determine background color based on the last character of the hostname
     local function get_hostname_bg_color()
       local hostname = vim.fn.hostname()
@@ -98,8 +95,8 @@ return {
         function()
           return vim.fn.hostname()
         end,
-        color = { fg = get_hostname_bg_color(), bg = colors["linkarzu_color13"], gui = "bold" },
-        separator = { left = "", right = "" },
+        color = { fg = get_hostname_bg_color(), bg = colors["linkarzu_color17"], gui = "bold" },
+        separator = { right = "" },
         padding = 1,
         cond = condition,
       }
@@ -162,39 +159,80 @@ return {
       },
     }
 
-    -- Add permissions component to lualine_x if conditions are met
+    -- SPELLING component
+    table.insert(opts.sections.lualine_x, 1, {
+      get_spell_status, -- Display spell status text
+      cond = should_show_spell_status,
+      color = function()
+        return { fg = get_spell_bg_color(), bg = colors["linkarzu_color17"], gui = "bold" }
+      end,
+      separator = { left = "", right = "" },
+      padding = 1,
+    })
+
+    -- SPELLING left separator
+    table.insert(opts.sections.lualine_x, 2, {
+      cond = should_show_spell_status,
+      function()
+        return "s"
+      end,
+      color = { fg = colors["linkarzu_color14"], bg = colors["linkarzu_color17"] },
+      separator = { left = "", right = "" },
+      padding = 0,
+    })
+
+    -- PERMISSIONS component
     table.insert(opts.sections.lualine_x, 1, {
       get_file_permissions, -- Display permissions text
       cond = should_show_permissions,
       color = function()
         local _, bg_color = get_file_permissions()
-        return { fg = bg_color, bg = fg_color, gui = "bold" }
+        return { fg = bg_color, bg = colors["linkarzu_color17"], gui = "bold" }
       end,
       separator = { left = "", right = "" },
       padding = 1,
     })
 
-    -- Add spell status component to lualine_x if conditions are met
+    -- PERMISSIONS left separator
     table.insert(opts.sections.lualine_x, 1, {
-      get_spell_status, -- Display spell status text
-      cond = should_show_spell_status,
-      color = function()
-        return { fg = get_spell_bg_color(), bg = fg_color, gui = "bold" }
+      cond = should_show_permissions,
+      function()
+        return "p"
       end,
-      separator = { left = "", right = "" },
-      padding = 1,
+      color = { fg = colors["linkarzu_color14"], bg = colors["linkarzu_color17"] },
+      separator = { left = "", right = "" },
+      padding = 0,
     })
 
-    -- Create and add hostname components based on the presence of additional components
+    -- HOSTNAME right separator
+    table.insert(opts.sections.lualine_x, 3, {
+      function()
+        return ".."
+      end,
+      color = { fg = colors["linkarzu_color14"], bg = colors["linkarzu_color17"] },
+      separator = { left = "", right = "" },
+      padding = 0,
+    })
+
+    -- HOSTNAME components
     local hostname_with_others = create_hostname_component(has_additional_components)
     local hostname_simple = create_hostname_component(function()
       return not has_additional_components()
     end)
-
     -- If this number is set to 1 `lualine_x, 1` the hostname will show to the
     -- left of of permissions and hostname, but if set to 3, hostname will show
     -- to the right of those 2
     table.insert(opts.sections.lualine_x, 3, hostname_with_others)
     table.insert(opts.sections.lualine_x, 3, hostname_simple)
+
+    -- HOSTNAME left separator
+    table.insert(opts.sections.lualine_x, 3, {
+      function()
+        return "-"
+      end,
+      color = { fg = colors["linkarzu_color14"], bg = colors["linkarzu_color17"] },
+      separator = { left = "", right = "" },
+      padding = 0,
+    })
   end,
 }

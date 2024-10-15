@@ -159,22 +159,33 @@ return {
       },
     }
 
-    -- SPELLING component
+    -- SPELLING left separator
     table.insert(opts.sections.lualine_x, 1, {
+      cond = should_show_spell_status,
+      function()
+        return ""
+      end,
+      color = { fg = colors["linkarzu_color14"], bg = colors["linkarzu_color17"] },
+      separator = { left = "", right = "" },
+      padding = 0,
+    })
+
+    -- SPELLING component
+    table.insert(opts.sections.lualine_x, 2, {
       get_spell_status, -- Display spell status text
       cond = should_show_spell_status,
       color = function()
         return { fg = get_spell_bg_color(), bg = colors["linkarzu_color17"], gui = "bold" }
       end,
-      separator = { left = "", right = "" },
+      separator = { left = "", right = "" },
       padding = 1,
     })
 
-    -- SPELLING left separator
-    table.insert(opts.sections.lualine_x, 2, {
-      cond = should_show_spell_status,
+    -- PERMISSIONS left separator
+    table.insert(opts.sections.lualine_x, 3, {
+      cond = should_show_permissions,
       function()
-        return "s"
+        return ""
       end,
       color = { fg = colors["linkarzu_color14"], bg = colors["linkarzu_color17"] },
       separator = { left = "", right = "" },
@@ -182,32 +193,21 @@ return {
     })
 
     -- PERMISSIONS component
-    table.insert(opts.sections.lualine_x, 1, {
+    table.insert(opts.sections.lualine_x, 4, {
       get_file_permissions, -- Display permissions text
       cond = should_show_permissions,
       color = function()
         local _, bg_color = get_file_permissions()
         return { fg = bg_color, bg = colors["linkarzu_color17"], gui = "bold" }
       end,
-      separator = { left = "", right = "" },
+      separator = { left = "", right = "" },
       padding = 1,
     })
 
-    -- PERMISSIONS left separator
-    table.insert(opts.sections.lualine_x, 1, {
-      cond = should_show_permissions,
-      function()
-        return "p"
-      end,
-      color = { fg = colors["linkarzu_color14"], bg = colors["linkarzu_color17"] },
-      separator = { left = "", right = "" },
-      padding = 0,
-    })
-
     -- HOSTNAME right separator
-    table.insert(opts.sections.lualine_x, 3, {
+    table.insert(opts.sections.lualine_x, 5, {
       function()
-        return ".."
+        return ""
       end,
       color = { fg = colors["linkarzu_color14"], bg = colors["linkarzu_color17"] },
       separator = { left = "", right = "" },
@@ -222,13 +222,13 @@ return {
     -- If this number is set to 1 `lualine_x, 1` the hostname will show to the
     -- left of of permissions and hostname, but if set to 3, hostname will show
     -- to the right of those 2
-    table.insert(opts.sections.lualine_x, 3, hostname_with_others)
-    table.insert(opts.sections.lualine_x, 3, hostname_simple)
+    table.insert(opts.sections.lualine_x, 6, hostname_with_others)
+    table.insert(opts.sections.lualine_x, 7, hostname_simple)
 
     -- HOSTNAME left separator
-    table.insert(opts.sections.lualine_x, 3, {
+    table.insert(opts.sections.lualine_x, 8, {
       function()
-        return "-"
+        return ""
       end,
       color = { fg = colors["linkarzu_color14"], bg = colors["linkarzu_color17"] },
       separator = { left = "", right = "" },

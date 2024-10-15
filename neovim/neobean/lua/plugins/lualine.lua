@@ -8,6 +8,14 @@
 -- Filename: ~/github/dotfiles-latest/neovim/neobean/lua/plugins/lualine.lua
 -- Description: Optimized Lualine configuration for Neovim.
 
+-- Other separator symbols:
+-- █
+--   
+--   
+--   
+--   
+--   
+
 local colors = require("config.colors").load_colors()
 local icons = LazyVim.config.icons
 
@@ -85,14 +93,14 @@ return {
     end
 
     -- Function to create a hostname component with a specified right separator
-    local function create_hostname_component(separator_right, condition)
+    local function create_hostname_component(condition)
       return {
         function()
           return vim.fn.hostname()
         end,
         color = { fg = fg_color, bg = get_hostname_bg_color(), gui = "bold" },
-        separator = { left = "", right = separator_right },
-        padding = 0,
+        separator = { left = "", right = "" },
+        padding = 1,
         cond = condition,
       }
     end
@@ -162,8 +170,8 @@ return {
         local _, bg_color = get_file_permissions()
         return { fg = fg_color, bg = bg_color, gui = "bold" }
       end,
-      separator = { left = "█", right = " " },
-      padding = 0,
+      separator = { left = "", right = "" },
+      padding = 1,
     })
 
     -- Add spell status component to lualine_x if conditions are met
@@ -173,13 +181,13 @@ return {
       color = function()
         return { fg = fg_color, bg = get_spell_bg_color(), gui = "bold" }
       end,
-      separator = { left = "█", right = " " },
-      padding = 0,
+      separator = { left = "", right = "" },
+      padding = 1,
     })
 
     -- Create and add hostname components based on the presence of additional components
-    local hostname_with_others = create_hostname_component("█ ", has_additional_components)
-    local hostname_simple = create_hostname_component("", function()
+    local hostname_with_others = create_hostname_component(has_additional_components)
+    local hostname_simple = create_hostname_component(function()
       return not has_additional_components()
     end)
 

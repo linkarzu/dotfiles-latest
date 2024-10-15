@@ -98,7 +98,7 @@ return {
         function()
           return vim.fn.hostname()
         end,
-        color = { fg = fg_color, bg = get_hostname_bg_color(), gui = "bold" },
+        color = { fg = get_hostname_bg_color(), bg = colors["linkarzu_color13"], gui = "bold" },
         separator = { left = "", right = "" },
         padding = 1,
         cond = condition,
@@ -168,7 +168,7 @@ return {
       cond = should_show_permissions,
       color = function()
         local _, bg_color = get_file_permissions()
-        return { fg = fg_color, bg = bg_color, gui = "bold" }
+        return { fg = bg_color, bg = fg_color, gui = "bold" }
       end,
       separator = { left = "", right = "" },
       padding = 1,
@@ -179,7 +179,7 @@ return {
       get_spell_status, -- Display spell status text
       cond = should_show_spell_status,
       color = function()
-        return { fg = fg_color, bg = get_spell_bg_color(), gui = "bold" }
+        return { fg = get_spell_bg_color(), bg = fg_color, gui = "bold" }
       end,
       separator = { left = "", right = "" },
       padding = 1,

@@ -107,6 +107,16 @@ return {
       end
     end
 
+    -- Function to get the current Python virtual environment name
+    local function get_venv_name()
+      local venv = os.getenv("VIRTUAL_ENV")
+      if venv then
+        return venv:match("([^/]+)$")
+      else
+        return ""
+      end
+    end
+
     -- Configure lualine_c with diagnostics
     opts.sections.lualine_c = {
       {
@@ -135,6 +145,12 @@ return {
       {
         "branch",
         color = get_branch_color,
+        separator = { right = "" },
+      },
+      {
+        get_venv_name,
+        color = { fg = colors["linkarzu_color10"], bg = colors["linkarzu_color02"], gui = "bold" },
+        separator = { right = "" },
       },
     }
 

@@ -95,7 +95,8 @@ source "$ITEM_DIR/front_app.sh"
 ###############################################################################
 
 # Shows album art and song name, I prefer this as it give me useful info
-source "$ITEM_DIR/media.sh"
+# Disabled this as it always kept it in the middle even if nothing was playing
+# source "$ITEM_DIR/media.sh"
 
 # Shows floating window when spotify is playing a song
 # source "$ITEM_DIR/spotify.sh"

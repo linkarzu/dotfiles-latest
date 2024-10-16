@@ -134,7 +134,8 @@ yabai -m config mouse_follows_focus off
 
 # I don't understand what this does, I've enabled and disabled it in the past,
 # and still don't get it
-yabai -m config window_topmost off
+# This option as removed https://github.com/koekeishiya/yabai/issues/1887
+# yabai -m config window_topmost off
 
 # Configure the layout mode
 # "stack" - is what I use, keeps a single app on the front

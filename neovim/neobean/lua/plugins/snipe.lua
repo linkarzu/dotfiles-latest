@@ -24,7 +24,7 @@ return {
         -- Remove "j" and "k" from your dictionary to navigate easier to delete
         -- Close the buffer under the cursor
         -- NOTE: Make sure you don't use the character below on your dictionary
-        -- close_buffer = "d",
+        close_buffer = "d",
       },
       -- Define the way buffers are sorted by default
       -- Can be any of "default" (sort buffers by their number) or "last" (sort buffers by last accessed)

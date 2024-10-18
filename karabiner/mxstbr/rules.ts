@@ -283,6 +283,30 @@ const rules: KarabinerRules[] = [
     ],
   },
 
+  // This is fucking genius, I'm always switching between the last 3 apps
+  // I have a glove80 and I never use the left or right arrows
+  {
+    description: "left_arrow -> cmd+tab+tab",
+    manipulators: [
+      {
+        from: {
+          key_code: "left_arrow",
+        },
+        to: [
+          {
+            key_code: "tab",
+            modifiers: ["command"],
+          },
+          {
+            key_code: "tab",
+            modifiers: ["command"],
+          },
+        ],
+        type: "basic",
+      },
+    ],
+  },
+
   // this is useful to hit enter after pasting text using the left hand
   {
     description: "left_option + spacebar -> enter",

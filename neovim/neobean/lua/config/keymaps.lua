@@ -1751,7 +1751,9 @@ end, { desc = "[P]Delete all marks" })
 vim.keymap.set("n", "<leader>fO", function()
   local file_path = vim.fn.expand("%:p")
   if file_path ~= "" then
-    local command = "open -R " .. vim.fn.shellescape(file_path)
+    -- -- Open in Finder or in ForkLift
+    -- local command = "open -R " .. vim.fn.shellescape(file_path)
+    local command = "open -a ForkLift " .. vim.fn.shellescape(file_path)
     vim.fn.system(command)
     print("Opened file in Finder: " .. file_path)
   else

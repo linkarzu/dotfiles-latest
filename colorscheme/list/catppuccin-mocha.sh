@@ -40,7 +40,7 @@ linkarzu_color13="#585b70"
 linkarzu_color14="#cdd6f4"
 # Surface1
 # Tmux inactive windows
-linkarzu_color15="#45475a"
+linkarzu_color15="#314430"
 # Flamingo
 # Selected text
 linkarzu_color16="#f2cdcd"

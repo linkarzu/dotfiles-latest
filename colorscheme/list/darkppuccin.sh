@@ -39,8 +39,8 @@ linkarzu_color13="#3d3d5d"
 # Cursor and tmux windows text
 linkarzu_color14="#cdd6f4"
 # Surface1
-# Tmux inactive windows
-linkarzu_color15="#353552"
+# Tmux inactive windows (7 colors to the right)
+linkarzu_color15="#314430"
 # Flamingo
 # Selected text
 linkarzu_color16="#f2cdcd"

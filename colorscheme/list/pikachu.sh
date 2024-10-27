@@ -24,8 +24,8 @@ linkarzu_color12="#fad61d"
 linkarzu_color13="#314154"
 # Cursor and tmux windows text
 linkarzu_color14="#ebfafa"
-# Tmux inactive windows
-linkarzu_color15="#013e4a"
+# Tmux inactive windows (7 colors to the right)
+linkarzu_color15="#4b4838"
 # Selected text
 linkarzu_color16="#e9b3fd"
 # Lualine across

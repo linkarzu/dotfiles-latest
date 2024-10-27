@@ -24,7 +24,7 @@ linkarzu_color12="#f1fc79"
 linkarzu_color13="#314154"
 # Cursor and tmux windows text
 linkarzu_color14="#ebfafa"
-# Tmux inactive windows
+# Tmux inactive windows (7 colors to the right)
 linkarzu_color15="#013e4a"
 # Selected text
 linkarzu_color16="#e9b3fd"

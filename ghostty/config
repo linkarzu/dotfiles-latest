@@ -1,0 +1,117 @@
+# To get the default values
+# ghostty +show-config --default --docs > ~/github/dotfiles-latest/ghostty/config-default
+
+# Additional configuration files to read. This configuration can be repeated
+# to read multiple configuration files. Configuration files themselves can
+# load more configuration files. Paths are relative to the file containing the
+# `config-file` directive. For command-line arguments, paths are relative to
+# the current working directory.
+# 
+# Prepend a ? character to the file path to suppress errors if the file does
+# not exist. If you want to include a file that begins with a literal ?
+# character, surround the file path in double quotes (").
+# 
+# Cycles are not allowed. If a cycle is detected, an error will be logged and
+# the configuration file will be ignored.
+config-file = ghostty-theme
+
+# The command to run, usually a shell. If this is not an absolute path, it'll
+# be looked up in the `PATH`. If this is not set, a default will be looked up
+# from your system. The rules for the default lookup are:
+# 
+#   * `SHELL` environment variable
+# 
+#   * `passwd` entry (user information)
+# 
+# This can contain additional arguments to run the command with. If additional
+# arguments are provided, the command will be executed using `/bin/sh -c`.
+# Ghostty does not do any shell command parsing.
+# 
+# If you're using the `ghostty` CLI there is also a shortcut to run a command
+# with arguments directly: you can use the `-e` flag. For example: `ghostty -e
+# fish --with --custom --args`. The `-e` flag automatically forces some
+# other behaviors as well:
+# 
+#   * `gtk-single-instance=false` - This ensures that a new instance is
+#     launched and the CLI args are respected.
+# 
+#   * `quit-after-last-window-closed=true` - This ensures that the Ghostty
+#     process will exit when the command exits. Additionally, the
+#     `quit-after-last-window-closed-delay` is unset.
+# ############################################################################ 
+# The following command checks if tmux is installed.
+# If tmux is installed, it automatically attaches to an existing tmux session.
+# If no tmux session exists, a new one is created.
+# If tmux is not installed, it simply starts zsh without tmux.
+#
+# For this to work properly, you need to make sure that your shell is configured
+# for homebrew, so you should have this line:
+# eval "$(/opt/homebrew/bin/brew shellenv)"
+# In your ~/.zprofile file
+# If you don't have that line, or if the file doesn't exist, run this:
+# echo '' >>~/.zprofile && echo '# Configure shell for brew' >>~/.zprofile && echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >>~/.zprofile && eval "$(/opt/homebrew/bin/brew shellenv)"
+#
+# This assumes you installed tmux through brew if using macos
+command = zsh --login -c "if command -v tmux >/dev/null 2>&1; then tmux attach || tmux; else zsh; fi"
+
+# Horizontal window padding. This applies padding between the terminal cells
+# and the left and right window borders. The value is in points, meaning that
+# it will be scaled appropriately for screen DPI.
+# 
+# If this value is set too large, the screen will render nothing, because the
+# grid will be completely squished by the padding. It is up to you as the user
+# to pick a reasonable value. If you pick an unreasonable value, a warning
+# will appear in the logs.
+# 
+# Changing this configuration at runtime will only affect new terminals, i.e.
+# new windows, tabs, etc.
+# 
+# To set a different left and right padding, specify two numerical values
+# separated by a comma. For example, `window-padding-x = 2,4` will set the
+# left padding to 2 and the right padding to 4. If you want to set both
+# paddings to the same value, you can use a single value. For example,
+# `window-padding-x = 2` will set both paddings to 2.
+window-padding-x = 6,0
+
+# Vertical window padding. This applies padding between the terminal cells and
+# the top and bottom window borders. The value is in points, meaning that it
+# will be scaled appropriately for screen DPI.
+# 
+# If this value is set too large, the screen will render nothing, because the
+# grid will be completely squished by the padding. It is up to you as the user
+# to pick a reasonable value. If you pick an unreasonable value, a warning
+# will appear in the logs.
+# 
+# Changing this configuration at runtime will only affect new terminals,
+# i.e. new windows, tabs, etc.
+# 
+# To set a different top and bottom padding, specify two numerical values
+# separated by a comma. For example, `window-padding-y = 2,4` will set the
+# top padding to 2 and the bottom padding to 4. If you want to set both
+# paddings to the same value, you can use a single value. For example,
+# `window-padding-y = 2` will set both paddings to 2.
+window-padding-y = 8,0
+
+font-family = "JetBrainsMono Nerd Font"
+font-size = 15
+
+# Valid values:
+# 
+#   * `true`
+#   * `false` - windows won't have native decorations, i.e. titlebar and
+#      borders. On macOS this also disables tabs and tab overview.
+# 
+# The "toggle_window_decoration" keybind action can be used to create
+# a keybinding to toggle this setting at runtime.
+# 
+# Changing this configuration in your configuration and reloading will
+# only affect new windows. Existing windows will not be affected.
+# 
+# macOS: To hide the titlebar without removing the native window borders
+#        or rounded corners, use `macos-titlebar-style = hidden` instead.
+macos-titlebar-style = hidden
+
+# Confirms that a surface should be closed before closing it. This defaults to
+# true. If set to false, surfaces will close without any confirmation.
+confirm-close-surface = false
+

@@ -94,6 +94,42 @@ EOF
   echo "Kitty configuration updated at '$kitty_conf_file'."
 }
 
+generate_ghostty_config() {
+  ghostty_conf_file="$HOME/github/dotfiles-latest/ghostty/ghostty-theme"
+
+  cat >"$ghostty_conf_file" <<EOF
+background = $linkarzu_color10
+foreground = $linkarzu_color14
+
+# black
+palette = 0=$linkarzu_color10
+palette = 8=$linkarzu_color08
+# red
+palette = 1=$linkarzu_color11
+palette = 9=$linkarzu_color11
+# green
+palette = 2=$linkarzu_color02
+palette = 10=$linkarzu_color02
+# yellow
+palette = 3=$linkarzu_color05
+palette = 11=$linkarzu_color05
+# blue
+palette = 4=$linkarzu_color04
+palette = 12=$linkarzu_color04
+# purple
+palette = 5=$linkarzu_color01
+palette = 13=$linkarzu_color01
+# aqua
+palette = 6=$linkarzu_color03
+palette = 14=$linkarzu_color03
+# white
+palette = 7=$linkarzu_color14
+palette = 15=$linkarzu_color14
+EOF
+
+  echo "Ghostty configuration updated at '$ghostty_conf_file'."
+}
+
 generate_starship_config() {
   # Define the path to the active-config.toml
   starship_conf_file="$HOME/github/dotfiles-latest/starship-config/active-config.toml"
@@ -173,9 +209,6 @@ if [ "$UPDATED" = true ]; then
   # Source the active colorscheme to load variables
   source "$active_file"
 
-  # Generate the Kitty configuration file
-  generate_kitty_config
-
   # Set the tmux colors
   $HOME/github/dotfiles-latest/tmux/tools/linkarzu/set_tmux_colors.sh
   tmux source-file ~/.tmux.conf
@@ -186,6 +219,12 @@ if [ "$UPDATED" = true ]; then
 
   generate_starship_config
 
+  # Generate the ghostty config file
+  generate_ghostty_config
+  osascript $HOME/github/dotfiles-latest/ghostty/reload-config.scpt
+
+  # Generate the Kitty configuration file
+  generate_kitty_config
   # This reloads kitty config without closing and re-opening
   kill -SIGUSR1 "$(pgrep -x kitty)"
 fi

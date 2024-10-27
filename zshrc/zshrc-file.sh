@@ -29,6 +29,7 @@ mkdir -p ~/.config/alacritty
 # Kitty is inside its own dir
 mkdir -p ~/.config/kitty/
 mkdir -p ~/.config/wezterm/
+mkdir -p ~/.config/ghostty
 # Creating obsidian directory
 # Even if you don't use obsidian, don't remove this dir to avoid warnings
 mkdir -p ~/github/obsidian_main
@@ -94,6 +95,8 @@ create_symlink ~/github/dotfiles-latest/tmux/tmux.conf.sh ~/.tmux.conf
 create_symlink ~/github/dotfiles-latest/alacritty/alacritty.toml ~/.config/alacritty/alacritty.toml
 create_symlink ~/github/dotfiles-latest/kitty/kitty.conf ~/.config/kitty/kitty.conf
 create_symlink ~/github/dotfiles-latest/wezterm/wezterm.lua ~/.config/wezterm/wezterm.lua
+create_symlink ~/github/dotfiles-latest/ghostty/config ~/.config/ghostty/config
+create_symlink ~/github/dotfiles-latest/ghostty/ghostty-theme ~/.config/ghostty/ghostty-theme
 create_symlink ~/github/dotfiles-latest/yabai/yabairc ~/.yabairc
 create_symlink ~/github/dotfiles-latest/.prettierrc.yaml ~/.prettierrc.yaml
 create_symlink ~/github/dotfiles-latest/vscode/settings.json "$HOME/Library/Application Support/Code/User/settings.json"

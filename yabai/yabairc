@@ -79,7 +79,7 @@ yabai -m config window_opacity on
 # yabai -m config window_opacity off
 
 # Make the below apps transparent
-apps_transparent="(Spotify|kitty|Neovide|Google Chrome|WezTerm|Code)"
+apps_transparent="(Spotify|kitty|Neovide|Google Chrome|WezTerm|Code|Ghostty)"
 yabai -m signal --add event=window_focused app="^${apps_transparent}$" action="yabai -m config active_window_opacity 0.90"
 yabai -m signal --add event=window_focused app="^${apps_transparent}$" action="yabai -m config normal_window_opacity 0.00001"
 

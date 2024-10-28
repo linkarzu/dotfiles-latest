@@ -1,6 +1,9 @@
 # To get the default values
 # ghostty +show-config --default --docs > ~/github/dotfiles-latest/ghostty/config-default
 
+# No way of reloading config via command yet, only via keymap cmd+shift+,
+# Created a script to do it so that its reloaded with my colorscheme selector
+
 # Additional configuration files to read. This configuration can be repeated
 # to read multiple configuration files. Configuration files themselves can
 # load more configuration files. Paths are relative to the file containing the
@@ -14,6 +17,22 @@
 # Cycles are not allowed. If a cycle is detected, an error will be logged and
 # the configuration file will be ignored.
 config-file = ghostty-theme
+
+# Some shaders can be found in this repo, they're usually uploaded to discord
+# https://github.com/hackrmomo/ghostty-shaders
+# custom-shader = shaders/animated-gradient-shader.glsl
+# custom-shader = shaders/bloom.glsl
+# custom-shader = shaders/bloom1.glsl
+# custom-shader = shaders/bloom075.glsl
+# custom-shader = shaders/bloom060.glsl
+# custom-shader = shaders/bloom050.glsl
+custom-shader = shaders/bloom025.glsl
+# custom-shader = shaders/crt.glsl
+# custom-shader = shaders/cubes.glsl
+# custom-shader = shaders/gradient-background.glsl
+# custom-shader = shaders/just-snow.glsl
+# custom-shader = shaders/starfield-colors.glsl
+# custom-shader = shaders/starfield.glsl
 
 # The command to run, usually a shell. If this is not an absolute path, it'll
 # be looked up in the `PATH`. If this is not set, a default will be looked up
@@ -115,3 +134,41 @@ macos-titlebar-style = hidden
 # true. If set to false, surfaces will close without any confirmation.
 confirm-close-surface = false
 
+# Toggle the "quick" terminal. The quick terminal is a terminal that
+# appears on demand from a keybinding, often sliding in from a screen
+# edge such as the top. This is useful for quick access to a terminal
+# without having to open a new window or tab.
+#
+# When the quick terminal loses focus, it disappears. The terminal state
+# is preserved between appearances, so you can always press the keybinding
+# to bring it back up.
+#
+# The quick terminal has some limitations:
+#
+#   - It is a singleton; only one instance can exist at a time.
+#   - It does not support tabs.
+#   - It will not be restored when the application is restarted
+#     (for systems that support window restoration).
+#   - It supports fullscreen, but fullscreen will always be a non-native
+#     fullscreen (macos-non-native-fullscreen = true). This only applies
+#     to the quick terminal window. This is a requirement due to how
+#     the quick rerminal is rendered.
+#
+# See the various configurations for the quick terminal in the
+# configuration file to customize its behavior.
+#
+# `global:` - Make the keybind global. By default, keybinds only work
+#  within Ghostty and under the right conditions (application focused,
+#  sometimes terminal focused, etc.). If you want a keybind to work
+#  globally across your system (i.e. even when Ghostty is not focused),
+#  specify this prefix. This prefix implies `all:`. Note: this does not
+#  work in all environments; see the additional notes below for more
+#  information.
+# keybind = global:cmd+s=toggle_quick_terminal
+keybind = cmd+s=toggle_quick_terminal
+
+keybind = super+i=inspector:toggle
+keybind = super+r=reload_config
+
+# This doesn't work when in tmux, if outside tmux the regular ctrl+l works
+# keybind = super+k=clear_screen

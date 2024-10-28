@@ -66,8 +66,20 @@ config = {
 	-- In my wezterm video and will test them out
 	-- https://youtu.be/ibCPb4tSRXM
 	-- https://wezfurlong.org/wezterm/config/lua/config/animation_fps.html?h=animation
-	-- animation_fps = 60,
+	-- animation_fps = 120,
 
+	-- Limits the maximum number of frames per second that wezterm will attempt to draw
+	-- I tried settings this value to 5, 15, 30, 60 and you do feel a difference
+	-- It feels WAY SMOOTHER at 120
+	-- In my humble opiniont, 120 should be the default as I'm not the only one
+	-- experiencing this "performance" issue in wezterm
+	-- https://wezfurlong.org/wezterm/config/lua/config/max_fps.html
+	max_fps = 120,
+
+	-- front_end = "WebGpu" - will more directly use Metal than the OpenGL
+	-- The default is "WebGpu". In earlier versions it was "OpenGL"
+	-- Metal translation used on M1 machines, may yield some more fps.
+	-- https://github.com/wez/wezterm/discussions/3664
 	-- https://wezfurlong.org/wezterm/config/lua/config/front_end.html?h=front_
 	-- front_end = "WebGpu",
 

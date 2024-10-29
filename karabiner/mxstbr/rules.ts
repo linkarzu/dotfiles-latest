@@ -764,7 +764,8 @@ const rules: KarabinerRules[] = [
       o: {
         to: [
           {
-            shell_command: `/opt/homebrew/bin/yabai --restart-service`,
+            // shell_command: `/opt/homebrew/bin/yabai --restart-service`,
+            shell_command: `~/github/dotfiles-latest/yabai/yabai_restart.sh`,
           },
         ],
       },

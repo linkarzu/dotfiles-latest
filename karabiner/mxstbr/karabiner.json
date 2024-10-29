@@ -168,6 +168,16 @@
                         ]
                     },
                     {
+                        "description": "right_arrow -> sticky notes",
+                        "manipulators": [
+                            {
+                                "from": { "key_code": "right_arrow" },
+                                "to": [{ "shell_command": "open -a 'kitty.app'" }],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
                         "description": "left_option + spacebar -> enter",
                         "manipulators": [
                             {
@@ -351,12 +361,12 @@
                                         "value": 1
                                     }
                                 ],
-                                "description": "Open -a 'Ghostty.app'",
+                                "description": "Open -a 'WezTerm.app'",
                                 "from": {
                                     "key_code": "j",
                                     "modifiers": { "mandatory": ["any"] }
                                 },
-                                "to": [{ "shell_command": "open -a 'Ghostty.app'" }],
+                                "to": [{ "shell_command": "open -a 'WezTerm.app'" }],
                                 "type": "basic"
                             },
                             {
@@ -2082,7 +2092,7 @@
                                     "key_code": "o",
                                     "modifiers": { "mandatory": ["any"] }
                                 },
-                                "to": [{ "shell_command": "/opt/homebrew/bin/yabai --restart-service" }],
+                                "to": [{ "shell_command": "~/github/dotfiles-latest/yabai/yabai_restart.sh" }],
                                 "type": "basic"
                             },
                             {

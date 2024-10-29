@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
 # #############################################################################
 # Do not delete the `UNIQUE_ID` line below, I use it to backup original files
@@ -6,11 +6,28 @@
 # UNIQUE_ID=do_not_delete_this_line
 # #############################################################################
 
+# Load all the variables I need from the yabai_env.sh file
+source "$HOME/github/dotfiles-latest/yabai/yabai_env.sh"
+
 # This command is the one that loads the scripting addition
 # Configure your user to execute `yabai --load-sa` as the root user without having to enter a password.
 #  https://github.com/koekeishiya/yabai/wiki/Installing-yabai-(latest-release)#configure-scripting-addition
 yabai -m signal --add event=dock_did_restart action="sudo yabai --load-sa"
 sudo yabai --load-sa
+
+###############################################################################
+#                              Excluded apps
+###############################################################################
+
+yabai -m rule --add app="^${apps_mgoff_normal}$" manage=off
+yabai -m rule --add app="^${apps_mgoff_below}$" manage=off sub-layer=below
+yabai -m rule --add app="^${apps_mgoff_above}$" manage=off sub-layer=above
+
+# In case you want to debug and see the contents of a variable
+# echo "apps_mgoff_below: $apps_mgoff_below" >> /tmp/yabai_debug.log
+
+# yabai -m rule --add app="kitty" manage=on position=200:50 size=10:50
+# yabai -m rule --add app="^kitty$" manage=off position=100:100 size=80:60
 
 ###############################################################################
 #                          Custom padding settings
@@ -33,10 +50,10 @@ if command -v sketchybar &>/dev/null; then
   else
     # # This matches my asus 27 inch monitor
     # # yabai -m config top_padding 39
-    yabai -m config top_padding 59
-    yabai -m config bottom_padding 20
-    yabai -m config left_padding 20
-    yabai -m config right_padding 20
+    yabai -m config top_padding 49
+    yabai -m config bottom_padding 10
+    yabai -m config left_padding 10
+    yabai -m config right_padding 230
 
     # # For videos thumbnails
     # yabai -m config top_padding 400
@@ -46,10 +63,10 @@ if command -v sketchybar &>/dev/null; then
 
     # For youtube thumbnails
     # yabai -m config right_padding 500
-    
+
     # For youtube posts and neomemes
     # yabai -m config right_padding 800
-    
+
     # For shorts
     # yabai -m config bottom_padding 400
   fi
@@ -79,9 +96,12 @@ yabai -m config window_opacity on
 # yabai -m config window_opacity off
 
 # Make the below apps transparent
-apps_transparent="(Spotify|kitty|Neovide|Google Chrome|WezTerm|Code|Ghostty)"
 yabai -m signal --add event=window_focused app="^${apps_transparent}$" action="yabai -m config active_window_opacity 0.90"
 yabai -m signal --add event=window_focused app="^${apps_transparent}$" action="yabai -m config normal_window_opacity 0.00001"
+
+# I want the apps here to always be shown, probably they'll be on the right
+# padding section. This is my "sticky notes"
+yabai -m rule --add app="^${apps_transp_ignore}$" opacity=0.9
 
 # When any other app gains focus, reset both active and background window opacity to fully visible
 yabai -m signal --add event=window_focused app!="^${apps_transparent}$" action="yabai -m config active_window_opacity 1.0"
@@ -89,6 +109,10 @@ yabai -m signal --add event=window_focused app!="^${apps_transparent}$" action="
 
 # yabai -m signal --add event=window_focused app=".*CleanShot X.*" action="yabai -m config active_window_opacity 1.0"
 # yabai -m signal --add event=window_focused app=".*CleanShot X.*" action="yabai -m config normal_window_opacity 1.0"
+
+# Nice trick shared by @timhansinger8030 in my YouTube video https://youtu.be/SLCR1oO65GI
+# Allows to see mission control apps when calling mission control from a transparent app
+yabai -m signal --add event=mission_control_enter action="yabai -m config normal_window_opacity 1.0"
 
 ###############################################################################
 #                             sub-layer=normal
@@ -102,24 +126,6 @@ yabai -m signal --add event=window_focused app!="^${apps_transparent}$" action="
 # of other apps
 
 # yabai -m rule --add app=".*" sub-layer=normal
-
-###############################################################################
-#                              Excluded apps
-###############################################################################
-
-# Apps excluded from window management, so you can resize them and move them around
-
-apps_mgoff_normal="(Calculator|iStat Menus|Hammerspoon|BetterDisplay|GIMP|Notes|System Preferences|System Settings|Activity Monitor|App StoreSoftware Update|CleanShot X|Karabiner-Elements|TestRig|Gemini|Raycast|OBS Studio|QuickTime Player|Cisco Packet Tracer 8.2.2|Cisco Packet Tracer)"
-# This keeps apps always below
-apps_mgoff_below="()"
-# This keeps apps always on the top
-apps_mgoff_above="()"
-yabai -m rule --add app="^${apps_mgoff_normal}$" manage=off
-yabai -m rule --add app="^${apps_mgoff_below}$" manage=off sub-layer=below
-yabai -m rule --add app="^${apps_mgoff_above}$" manage=off sub-layer=above
-
-# In case you want to debug and see the contents of a variable
-# echo "apps_mgoff_below: $apps_mgoff_below" >> /tmp/yabai_debug.log
 
 ###############################################################################
 #                                  Misc
@@ -145,7 +151,6 @@ yabai -m config layout stack
 # yabai -m config layout bsp
 # yabai -m config layout float
 
-
 ###############################################################################
 #                              Signal events
 ###############################################################################
@@ -167,27 +172,27 @@ yabai -m signal --add event=window_focused action="sketchybar --trigger window_f
 ###############################################################################
 
 yabai -m config \
-	focus_follows_mouse off \
-	window_origin_display default \
-	window_placement second_child \
-	window_zoom_persist on \
-	window_shadow off \
-	window_animation_duration 2 \
-	window_animation_frame_rate 120 \
-	window_opacity_duration 0.0 \
-	insert_feedback_color 0xffd75f5f \
-	active_window_border_color 0xff775759 \
-	normal_window_border_color 0xff555555 \
-	window_border_width 4 \
-	window_border_radius 12 \
-	window_border_blur off \
-	window_border_hidpi on \
-	window_border off \
-	split_ratio 0.50 \
-	split_type auto \
-	auto_balance off \
-	window_gap 06 \
-	mouse_modifier fn \
-	mouse_action1 move \
-	mouse_action2 resize \
-	mouse_drop_action swap
+  focus_follows_mouse off \
+  window_origin_display default \
+  window_placement second_child \
+  window_zoom_persist on \
+  window_shadow off \
+  window_animation_duration 2 \
+  window_animation_frame_rate 120 \
+  window_opacity_duration 0.0 \
+  insert_feedback_color 0xffd75f5f \
+  active_window_border_color 0xff775759 \
+  normal_window_border_color 0xff555555 \
+  window_border_width 4 \
+  window_border_radius 12 \
+  window_border_blur off \
+  window_border_hidpi on \
+  window_border off \
+  split_ratio 0.50 \
+  split_type auto \
+  auto_balance off \
+  window_gap 06 \
+  mouse_modifier fn \
+  mouse_action1 move \
+  mouse_action2 resize \
+  mouse_drop_action swap

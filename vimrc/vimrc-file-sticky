@@ -1,0 +1,22 @@
+" """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Do not delete the `UNIQUE_ID` line below, I use it to backup original files
+" so they're not lost when my symlinks are applied
+" UNIQUE_ID=do_not_delete_this_line
+" """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+" Filename: ~/github/dotfiles-latest/vimrc/vimrc-file-sticky
+" ~/github/dotfiles-latest/vimrc/vimrc-file-sticky
+
+source $HOME/github/dotfiles-latest/vimrc/vimrc-file
+
+" I always want to show the status line at the bottom (0 never, 1 if 2 windows, 2 always)
+set laststatus=2
+set nonumber
+
+"  Breaks and wraps lines at 23 characters
+set textwidth=23
+
+" Info to be shown in the status line
+" %f filename, %y filetype, %m modified flag, %r RO flag, %= align to right, %l line, %c column
+" set statusline=%m
+set statusline=%m

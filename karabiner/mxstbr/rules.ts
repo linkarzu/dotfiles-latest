@@ -307,6 +307,23 @@ const rules: KarabinerRules[] = [
     ],
   },
 
+  {
+    description: "right_arrow -> sticky notes",
+    manipulators: [
+      {
+        from: {
+          key_code: "right_arrow",
+        },
+        to: [
+          {
+            shell_command: "open -a 'kitty.app'",
+          },
+        ],
+        type: "basic",
+      },
+    ],
+  },
+
   // this is useful to hit enter after pasting text using the left hand
   {
     description: "left_option + spacebar -> enter",

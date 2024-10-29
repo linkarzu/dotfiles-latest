@@ -19,6 +19,7 @@ config = {
 	-- -- BEFORE you can set the term to wezterm, you need to install a copy of the
 	-- -- wezterm TERM definition
 	-- -- https://wezfurlong.org/wezterm/config/lua/config/term.html?h=term
+	-- -- https://github.com/wez/wezterm/blob/main/termwiz/data/wezterm.terminfo
 	-- --
 	-- -- If you're using tmux, set your tmux.conf file to:
 	-- -- set -g default-terminal "${TERM}"
@@ -130,6 +131,7 @@ config = {
 	-- -- for that in my zshrc file
 	-- -- Neovim didn't need cursor changes, worked by setting it to "xterm-kitty"
 	-- --
+	default_cursor_style = "SteadyBlock",
 	-- default_cursor_style = "BlinkingBlock",
 
 	-- I don't like the the "Linear", which gives it a fade effect between blinks

@@ -48,7 +48,8 @@ local function update_winbar()
     .. "%#WinBar1#"
     .. home_replaced
     .. "%*%=%#WinBar2#"
-    .. vim.fn.systemlist("hostname")[1]
+  -- I don't need the hostname as I have it in lualine
+  -- .. vim.fn.systemlist("hostname")[1]
 end
 -- Autocmd to update the winbar on BufEnter and WinEnter events
 vim.api.nvim_create_autocmd({ "BufEnter", "WinEnter" }, {

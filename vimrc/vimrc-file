@@ -116,8 +116,11 @@ nnoremap k gk
 xnoremap j gj
 xnoremap k gk
 
-" Use leader+w to save files
-nnoremap <leader>w :w<cr>
+" Use leader+w to save or write files
+nnoremap <leader>ww :w<cr>
+
+" Create a task used with bullets plugin
+nnoremap <leader>ml i- [ ] <Esc>a
 
 " Copy to the system clipboard
 vnoremap y "+y

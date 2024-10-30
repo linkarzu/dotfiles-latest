@@ -1027,6 +1027,13 @@ end, { desc = "[P]BOLD toggle bold markers" })
 --   end
 -- end, { desc = "[P]BOLD toggle on current word or selection" })
 
+-- Crate task or checkbox lamw25wmal
+-- These are marked with <leader>x using bullets.vim
+vim.keymap.set("n", "<leader>ml", function()
+  vim.cmd("normal! i- [ ]  ")
+  vim.cmd("startinsert")
+end, { desc = "[P]Toggle checkbox" })
+
 -- In visual mode, surround the selected text with markdown link syntax
 vim.keymap.set("v", "<leader>mll", function()
   -- Copy what's currently in my clipboard to the register "a lamw25wmal

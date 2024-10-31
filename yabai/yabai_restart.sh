@@ -18,9 +18,9 @@ yabai --restart-service
 
 # Restart the apps in apps_transp_ignore to apply the settings
 for app in $(echo $apps_transp_ignore | tr -d '()' | tr '|' ' '); do
-  osascript -e "tell application \"$app\" to quit"
-  osascript -e "delay 0.5"
-  osascript -e "tell application \"$app\" to activate"
+  pkill "$app"
+  sleep 0.5
+  open -a "$app"
 done
 
 # After yabai is restarted, I want kitty to be moved to a specific position on

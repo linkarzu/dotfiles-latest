@@ -46,7 +46,7 @@ if command -v sketchybar &>/dev/null; then
     yabai -m config top_padding 22
     yabai -m config bottom_padding 10
     yabai -m config left_padding 10
-    yabai -m config right_padding 10
+    yabai -m config right_padding 230
   else
     # # This matches my asus 27 inch monitor
     # # yabai -m config top_padding 39

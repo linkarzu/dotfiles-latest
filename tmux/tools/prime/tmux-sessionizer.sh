@@ -99,5 +99,17 @@ if ! tmux has-session -t=$selected_name 2>/dev/null; then
   tmux new-session -ds $selected_name -c "$selected"
 fi
 
-# Switch to the tmux session with the name derived from the selected directory
+# Check if Neovim is running in the selected tmux session.
+# If Neovim is not found in any pane, open it with the desired configuration lamw25wmal
+if ! tmux list-panes -t "$selected_name" -F "#{pane_current_command}" | grep -q "nvim"; then
+  # Set NVIM_APPNAME variable to load config and start it in the selected tmux session.
+  # C-m presses enter
+  tmux send-keys -t "$selected_name" "export NVIM_APPNAME='neobean' && /opt/homebrew/bin/nvim" C-m
+
+  # Send the "s" key in Neovim to restore the session after Neovim starts.
+  # I use "s" to restore the session in nvimdev/dashboard-nvim
+  tmux send-keys -t "$selected_name" "s"
+fi
+
+# If Neovim is running, just switch to the session
 tmux switch-client -t $selected_name

@@ -1,0 +1,93 @@
+{
+  "bash code block": {
+    "prefix": "bash",
+    "body": ["```bash", "$1", "```"],
+    "description": "Insert a bash code block"
+  },
+
+  "yaml code block": {
+    "prefix": "yaml",
+    "body": ["```yaml", "$1", "```"],
+    "description": "Insert a yaml code block"
+  },
+
+  "go code block": {
+    "prefix": "go",
+    "body": ["```go", "$1", "```"],
+    "description": "Insert a go code block"
+  },
+
+  "sql code block": {
+    "prefix": "sql",
+    "body": ["```sql", "$1", "```"],
+    "description": "Insert a sql code block"
+  },
+
+  "chirpy tip": {
+    "prefix": "chirpy",
+    "body": [
+      " ",
+      "<!-- markdownlint-disable -->",
+      "<!-- prettier-ignore-start -->",
+      " ",
+      "<!-- tip=green, info=blue, warning=yellow, danger=red -->",
+      " ",
+      "> $1",
+      "{: .prompt-$2 }",
+      " ",
+      "<!-- prettier-ignore-end -->",
+      "<!-- markdownlint-restore -->"
+    ],
+    "description": "Insert a chirpy theme tip"
+  },
+
+  "markdownlint": {
+    "prefix": "markdownlint",
+    "body": [
+      " ",
+      "<!-- markdownlint-disable -->",
+      " ",
+      "> $1",
+      " ",
+      "<!-- markdownlint-restore -->"
+    ],
+    "description": "Markdownlint disable range"
+  },
+
+  "prettier ignore": {
+    "prefix": "prettier-ignore",
+    "body": [
+      " ",
+      "<!-- prettier-ignore-start -->",
+      " ",
+      "> $1",
+      " ",
+      "<!-- prettier-ignore-end -->"
+    ],
+    "description": "Prettier ignore range"
+  },
+
+  "regular link": {
+    "prefix": "link",
+    "body": ["[$1]($2)"],
+    "description": "Create a new link"
+  },
+
+  "link in new tab": {
+    "prefix": "linkt",
+    "body": ["[$1]($2){:target=\"_blank\"}"],
+    "description": "Open a link in a new tab (chirpy theme)"
+  },
+
+  "todo item": {
+    "prefix": "todo",
+    "body": ["<!-- TODO: $1 -->"],
+    "description": "Create a todo item"
+  },
+
+  "markdown workflow 25": {
+    "prefix": "lam",
+    "body": ["lamw25wmal"],
+    "description": "markdown workflow 25"
+  }
+}

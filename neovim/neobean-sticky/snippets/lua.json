@@ -1,0 +1,13 @@
+{
+  "lua multiline comment": {
+    "prefix": "luamulti",
+    "body": ["--[=====[", "$1", "--]=====]"],
+    "description": "Insert a multiline comment in lua"
+  },
+
+  "markdown workflow 25": {
+    "prefix": "lam",
+    "body": ["lamw25wmal"],
+    "description": "markdown workflow 25"
+  }
+}

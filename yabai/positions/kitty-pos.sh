@@ -12,7 +12,13 @@
 # the /opt/homebrew/bin dir
 export PATH="/opt/homebrew/bin:$PATH"
 
-# After yabai is restarted, I want kitty to be moved to a specific position on
-# the screen as it will be my "sticky notes", I also set its size
-yabai -m window --focus "$(yabai -m query --windows | jq '.[] | select(.app == "kitty") | .id')" --move abs:1380:50
-yabai -m window --focus "$(yabai -m query --windows | jq '.[] | select(.app == "kitty") | .id')" --resize abs:210:500
+display_resolution=$(system_profiler SPDisplaysDataType | grep Resolution)
+# First condition is to match my macbook pro, the * are used as wildcards
+if [[ "$display_resolution" == *"3456 x 2234"* ]]; then
+  yabai -m window --focus "$(yabai -m query --windows | jq '.[] | select(.app == "kitty") | .id')" --move abs:1278:50
+  yabai -m window --focus "$(yabai -m query --windows | jq '.[] | select(.app == "kitty") | .id')" --resize abs:210:500
+  # Else below will match my 27 inch monitor
+else
+  yabai -m window --focus "$(yabai -m query --windows | jq '.[] | select(.app == "kitty") | .id')" --move abs:1380:50
+  yabai -m window --focus "$(yabai -m query --windows | jq '.[] | select(.app == "kitty") | .id')" --resize abs:210:500
+fi

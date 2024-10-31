@@ -101,6 +101,7 @@ create_symlink ~/github/dotfiles-latest/vscode/settings.json "$HOME/Library/Appl
 
 # Creating symlinks for directories
 create_symlink ~/github/dotfiles-latest/neovim/neobean/ ~/.config/neobean
+create_symlink ~/github/dotfiles-latest/neovim/neobean-sticky/ ~/.config/neobean-sticky
 create_symlink ~/github/dotfiles-latest/neovim/quarto-nvim-kickstarter/ ~/.config/quarto-nvim-kickstarter
 create_symlink ~/github/dotfiles-latest/neovim/kickstart.nvim/ ~/.config/kickstart.nvim
 create_symlink ~/github/dotfiles-latest/neovim/lazyvim/ ~/.config/lazyvim

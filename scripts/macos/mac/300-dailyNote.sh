@@ -57,7 +57,7 @@ if ! tmux has-session -t="$tmux_session_name" 2>/dev/null; then
   # Create a new tmux session with the note name in detached mode and start
   # neovim with the daily note, cursor at the last line
   # + tells neovim to execute a command after opening and G goes to last line
-  tmux new-session -d -s "$tmux_session_name" -c "$note_dir" "nvim +norm\ G $full_path"
+  tmux new-session -d -s "$tmux_session_name" -c "$note_dir" "export NVIM_APPNAME='neobean' && /opt/homebrew/bin/nvim +norm\ Go +startinsert $full_path"
   # tmux new-session -d -s "$tmux_session_name" "nvim +norm\ G $full_path"
 
   # Create a new tmux session with the note name in detached mode and start neovim with the daily note

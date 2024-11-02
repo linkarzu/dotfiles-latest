@@ -98,6 +98,11 @@ create_symlink ~/github/dotfiles-latest/wezterm/wezterm.lua ~/.config/wezterm/we
 create_symlink ~/github/dotfiles-latest/yabai/yabairc ~/.yabairc
 create_symlink ~/github/dotfiles-latest/.prettierrc.yaml ~/.prettierrc.yaml
 create_symlink ~/github/dotfiles-latest/vscode/settings.json "$HOME/Library/Application Support/Code/User/settings.json"
+create_symlink ~/github/dotfiles-latest/neovim/neobean/lua/config/autocmds.lua ~/github/dotfiles-latest/neovim/neobean-sticky/lua/config/autocmds.lua
+create_symlink ~/github/dotfiles-latest/neovim/neobean/lua/config/colors.lua ~/github/dotfiles-latest/neovim/neobean-sticky/lua/config/colors.lua
+create_symlink ~/github/dotfiles-latest/neovim/neobean/lua/config/highlights.lua ~/github/dotfiles-latest/neovim/neobean-sticky/lua/config/highlights.lua
+create_symlink ~/github/dotfiles-latest/neovim/neobean/lua/config/keymaps.lua ~/github/dotfiles-latest/neovim/neobean-sticky/lua/config/keymaps.lua
+create_symlink ~/github/dotfiles-latest/neovim/neobean/init.lua ~/github/dotfiles-latest/neovim/neobean-sticky/init.lua
 
 # Creating symlinks for directories
 create_symlink ~/github/dotfiles-latest/neovim/neobean/ ~/.config/neobean
@@ -110,6 +115,8 @@ create_symlink ~/github/dotfiles-latest/karabiner/mxstbr/ ~/.config/karabiner
 create_symlink ~/github/dotfiles-latest/sketchybar/felixkratz-linkarzu/ ~/.config/sketchybar
 create_symlink ~/github/dotfiles-latest/neovide/ ~/.config/neovide
 create_symlink ~/github/dotfiles-latest/ghostty/ ~/.config/ghostty
+create_symlink ~/github/dotfiles-latest/neovim/neobean/spell/ ~/github/dotfiles-latest/neovim/neobean-sticky/spell
+create_symlink ~/github/dotfiles-latest/neovim/neobean/snippets/ ~/github/dotfiles-latest/neovim/neobean-sticky/snippets
 # Notice I also have the "nvim" directory below and I have it pointing to my
 # "neobean" config.
 # If I don't do this, my daily note with hyper+t+r won't work

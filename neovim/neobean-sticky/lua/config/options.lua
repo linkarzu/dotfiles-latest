@@ -54,7 +54,7 @@ vim.opt.conceallevel = 0
 -- This WILL NOT auto wrap existing lines, or if you paste a long line into a
 -- file it will not wrap it as well
 -- https://www.reddit.com/r/neovim/comments/1av26kw/i_tried_to_figure_it_out_but_i_give_up_how_do_i/
-vim.opt.textwidth = 22
+vim.opt.textwidth = 33
 
 -- Above option applies the setting to ALL file types, if you want to apply it
 -- to specific files only

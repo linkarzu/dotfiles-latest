@@ -49,4 +49,4 @@ overrides:
       # lines will be longer
       # All the different options can be found in
       # https://prettier.io/docs/en/options#print-width
-      printWidth: 22
+      printWidth: 33

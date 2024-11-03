@@ -43,17 +43,17 @@ if command -v sketchybar &>/dev/null; then
   # First condition is to match my macbook pro, the * are used as wildcards
   if [[ "$display_resolution" == *"3456 x 2234"* ]]; then
     # yabai -m config top_padding 12
-    yabai -m config top_padding 22
-    yabai -m config bottom_padding 10
-    yabai -m config left_padding 10
-    yabai -m config right_padding 230
+    yabai -m config top_padding 17
+    yabai -m config bottom_padding 5
+    yabai -m config left_padding 5
+    yabai -m config right_padding 300
   else
     # # This matches my asus 27 inch monitor
     # # yabai -m config top_padding 39
-    yabai -m config top_padding 49
-    yabai -m config bottom_padding 10
-    yabai -m config left_padding 10
-    yabai -m config right_padding 230
+    yabai -m config top_padding 43
+    yabai -m config bottom_padding 5
+    yabai -m config left_padding 5
+    yabai -m config right_padding 300
 
     # # For videos thumbnails
     # yabai -m config top_padding 400

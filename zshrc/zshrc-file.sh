@@ -98,10 +98,17 @@ create_symlink ~/github/dotfiles-latest/wezterm/wezterm.lua ~/.config/wezterm/we
 create_symlink ~/github/dotfiles-latest/yabai/yabairc ~/.yabairc
 create_symlink ~/github/dotfiles-latest/.prettierrc.yaml ~/.prettierrc.yaml
 create_symlink ~/github/dotfiles-latest/vscode/settings.json "$HOME/Library/Application Support/Code/User/settings.json"
+# Below symlinks are dumb and I need to find a better way to create a new neovim config and
+# just override the settings that I don't need, don't have time for that right now
 create_symlink ~/github/dotfiles-latest/neovim/neobean/lua/config/autocmds.lua ~/github/dotfiles-latest/neovim/neobean-sticky/lua/config/autocmds.lua
 create_symlink ~/github/dotfiles-latest/neovim/neobean/lua/config/colors.lua ~/github/dotfiles-latest/neovim/neobean-sticky/lua/config/colors.lua
 create_symlink ~/github/dotfiles-latest/neovim/neobean/lua/config/highlights.lua ~/github/dotfiles-latest/neovim/neobean-sticky/lua/config/highlights.lua
 create_symlink ~/github/dotfiles-latest/neovim/neobean/lua/config/keymaps.lua ~/github/dotfiles-latest/neovim/neobean-sticky/lua/config/keymaps.lua
+create_symlink ~/github/dotfiles-latest/neovim/neobean/lua/plugins/telescope.lua ~/github/dotfiles-latest/neovim/neobean-sticky/lua/plugins/telescope.lua
+create_symlink ~/github/dotfiles-latest/neovim/neobean/lua/plugins/auto-save.lua ~/github/dotfiles-latest/neovim/neobean-sticky/lua/plugins/auto-save.lua
+create_symlink ~/github/dotfiles-latest/neovim/neobean/lua/plugins/mini-files.lua ~/github/dotfiles-latest/neovim/neobean-sticky/lua/plugins/mini-files.lua
+create_symlink ~/github/dotfiles-latest/neovim/neobean/lua/plugins/image-nvim.lua ~/github/dotfiles-latest/neovim/neobean-sticky/lua/plugins/image-nvim.lua
+create_symlink ~/github/dotfiles-latest/neovim/neobean/lua/plugins/render-markdown.lua ~/github/dotfiles-latest/neovim/neobean-sticky/lua/plugins/render-markdown.lua
 create_symlink ~/github/dotfiles-latest/neovim/neobean/init.lua ~/github/dotfiles-latest/neovim/neobean-sticky/init.lua
 create_symlink ~/github/dotfiles-latest/lazygit/config.yml "$HOME/Library/Application Support/lazygit/config.yml"
 

@@ -99,6 +99,21 @@ return {
         desc = "Grep (Root Dir)",
       },
 
+      -- { "<leader>gs", "<cmd>Telescope git_status<CR>", desc = "Status" },
+      {
+        "<leader>gs",
+        function()
+          require("telescope.builtin").git_status(require("telescope.themes").get_ivy({
+            layout_config = {
+              -- Set preview width, 0.7 sets it to 70% of the window width
+              preview_width = 0.7,
+            },
+            initial_mode = "normal", -- Start in normal mode
+          }))
+        end,
+        desc = "Git Status (ivy theme with custom preview size)",
+      },
+
       {
         "<leader><space>",
         "<cmd>e #<cr>",

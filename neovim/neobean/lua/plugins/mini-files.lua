@@ -13,7 +13,7 @@ return {
     -- Module mappings created only inside explorer.
     -- Use `''` (empty string) to not create one.
     mappings = {
-      close = "q",
+      close = "<esc>",
       -- Use this if you want to open several files
       go_in = "l",
       -- This opens the file, but quits out of mini.files (default L)

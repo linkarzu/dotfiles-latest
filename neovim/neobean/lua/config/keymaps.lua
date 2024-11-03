@@ -1625,31 +1625,47 @@ local function insert_heading_and_date(level)
   -- vim.api.nvim_win_set_cursor(0, { row, #heading })
 end
 
--- Create or find a daily note based on a date line format and open it in Neovim
--- This is used in obsidian markdown files that have the "Link to non-existent
--- document" warning
-local function create_daily_note(date_line)
+-- parse date line and generate file path components for the daily note
+local function parse_date_line(date_line)
   local home = os.getenv("HOME")
   local year, month, day, weekday = date_line:match("%[%[(%d+)%-(%d+)%-(%d+)%-(%w+)%]%]")
   if not (year and month and day and weekday) then
     print("No valid date found in the line")
-    return
+    return nil
   end
   local month_abbr = os.date("%b", os.time({ year = year, month = month, day = day }))
   local note_dir = string.format("%s/github/obsidian_main/250-daily/%s/%s-%s", home, year, month, month_abbr)
   local note_name = string.format("%s-%s-%s-%s.md", year, month, day, weekday)
-  local full_path = note_dir .. "/" .. note_name
-  -- Check if the directory exists, if not, create it
+  return note_dir, note_name
+end
+
+-- get the full path of the daily note
+local function get_daily_note_path(date_line)
+  local note_dir, note_name = parse_date_line(date_line)
+  if not note_dir or not note_name then
+    return nil
+  end
+  return note_dir .. "/" .. note_name
+end
+
+-- Updated create_daily_note function using helper functions
+-- Create or find a daily note based on a date line format and open it in Neovim
+-- This is used in obsidian markdown files that have the "Link to non-existent
+-- document" warning
+local function create_daily_note(date_line)
+  local full_path = get_daily_note_path(date_line)
+  if not full_path then
+    return
+  end
+  local note_dir = full_path:match("(.*/)") -- Extract directory path from full path
+  -- Ensure the directory exists
   vim.fn.mkdir(note_dir, "p")
-  -- Check if the file exists and create it if not
+  -- Check if the file exists and create it if it doesn't
   if vim.fn.filereadable(full_path) == 0 then
     local file = io.open(full_path, "w")
     if file then
       file:write("# Contents\n\n<!-- toc -->\n\n- [Daily note](#daily-note)\n\n<!-- tocstop -->\n\n## Daily note\n")
       file:close()
-      -- Open the file and then close it to refresh the buffer
-      -- I do this, because otherwise the current file does not recognize that
-      -- the new file was created
       vim.cmd("edit " .. vim.fn.fnameescape(full_path))
       vim.cmd("bd!")
       vim.api.nvim_echo({
@@ -1663,6 +1679,23 @@ local function create_daily_note(date_line)
     print("Daily note already exists: " .. full_path)
   end
 end
+
+-- Function to switch to the daily note or create it if it does not exist
+local function switch_to_daily_note(date_line)
+  local full_path = get_daily_note_path(date_line)
+  if not full_path then
+    return
+  end
+  create_daily_note(date_line)
+  vim.cmd("edit " .. vim.fn.fnameescape(full_path))
+end
+
+-- Keymap to switch to the daily note or create it if it does not exist
+vim.keymap.set("n", "<leader>gd", function()
+  local current_line = vim.api.nvim_get_current_line()
+  local date_line = current_line:match("%[%[%d+%-%d+%-%d+%-%w+%]%]") or ("[[" .. os.date("%Y-%m-%d-%A") .. "]]")
+  switch_to_daily_note(date_line)
+end, { desc = "[P]Go to or create daily note" })
 
 -- These create the the markdown heading
 -- H1

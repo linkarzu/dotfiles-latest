@@ -65,7 +65,7 @@ vim.api.nvim_create_autocmd({ "BufEnter", "WinEnter" }, {
 -- -- Wrap lines at convenient points, this comes enabled by default in lazyvim
 -- vim.opt.linebreak = true
 -- -- Disable line wrap, set to false by default in lazyvim
--- vim.opt.wrap = true
+vim.opt.wrap = true
 
 -- -- This is my old way of updating the winbar but it stopped working, it
 -- -- wasn't showing the entire path, it was being truncated in some dirs

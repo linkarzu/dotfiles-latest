@@ -103,6 +103,7 @@ create_symlink ~/github/dotfiles-latest/neovim/neobean/lua/config/colors.lua ~/g
 create_symlink ~/github/dotfiles-latest/neovim/neobean/lua/config/highlights.lua ~/github/dotfiles-latest/neovim/neobean-sticky/lua/config/highlights.lua
 create_symlink ~/github/dotfiles-latest/neovim/neobean/lua/config/keymaps.lua ~/github/dotfiles-latest/neovim/neobean-sticky/lua/config/keymaps.lua
 create_symlink ~/github/dotfiles-latest/neovim/neobean/init.lua ~/github/dotfiles-latest/neovim/neobean-sticky/init.lua
+create_symlink ~/github/dotfiles-latest/lazygit/config.yml "$HOME/Library/Application Support/lazygit/config.yml"
 
 # Creating symlinks for directories
 create_symlink ~/github/dotfiles-latest/neovim/neobean/ ~/.config/neobean

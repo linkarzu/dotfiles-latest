@@ -1,0 +1,4 @@
+# Keybindings
+keybinding:
+  universal:
+    quit: <esc>

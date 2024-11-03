@@ -16,14 +16,17 @@
 
 -- I'm switching from bufexplorer to telescope buffers as I get a file preview,
 -- that's basically the main benefit lamw25wmal
-vim.keymap.set(
-  "n",
-  "<S-h>",
-  -- Notice that I start it in normal mode to navigate similarly to bufexplorer,
-  -- the ivy theme is also similar to bufexplorer and tmux sessions
-  "<cmd>Telescope buffers sort_mru=true sort_lastused=true initial_mode=normal theme=ivy<cr>",
-  { desc = "[P]Open telescope buffers" }
-)
+vim.keymap.set("n", "<S-h>", function()
+  require("telescope.builtin").buffers(require("telescope.themes").get_ivy({
+    sort_mru = true,
+    sort_lastused = true,
+    initial_mode = "normal",
+    layout_config = {
+      -- Set preview width, 0.7 sets it to 70% of the window width
+      preview_width = 0.6,
+    },
+  }))
+end, { desc = "[P]Open telescope buffers" })
 -- vim.keymap.del("n", "<S-l>")
 
 vim.keymap.set("n", "<S-l>", function()

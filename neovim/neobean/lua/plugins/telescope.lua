@@ -34,7 +34,14 @@ return {
               -- I'm used to closing buffers with "d" from bufexplorer
               ["d"] = require("telescope.actions").delete_buffer,
               -- I'm also used to quitting bufexplorer with q instead of escape
-              ["q"] = require("telescope.actions").close,
+              ["<esc>"] = require("telescope.actions").close,
+            },
+            -- When in insert mode, I want to quit telescope when I press escape
+            -- instead of going to normal mode, to go to normal mode I can press
+            -- my regular `kj`
+            -- https://www.reddit.com/r/neovim/comments/1ghzlx4/comment/lv3jg0n/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button
+            i = {
+              ["<esc>"] = require("telescope.actions").close,
             },
           },
         },

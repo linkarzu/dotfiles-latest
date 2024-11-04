@@ -16,6 +16,9 @@ export PATH="/opt/homebrew/bin:$PATH"
 
 yabai --restart-service
 
+# Wait a few seconds after restarting yabai, or the apps will restart too early
+# I think this causes the apps not to show with my transparent apps
+sleep 2
 # Restart the apps in apps_transp_ignore to apply the settings
 for app in $(echo $apps_transp_ignore | tr -d '()' | tr '|' ' '); do
   pkill "$app"

@@ -308,6 +308,24 @@ const rules: KarabinerRules[] = [
   },
 
   {
+    description: "down_arrow -> tmux 3rd session",
+    manipulators: [
+      {
+        from: {
+          key_code: "down_arrow",
+        },
+        to: [
+          {
+            shell_command:
+              "open btt://execute_assigned_actions_for_trigger/?uuid=79CE855A-4DEA-4340-9878-4C33328B6B85",
+          },
+        ],
+        type: "basic",
+      },
+    ],
+  },
+
+  {
     description: "right_arrow -> sticky notes",
     manipulators: [
       {

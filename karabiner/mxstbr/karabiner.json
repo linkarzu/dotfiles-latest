@@ -168,6 +168,16 @@
                         ]
                     },
                     {
+                        "description": "down_arrow -> tmux 3rd session",
+                        "manipulators": [
+                            {
+                                "from": { "key_code": "down_arrow" },
+                                "to": [{ "shell_command": "open btt://execute_assigned_actions_for_trigger/?uuid=79CE855A-4DEA-4340-9878-4C33328B6B85" }],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
                         "description": "right_arrow -> sticky notes",
                         "manipulators": [
                             {
@@ -2890,16 +2900,6 @@
                     }
                 ]
             },
-            "devices": [
-                {
-                    "disable_built_in_keyboard_if_exists": true,
-                    "identifiers": {
-                        "is_keyboard": true,
-                        "product_id": 10203,
-                        "vendor_id": 5824
-                    }
-                }
-            ],
             "name": "Default",
             "virtual_hid_keyboard": { "keyboard_type_v2": "ansi" }
         }

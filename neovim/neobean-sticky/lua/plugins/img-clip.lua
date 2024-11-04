@@ -29,9 +29,10 @@ return {
 
       -- I want to save the images in a directory named after the current file,
       -- but I want the name of the dir to end with `-img`
-      dir_path = function()
-        return vim.fn.expand("%:t:r") .. "-img"
-      end,
+      -- dir_path = function()
+      --   return vim.fn.expand("%:t:r") .. "-img"
+      -- end,
+      dir_path = "img",
 
       -- If you want to get prompted for the filename when pasting an image
       -- This is the actual name that the physical file will have
@@ -99,7 +100,7 @@ return {
         -- template = "![$CURSOR]($FILE_PATH)", ---@type string
         --
         -- -- This will just statically type "Image" in the alternative text
-        template = "![Image]($FILE_PATH)", ---@type string
+        template = "![]($FILE_PATH)", ---@type string
         --
         -- -- This will dynamically configure the alternative text to show the
         -- -- same that you configured as the "file_name" above

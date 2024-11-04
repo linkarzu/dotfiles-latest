@@ -5,6 +5,15 @@
 return {
   -- "linkarzu/snipe.nvim",
   "leath-dub/snipe.nvim",
+  keys = {
+    {
+      "<S-l>",
+      function()
+        require("snipe").open_buffer_menu()
+      end,
+      desc = "Open Snipe buffer menu",
+    },
+  },
   config = function()
     local snipe = require("snipe")
     snipe.setup({
@@ -18,8 +27,8 @@ return {
       navigate = {
         -- In case you changed your mind, provide a keybind that lets you
         -- cancel the snipe and close the window.
-        -- cancel_snipe = "<esc>",
-        cancel_snipe = "q",
+        cancel_snipe = "<esc>",
+        -- cancel_snipe = "q",
 
         -- Remove "j" and "k" from your dictionary to navigate easier to delete
         -- Close the buffer under the cursor

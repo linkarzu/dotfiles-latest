@@ -29,13 +29,16 @@ vim.keymap.set("n", "<S-h>", function()
 end, { desc = "[P]Open telescope buffers" })
 -- vim.keymap.del("n", "<S-l>")
 
-vim.keymap.set("n", "<S-l>", function()
-  local toggle = require("snipe").create_buffer_menu_toggler({
-    -- Limit the width of path buffer names
-    max_path_width = 1,
-  })
-  toggle()
-end, { desc = "[P]Snipe" })
+-- Snipe has been updated so this keymap changed, I moved the keymap to the
+-- snipe plugin file, the only issue as of now is that `max_path_width` is not
+-- available, but raised issue https://github.com/leath-dub/snipe.nvim/issues/38
+-- vim.keymap.set("n", "<S-l>", function()
+--   local toggle = require("snipe").create_buffer_menu_toggler({
+--     -- Limit the width of path buffer names
+--     max_path_width = 1,
+--   })
+--   toggle()
+-- end, { desc = "[P]Snipe" })
 
 vim.keymap.set("n", "<leader>uk", '<cmd>lua require("kubectl").toggle()<cr>', { noremap = true, silent = true })
 

@@ -4,8 +4,29 @@ return {
     -- Get default opts if not provided
     opts = opts or {}
 
-    -- Set the model
-    local model = "claude-3.5-sonnet"
+    -- Function to get the computer model
+    local function get_computer_model()
+      local handle = io.popen("sysctl -n hw.model")
+      if handle then
+        local result = handle:read("*a")
+        handle:close()
+        if result then
+          return result:match("^%s*(.-)%s*$") -- Trim any whitespace
+        end
+      end
+      return nil
+    end
+
+    -- Get the computer model
+    local computer_model = get_computer_model()
+
+    -- Set the model based on the computer model
+    local model
+    if computer_model == "MacBookPro18,2" then
+      model = "gpt-4o"
+    else
+      model = "claude-3.5-sonnet"
+    end
     opts.model = model
 
     -- Get username with first letter capitalized

@@ -72,3 +72,14 @@ sticky.md
 neovim/neobean-sticky/skitty-notes.md
 karabiner/mxstbr/automatic_backups
 neovim/neobean-sticky/img
+neovim/neobean-sticky/lua/config/autocmds.lua
+neovim/neobean-sticky/lua/config/colors.lua
+neovim/neobean-sticky/lua/config/highlights.lua
+neovim/neobean-sticky/lua/config/keymaps.lua
+neovim/neobean-sticky/lua/plugins/auto-save.lua
+neovim/neobean-sticky/lua/plugins/mini-files.lua
+neovim/neobean-sticky/lua/plugins/render-markdown.lua
+neovim/neobean-sticky/lua/plugins/telescope.lua
+neovim/neobean-sticky/init.lua
+neovim/neobean-sticky/snippets
+neovim/neobean-sticky/spell

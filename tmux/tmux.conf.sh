@@ -46,10 +46,6 @@ set -as terminal-overrides ',*:Smulx=\E[4::%p1%dm'
 # underscore colours - needs tmux-3.0
 set -as terminal-overrides ',*:Setulc=\E[58::2::%p1%{65536}%/%d::%p1%{256}%/%{255}%&%d::%p1%{255}%&%d%;m'
 
-# Change the keybinding to enter copy mode from 'prefix + [' to 'prefix + v'
-unbind v
-bind v copy-mode
-
 # https://github.com/3rd/image.nvim/?tab=readme-ov-file#tmux
 # This is needed by the image.nvim plugin
 set -gq allow-passthrough on
@@ -285,6 +281,13 @@ bind -r Left resize-pane -L 1
 bind -r Down resize-pane -D 1
 bind -r Up resize-pane -U 1
 bind -r Right resize-pane -R 1
+
+# Change the keybinding to enter copy mode from 'prefix + [' to 'prefix + v'
+unbind v
+bind v copy-mode
+
+# Bind Esc to exit copy-mode
+bind-key -T copy-mode-vi 'Escape' send -X cancel
 
 # start selecting text with "v", this is visual mode
 bind-key -T copy-mode-vi 'v' send -X begin-selection

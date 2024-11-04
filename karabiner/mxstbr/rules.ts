@@ -326,6 +326,24 @@ const rules: KarabinerRules[] = [
   },
 
   {
+    description: "up_arrow -> tmux visual mode",
+    manipulators: [
+      {
+        from: {
+          key_code: "up_arrow",
+        },
+        to: [
+          {
+            shell_command:
+              "open btt://execute_assigned_actions_for_trigger/?uuid=F789C9F8-0F29-4922-9179-BFE03D226176",
+          },
+        ],
+        type: "basic",
+      },
+    ],
+  },
+
+  {
     description: "right_arrow -> sticky notes",
     manipulators: [
       {

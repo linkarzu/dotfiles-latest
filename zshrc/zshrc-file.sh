@@ -122,6 +122,7 @@ create_symlink ~/github/dotfiles-latest/karabiner/mxstbr/ ~/.config/karabiner
 create_symlink ~/github/dotfiles-latest/sketchybar/felixkratz-linkarzu/ ~/.config/sketchybar
 create_symlink ~/github/dotfiles-latest/neovide/ ~/.config/neovide
 create_symlink ~/github/dotfiles-latest/ghostty/ ~/.config/ghostty
+create_symlink ~/github/dotfiles-latest/rio/ ~/.config/rio
 create_symlink ~/github/dotfiles-latest/neovim/neobean/spell/ ~/github/dotfiles-latest/neovim/neobean-sticky/spell
 create_symlink ~/github/dotfiles-latest/neovim/neobean/snippets/ ~/github/dotfiles-latest/neovim/neobean-sticky/snippets
 # Notice I also have the "nvim" directory below and I have it pointing to my

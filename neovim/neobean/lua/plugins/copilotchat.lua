@@ -49,7 +49,7 @@ return {
     -- Set model and format username
     opts.model = get_model()
     local user = (vim.env.USER or "User"):gsub("^%l", string.upper)
-    opts.question_header = string.format("  %s (%s) ", user, opts.model)
+    opts.question_header = string.format(" %s (%s) ", user, opts.model)
 
     -- Configure mappings
     opts.mappings = {

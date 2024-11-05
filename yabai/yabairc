@@ -196,3 +196,10 @@ yabai -m config \
   mouse_action1 move \
   mouse_action2 resize \
   mouse_drop_action swap
+
+# THIS IS VERY IMPORTANT
+# It ensures that when I restart yabai, all the rules (including the manage=off rules)
+# are reapplied to existing windows
+# Otherwise yabai takes care of management and I couldnt resize apps like
+# packet tracer for example
+yabai -m rule --apply

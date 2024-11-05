@@ -127,7 +127,7 @@ yabai -m signal --add event=mission_control_enter action="yabai -m config normal
 # davinci resolve and other apps where their floating windows would show on top
 # of other apps
 
-# yabai -m rule --add app=".*" sub-layer=normal
+yabai -m rule --add app=".*" sub-layer=normal
 
 ###############################################################################
 #                                  Misc

@@ -499,16 +499,17 @@ const rules: KarabinerRules[] = [
       // Below I'm just leaving comments of the shortcuts I specifically use on
       // apps in case I need to configure them on a new computer
       // hyper+w - paste activate
-      // hyper+1 - paste stack
-      // hyper+0 - cleanshot x capture area
-      // hyper+9 - cleanshot x capture previous area
       // hyper+p - cleanshot x OCR
       // hyper+` - cleanshot x record screen
+      // hyper+0 - cleanshot x capture area
+      // hyper+1 - paste stack
       // hyper+2 - betterdisplay fav res 1
       // hyper+3 - betterdisplay fav res 2
       // hyper+4 - betterdisplay input hdmi
       // hyper+5 - betterdisplay input usbc
       // hyper+6 - homerow clicking shortcut
+      // hyper+8 - hand mirror
+      // hyper+9 - cleanshot x capture previous area
       // hyper+tab - cleanshot capture history
     },
 

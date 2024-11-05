@@ -1,40 +1,55 @@
+-- Filename: ~/github/dotfiles-latest/neovim/neobean/lua/plugins/copilotchat.lua
+-- ~/github/dotfiles-latest/neovim/neobean/lua/plugins/copilotchat.lua
+
+-- https://github.com/CopilotC-Nvim/CopilotChat.nvim
+
 return {
   "CopilotC-Nvim/CopilotChat.nvim",
   opts = function(_, opts)
-    -- Get default opts if not provided
-    opts = opts or {}
+    -- Cache system values
+    local cached_model = nil
+    local cached_computer_model = nil
 
-    -- Function to get the computer model
+    ---Get the computer model (cached)
+    ---@return string|nil
     local function get_computer_model()
-      local handle = io.popen("sysctl -n hw.model")
-      if handle then
-        local result = handle:read("*a")
-        handle:close()
-        if result then
-          return result:match("^%s*(.-)%s*$") -- Trim any whitespace
-        end
+      if cached_computer_model then
+        return cached_computer_model
+      end
+
+      local ok, handle = pcall(io.popen, "sysctl -n hw.model")
+      if not ok or not handle then
+        return nil
+      end
+
+      local result = handle:read("*a")
+      handle:close()
+
+      if result then
+        cached_computer_model = result:gsub("^%s*(.-)%s*$", "%1") -- Trim whitespace
+        return cached_computer_model
       end
       return nil
     end
 
-    -- Get the computer model
-    local computer_model = get_computer_model()
+    -- Initialize options
+    opts = opts or {}
 
-    -- Set the model based on the computer model
-    local model
-    if computer_model == "MacBookPro18,2" then
-      model = "gpt-4o"
-    else
-      model = "claude-3.5-sonnet"
+    -- Determine model based on computer type (cached)
+    local function get_model()
+      if cached_model then
+        return cached_model
+      end
+
+      local computer_model = get_computer_model()
+      cached_model = computer_model == "MacBookPro18,2" and "gpt-4o" or "claude-3.5-sonnet"
+      return cached_model
     end
-    opts.model = model
 
-    -- Get username with first letter capitalized
-    local user = vim.env.USER or "User"
-    user = user:sub(1, 1):upper() .. user:sub(2)
-
-    -- Modify question header to include model
-    opts.question_header = string.format("  %s (%s) ", user, model)
+    -- Set model and format username
+    opts.model = get_model()
+    local user = (vim.env.USER or "User"):gsub("^%l", string.upper)
+    opts.question_header = string.format("  %s (%s) ", user, opts.model)
 
     -- Configure mappings
     opts.mappings = {

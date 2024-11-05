@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# Filename: ~/github/dotfiles-latest/yabai/yabai_env.sh
-# ~/github/dotfiles-latest/yabai/yabai_env.sh
+# Filename: ~/github/dotfiles-latest/yabai/yabai_restart.sh
+# ~/github/dotfiles-latest/yabai/yabai_restart.sh
 
 source "$HOME/github/dotfiles-latest/yabai/yabai_env.sh"
 

@@ -594,9 +594,9 @@ if [ "$OS" = 'Mac' ]; then
     #
     # This also specifies the blinking cursor
     # ZVM_CURSOR_STYLE_ENABLED=false
-    ZVM_INSERT_MODE_CURSOR=$ZVM_CURSOR_BLINKING_BEAM
-    ZVM_NORMAL_MODE_CURSOR=$ZVM_CURSOR_BLINKING_BLOCK
-    ZVM_OPPEND_MODE_CURSOR=$ZVM_CURSOR_BLINKING_UNDERLINE
+    ZVM_INSERT_MODE_CURSOR=$ZVM_CURSOR_BEAM
+    ZVM_NORMAL_MODE_CURSOR=$ZVM_CURSOR_BLOCK
+    ZVM_OPPEND_MODE_CURSOR=$ZVM_CURSOR_UNDERLINE
 
     # Source .fzf.zsh so that the ctrl+r bindkey is given back fzf
     zvm_after_init_commands+=('[ -f $HOME/.fzf.zsh ] && source $HOME/.fzf.zsh')

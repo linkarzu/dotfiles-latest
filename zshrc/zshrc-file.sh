@@ -523,12 +523,19 @@ if [ "$OS" = 'Mac' ]; then
     export FZF_DEFAULT_OPTS='--color=fg:#ebfafa,bg:#09090d,hl:#37f499 --color=fg+:#ebfafa,bg+:#0D1116,hl+:#37f499 --color=info:#04d1f9,prompt:#04d1f9,pointer:#7081d0 --color=marker:#7081d0,spinner:#f7c67f,header:#323449'
   fi
 
-  # Starship
-  # Not sure if counts a CLI tool, because it only makes my prompt more useful
-  # https://starship.rs/config/#prompt
+  # # Starship
+  # # Not sure if counts a CLI tool, because it only makes my prompt more useful
+  # # https://starship.rs/config/#prompt
+  # # I was getting this error
+  # # starship_zle-keymap-select-wrapped:1: maximum nested function level reached; increase FUNCNEST?
+  # # Check that the function `starship_zle-keymap-select()` is defined
+  # # https://github.com/starship/starship/issues/3418
   if command -v starship &>/dev/null; then
-    export STARSHIP_CONFIG=$HOME/github/dotfiles-latest/starship-config/active-config.toml
-    eval "$(starship init zsh)" >/dev/null 2>&1
+    type starship_zle-keymap-select >/dev/null ||
+      {
+        export STARSHIP_CONFIG=$HOME/github/dotfiles-latest/starship-config/active-config.toml
+        eval "$(starship init zsh)" >/dev/null 2>&1
+      }
   fi
 
   # eza

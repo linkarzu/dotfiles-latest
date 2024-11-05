@@ -115,6 +115,7 @@ yabai -m signal --add event=window_focused app!="^${apps_transparent}$" action="
 # Nice trick shared by @timhansinger8030 in my YouTube video https://youtu.be/SLCR1oO65GI
 # Allows to see mission control apps when calling mission control from a transparent app
 yabai -m signal --add event=mission_control_enter action="yabai -m config normal_window_opacity 1.0"
+yabai -m signal --add event=mission_control_exit action="yabai -m config active_window_opacity 1.0"
 
 ###############################################################################
 #                             sub-layer=normal

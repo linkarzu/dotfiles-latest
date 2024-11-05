@@ -137,7 +137,8 @@ config = {
 	-- I don't like the the "Linear", which gives it a fade effect between blinks
 	cursor_blink_ease_out = "Constant",
 	cursor_blink_ease_in = "Constant",
-	cursor_blink_rate = 400,
+	-- Setting this to 0 disables blinking
+	cursor_blink_rate = 0,
 
 	window_padding = {
 		left = 2,

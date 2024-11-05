@@ -24,7 +24,7 @@ yabai -m rule --add app="^${apps_mgoff_below}$" manage=off sub-layer=below
 yabai -m rule --add app="^${apps_mgoff_above}$" manage=off sub-layer=above
 
 # In case you want to debug and see the contents of a variable
-# echo "apps_mgoff_below: $apps_mgoff_below" >> /tmp/yabai_debug.log
+# echo "apps_mgoff_below: ^${apps_mgoff_normal}$" > /tmp/yabai_debug.log
 
 # yabai -m rule --add app="kitty" manage=on position=200:50 size=10:50
 # yabai -m rule --add app="^kitty$" manage=off position=100:100 size=80:60

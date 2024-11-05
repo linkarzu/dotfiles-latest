@@ -18,12 +18,21 @@ yabai --restart-service
 
 # Wait a few seconds after restarting yabai, or the apps will restart too early
 # I think this causes the apps not to show with my transparent apps
-sleep 2
+sleep 1
 # Restart the apps in apps_transp_ignore to apply the settings
-for app in $(echo $apps_transp_ignore | tr -d '()' | tr '|' ' '); do
+# Convert the string to an array, properly handling spaces in app names
+# Remove parentheses and split on |
+IFS='|' read -ra apps <<<"$(echo "$apps_transp_ignore" | tr -d '()')"
+
+# Iterate through the array
+for app in "${apps[@]}"; do
+  # Trim leading/trailing whitespace
+  app=$(echo "$app" | xargs)
+  echo "Restarting: $app"
   pkill "$app"
   sleep 0.5
   open -a "$app"
+  sleep 0.5
 done
 
 # After yabai is restarted, I want kitty to be moved to a specific position on

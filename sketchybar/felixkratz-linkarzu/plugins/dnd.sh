@@ -14,5 +14,5 @@ else
   # DND is on - show the icon
   # sketchybar -m --set dnd label="DND" icon=􀆺 icon.color=$GREEN label.color=$GREEN icon.drawing=on
   # sketchybar -m --set dnd label="DND" icon=􀆺 icon.color=$BLUE label.color=$BLUE icon.drawing=on
-  sketchybar -m --set dnd label="DND" icon=􀆺 icon.color=$MAGENTA label.color=$MAGENTA icon.drawing=on
+  sketchybar -m --set dnd label="DND" icon=􀆺 icon.color=$ORANGE label.color=$ORANGE icon.drawing=on
 fi

@@ -10,14 +10,10 @@ custom_text=(
   update_freq=3
   label.drawing=on
   padding_right=15
-  label.font="$FONT:Bold:17.0"
+  label.font="$FONT:Regular:16.0"
   # label.padding_left=3
   script="$PLUGIN_DIR/custom_text.sh"
 )
 
-if [ -f "$youtube_banner" ]; then
-  sketchybar --add item custom_text right \
-    --set custom_text "${custom_text[@]}"
-else
-  sketchybar --remove custom_text
-fi
+sketchybar --add item custom_text right \
+  --set custom_text "${custom_text[@]}"

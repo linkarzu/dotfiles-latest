@@ -114,6 +114,7 @@ return {
             layout_config = {
               -- Set preview width, 0.7 sets it to 70% of the window width
               preview_width = 0.7,
+              -- height = 0.2,
             },
             initial_mode = "normal", -- Start in normal mode
           }))

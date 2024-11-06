@@ -133,6 +133,11 @@ source "$ITEM_DIR/wifi.sh"
 # you can change "plugins/battery.sh" if needed to modify the behavior
 source "$ITEM_DIR/battery.sh"
 
+# Community plugin that I modified, so that it shows you the mic name
+# If you right click it you can change the mic.
+# Shows you the value of the input volume level
+source "$ITEM_DIR/mic.sh"
+
 # left click to change volume
 # right click to switch audio sources, you need switchaudio-osx
 source "$ITEM_DIR/volume.sh"
@@ -143,11 +148,6 @@ source "$ITEM_DIR/cpu.sh"
 ###############################################################################
 #                            Community plugins
 ###############################################################################
-
-# Community plugin that I modified, so that it shows you the mic name
-# If you right click it you can change the mic.
-# Shows you the value of the input volume level
-source "$ITEM_DIR/mic.sh"
 
 source "$ITEM_DIR/custom_text.sh"
 

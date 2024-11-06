@@ -22,15 +22,15 @@ MIC_VOLUME=$(osascript -e 'input volume of (get volume settings)')
 
 # Check if MIC_NAME is not meaningful
 if [[ "$MIC_NAME" != "$VALIDATED_MIC_NAME" || -z "$MIC_NAME" ]]; then
-	# If the mic name is not valid or empty
-	sketchybar -m --set mic label="" icon= icon.color=$YELLOW label.color=$YELLOW
+  # If the mic name is not valid or empty
+  sketchybar -m --set mic label="" icon= icon.color=$YELLOW label.color=$YELLOW
 else
-	# Update SketchyBar with the microphone's name and volume
-	if [[ $MIC_VOLUME -eq 0 ]]; then
-		sketchybar -m --set mic label="$MIC_NAME $MIC_VOLUME" icon= icon.color=$RED label.color=$RED
-	elif [[ $MIC_VOLUME -gt 0 && $MIC_VOLUME -lt 80 ]]; then
-		sketchybar -m --set mic label="$MIC_NAME $MIC_VOLUME" icon= icon.color=$ORANGE label.color=$ORANGE
-	elif [[ $MIC_VOLUME -eq 80 ]]; then
-		sketchybar -m --set mic label="$MIC_NAME $MIC_VOLUME" icon= icon.color=$WHITE label.color=$WHITE
-	fi
+  # Update SketchyBar with the microphone's name and volume
+  if [[ $MIC_VOLUME -eq 0 ]]; then
+    sketchybar -m --set mic label="$MIC_NAME$MIC_VOLUME " icon= icon.color=$RED label.color=$RED
+  elif [[ $MIC_VOLUME -gt 0 && $MIC_VOLUME -lt 80 ]]; then
+    sketchybar -m --set mic label="$MIC_NAME$MIC_VOLUME " icon= icon.color=$ORANGE label.color=$ORANGE
+  elif [[ $MIC_VOLUME -eq 80 ]]; then
+    sketchybar -m --set mic label="$MIC_NAME$MIC_VOLUME " icon= icon.color=$WHITE label.color=$WHITE
+  fi
 fi

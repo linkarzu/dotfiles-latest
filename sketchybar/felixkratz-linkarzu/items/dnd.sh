@@ -1,17 +1,19 @@
-#!/bin/env/bash
+#!/bin/bash
 
-# https://github.com/Pe8er/dotfiles/blob/00d5d13a781f1d9c0ae4f518c79a96d6c8e286db/config.symlink/sketchybar/items/dnd.sh
+# Filename: ~/github/dotfiles-latest/sketchybar/felixkratz-linkarzu/items/dnd.sh
+# ~/github/dotfiles-latest/sketchybar/felixkratz-linkarzu/items/dnd.sh
 
 dnd=(
-	script="$PLUGIN_DIR/dnd.sh"
-	label.drawing=off
-	update_freq=10
-	icon=􀆺
-	--add event focus_on "_NSDoNotDisturbEnabledNotification"
-	--add event focus_off "_NSDoNotDisturbDisabledNotification"
-	--subscribe dnd focus_on focus_off mouse.clicked
+  updates=on
+  label.font="$FONT:Regular:8.0"
+  update_freq=10
+  padding_right=2
+  padding_left=4
+  label.padding_left=0
+  label.drawing=on
+  script="$PLUGIN_DIR/dnd.sh"
 )
 
-sketchybar \
-	--add item dnd right \
-	--set dnd "${dnd[@]}"
+# Add the DND item to the right side of the bar and set its properties
+sketchybar --add item dnd right \
+  --set dnd "${dnd[@]}"

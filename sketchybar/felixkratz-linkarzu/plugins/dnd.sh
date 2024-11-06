@@ -1,47 +1,18 @@
 #!/bin/bash
 
-# https://github.com/Pe8er/dotfiles/blob/00d5d13a781f1d9c0ae4f518c79a96d6c8e286db/config.symlink/sketchybar/plugins/dnd.sh
+# Filename: ~/github/dotfiles-latest/sketchybar/felixkratz-linkarzu/plugins/dnd.sh
 
-# Load global styles, colors and icons
-# source "$CONFIG_DIR/globalstyles.sh"
+source "$CONFIG_DIR/colors.sh"
 
-check_state() {
-	# DND_ENABLED=$(cat ~/Library/DoNotDisturb/DB/Assertions.json | jq .data[0].storeAssertionRecords)
+DND_ENABLED=$(plutil -convert json -o - ~/Library/DoNotDisturb/DB/Assertions.json | jq -r '.data[0].storeAssertionRecords')
 
-	# Alternate SLOW method:
-	DND_ENABLED=$(defaults read com.apple.controlcenter "NSStatusItem Visible FocusModes")
-
-	if [ "$DND_ENABLED" -eq 0 ]; then
-		COLOR=$(getcolor white 25)
-	else
-		COLOR=$(getcolor white)
-	fi
-
-	sketchybar --set $NAME icon.color=$COLOR
-}
-
-update_icon() {
-	if [ "$SENDER" == "focus_off" ]; then
-		COLOR=$(getcolor white 25)
-	else
-		COLOR=$(getcolor white)
-	fi
-
-	sketchybar --set $NAME icon.color=$COLOR
-}
-
-toggle_dnd() {
-	osascript -e 'tell application "System Events" to keystroke "\\" using {control down, shift down, command down, option down}'
-}
-
-case "$SENDER" in
-"routine" | "forced")
-	check_state
-	;;
-"focus_on" | "focus_off")
-	update_icon
-	;;
-"mouse.clicked")
-	toggle_dnd
-	;;
-esac
+# Check if DND is enabled or not
+if [ "$DND_ENABLED" = null ]; then
+  # DND is off - hide the icon
+  sketchybar -m --set dnd label="" icon.drawing=off
+else
+  # DND is on - show the icon
+  # sketchybar -m --set dnd label="DND" icon=􀆺 icon.color=$GREEN label.color=$GREEN icon.drawing=on
+  # sketchybar -m --set dnd label="DND" icon=􀆺 icon.color=$BLUE label.color=$BLUE icon.drawing=on
+  sketchybar -m --set dnd label="DND" icon=􀆺 icon.color=$MAGENTA label.color=$MAGENTA icon.drawing=on
+fi

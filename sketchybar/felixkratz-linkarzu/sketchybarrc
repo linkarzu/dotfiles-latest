@@ -120,7 +120,7 @@ source "$ITEM_DIR/calendar.sh"
 source "$ITEM_DIR/brew.sh"
 
 # DND not working with sonoma, will figure it out later (hopefully)
-# source "$ITEM_DIR/dnd.sh"
+source "$ITEM_DIR/dnd.sh"
 
 # Shows github notifications via gh cli, mine aren't working properly
 # `gh api notifications` shows nothing but `gh status` does

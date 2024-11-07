@@ -42,7 +42,29 @@ return {
     end
 
     -- Define languages for code blocks
-    local languages = { "python", "bash", "yaml", "go", "sql", "lua" }
+    local languages = {
+      "txt",
+      "lua",
+      "sql",
+      "go",
+      "regex",
+      "bash",
+      "markdown",
+      "markdown_inline",
+      "yaml",
+      "json",
+      "jsonc",
+      "cpp",
+      "csv",
+      "java",
+      "javascript",
+      "python",
+      "dockerfile",
+      "html",
+      "css",
+      "templ",
+      "php",
+    }
 
     -- Generate snippets for all languages
     local snippets = {}

@@ -30,6 +30,34 @@ return {
         --   fallback()
         -- end,
       })
+
+      -- Modify existing sources priorities
+      for _, source in ipairs(opts.sources) do
+        if source.name == "luasnip" then
+          source.priority = 1000 -- Highest priority for snippets
+        end
+      end
+
+      -- Add copilot source with lower priority
+      table.insert(opts.sources, 1, {
+        name = "copilot",
+        -- `group_index` in nvim-cmp is used to group completion sources
+        -- Sources with lower group numbers (like 1) appear before sources
+        -- with higher numbers (like 2).
+        group_index = 2, -- Changed from 1 to 2
+        priority = 100, -- Lower priority than snippets
+      })
+
+      opts.sorting = {
+        priority_weight = 2,
+        comparators = {
+          cmp.config.compare.exact,
+          cmp.config.compare.score,
+          cmp.config.compare.kind,
+          cmp.config.compare.length,
+          cmp.config.compare.order,
+        },
+      }
     end,
   },
 }

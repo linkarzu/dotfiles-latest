@@ -381,12 +381,12 @@
                                         "value": 1
                                     }
                                 ],
-                                "description": "Open -a 'WezTerm.app'",
+                                "description": "Open -a 'Ghostty.app'",
                                 "from": {
                                     "key_code": "j",
                                     "modifiers": { "mandatory": ["any"] }
                                 },
-                                "to": [{ "shell_command": "open -a 'WezTerm.app'" }],
+                                "to": [{ "shell_command": "open -a 'Ghostty.app'" }],
                                 "type": "basic"
                             },
                             {

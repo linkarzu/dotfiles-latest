@@ -557,6 +557,55 @@ vim.keymap.set({ "n", "v", "i" }, "<C-a>", function()
   end, 100)
 end, { desc = "[P]Paste image from system clipboard" })
 
+-- This pastes images for my blogpost, I need to keep them in a different
+-- directory so I pass those options to img-clip
+vim.keymap.set({ "n", "v", "i" }, "<C-p>", function()
+  -- Display a message to indicate the action
+  print("PROCESSING IMAGE WITH CUSTOM DIRECTORY STRUCTURE...")
+  -- Function to find the nearest "assets" directory up the directory tree
+  local function find_assets_dir()
+    local dir = vim.fn.expand("%:p:h") -- Start from the current file's directory
+    while dir ~= "/" do -- Stop if we reach the root directory
+      if vim.fn.isdirectory(dir .. "/assets") == 1 then
+        return dir .. "/assets/img" -- Return the path to the "assets/img" directory
+      end
+      dir = vim.fn.fnamemodify(dir, ":h") -- Go up one level
+    end
+    return nil -- Return nil if no "assets" directory is found
+  end
+  -- Get the "assets/img" directory path
+  local img_dir = find_assets_dir()
+  if not img_dir then
+    print("No 'assets/img' directory found. Image not pasted.")
+    return
+  end
+  -- Create a subdirectory with the name of the markdown file
+  local md_file_name = vim.fn.expand("%:t:r") -- Get the current markdown file name without extension
+  local target_dir = img_dir .. "/" .. md_file_name
+  -- Ensure the target directory exists
+  vim.fn.mkdir(target_dir, "p") -- Create the directory if it doesn’t exist
+  -- Add a delay for the message display
+  vim.defer_fn(function()
+    -- Call the paste_image function from img-clip, overriding specific options
+    local pasted_image = require("img-clip").paste_image({
+      dir_path = target_dir, -- Set dir_path to the custom subdirectory
+      use_absolute_path = false, -- Avoid absolute paths
+      relative_to_current_file = false, -- Prevents creating additional subdirectories
+      file_name = "%y%m%d-%H%M%S", -- Use markdown file name as the image file name
+      extension = "avif", -- Set the desired format
+      process_cmd = "convert - -quality 75 avif:-", -- Specify the conversion command
+    })
+    if pasted_image then
+      -- -- Save the file only if the image was pasted
+      -- vim.cmd("update")
+      vim.api.nvim_put({ '{: width="300" .w-75 .normal}' }, "c", true, true)
+      print("Image pasted in '" .. target_dir .. "' and file saved")
+    else
+      print("No image pasted. File not updated.")
+    end
+  end, 100)
+end, { desc = "[P]Paste image 'assets' directory" })
+
 -- ############################################################################
 
 -- Open image under cursor in the Preview app (macOS)

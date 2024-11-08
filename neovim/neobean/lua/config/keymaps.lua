@@ -620,10 +620,8 @@ vim.keymap.set("n", "<leader>io", function()
 
     return image_path
   end
-
   -- Get the image path
   local image_path = get_image_path()
-
   if image_path then
     -- Check if the image path starts with "http" or "https"
     if string.sub(image_path, 1, 4) == "http" then
@@ -668,10 +666,8 @@ vim.keymap.set("n", "<leader>if", function()
 
     return image_path
   end
-
   -- Get the image path
   local image_path = get_image_path()
-
   if image_path then
     -- Check if the image path starts with "http" or "https"
     if string.sub(image_path, 1, 4) == "http" then
@@ -680,11 +676,9 @@ vim.keymap.set("n", "<leader>if", function()
       -- Construct absolute image path
       local current_file_path = vim.fn.expand("%:p:h")
       local absolute_image_path = current_file_path .. "/" .. image_path
-
       -- Open the containing folder in Finder and select the image file
       local command = "open -R " .. vim.fn.shellescape(absolute_image_path)
       local success = vim.fn.system(command)
-
       if success == 0 then
         print("Opened image in Finder: " .. absolute_image_path)
       else

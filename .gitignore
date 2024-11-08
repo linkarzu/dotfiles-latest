@@ -83,3 +83,4 @@ neovim/neobean-sticky/lua/plugins/telescope.lua
 neovim/neobean-sticky/init.lua
 neovim/neobean-sticky/snippets
 neovim/neobean-sticky/spell
+neovim/neobean/lazyvim.json

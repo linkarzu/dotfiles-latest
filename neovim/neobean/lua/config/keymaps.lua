@@ -560,28 +560,43 @@ end, { desc = "[P]Paste image from system clipboard" })
 -- This pastes images for my blogpost, I need to keep them in a different
 -- directory so I pass those options to img-clip lamw25wmal
 vim.keymap.set({ "n", "v", "i" }, "<C-p>", function()
-  -- Display a message to indicate the action
   print("PROCESSING IMAGE WITH CUSTOM DIRECTORY STRUCTURE...")
-  -- Function to find the nearest "assets" directory up the directory tree
-  local function find_assets_dir()
-    local dir = vim.fn.expand("%:p:h") -- Start from the current file's directory
-    while dir ~= "/" do -- Stop if we reach the root directory
-      if vim.fn.isdirectory(dir .. "/assets") == 1 then
-        return dir .. "/assets/img/imgs" -- Set to fixed path "assets/img/imgs"
-      end
-      dir = vim.fn.fnamemodify(dir, ":h") -- Go up one level
-    end
-    return nil -- Return nil if no "assets" directory is found
+  local function paste_image(dir_path, file_name)
+    return require("img-clip").paste_image({
+      dir_path = dir_path,
+      use_absolute_path = false,
+      relative_to_current_file = false,
+      file_name = file_name,
+      extension = "avif",
+      process_cmd = "convert - -quality 75 avif:-",
+    })
   end
-  -- Get the "assets/img/imgs" directory path
+  local temp_buf = vim.api.nvim_create_buf(false, true) -- Create an unlisted, scratch buffer
+  vim.api.nvim_set_current_buf(temp_buf) -- Switch to the temporary buffer
+  local temp_image_path = vim.fn.tempname() .. ".avif"
+  if not paste_image(vim.fn.fnamemodify(temp_image_path, ":h"), vim.fn.fnamemodify(temp_image_path, ":t:r")) then
+    print("No image found in clipboard. Paste canceled.")
+    vim.api.nvim_buf_delete(temp_buf, { force = true }) -- Delete the buffer if no image found
+    return
+  end
+  vim.api.nvim_buf_delete(temp_buf, { force = true }) -- Delete the buffer after the check
+  vim.fn.delete(temp_image_path) -- Delete the temporary file
+  local function find_assets_dir()
+    local dir = vim.fn.expand("%:p:h")
+    while dir ~= "/" do
+      if vim.fn.isdirectory(dir .. "/assets") == 1 then
+        return dir .. "/assets/img/imgs"
+      end
+      dir = vim.fn.fnamemodify(dir, ":h")
+    end
+    return nil
+  end
   local img_dir = find_assets_dir()
   if not img_dir then
     print("No 'assets/img/imgs' directory found. Image not pasted.")
     return
   end
-  -- Add a delay for the message display
   vim.defer_fn(function()
-    -- Prompt for thumbnail or not
     vim.ui.select({ "no", "yes" }, { prompt = "Is this a thumbnail image? " }, function(is_thumbnail)
       if not is_thumbnail then
         print("Image pasting canceled.")
@@ -600,20 +615,11 @@ vim.keymap.set({ "n", "v", "i" }, "<C-p>", function()
             print("Image name already exists. Please enter a new name.")
             prompt_for_name()
           else
-            local pasted_image = require("img-clip").paste_image({
-              dir_path = img_dir,
-              use_absolute_path = false,
-              relative_to_current_file = false,
-              file_name = full_image_name,
-              extension = "avif",
-              process_cmd = "convert - -quality 75 avif:-",
-            })
-            if pasted_image then
-              vim.api.nvim_put({ '{: width="500" }' }, "c", true, true) -- This part remains untouched
-              -- Switch to the line above
-              vim.cmd("normal! O") -- Move to a new line above and enter insert mode
-              vim.api.nvim_put({ "<!-- prettier-ignore -->" }, "c", true, true) -- Add prettier-ignore above
-              vim.cmd("normal! jo") -- Move two lines down
+            if paste_image(img_dir, full_image_name) then
+              vim.api.nvim_put({ '{: width="500" }' }, "c", true, true)
+              vim.cmd("normal! O")
+              vim.api.nvim_put({ "<!-- prettier-ignore -->" }, "c", true, true)
+              vim.cmd("normal! jo")
               vim.api.nvim_put({ "_image_", "" }, "c", true, true)
               print("Image pasted in '" .. img_dir .. "' and file saved as " .. full_image_name .. ".avif")
             else

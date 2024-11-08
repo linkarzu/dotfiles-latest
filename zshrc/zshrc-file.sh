@@ -34,6 +34,8 @@ mkdir -p ~/.config/ghostty
 # Even if you don't use obsidian, don't remove this dir to avoid warnings
 mkdir -p ~/github/obsidian_main
 mkdir -p ~/.config/neovide
+mkdir -p ~/.config/rio
+mkdir -p ~/.config/yazi
 
 # Create the symlinks I normally use
 # ~/.config dir holds nvim, neofetch, alacritty configs
@@ -123,6 +125,7 @@ create_symlink ~/github/dotfiles-latest/sketchybar/felixkratz-linkarzu/ ~/.confi
 create_symlink ~/github/dotfiles-latest/neovide/ ~/.config/neovide
 create_symlink ~/github/dotfiles-latest/ghostty/ ~/.config/ghostty
 create_symlink ~/github/dotfiles-latest/rio/ ~/.config/rio
+create_symlink ~/github/dotfiles-latest/yazi/ ~/.config/yazi
 create_symlink ~/github/dotfiles-latest/neovim/neobean/spell/ ~/github/dotfiles-latest/neovim/neobean-sticky/spell
 create_symlink ~/github/dotfiles-latest/neovim/neobean/snippets/ ~/github/dotfiles-latest/neovim/neobean-sticky/snippets
 # Notice I also have the "nvim" directory below and I have it pointing to my

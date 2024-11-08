@@ -238,6 +238,28 @@ const rules: KarabinerRules[] = [
   },
 
   {
+    description: "right_shift -> Mute microphone",
+    manipulators: [
+      {
+        from: {
+          key_code: "right_shift",
+        },
+        to: [
+          {
+            key_code: "right_shift",
+          },
+        ],
+        to_if_alone: [
+          {
+            shell_command: `~/github/dotfiles-latest/scripts/macos/mac/200-micMute.sh`,
+          },
+        ],
+        type: "basic",
+      },
+    ],
+  },
+
+  {
     description: "left_option -> cmd+v if pressed alone",
     manipulators: [
       {

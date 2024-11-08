@@ -5,9 +5,9 @@
 
 mic=(
   updates=on
-  update_freq=3
+  update_freq=1
   label.drawing=on
-  padding_right=2
+  padding_right=4
   label.padding_right=2
   label.font="$FONT:Regular:12.0"
   script="$PLUGIN_DIR/mic.sh"

@@ -558,7 +558,7 @@ vim.keymap.set({ "n", "v", "i" }, "<C-a>", function()
 end, { desc = "[P]Paste image from system clipboard" })
 
 -- This pastes images for my blogpost, I need to keep them in a different
--- directory so I pass those options to img-clip
+-- directory so I pass those options to img-clip lamw25wmal
 vim.keymap.set({ "n", "v", "i" }, "<C-p>", function()
   -- Display a message to indicate the action
   print("PROCESSING IMAGE WITH CUSTOM DIRECTORY STRUCTURE...")
@@ -738,7 +738,7 @@ vim.keymap.set("n", "<leader>id", function()
         -- Keep in mind that if deleting with `rm` the images won't go to the
         -- macos trash app, they'll be gone
         -- This is useful in case trying to delete imaes mounted in a network
-        -- drive, like for my blogpost
+        -- drive, like for my blogpost lamw25wmal
         vim.ui.select({ "yes", "no" }, { prompt = "Trash deletion failed. Try with rm command? " }, function(rm_choice)
           if rm_choice == "yes" then
             local rm_success, _ = pcall(function()

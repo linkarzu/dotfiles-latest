@@ -598,10 +598,16 @@ vim.keymap.set({ "n", "v", "i" }, "<C-p>", function()
     vim.ui.select(options, { prompt = prompt }, function(is_thumbnail)
       if is_thumbnail == "search" then
         vim.api.nvim_put({ '![Image](../../../assets/img/imgs){: width="500" }' }, "c", true, true)
+        -- Capital "O" to move to the line above
         vim.cmd("normal! O")
+        -- This "o" is to leave a blank line above
+        vim.cmd("normal! o")
         vim.api.nvim_put({ "<!-- prettier-ignore -->" }, "c", true, true)
         vim.cmd("normal! jo")
         vim.api.nvim_put({ "_image_", "" }, "c", true, true)
+        vim.cmd("normal kkf)")
+        -- This puts me in insert mode where the cursor is
+        vim.api.nvim_feedkeys("i", "n", true)
         return
       end
       if not is_thumbnail then
@@ -623,11 +629,14 @@ vim.keymap.set({ "n", "v", "i" }, "<C-p>", function()
           else
             if paste_image(img_dir, full_image_name) then
               vim.api.nvim_put({ '{: width="500" }' }, "c", true, true)
+              -- Capital "O" to move to the line above
               vim.cmd("normal! O")
+              -- This "o" is to leave a blank line above
+              vim.cmd("normal! o")
               vim.api.nvim_put({ "<!-- prettier-ignore -->" }, "c", true, true)
               vim.cmd("normal! jo")
-              vim.api.nvim_put({ "_image_", "" }, "c", true, true)
-              print("Image pasted in '" .. img_dir .. "' and file saved as " .. full_image_name .. ".avif")
+              vim.api.nvim_put({ "_image_" }, "c", true, true)
+              vim.cmd("normal o")
             else
               print("No image pasted. File not updated.")
             end

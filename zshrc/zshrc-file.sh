@@ -422,6 +422,9 @@ if [ "$OS" = 'Mac' ]; then
 
   export PATH="/opt/homebrew/opt/libpq/bin:$PATH"
 
+  # Added this for my blogpost files that are in a mounted network drive
+  export GIT_DISCOVERY_ACROSS_FILESYSTEM=1
+
   # Add templ to PATH if it is installed
   # templ is installed with
   # go install github.com/a-h/templ/cmd/templ@latest

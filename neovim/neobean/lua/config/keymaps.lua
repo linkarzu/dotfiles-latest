@@ -557,8 +557,7 @@ vim.keymap.set({ "n", "v", "i" }, "<C-a>", function()
   end, 100)
 end, { desc = "[P]Paste image from system clipboard" })
 
--- This pastes images for my blogpost, I need to keep them in a different
--- directory so I pass those options to img-clip lamw25wmal
+-- This pastes images for my blogpost, I need to keep them in a different directory so I pass those options to img-clip lamw25wmal
 vim.keymap.set({ "n", "v", "i" }, "<C-p>", function()
   print("PROCESSING IMAGE WITH CUSTOM DIRECTORY STRUCTURE...")
   local function paste_image(dir_path, file_name)
@@ -574,12 +573,9 @@ vim.keymap.set({ "n", "v", "i" }, "<C-p>", function()
   local temp_buf = vim.api.nvim_create_buf(false, true) -- Create an unlisted, scratch buffer
   vim.api.nvim_set_current_buf(temp_buf) -- Switch to the temporary buffer
   local temp_image_path = vim.fn.tempname() .. ".avif"
-  if not paste_image(vim.fn.fnamemodify(temp_image_path, ":h"), vim.fn.fnamemodify(temp_image_path, ":t:r")) then
-    print("No image found in clipboard. Paste canceled.")
-    vim.api.nvim_buf_delete(temp_buf, { force = true }) -- Delete the buffer if no image found
-    return
-  end
-  vim.api.nvim_buf_delete(temp_buf, { force = true }) -- Delete the buffer after the check
+  local image_pasted =
+    paste_image(vim.fn.fnamemodify(temp_image_path, ":h"), vim.fn.fnamemodify(temp_image_path, ":t:r"))
+  vim.api.nvim_buf_delete(temp_buf, { force = true }) -- Delete the buffer
   vim.fn.delete(temp_image_path) -- Delete the temporary file
   local function find_assets_dir()
     local dir = vim.fn.expand("%:p:h")
@@ -597,7 +593,17 @@ vim.keymap.set({ "n", "v", "i" }, "<C-p>", function()
     return
   end
   vim.defer_fn(function()
-    vim.ui.select({ "no", "yes" }, { prompt = "Is this a thumbnail image? " }, function(is_thumbnail)
+    local options = image_pasted and { "no", "yes", "search" } or { "search" }
+    local prompt = image_pasted and "Is this a thumbnail image? " or "No image in clipboard. Select search to continue."
+    vim.ui.select(options, { prompt = prompt }, function(is_thumbnail)
+      if is_thumbnail == "search" then
+        vim.api.nvim_put({ '![Image](../../../assets/img/imgs){: width="500" }' }, "c", true, true)
+        vim.cmd("normal! O")
+        vim.api.nvim_put({ "<!-- prettier-ignore -->" }, "c", true, true)
+        vim.cmd("normal! jo")
+        vim.api.nvim_put({ "_image_", "" }, "c", true, true)
+        return
+      end
       if not is_thumbnail then
         print("Image pasting canceled.")
         return

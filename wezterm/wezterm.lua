@@ -95,18 +95,18 @@ config = {
 	-- https://github.com/wez/wezterm/discussions/4650
 	send_composed_key_when_left_alt_is_pressed = true,
 
-	default_prog = {
-		"/bin/zsh",
-		"--login",
-		"-c",
-		[[
-	   if command -v tmux >/dev/null 2>&1; then
-	     tmux attach || tmux new;
-	   else
-	     exec zsh;
-	   fi
-	   ]],
-	},
+	-- default_prog = {
+	-- 	"/bin/zsh",
+	-- 	"--login",
+	-- 	"-c",
+	-- 	[[
+	--    if command -v tmux >/dev/null 2>&1; then
+	--      tmux attach || tmux new;
+	--    else
+	--      exec zsh;
+	--    fi
+	--    ]],
+	-- },
 
 	-- For example, changing the color scheme:
 	-- color_scheme = "AdventureTime"

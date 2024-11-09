@@ -1,3 +1,8 @@
+gui:
+  theme:
+    selectedLineBgColor:
+      - cyan
+
 # Keybindings
 keybinding:
   universal:

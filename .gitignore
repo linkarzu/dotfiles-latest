@@ -84,3 +84,4 @@ neovim/neobean-sticky/init.lua
 neovim/neobean-sticky/snippets
 neovim/neobean-sticky/spell
 neovim/neobean/lazyvim.json
+neovim/neobean-sticky/lazyvim.json

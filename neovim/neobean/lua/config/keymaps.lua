@@ -317,12 +317,21 @@ vim.keymap.set(
 -- The command to switch is `:e #`
 -- `:e` is used to `edit-a-file`, see `help :e`
 
--- Make the file you run the command on, executable, so you don't have to go out to the command line
--- Had to include quotes around "%" because there are some apple dirs that contain spaces, like iCloud
-vim.keymap.set("n", "<leader>fx", '<cmd>!chmod +x "%"<CR>', { silent = true, desc = "Make file executable" })
--- vim.keymap.set("n", "<leader>fx", "<cmd>!chmod +x %<CR>", { silent = true, desc = "Make file executable" })
-vim.keymap.set("n", "<leader>fX", '<cmd>!chmod -x "%"<CR>', { silent = true, desc = "Remove executable flag" })
--- vim.keymap.set("n", "<leader>fX", "<cmd>!chmod -x %<CR>", { silent = true, desc = "Remove executable flag" })
+-- Toggle executable permission on current file, previously I had 2 keymaps, to
+-- add or remove exec permissions, now it's a toggle using the same keymap
+vim.keymap.set("n", "<leader>fx", function()
+  local file = vim.fn.expand("%")
+  local perms = vim.fn.getfperm(file)
+  local is_executable = string.match(perms, "x", -1) ~= nil
+  local escaped_file = vim.fn.shellescape(file)
+  if is_executable then
+    vim.cmd("silent !chmod -x " .. escaped_file)
+    vim.notify("Removed executable permission", vim.log.levels.INFO)
+  else
+    vim.cmd("silent !chmod +x " .. escaped_file)
+    vim.notify("Added executable permission", vim.log.levels.INFO)
+  end
+end, { desc = "Toggle executable permission" })
 
 -- If this is a bash script, make it executable, and execute it in a tmux pane on the right
 -- Using a tmux pane allows me to easily select text

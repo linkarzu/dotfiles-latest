@@ -1035,10 +1035,41 @@ fs.writeFileSync(
       },
       profiles: [
         {
-          name: "Default",
           complex_modifications: {
             rules,
           },
+          fn_function_keys: [
+            {
+              from: { key_code: "f6" },
+              to: [{ consumer_key_code: "rewind" }],
+            },
+            {
+              from: { key_code: "f7" },
+              to: [{ consumer_key_code: "play_or_pause" }],
+            },
+            {
+              from: { key_code: "f8" },
+              to: [{ consumer_key_code: "fast_forward" }],
+            },
+            {
+              from: { key_code: "f9" },
+              to: [{ consumer_key_code: "volume_decrement" }],
+            },
+            {
+              from: { key_code: "f10" },
+              to: [{ consumer_key_code: "volume_increment" }],
+            },
+            {
+              from: { key_code: "f11" },
+              to: [{ key_code: "f11" }],
+            },
+            {
+              from: { key_code: "f12" },
+              to: [{ key_code: "f12" }],
+            },
+          ],
+          name: "Default",
+          selected: true,
           virtual_hid_keyboard: { keyboard_type_v2: "ansi" },
         },
       ],

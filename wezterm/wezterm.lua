@@ -154,7 +154,7 @@ config = {
 		background = colors["linkarzu_color10"],
 
 		-- Overrides the cell background color when the current cell is occupied by the cursor
-		cursor_bg = colors["linkarzu_color14"],
+		cursor_bg = colors["linkarzu_color24"],
 		-- Overrides the text color when the current cell is occupied by the cursor
 		cursor_fg = colors["linkarzu_color10"],
 		-- Specifies the border color of the cursor when the cursor style is set to Block

@@ -59,6 +59,8 @@ linkarzu_color21="#585c89"
 linkarzu_color22="#0f857c"
 # Markdown heading 6 - color08
 linkarzu_color23="#396592"
+# Cursor color
+linkarzu_color24="#F712FF"
 # https://www.colorhexa.com/1e1e2e
 # #0f0f16
 # #161622

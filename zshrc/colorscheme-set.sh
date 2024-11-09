@@ -101,6 +101,8 @@ generate_ghostty_config() {
 background = $linkarzu_color10
 foreground = $linkarzu_color14
 
+cursor-color = $linkarzu_color24
+
 # black
 palette = 0=$linkarzu_color10
 palette = 8=$linkarzu_color08

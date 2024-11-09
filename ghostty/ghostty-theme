@@ -1,6 +1,8 @@
 background = #0D1116
 foreground = #ebfafa
 
+cursor-color = #F712FF
+
 # black
 palette = 0=#0D1116
 palette = 8=#5fa9f4

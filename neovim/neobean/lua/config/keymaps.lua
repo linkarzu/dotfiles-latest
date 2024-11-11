@@ -1364,6 +1364,17 @@ vim.keymap.set("n", "zu", function()
   vim.cmd("normal! zR") -- Unfold all headings
 end, { desc = "[P]Unfold all headings level 2 or above" })
 
+-- gk jummps to the markdown heading above and then folds it
+-- zi by default toggles folding, but I don't need it lamw25wmal
+vim.keymap.set("n", "zi", function()
+  -- Difference between normal and normal!
+  -- - `normal` executes the command and respects any mappings that might be defined.
+  -- - `normal!` executes the command in a "raw" mode, ignoring any mappings.
+  vim.cmd("normal gk")
+  -- This is to fold the line under the cursor
+  vim.cmd("normal! za")
+end, { desc = "[P]Fold the heading cursor currently on" })
+
 -- Keymap for folding markdown headings of level 1 or above
 vim.keymap.set("n", "zj", function()
   -- vim.keymap.set("n", "<leader>mfj", function()

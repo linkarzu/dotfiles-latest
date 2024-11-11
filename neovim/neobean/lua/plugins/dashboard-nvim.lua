@@ -57,7 +57,7 @@ return {
           { action = 'lua require("persistence").load()',              desc = " Restore Session", icon = " ", key = "s" },
           -- { action = "LazyExtras",                                     desc = " Lazy Extras",     icon = " ", key = "x" },
           -- { action = "Lazy",                                           desc = " Lazy",            icon = "󰒲 ", key = "l" },
-          { action = function() vim.api.nvim_input("<cmd>qa<cr>") end, desc = " Quit",            icon = " ", key = "q" },
+          { action = function() vim.api.nvim_input("<cmd>qa<cr>") end, desc = " Quit",            icon = " ", key = "<Esc>" },
         },
         footer = function()
           local stats = require("lazy").stats()

@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+osascript -e 'display notification "Toggled mic volume" with title "Mic"'
+
 # Get the current microphone volume
 MIC_VOLUME=$(osascript -e 'input volume of (get volume settings)')
 

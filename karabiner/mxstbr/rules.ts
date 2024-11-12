@@ -520,18 +520,21 @@ const rules: KarabinerRules[] = [
 
       // Below I'm just leaving comments of the shortcuts I specifically use on
       // apps in case I need to configure them on a new computer
-      // hyper+w - paste activate
-      // hyper+p - cleanshot x OCR
+      // hyper+w - paste - activate paste
+      // hyper+p - cleanshot x OCR capture text
       // hyper+` - cleanshot x record screen
-      // hyper+0 - cleanshot x capture area
-      // hyper+1 - paste stack
+      // hyper+1 - paste - activate paste stack
       // hyper+2 - betterdisplay fav res 1
       // hyper+3 - betterdisplay fav res 2
       // hyper+4 - betterdisplay input hdmi
       // hyper+5 - betterdisplay input usbc
       // hyper+6 - homerow clicking shortcut
+      // hyper+7 - cleanshot x close all overlays
       // hyper+8 - hand mirror
       // hyper+9 - cleanshot x capture previous area
+      // hyper+0 - cleanshot x capture area
+      // hyper+- - cleanshot x capture window
+      // hyper+= - cleanshot x capture area & annotate
       // hyper+tab - cleanshot capture history
     },
 
@@ -844,7 +847,7 @@ const rules: KarabinerRules[] = [
 
     // For betterTouchTool
     d: {
-      // Select text from alacritty
+      // Terminal select last command
       j: open(
         "btt://execute_assigned_actions_for_trigger/?uuid=5A708885-4D65-465C-B87A-996BA6C23B86"
       ),

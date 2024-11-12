@@ -5,8 +5,14 @@
 
 # These files have to be executable
 
+# Lighter markdown headings
 # 4 colors to the right for these ligher headings
 # https://www.color-hex.com/color/987afb
+#
+# Given that color A (#987afb) becomes color B (#5b4996) when darkened 4 steps
+# to the right, apply the same darkening ratio/pattern to calculate what color
+# C (#37f499) becomes when darkened 4 steps to the right.
+#
 # Markdown heading 1 - color04
 linkarzu_color18="#5b4996"
 # Markdown heading 2 - color02
@@ -19,15 +25,16 @@ linkarzu_color21="#585c89"
 linkarzu_color22="#0f857c"
 # Markdown heading 6 - color08
 linkarzu_color23="#396592"
-linkarzu_color01="#949ae5"
+
+linkarzu_color04="#987afb"
 linkarzu_color02="#37f499"
 linkarzu_color03="#04d1f9"
-linkarzu_color04="#987afb"
+linkarzu_color01="#949ae5"
 linkarzu_color05="#19dfcf"
+linkarzu_color08="#5fa9f4"
 linkarzu_color06="#1682ef"
 # Markdown codeblock
 linkarzu_color07="#1c242f"
-linkarzu_color08="#5fa9f4"
 # Comments
 linkarzu_color09="#a5afc2"
 # Terminal and neovim background

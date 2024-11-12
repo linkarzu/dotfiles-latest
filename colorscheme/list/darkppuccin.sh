@@ -8,35 +8,41 @@
 # Lighter markdown headings
 # 4 colors to the right for these ligher headings
 # https://www.color-hex.com/color/987afb
+#
+# Given that color A (#987afb) becomes color B (#5b4996) when darkened 4 steps
+# to the right, apply the same darkening ratio/pattern to calculate what color
+# C (#37f499) becomes when darkened 4 steps to the right.
+#
 # Markdown heading 1 - color04
 linkarzu_color18="#796394"
 # Markdown heading 2 - color02
 linkarzu_color19="#526c96"
 # Markdown heading 3 - color03
-linkarzu_color20="#638860"
+linkarzu_color20="#648861"
 # Markdown heading 4 - color01
 linkarzu_color21="#8d6067"
 # Markdown heading 5 - color05
 linkarzu_color22="#6c7298"
 # Markdown heading 6 - color08
 linkarzu_color23="#966b51"
-# Maroon
-linkarzu_color01="#eba0ac"
+
+# Mauve
+linkarzu_color04="#cba6f7"
 # Blue
 linkarzu_color02="#89b4fa"
 # Green
 linkarzu_color03="#a6e3a1"
-# Mauve
-linkarzu_color04="#cba6f7"
+# Maroon
+linkarzu_color01="#eba0ac"
 # Lavender
 linkarzu_color05="#b4befe"
+# Peach
+linkarzu_color08="#fab387"
 # Sapphire
 linkarzu_color06="#74c7ec"
 # Surface 0
 # Markdown codeblock
 linkarzu_color07="#26263a"
-# Peach
-linkarzu_color08="#fab387"
 # Subtext0
 # Comments
 linkarzu_color09="#a6adc8"

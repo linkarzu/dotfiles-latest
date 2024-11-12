@@ -3,23 +3,44 @@
 # Filename: ~/github/dotfiles-latest/colorscheme/list/catppuccin-macchiato.sh
 # ~/github/dotfiles-latest/colorscheme/list/catppuccin-macchiato.sh
 
-# Maroon
-linkarzu_color01="#ee99a0"
+# Lighter markdown headings
+# 4 colors to the right for these ligher headings
+# https://www.color-hex.com/color/987afb
+#
+# Given that color A (#987afb) becomes color B (#5b4996) when darkened 4 steps
+# to the right, apply the same darkening ratio/pattern to calculate what color
+# C (#37f499) becomes when darkened 4 steps to the right.
+#
+# Markdown heading 1 - color04
+linkarzu_color18="#765f93"
+# Markdown heading 2 - color02
+linkarzu_color19="#536892"
+# Markdown heading 3 - color03
+linkarzu_color20="#648359"
+# Markdown heading 4 - color01
+linkarzu_color21="#8e5c60"
+# Markdown heading 5 - color05
+linkarzu_color22="#6d7195"
+# Markdown heading 6 - color08
+linkarzu_color23="#93654c"
+
+# Mauve
+linkarzu_color04="#c6a0f6"
 # Blue
 linkarzu_color02="#8aadf4"
 # Green
 linkarzu_color03="#a6da95"
-# Mauve
-linkarzu_color04="#c6a0f6"
+# Maroon
+linkarzu_color01="#ee99a0"
 # Lavender
 linkarzu_color05="#b7bdf8"
+# Peach
+linkarzu_color08="#f5a97f"
 # Sapphire
 linkarzu_color06="#7dc4e4"
 # Surface 0
 # Markdown codeblock, lualine color across
 linkarzu_color07="#363a4f"
-# Peach
-linkarzu_color08="#f5a97f"
 # Subtext0
 # Comments
 linkarzu_color09="#a5adcb"
@@ -46,18 +67,5 @@ linkarzu_color15="#31412c"
 linkarzu_color16="#f0c6c6"
 # Lualine across
 linkarzu_color17="#363a4f"
-# Lighter markdown headings
-# Markdown heading 1 - color04
-linkarzu_color18="#5b4996"
-# Markdown heading 2 - color02
-linkarzu_color19="#21925b"
-# Markdown heading 3 - color03
-linkarzu_color20="#027d95"
-# Markdown heading 4 - color01
-linkarzu_color21="#585c89"
-# Markdown heading 5 - color05
-linkarzu_color22="#0f857c"
-# Markdown heading 6 - color08
-linkarzu_color23="#396592"
 # Cursor color
 linkarzu_color24="#F712FF"

@@ -16,7 +16,8 @@ return {
         },
       },
       notifier = {
-        enabled = false,
+        enabled = true,
+        top_down = false, -- place notifications from top to bottom
       },
     },
   },

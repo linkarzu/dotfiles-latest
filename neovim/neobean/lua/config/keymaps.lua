@@ -523,180 +523,54 @@ end, { desc = "[P]Reload current buffer" })
 --                             Image section
 -- ############################################################################
 
--- Paste images
--- I use a Ctrl keymap so that I can paste images in insert mode
--- I tried using <C-v> but duh, that's used for visual block mode
--- so don't do it
-vim.keymap.set({ "n", "v", "i" }, "<C-a>", function()
-  -- The image needs to be converted to the format I use, which usually is AVIF
-  -- and it takes a few seconds, a lot of time I don't know if it's being pasted
-  -- or not, so I like seeing this message to know I pressed the correct keymap
-  print("PROCESSING IMAGE BEFORE PASTING...")
-  -- I had to add a 100ms delay because the message above was not shown
+-- Upload images to imgur, initial test, not tied to my account yet
+-- used this as a start
+-- https://github.com/evanpurkhiser/image-paste.nvim/blob/main/lua/image-paste.lua
+vim.keymap.set({ "n", "v", "i" }, "<C-f>", function()
+  print("UPLOADING IMAGE TO IMGUR...")
+  -- Slight delay to show the message
   vim.defer_fn(function()
-    -- Call the paste_image function from the Lua API
-    -- Using the plugin's Lua API (require("img-clip").paste_image()) instead of the
-    -- PasteImage command because the Lua API returns a boolean value indicating
-    -- whether an image was pasted successfully or not.
-    -- The PasteImage command does not
-    -- https://github.com/HakonHarnes/img-clip.nvim/blob/main/README.md#api
-    local pasted_image = require("img-clip").paste_image()
-    if pasted_image then
-      -- "Update" saves only if the buffer has been modified since the last save
-      vim.cmd("update")
-      print("Image pasted and file saved")
-      -- Only if updated I'll refresh the images by clearing them first
-      -- I'm using [[ ]] to escape the special characters in a command
-      require("image").clear()
-      -- vim.cmd([[lua require("image").clear()]])
-      -- Switch to the line below
-      vim.cmd("normal! o")
-      -- Switch back to command mode or normal mode
-      vim.cmd("startinsert")
-      vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("- ", true, false, true), "i", true)
-    -- Reloads the file to reflect the changes
-    -- I commented this edit because I was getting error when pasting images:
-    -- msg_show E5108: Error executing lua: vim/_editor.lua:0: nvim_exec2()..DiagnosticChanged
-    -- Autocommands for "*": Vim(append):Error executing lua callback:
-    -- ...vim-treesitter-context/lua/treesitter-context/render.lua:270: E565: Not allowed to change text or change window
-    -- vim.cmd("edit!")
-    else
-      print("No image pasted. File not updated.")
+    -- Retrieve the Imgur Client ID from the environment
+    local imgur_client_id = vim.fn.getenv("IMGUR_CLIENT_ID")
+    if not imgur_client_id or imgur_client_id == "" then
+      print("Imgur Client ID not found. Please set IMGUR_CLIENT_ID environment variable.")
+      return
     end
-  end, 100)
-end, { desc = "[P]Paste image from system clipboard" })
-
--- This pastes images for my blogpost, I need to keep them in a different directory so I pass those options to img-clip lamw25wmal
-vim.keymap.set({ "n", "v", "i" }, "<C-p>", function()
-  print("PROCESSING IMAGE WITH CUSTOM DIRECTORY STRUCTURE...")
-  local function paste_image(dir_path, file_name)
-    return require("img-clip").paste_image({
-      dir_path = dir_path,
-      use_absolute_path = false,
-      relative_to_current_file = false,
-      file_name = file_name,
-      extension = "avif",
-      process_cmd = "convert - -quality 75 avif:-",
-    })
-  end
-  local temp_buf = vim.api.nvim_create_buf(false, true) -- Create an unlisted, scratch buffer
-  vim.api.nvim_set_current_buf(temp_buf) -- Switch to the temporary buffer
-  local temp_image_path = vim.fn.tempname() .. ".avif"
-  local image_pasted =
-    paste_image(vim.fn.fnamemodify(temp_image_path, ":h"), vim.fn.fnamemodify(temp_image_path, ":t:r"))
-  vim.api.nvim_buf_delete(temp_buf, { force = true }) -- Delete the buffer
-  vim.fn.delete(temp_image_path) -- Delete the temporary file
-  local function find_assets_dir()
-    local dir = vim.fn.expand("%:p:h")
-    while dir ~= "/" do
-      if vim.fn.isdirectory(dir .. "/assets") == 1 then
-        return dir .. "/assets/img/imgs"
-      end
-      dir = vim.fn.fnamemodify(dir, ":h")
-    end
-    return nil
-  end
-  local img_dir = find_assets_dir()
-  if not img_dir then
-    print("No 'assets/img/imgs' directory found. Image not pasted.")
-    return
-  end
-  vim.defer_fn(function()
-    local options = image_pasted and { "no", "yes", "search" } or { "search" }
-    local prompt = image_pasted and "Is this a thumbnail image? " or "No image in clipboard. Select search to continue."
-    vim.ui.select(options, { prompt = prompt }, function(is_thumbnail)
-      if is_thumbnail == "search" then
-        vim.api.nvim_put({ '![Image](../../../assets/img/imgs){: width="500" }' }, "c", true, true)
-        -- Capital "O" to move to the line above
-        vim.cmd("normal! O")
-        -- This "o" is to leave a blank line above
-        vim.cmd("normal! o")
-        vim.api.nvim_put({ "<!-- prettier-ignore -->" }, "c", true, true)
-        vim.cmd("normal! jo")
-        vim.api.nvim_put({ "_image_", "" }, "c", true, true)
-        vim.cmd("normal kkf)")
-        -- This puts me in insert mode where the cursor is
-        vim.api.nvim_feedkeys("i", "n", true)
-        return
-      end
-      if not is_thumbnail then
-        print("Image pasting canceled.")
-        return
-      end
-      local prefix = vim.fn.strftime("%y%m%d-") .. (is_thumbnail == "yes" and "thux-" or "")
-      local function prompt_for_name()
-        vim.ui.input({ prompt = "Enter image name (no spaces). Added prefix: " .. prefix }, function(input_name)
-          if not input_name or input_name:match("%s") then
-            print("Invalid image name or canceled. Image not pasted.")
-            return
-          end
-          local full_image_name = prefix .. input_name
-          local file_path = img_dir .. "/" .. full_image_name .. ".avif"
-          if vim.fn.filereadable(file_path) == 1 then
-            print("Image name already exists. Please enter a new name.")
-            prompt_for_name()
+    -- Function to execute image upload command to Imgur
+    local function upload_to_imgur()
+      local upload_command = string.format(
+        [[
+        osascript -e "get the clipboard as «class PNGf»" | sed "s/«data PNGf//; s/»//" | xxd -r -p \
+        | curl --silent --fail --request POST --form "image=@-" \
+          --header "Authorization: Client-ID %s" "https://api.imgur.com/3/upload" \
+        | jq --raw-output .data.link
+      ]],
+        imgur_client_id
+      )
+      local url = nil
+      vim.fn.jobstart(upload_command, {
+        stdout_buffered = true,
+        on_stdout = function(_, data)
+          url = vim.fn.join(data):gsub("^%s*(.-)%s*$", "%1")
+        end,
+        on_exit = function(_, exit_code)
+          if exit_code == 0 and url ~= "" then
+            -- Format the URL as Markdown
+            local markdown_url = string.format("![imgur](%s)", url)
+            print("Image uploaded to Imgur: " .. markdown_url)
+            -- Insert formatted Markdown link into buffer at cursor position
+            local row, col = unpack(vim.api.nvim_win_get_cursor(0))
+            vim.api.nvim_buf_set_text(0, row - 1, col, row - 1, col, { markdown_url })
           else
-            if paste_image(img_dir, full_image_name) then
-              vim.api.nvim_put({ '{: width="500" }' }, "c", true, true)
-              -- Capital "O" to move to the line above
-              vim.cmd("normal! O")
-              -- This "o" is to leave a blank line above
-              vim.cmd("normal! o")
-              vim.api.nvim_put({ "<!-- prettier-ignore -->" }, "c", true, true)
-              vim.cmd("normal! jo")
-              vim.api.nvim_put({ "_image_" }, "c", true, true)
-              vim.cmd("normal o")
-            else
-              print("No image pasted. File not updated.")
-            end
+            print("Failed to upload image to Imgur.")
           end
-        end)
-      end
-      prompt_for_name()
-    end)
-  end, 100)
-end, { desc = "[P]Paste image 'assets' directory" })
-
--- ############################################################################
-
--- Open image under cursor in the Preview app (macOS)
-vim.keymap.set("n", "<leader>io", function()
-  local function get_image_path()
-    -- Get the current line
-    local line = vim.api.nvim_get_current_line()
-    -- Pattern to match image path in Markdown
-    local image_pattern = "%[.-%]%((.-)%)"
-    -- Extract relative image path
-    local _, _, image_path = string.find(line, image_pattern)
-
-    return image_path
-  end
-  -- Get the image path
-  local image_path = get_image_path()
-  if image_path then
-    -- Check if the image path starts with "http" or "https"
-    if string.sub(image_path, 1, 4) == "http" then
-      print("URL image, use 'gx' to open it in the default browser.")
-    else
-      -- Construct absolute image path
-      local current_file_path = vim.fn.expand("%:p:h")
-      local absolute_image_path = current_file_path .. "/" .. image_path
-
-      -- Construct command to open image in Preview
-      local command = "open -a Preview " .. vim.fn.shellescape(absolute_image_path)
-      -- Execute the command
-      local success = os.execute(command)
-
-      if success then
-        print("Opened image in Preview: " .. absolute_image_path)
-      else
-        print("Failed to open image in Preview: " .. absolute_image_path)
-      end
+        end,
+      })
     end
-  else
-    print("No image found under the cursor")
-  end
-end, { desc = "[P](macOS) Open image under cursor in Preview" })
+    -- Call the upload function
+    upload_to_imgur()
+  end, 100)
+end, { desc = "[P]Paste image to Imgur" })
 
 -- ############################################################################
 

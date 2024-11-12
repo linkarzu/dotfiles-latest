@@ -90,6 +90,11 @@ source "$ITEM_DIR/apple.sh"
 # Clicking it opens mission control (can be customized)
 source "$ITEM_DIR/front_app.sh"
 
+# Community plugin that I modified, so that it shows you the mic name
+# If you right click it you can change the mic.
+# Shows you the value of the input volume level
+source "$ITEM_DIR/mic.sh"
+
 ###############################################################################
 #                                 Center
 ###############################################################################
@@ -132,11 +137,6 @@ source "$ITEM_DIR/wifi.sh"
 # By default the icon will only show when on battery and if it's 50% or less,
 # you can change "plugins/battery.sh" if needed to modify the behavior
 source "$ITEM_DIR/battery.sh"
-
-# Community plugin that I modified, so that it shows you the mic name
-# If you right click it you can change the mic.
-# Shows you the value of the input volume level
-source "$ITEM_DIR/mic.sh"
 
 # left click to change volume
 # right click to switch audio sources, you need switchaudio-osx

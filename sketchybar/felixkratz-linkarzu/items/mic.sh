@@ -5,7 +5,7 @@
 
 mic=(
   updates=on
-  update_freq=1
+  update_freq=5
   label.drawing=on
   padding_right=4
   label.padding_right=2
@@ -14,6 +14,6 @@ mic=(
   click_script="$PLUGIN_DIR/mic_click.sh"
 )
 
-sketchybar --add item mic right \
+sketchybar --add item mic left \
   --set mic "${mic[@]}" \
   --subscribe mic volume_change

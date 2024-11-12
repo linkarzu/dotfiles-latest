@@ -8,9 +8,22 @@
 source "$CONFIG_DIR/colors.sh"
 
 # Attempt to get the current input device name
-MIC_NAME=$(SwitchAudioSource -t input -c)
-# I just want the first word, in case it's too long
-MIC_NAME=$(echo $MIC_NAME | awk '{print $1}')
+CURRENT_MIC=$(SwitchAudioSource -t input -c)
+
+# List all input devices
+AVAILABLE_INPUTS=$(SwitchAudioSource -a -t input)
+
+# Look for a device name that contains "Yeti"
+YETI_DEVICE=$(echo "$AVAILABLE_INPUTS" | grep -i "Yeti")
+
+if [[ -n "$YETI_DEVICE" && "$CURRENT_MIC" != "$YETI_DEVICE" ]]; then
+  # Only switch if the current device is not already Yeti
+  SwitchAudioSource -t input -s "$YETI_DEVICE"
+  MIC_NAME=$(echo "$YETI_DEVICE" | awk '{print $1}')
+else
+  # Use the current input device as MIC_NAME
+  MIC_NAME=$(echo "$CURRENT_MIC" | awk '{print $1}')
+fi
 
 # When no microphone is connected, SwitchAudioSource gives me back random
 # characters and sketchybar shows "Warning: Malformed UTF-8 string"
@@ -28,9 +41,17 @@ else
   # Update SketchyBar with the microphone's name and volume
   if [[ $MIC_VOLUME -eq 0 ]]; then
     sketchybar -m --set mic label="$MIC_NAME-$MIC_VOLUME " icon= icon.color=$RED label.color=$RED
-  elif [[ $MIC_VOLUME -gt 0 && $MIC_VOLUME -lt 80 ]]; then
-    sketchybar -m --set mic label="$MIC_NAME-$MIC_VOLUME " icon= icon.color=$ORANGE label.color=$ORANGE
-  elif [[ $MIC_VOLUME -eq 80 ]]; then
-    sketchybar -m --set mic label="$MIC_NAME-$MIC_VOLUME " icon= icon.color=$WHITE label.color=$WHITE
+  elif [[ $MIC_VOLUME -gt 0 && $MIC_VOLUME -lt 60 ]]; then
+    if [[ "$MIC_NAME" == Yeti* ]]; then
+      sketchybar -m --set mic label="$MIC_NAME-$MIC_VOLUME " icon= icon.color=$BLUE label.color=$BLUE
+    else
+      sketchybar -m --set mic label="$MIC_NAME-$MIC_VOLUME " icon= icon.color=$ORANGE label.color=$ORANGE
+    fi
+  elif [[ $MIC_VOLUME -eq 60 ]]; then
+    if [[ "$MIC_NAME" == Yeti* ]]; then
+      sketchybar -m --set mic label="$MIC_NAME-$MIC_VOLUME " icon= icon.color=$BLUE label.color=$BLUE
+    else
+      sketchybar -m --set mic label="$MIC_NAME-$MIC_VOLUME " icon= icon.color=$ORANGE label.color=$ORANGE
+    fi
   fi
 fi

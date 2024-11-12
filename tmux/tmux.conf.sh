@@ -85,12 +85,26 @@ set -wF mode-style "fg=$linkarzu_color02,bg=$linkarzu_color13"
 # -Z zooms the pane (don't uderstand what this does)
 # -O specifies the initial sort field: one of ‘index’, ‘name’, or ‘time’ (activity).
 # https://unix.stackexchange.com/questions/608268/how-can-i-force-tmux-to-sort-my-sessions-alphabetically
+#
+# -y at the end is a feature I requested so that the session is closed without confirmation
+# https://github.com/tmux/tmux/issues/4152
 # bind s choose-tree -Zs -O time
 # bind s choose-tree -Zs -O time -y
-bind s choose-tree -Zs -O time -F "#{session_windows}"
-# bind s choose-tree -Zs -O time -F "#{session_windows}" -y
+# bind s choose-tree -Zs -O time -F "#{session_windows}"
+bind s choose-tree -Zs -O time -F "#{session_windows}" -y
 # bind s choose-tree -Zs -O time -F "#{?session_attached,#[fg=$linkarzu_color02],#[fg=$linkarzu_color03]}#{session_name}#[default]" -y
 # bind s choose-tree -Zs -O time -F "#{?session_attached,#[fg=$linkarzu_color02],#[fg=$linkarzu_color03]}" -y
+
+# # Bind 'd' to perform the 'x' action when in choose-tree mode
+# # In other words, this allows you to close sessions with "d" when in the session
+# # navigator "choose-tree" that comes up with prefix+s
+bind -n d if -F '#{==:#{pane_mode},tree-mode}' 'send x' 'send d'
+
+# Use 'd' instead of 't' to tag panes that I want to delete
+# bind -n d if -F '#{==:#{pane_mode},tree-mode}' 'send t' 'send d'
+
+# Use 'D' instead of 'X' to delete all tagged panes
+bind -n D if -F '#{==:#{pane_mode},tree-mode}' 'send X' 'send D'
 
 # Search sessions using an fzf menu
 # Found this gem down here:
@@ -108,17 +122,6 @@ bind D display-popup -E "\
     tmux list-sessions -F '#{?session_attached,,#{session_name}}' |\
     fzf --reverse -m --header=kill-session |\
     xargs -I {} tmux kill-session -t {}"
-
-# # Bind 'd' to perform the 'x' action when in choose-tree mode
-# # In other words, this allows you to close sessions with "d" when in the session
-# # navigator "choose-tree" that comes up with prefix+s
-bind -n d if -F '#{==:#{pane_mode},tree-mode}' 'send x' 'send d'
-
-# Use 'd' instead of 't' to tag panes that I want to delete
-# bind -n d if -F '#{==:#{pane_mode},tree-mode}' 'send t' 'send d'
-
-# Use 'D' instead of 'X' to delete all tagged panes
-bind -n D if -F '#{==:#{pane_mode},tree-mode}' 'send X' 'send D'
 
 # Create vertical split
 unbind '|'

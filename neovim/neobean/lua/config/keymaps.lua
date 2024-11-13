@@ -410,22 +410,52 @@ end, { desc = "[P]GOLANG, execute file" })
 --   end
 -- end, { desc = "[P]Execute Go file in pane on the right" })
 
--- Toggle a tmux pane on the right in bash, in the same directory as the current file
--- Opening it in bash because it's faster, I don't have to run my .zshrc file,
--- which pulls from my repo and a lot of other stuff
-vim.keymap.set("n", "<leader>f.", function()
+-- -- Toggle a tmux pane on the right in bash, in the same directory as the current file
+-- -- Opening it in bash because it's faster, I don't have to run my .zshrc file,
+-- -- which pulls from my repo and a lot of other stuff
+-- vim.keymap.set("n", "<leader>f.", function()
+--   local file_dir = vim.fn.expand("%:p:h") -- Get the directory of the current file
+--   local pane_width = 60
+--   local right_pane_id =
+--     vim.fn.system("tmux list-panes -F '#{pane_id} #{pane_width}' | awk '$2 == " .. pane_width .. " {print $1}'")
+--   if right_pane_id ~= "" then
+--     -- If the right pane exists, close it
+--     vim.fn.system("tmux kill-pane -t " .. right_pane_id)
+--   else
+--     -- -- If the right pane doesn't exist, open it
+--     -- vim.fn.system("tmux split-window -h -l " .. pane_width .. " 'cd " .. file_dir .. " && bash'")
+--     -- If the right pane doesn't exist, open it with zsh and no-pull parameter
+--     vim.fn.system("tmux split-window -h -l " .. pane_width .. " 'cd " .. file_dir .. " && DISABLE_PULL=1 zsh'")
+--   end
+-- end, { desc = "[P]Open (toggle) current dir in right tmux pane" })
+
+-- -- Toggle a tmux pane on the right in zsh, in the same directory as the current file
+-- -- Notice I'm setting the variable DISABLE_PULL=1, because in my zshrc file,
+-- -- I check if this variable is set, if it is, I don't pull github repos, to save time
+-- -- lamw25wmal
+vim.keymap.set("n", ",", function()
   local file_dir = vim.fn.expand("%:p:h") -- Get the directory of the current file
   local pane_width = 60
   local right_pane_id =
     vim.fn.system("tmux list-panes -F '#{pane_id} #{pane_width}' | awk '$2 == " .. pane_width .. " {print $1}'")
+  local is_zoomed = vim.fn.system("tmux display-message -p '#{window_zoomed_flag}'"):gsub("%s+", "") == "1"
   if right_pane_id ~= "" then
-    -- If the right pane exists, close it
-    vim.fn.system("tmux kill-pane -t " .. right_pane_id)
+    -- If the right pane exists
+    if is_zoomed then
+      -- If zoomed, unzoom and switch to right pane
+      vim.fn.system("tmux resize-pane -Z")
+      vim.fn.system("tmux send-keys C-l")
+    else
+      -- If not zoomed, zoom current pane
+      vim.fn.system("tmux resize-pane -Z")
+    end
   else
-    -- If the right pane doesn't exist, open it
-    vim.fn.system("tmux split-window -h -l " .. pane_width .. " 'cd " .. file_dir .. " && bash'")
+    -- If the right pane doesn't exist, open it with zsh and no-pull parameter
+    vim.fn.system("tmux split-window -h -l " .. pane_width .. " 'cd " .. file_dir .. " && DISABLE_PULL=1 zsh'")
+    -- Simulate pressing Ctrl-l to move to the right
+    vim.fn.system("tmux send-keys C-l")
   end
-end, { desc = "[P]Open (toggle) current dir in right tmux pane" })
+end, { desc = "[P]Toggle between split and maximized view" })
 
 -- -- Open a tmux pane on the right in bash, in the same directory as the current file
 -- -- Opening it in bash because it's faster, I don't have to run my .zshrc file,

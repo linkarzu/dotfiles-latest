@@ -5,7 +5,7 @@
 
 # https://github.com/FelixKratz/SketchyBar/discussions/12#discussioncomment-1216899
 
-source "$CONFIG_DIR/colors.sh"
+source "$HOME/github/dotfiles-latest/sketchybar/felixkratz-linkarzu/colors.sh"
 
 # Attempt to get the current input device name
 CURRENT_MIC=$(SwitchAudioSource -t input -c)

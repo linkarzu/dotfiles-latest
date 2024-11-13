@@ -215,12 +215,28 @@ setopt histignorespace
 # Custom list of commands to ignore (adjust as needed)
 # HISTIGNORE='ls*:bg*:fg*:exit*:ll*'
 
+# -n is the opposite of -z, checks if the variable is not empty, so in other
+# words, checks if the variable is set
+if [[ -n "$DISABLE_PULL" ]]; then
+  # Override the default 'exit' command for this specific tmux pane
+  function exit() {
+    tmux select-pane -L # Switch focus to the left pane
+    tmux resize-pane -Z # Maximize the left pane
+    return 0            # Return success without actually exiting
+  }
+  # Create a new EXIT command to force actual exit
+  function EXIT() {
+    builtin exit
+  }
+fi
+
 # Common settings and plugins
 alias ll='ls -lh'
 alias lla='ls -alh'
 alias python='python3'
 # Shows the last 30 entries, default is 15
 alias history='history -30'
+alias x='exit'
 
 # kubernetes, if you need help, just run 'kgp --help' for example
 alias k='kubectl'
@@ -247,11 +263,16 @@ alias coverage='go test -coverprofile=coverage.out && go tool cover -html=covera
 # opening the terminal with hyper+space+j to hyper+space+b, it will
 # change your mappings too
 #
-# If you don't want to fork, comment the 3 lines below if you don't want to always pull
+# If you don't want to fork, comment this section if you don't want to always pull
 # my latest changes, otherwise your changes will be overriden by my updates
+#
+# If the variable DISABLE_PULL is UNSET, pull the latest changes
+# I set this var from neovim when opening a tmux pane on the right
 echo
-echo "Pulling latest changes, please wait..."
-(cd ~/github/dotfiles-latest && git pull >/dev/null 2>&1) || echo "Failed to pull dotfiles"
+if [[ -z "$DISABLE_PULL" ]]; then
+  echo "Pulling latest changes, please wait..."
+  (cd ~/github/dotfiles-latest && git pull >/dev/null 2>&1) || echo "Failed to pull dotfiles"
+fi
 # Every time I log into a host I want to pull my github repos, but not cd to that dir
 # So running the command above in a subshell
 #

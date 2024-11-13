@@ -42,4 +42,4 @@ tmux set -g @catppuccin_window_current_text "#[fg=$linkarzu_color14]#W"
 # https://youtu.be/GH3kpsbbERo?si=4ZoV090qVbble7np
 #
 # Second option shows a message when panes are syncronized
-tmux set -g @catppuccin_window_current_text "#W#{?window_zoomed_flag,#[fg=$linkarzu_color04] (   ),}#{?pane_synchronized,#[fg=$linkarzu_color04] SYNCHRONIZED-PANES,}"
+tmux set -g @catppuccin_window_current_text "#W#{?window_zoomed_flag,#[fg=$linkarzu_color04] (    ),}#{?pane_synchronized,#[fg=$linkarzu_color04] SYNCHRONIZED-PANES,}"

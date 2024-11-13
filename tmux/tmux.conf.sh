@@ -90,8 +90,8 @@ set -wF mode-style "fg=$linkarzu_color02,bg=$linkarzu_color13"
 # https://github.com/tmux/tmux/issues/4152
 # bind s choose-tree -Zs -O time
 # bind s choose-tree -Zs -O time -y
-# bind s choose-tree -Zs -O time -F "#{session_windows}"
-bind s choose-tree -Zs -O time -F "#{session_windows}" -y
+bind s choose-tree -Zs -O time -F "#{session_windows}"
+# bind s choose-tree -Zs -O time -F "#{session_windows}" -y
 # bind s choose-tree -Zs -O time -F "#{?session_attached,#[fg=$linkarzu_color02],#[fg=$linkarzu_color03]}#{session_name}#[default]" -y
 # bind s choose-tree -Zs -O time -F "#{?session_attached,#[fg=$linkarzu_color02],#[fg=$linkarzu_color03]}" -y
 

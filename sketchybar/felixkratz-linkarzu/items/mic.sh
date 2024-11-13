@@ -5,7 +5,7 @@
 
 mic=(
   updates=on
-  update_freq=5
+  update_freq=10
   label.drawing=on
   padding_right=4
   label.padding_right=2

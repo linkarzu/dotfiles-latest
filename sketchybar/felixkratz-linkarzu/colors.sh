@@ -1,6 +1,7 @@
 #!/bin/bash
 
-# Filename: ~/github/dotfiles-latest/sketchybar/felixkratz/colors.sh
+# Filename: ~/github/dotfiles-latest/sketchybar/felixkratz-linkarzu/colors.sh
+# ~/github/dotfiles-latest/sketchybar/felixkratz-linkarzu/colors.sh
 
 # Source the colorscheme file
 source "$HOME/github/dotfiles-latest/colorscheme/active/active-colorscheme.sh"

@@ -66,6 +66,28 @@ bind-key Space switch-client -l
 # search with /, using v for visual mode, etc
 set -g mode-keys vi
 
+# Border lines between panes are thicker
+# single -> single lines using ACS or UTF-8 characters
+# double -> double lines using UTF-8 characters
+# heavy  -> heavy lines using UTF-8 characters
+# simple -> simple ASCII characters
+# number -> the pane number
+set -g pane-border-lines single
+
+# Indicate active pane by colouring only half of the border in windows with 
+# exactly two panes, by displaying arrow markers, by drawing both or neither.
+# [off | colour | arrows | both]
+set -g pane-border-indicators colour
+
+# Enables tracking of focus events, allows tmux to respond when the terminal
+# window gains or looses focus
+set-option -g focus-events on
+
+# Change color of focused and unfocused panes, it helps me easily identify where
+# my cursor is
+set-hook -g pane-focus-in 'select-pane -P "bg=$linkarzu_color10,fg=white"'
+set-hook -g pane-focus-out 'select-pane -P "bg=$linkarzu_color13,fg=default"'
+
 # This changes the colors of visual selection and choose-tree
 # https://unix.stackexchange.com/questions/141311/tmux-hightlight-colour-setting
 # set -g mode-style "fg=$linkarzu_color13,bg=$linkarzu_color03"
@@ -364,10 +386,6 @@ set -s set-clipboard on
 # this setting was recommended by neovim `escape-time` (default 500)
 # Can be set to a lower value, like 10 for it to be faster
 set-option -sg escape-time 100
-
-# Enables tracking of focus events, allows tmux to respond when the terminal
-# window gains or looses focus
-set-option -g focus-events on
 
 # I just realized that my eyes are normally on the top left corner on the
 # screen, so moving the tmux bar to the top instead of bottom

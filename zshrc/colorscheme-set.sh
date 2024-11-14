@@ -146,7 +146,7 @@ theme[main_fg]="$linkarzu_color14"
 theme[title]="$linkarzu_color14"
 
 # Highlight color for keyboard shortcuts
-theme[hi_fg]="$linkarzu_color13"
+theme[hi_fg]="$linkarzu_color02"
 
 # Background color of selected item in processes box
 theme[selected_bg]="$linkarzu_color04"
@@ -155,7 +155,7 @@ theme[selected_bg]="$linkarzu_color04"
 theme[selected_fg]="$linkarzu_color14"
 
 # Color of inactive/disabled text
-theme[inactive_fg]="$linkarzu_color17"
+theme[inactive_fg]="$linkarzu_color09"
 
 # Color of text appearing on top of graphs, i.e uptime and current network graph scaling
 theme[graph_text]="$linkarzu_color14"
@@ -167,13 +167,13 @@ theme[meter_bg]="$linkarzu_color17"
 theme[proc_misc]="$linkarzu_color01"
 
 # Cpu box outline color
-theme[cpu_box]="$linkarzu_color01"
+theme[cpu_box]="$linkarzu_color04"
 
 # Memory/disks box outline color
 theme[mem_box]="$linkarzu_color02"
 
 # Net up/down box outline color
-theme[net_box]="$linkarzu_color11"
+theme[net_box]="$linkarzu_color03"
 
 # Processes box outline color
 theme[proc_box]="$linkarzu_color05"
@@ -222,8 +222,8 @@ theme[upload_mid]="$linkarzu_color16"
 theme[upload_end]="$linkarzu_color06"
 
 # Process box color gradient for threads, mem and cpu usage
-theme[process_start]="$linkarzu_color22"
-theme[process_mid]="$linkarzu_color05"
+theme[process_start]="$linkarzu_color03"
+theme[process_mid]="$linkarzu_color02"
 theme[process_end]="$linkarzu_color06"
 EOF
 

@@ -8,7 +8,7 @@ theme[main_fg]="#ebfafa"
 theme[title]="#ebfafa"
 
 # Highlight color for keyboard shortcuts
-theme[hi_fg]="#314154"
+theme[hi_fg]="#37f499"
 
 # Background color of selected item in processes box
 theme[selected_bg]="#987afb"
@@ -17,7 +17,7 @@ theme[selected_bg]="#987afb"
 theme[selected_fg]="#ebfafa"
 
 # Color of inactive/disabled text
-theme[inactive_fg]="#141b22"
+theme[inactive_fg]="#a5afc2"
 
 # Color of text appearing on top of graphs, i.e uptime and current network graph scaling
 theme[graph_text]="#ebfafa"
@@ -29,13 +29,13 @@ theme[meter_bg]="#141b22"
 theme[proc_misc]="#949ae5"
 
 # Cpu box outline color
-theme[cpu_box]="#949ae5"
+theme[cpu_box]="#987afb"
 
 # Memory/disks box outline color
 theme[mem_box]="#37f499"
 
 # Net up/down box outline color
-theme[net_box]="#f16c75"
+theme[net_box]="#04d1f9"
 
 # Processes box outline color
 theme[proc_box]="#19dfcf"
@@ -84,6 +84,6 @@ theme[upload_mid]="#e9b3fd"
 theme[upload_end]="#1682ef"
 
 # Process box color gradient for threads, mem and cpu usage
-theme[process_start]="#0f857c"
-theme[process_mid]="#19dfcf"
+theme[process_start]="#04d1f9"
+theme[process_mid]="#37f499"
 theme[process_end]="#1682ef"

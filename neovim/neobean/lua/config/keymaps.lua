@@ -562,26 +562,147 @@ end, { desc = "[P]Reload current buffer" })
 -- Upload images to imgur, initial test, not tied to my account yet
 -- used this as a start
 -- https://github.com/evanpurkhiser/image-paste.nvim/blob/main/lua/image-paste.lua
+-- If you want to upload the images to your own imgur account, follow the
+-- registration quickstart section in https://apidocs.imgur.com/
+-- You can use postman's web version or the desktop app, the instructions tell
+-- you even how to import imgur's api collection in postman
+--
+-- For the new postman version go to the `Imgur API` folder, then click on the
+-- `Authorization` tab, set the auth type to `oauth 2.0`, fill in the fields in
+-- the `Configure new token` section, and click `Get New Access Token` at the
+-- bottom, this will give you a lot of details including the refresh token
+-- vim.keymap.set({ "n", "v", "i" }, "<C-f>", function()
+--   print("UPLOADING IMAGE TO IMGUR...")
+--   -- Slight delay to show the message
+--   vim.defer_fn(function()
+--     -- Retrieve the Imgur Client ID from the environment
+--     local imgur_client_id = vim.fn.getenv("IMGUR_CLIENT_ID")
+--     if not imgur_client_id or imgur_client_id == "" then
+--       print("Imgur Client ID not found. Please set IMGUR_CLIENT_ID environment variable.")
+--       return
+--     end
+--     -- Function to execute image upload command to Imgur
+--     local function upload_to_imgur()
+--       local upload_command = string.format(
+--         [[
+--         osascript -e "get the clipboard as «class PNGf»" | sed "s/«data PNGf//; s/»//" | xxd -r -p \
+--         | curl --silent --fail --request POST --form "image=@-" \
+--           --header "Authorization: Client-ID %s" "https://api.imgur.com/3/upload" \
+--         | jq --raw-output .data.link
+--       ]],
+--         imgur_client_id
+--       )
+--       local url = nil
+--       vim.fn.jobstart(upload_command, {
+--         stdout_buffered = true,
+--         on_stdout = function(_, data)
+--           url = vim.fn.join(data):gsub("^%s*(.-)%s*$", "%1")
+--         end,
+--         on_exit = function(_, exit_code)
+--           if exit_code == 0 and url ~= "" then
+--             -- Format the URL as Markdown
+--             local markdown_url = string.format("![imgur](%s)", url)
+--             print("Image uploaded to Imgur: " .. markdown_url)
+--             -- Insert formatted Markdown link into buffer at cursor position
+--             local row, col = unpack(vim.api.nvim_win_get_cursor(0))
+--             vim.api.nvim_buf_set_text(0, row - 1, col, row - 1, col, { markdown_url })
+--           else
+--             print("Failed to upload image to Imgur.")
+--           end
+--         end,
+--       })
+--     end
+--     -- Call the upload function
+--     upload_to_imgur()
+--   end, 100)
+-- end, { desc = "[P]Paste image to Imgur" })
+
+-- Imgur keymap with Bearer token and auto-refresh for expired access tokens
 vim.keymap.set({ "n", "v", "i" }, "<C-f>", function()
   print("UPLOADING IMAGE TO IMGUR...")
   -- Slight delay to show the message
   vim.defer_fn(function()
-    -- Retrieve the Imgur Client ID from the environment
+    local imgur_access_token = vim.fn.getenv("IMGUR_ACCESS_TOKEN")
+    local imgur_refresh_token = vim.fn.getenv("IMGUR_REFRESH_TOKEN")
     local imgur_client_id = vim.fn.getenv("IMGUR_CLIENT_ID")
-    if not imgur_client_id or imgur_client_id == "" then
-      print("Imgur Client ID not found. Please set IMGUR_CLIENT_ID environment variable.")
+    local imgur_client_secret = vim.fn.getenv("IMGUR_CLIENT_SECRET")
+    if not imgur_access_token or imgur_access_token == "" then
+      print("Imgur Access Token not found. Please set IMGUR_ACCESS_TOKEN environment variable.")
       return
     end
+    -- Predeclare the functions to handle mutual references
+    local upload_to_imgur
+    local refresh_access_token
+    -- Function to refresh the access token if expired
+    -- Function to refresh the access token if expired
+    -- Function to refresh the access token if expired
+    refresh_access_token = function()
+      local refresh_command = string.format(
+        [[curl --silent --request POST "https://api.imgur.com/oauth2/token" \
+      --data "refresh_token=%s" \
+      --data "client_id=%s" \
+      --data "client_secret=%s" \
+      --data "grant_type=refresh_token"]],
+        imgur_refresh_token,
+        imgur_client_id,
+        imgur_client_secret
+      )
+      local new_access_token = nil
+      vim.fn.jobstart(refresh_command, {
+        stdout_buffered = true,
+        on_stdout = function(_, data)
+          local json_data = vim.fn.join(data)
+          new_access_token = vim.fn.json_decode(json_data).access_token
+        end,
+        on_exit = function(_, exit_code)
+          if exit_code == 0 and new_access_token then
+            -- Update environment variable with the new access token
+            vim.fn.setenv("IMGUR_ACCESS_TOKEN", new_access_token)
+            imgur_access_token = new_access_token
+            print("Access token refreshed.")
+            -- Write the new access token to ~/.zshrc_local to persist it
+            local zshrc_local_path = vim.fn.expand("~/Library/Mobile Documents/com~apple~CloudDocs/github/.zshrc_local")
+            local file = io.open(zshrc_local_path, "r+")
+            -- Check if file opened successfully
+            if file then
+              -- Read the full file content
+              local content = file:read("*all")
+              if content then
+                -- Replace the old token line with the new one
+                content = content:gsub(
+                  'export IMGUR_ACCESS_TOKEN="[^"]*"',
+                  'export IMGUR_ACCESS_TOKEN="' .. new_access_token .. '"'
+                )
+                -- Go back to the start of the file and write the modified content
+                file:seek("set", 0)
+                file:write(content)
+                file:close()
+                print("New access token saved to ~/.zshrc_local")
+              else
+                print("Failed to read ~/.zshrc_local content.")
+                file:close()
+              end
+            else
+              print("Error: Could not open ~/.zshrc_local for writing.")
+            end
+            -- Retry the upload after refreshing the token
+            upload_to_imgur()
+          else
+            print("Failed to refresh access token.")
+          end
+        end,
+      })
+    end
     -- Function to execute image upload command to Imgur
-    local function upload_to_imgur()
+    upload_to_imgur = function()
       local upload_command = string.format(
         [[
         osascript -e "get the clipboard as «class PNGf»" | sed "s/«data PNGf//; s/»//" | xxd -r -p \
         | curl --silent --fail --request POST --form "image=@-" \
-          --header "Authorization: Client-ID %s" "https://api.imgur.com/3/upload" \
+          --header "Authorization: Bearer %s" "https://api.imgur.com/3/image" \
         | jq --raw-output .data.link
       ]],
-        imgur_client_id
+        imgur_access_token
       )
       local url = nil
       vim.fn.jobstart(upload_command, {
@@ -597,13 +718,16 @@ vim.keymap.set({ "n", "v", "i" }, "<C-f>", function()
             -- Insert formatted Markdown link into buffer at cursor position
             local row, col = unpack(vim.api.nvim_win_get_cursor(0))
             vim.api.nvim_buf_set_text(0, row - 1, col, row - 1, col, { markdown_url })
+          elseif exit_code == 401 then -- Unauthorized (token expired)
+            print("Access token expired, refreshing...")
+            refresh_access_token()
           else
             print("Failed to upload image to Imgur.")
           end
         end,
       })
     end
-    -- Call the upload function
+    -- Attempt to upload the image
     upload_to_imgur()
   end, 100)
 end, { desc = "[P]Paste image to Imgur" })

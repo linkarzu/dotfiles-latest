@@ -66,18 +66,23 @@ vim.api.nvim_create_autocmd("FileType", {
   end,
 })
 
--- Change background color on unfocus and focus, I use this when switching to
--- another tmux pane
-vim.api.nvim_create_autocmd({ "FocusGained", "FocusLost" }, {
+-- Change background color when switching between neovim splits and tmux panes
+vim.api.nvim_create_autocmd({ "FocusGained", "FocusLost", "WinEnter", "WinLeave", "BufEnter", "BufLeave" }, {
   callback = function(ev)
-    if ev.event == "FocusGained" then
-      -- Change backgrounds only, preserve foreground colors
+    if ev.event == "FocusGained" or ev.event == "WinEnter" or ev.event == "BufEnter" then
+      -- Active window - darker background
       vim.cmd("hi Normal guibg=" .. colors.linkarzu_color10)
+      vim.cmd("hi NormalFloat guibg=" .. colors.linkarzu_color10)
+      -- vim.cmd("hi NormalNC guibg=" .. colors.linkarzu_color10)
+      -- vim.cmd("hi NormalFloatNC guibg=" .. colors.linkarzu_color10)
       vim.cmd("hi TreesitterContext guibg=" .. colors.linkarzu_color10)
       vim.cmd("hi TreesitterContextLineNumber guibg=" .. colors.linkarzu_color10)
     else
-      -- Change backgrounds only, preserve foreground colors
+      -- Inactive window - brighter background
       vim.cmd("hi Normal guibg=" .. colors.linkarzu_color25)
+      vim.cmd("hi NormalNC guibg=" .. colors.linkarzu_color25)
+      vim.cmd("hi NormalFloat guibg=" .. colors.linkarzu_color25)
+      vim.cmd("hi NormalFloatNC guibg=" .. colors.linkarzu_color25)
       vim.cmd("hi TreesitterContext guibg=" .. colors.linkarzu_color25)
       vim.cmd("hi TreesitterContextLineNumber guibg=" .. colors.linkarzu_color25)
     end

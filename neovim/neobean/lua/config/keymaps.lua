@@ -801,17 +801,38 @@ vim.keymap.set({ "n", "v", "i" }, "<C-f>", function()
 end, { desc = "[P]Paste image to Imgur" })
 
 -- -- Upload images to imgur, this uploads the images UN-authentiated, it means
--- it uploads them anonymously, not tied to your account
+-- -- it uploads them anonymously, not tied to your account
 -- -- used this as a start
 -- -- https://github.com/evanpurkhiser/image-paste.nvim/blob/main/lua/image-paste.lua
+-- -- Configuration:
+-- -- Path to your environment variables file
+-- local env_file_path = vim.fn.expand("~/Library/Mobile Documents/com~apple~CloudDocs/github/imgur_credentials")
 -- vim.keymap.set({ "n", "v", "i" }, "<C-f>", function()
 --   print("UPLOADING IMAGE TO IMGUR...")
 --   -- Slight delay to show the message
 --   vim.defer_fn(function()
---     -- Retrieve the Imgur Client ID from the environment
---     local imgur_client_id = vim.fn.getenv("IMGUR_CLIENT_ID")
+--     -- Function to read environment variables from the specified file
+--     local function load_env_variables()
+--       local env_vars = {}
+--       local file = io.open(env_file_path, "r")
+--       if file then
+--         for line in file:lines() do
+--           for key, value in string.gmatch(line, 'export%s+([%w_]+)="([^"]+)"') do
+--             env_vars[key] = value
+--           end
+--         end
+--         file:close()
+--       else
+--         print("Failed to open " .. env_file_path .. " to load environment variables.")
+--       end
+--       return env_vars
+--     end
+--     -- Load environment variables
+--     local env_vars = load_env_variables()
+--     -- Retrieve the Imgur Client ID from the loaded environment variables
+--     local imgur_client_id = env_vars["IMGUR_CLIENT_ID"]
 --     if not imgur_client_id or imgur_client_id == "" then
---       print("Imgur Client ID not found. Please set IMGUR_CLIENT_ID environment variable.")
+--       print("Imgur Client ID not found. Please set IMGUR_CLIENT_ID in your environment file.")
 --       return
 --     end
 --     -- Function to execute image upload command to Imgur

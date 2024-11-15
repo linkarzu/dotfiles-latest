@@ -606,11 +606,24 @@ if [ "$OS" = 'Mac' ]; then
     ZVM_VI_VISUAL_ESCAPE_BINDKEY=$ZVM_VI_ESCAPE_BINDKEY
     ZVM_VI_OPPEND_ESCAPE_BINDKEY=$ZVM_VI_ESCAPE_BINDKEY
 
+    # Function to switch to the left tmux pane and maximize it
+    function tmux_left_pane() {
+      tmux select-pane -L
+      tmux resize-pane -Z
+      zle reset-prompt # Refresh the prompt after switching panes
+    }
+
+    # Register the function as a ZLE widget
+    zle -N tmux_left_pane
+
     function zvm_after_lazy_keybindings() {
       # Remap to go to the beginning of the line
       zvm_bindkey vicmd 'gh' beginning-of-line
       # Remap to go to the end of the line
       zvm_bindkey vicmd 'gl' end-of-line
+      # Bind ',' to the tmux_left_pane function
+      # Moves me to my left pane in tmux and maximizes it
+      zvm_bindkey vicmd ',' tmux_left_pane
     }
 
     # Disable the cursor style feature

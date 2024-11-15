@@ -586,7 +586,7 @@ end, { desc = "[P]Reload current buffer" })
 -- - Ensure your environment variables are stored in a file (e.g., ~/.zshrc_local) and formatted as `export VARIABLE="value"`.
 --
 -- Path to your environment variables file
-local env_file_path = vim.fn.expand("~/Library/Mobile Documents/com~apple~CloudDocs/github/.zshrc_local")
+local env_file_path = vim.fn.expand("~/Library/Mobile Documents/com~apple~CloudDocs/github/imgur_credentials")
 -- Configuration variables
 -- update these names to match the names you have in the file above
 local access_token_var = "IMGUR_ACCESS_TOKEN"

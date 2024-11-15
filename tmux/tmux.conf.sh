@@ -87,7 +87,7 @@ set-option -g focus-events on
 # my cursor is
 # Make sure these colors also match your neovim autocmd if you change them
 set-hook -g pane-focus-in 'select-pane -P "bg=$linkarzu_color10,fg=white"'
-set-hook -g pane-focus-out 'select-pane -P "bg=$linkarzu_color25,fg=default"'
+set-hook -g pane-focus-out 'select-pane -P "bg=$linkarzu_color07,fg=default"'
 
 # This changes the colors of visual selection and choose-tree
 # https://unix.stackexchange.com/questions/141311/tmux-hightlight-colour-setting

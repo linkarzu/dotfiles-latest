@@ -66,25 +66,26 @@ vim.api.nvim_create_autocmd("FileType", {
   end,
 })
 
--- Change background color when switching between neovim splits and tmux panes
 vim.api.nvim_create_autocmd({ "FocusGained", "FocusLost", "WinEnter", "WinLeave", "BufEnter", "BufLeave" }, {
   callback = function(ev)
+    local active_bg = colors.linkarzu_color10 -- darker background
+    local inactive_bg = colors.linkarzu_color07 -- brighter background
     if ev.event == "FocusGained" or ev.event == "WinEnter" or ev.event == "BufEnter" then
       -- Active window - darker background
-      vim.cmd("hi Normal guibg=" .. colors.linkarzu_color10)
-      vim.cmd("hi NormalFloat guibg=" .. colors.linkarzu_color10)
-      -- vim.cmd("hi NormalNC guibg=" .. colors.linkarzu_color10)
-      -- vim.cmd("hi NormalFloatNC guibg=" .. colors.linkarzu_color10)
-      vim.cmd("hi TreesitterContext guibg=" .. colors.linkarzu_color10)
-      vim.cmd("hi TreesitterContextLineNumber guibg=" .. colors.linkarzu_color10)
+      vim.cmd("hi Normal guibg=" .. active_bg)
+      vim.cmd("hi NormalFloat guibg=" .. active_bg)
+      -- vim.cmd("hi NormalNC guibg=" .. active_bg)
+      -- vim.cmd("hi NormalFloatNC guibg=" .. active_bg)
+      vim.cmd("hi TreesitterContext guibg=" .. active_bg)
+      vim.cmd("hi TreesitterContextLineNumber guibg=" .. active_bg)
     else
       -- Inactive window - brighter background
-      vim.cmd("hi Normal guibg=" .. colors.linkarzu_color25)
-      vim.cmd("hi NormalNC guibg=" .. colors.linkarzu_color25)
-      vim.cmd("hi NormalFloat guibg=" .. colors.linkarzu_color25)
-      vim.cmd("hi NormalFloatNC guibg=" .. colors.linkarzu_color25)
-      vim.cmd("hi TreesitterContext guibg=" .. colors.linkarzu_color25)
-      vim.cmd("hi TreesitterContextLineNumber guibg=" .. colors.linkarzu_color25)
+      vim.cmd("hi Normal guibg=" .. inactive_bg)
+      vim.cmd("hi NormalNC guibg=" .. inactive_bg)
+      vim.cmd("hi NormalFloat guibg=" .. inactive_bg)
+      vim.cmd("hi NormalFloatNC guibg=" .. inactive_bg)
+      vim.cmd("hi TreesitterContext guibg=" .. inactive_bg)
+      vim.cmd("hi TreesitterContextLineNumber guibg=" .. inactive_bg)
     end
   end,
 })

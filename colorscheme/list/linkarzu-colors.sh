@@ -56,3 +56,5 @@ linkarzu_color17="#141b22"
 # Lighter markdown headings
 # Cursor color
 linkarzu_color24="#F712FF"
+# Background of inactive tmux pane
+linkarzu_color25=#232e3b

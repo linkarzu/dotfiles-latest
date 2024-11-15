@@ -78,3 +78,5 @@ linkarzu_color24="#F712FF"
 # #353552
 # #3d3d5d
 # #454569
+# Background of inactive tmux pane
+linkarzu_color25=#232e3b

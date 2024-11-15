@@ -69,3 +69,5 @@ linkarzu_color16="#f0c6c6"
 linkarzu_color17="#363a4f"
 # Cursor color
 linkarzu_color24="#F712FF"
+# Background of inactive tmux pane
+linkarzu_color25=#232e3b

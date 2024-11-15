@@ -6,6 +6,8 @@
 
 -- config/autocmds.lua
 
+local colors = require("config.colors").load_colors()
+
 local function augroup(name)
   return vim.api.nvim_create_augroup("lazyvim_" .. name, { clear = true })
 end
@@ -61,5 +63,23 @@ vim.api.nvim_create_autocmd("FileType", {
         desc = "Quit buffer",
       })
     end)
+  end,
+})
+
+-- Change background color on unfocus and focus, I use this when switching to
+-- another tmux pane
+vim.api.nvim_create_autocmd({ "FocusGained", "FocusLost" }, {
+  callback = function(ev)
+    if ev.event == "FocusGained" then
+      -- Change backgrounds only, preserve foreground colors
+      vim.cmd("hi Normal guibg=" .. colors.linkarzu_color10)
+      vim.cmd("hi TreesitterContext guibg=" .. colors.linkarzu_color10)
+      vim.cmd("hi TreesitterContextLineNumber guibg=" .. colors.linkarzu_color10)
+    else
+      -- Change backgrounds only, preserve foreground colors
+      vim.cmd("hi Normal guibg=" .. colors.linkarzu_color25)
+      vim.cmd("hi TreesitterContext guibg=" .. colors.linkarzu_color25)
+      vim.cmd("hi TreesitterContextLineNumber guibg=" .. colors.linkarzu_color25)
+    end
   end,
 })

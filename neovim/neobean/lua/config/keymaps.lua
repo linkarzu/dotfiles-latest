@@ -716,8 +716,12 @@ end, { desc = "[P]Paste image 'assets' directory" })
 -- bottom, this will give you a lot of details including the refresh token
 --
 -- Configuration:
--- - Set the variables below to match your system.
--- - Ensure your environment variables are stored in a file (e.g., ~/.zshrc_local) and formatted as `export VARIABLE="value"`.
+-- - Ensure your environment variables are stored in a file formatted as `VARIABLE="value"`.
+-- NOTE: Here's a sample file to copy and paste:
+-- IMGUR_ACCESS_TOKEN="xxxxxxx"
+-- IMGUR_REFRESH_TOKEN="yyyyyyy"
+-- IMGUR_CLIENT_ID="zzzzzz"
+-- IMGUR_CLIENT_SECRET="wwwwww"
 --
 -- Path to your environment variables file
 local env_file_path = vim.fn.expand("~/Library/Mobile Documents/com~apple~CloudDocs/github/imgur_credentials")
@@ -738,7 +742,8 @@ vim.keymap.set({ "n", "v", "i" }, "<C-f>", function()
       local file = io.open(env_file_path, "r")
       if file then
         for line in file:lines() do
-          for key, value in string.gmatch(line, 'export%s+([%w_]+)="([^"]+)"') do
+          -- Updated pattern to match lines without 'export'
+          for key, value in string.gmatch(line, '([%w_]+)="([^"]+)"') do
             env_vars[key] = value
           end
         end
@@ -821,12 +826,12 @@ vim.keymap.set({ "n", "v", "i" }, "<C-f>", function()
             local content = file:read("*all")
             if content then
               -- Update Access Token
-              local pattern_access = "export%s+" .. access_token_var .. '="[^"]*"'
-              local replacement_access = "export " .. access_token_var .. '="' .. new_access_token .. '"'
+              local pattern_access = access_token_var .. '="[^"]*"'
+              local replacement_access = access_token_var .. '="' .. new_access_token .. '"'
               content = content:gsub(pattern_access, replacement_access)
               -- Update Refresh Token
-              local pattern_refresh = "export%s+" .. refresh_token_var .. '="[^"]*"'
-              local replacement_refresh = "export " .. refresh_token_var .. '="' .. new_refresh_token .. '"'
+              local pattern_refresh = refresh_token_var .. '="[^"]*"'
+              local replacement_refresh = refresh_token_var .. '="' .. new_refresh_token .. '"'
               content = content:gsub(pattern_refresh, replacement_refresh)
               file:seek("set", 0)
               file:write(content)
@@ -876,10 +881,10 @@ vim.keymap.set({ "n", "v", "i" }, "<C-f>", function()
       end
       local upload_command = string.format(
         [[
-        %s \
-        | curl --silent --write-out "HTTPSTATUS:%%{http_code}" --request POST --form "image=@-" \
+          %s \
+          | curl --silent --write-out "HTTPSTATUS:%%{http_code}" --request POST --form "image=@-" \
           --header "Authorization: Bearer %s" "https://api.imgur.com/3/image"
-      ]],
+        ]],
         clipboard_command,
         imgur_access_token
       )

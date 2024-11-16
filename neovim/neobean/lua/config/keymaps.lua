@@ -783,20 +783,20 @@ vim.keymap.set({ "n", "v", "i" }, "<C-f>", function()
         imgur_client_id,
         imgur_client_secret
       )
-      print("Refresh command: " .. refresh_command) -- Log the refresh command
+      -- print("Refresh command: " .. refresh_command) -- Log the refresh command
       local new_access_token = nil
       local new_refresh_token = nil
       vim.fn.jobstart(refresh_command, {
         stdout_buffered = true,
         on_stdout = function(_, data)
           local json_data = table.concat(data, "\n")
-          print("Refresh token response JSON: " .. json_data) -- Log the response JSON
+          -- print("Refresh token response JSON: " .. json_data) -- Log the response JSON
           local response = vim.fn.json_decode(json_data)
           if response and response.access_token then
             new_access_token = response.access_token
             new_refresh_token = response.refresh_token
-            print("New access token obtained: " .. new_access_token) -- Log the new access token
-            print("New refresh token obtained: " .. new_refresh_token) -- Log the new refresh token
+            -- print("New access token obtained: " .. new_access_token) -- Log the new access token
+            -- print("New refresh token obtained: " .. new_refresh_token) -- Log the new refresh token
           else
             vim.notify(
               "Failed to refresh access token: " .. (response and response.error_description or "Unknown error"),
@@ -868,22 +868,22 @@ vim.keymap.set({ "n", "v", "i" }, "<C-f>", function()
       elseif is_linux then
         -- Linux command to get image from clipboard using xclip
         clipboard_command = [[xclip -selection clipboard -t image/png -o]]
-      -- Alternative for Wayland-based systems (uncomment if needed)
-      -- clipboard_command = [[wl-paste --type image/png]]
+        -- Alternative for Wayland-based systems (uncomment if needed)
+        -- clipboard_command = [[wl-paste --type image/png]]
       else
         vim.notify("Unsupported operating system for clipboard image upload.", vim.log.levels.ERROR)
         return
       end
       local upload_command = string.format(
         [[
-    %s \
-    | curl --silent --write-out "HTTPSTATUS:%%{http_code}" --request POST --form "image=@-" \
-      --header "Authorization: Bearer %s" "https://api.imgur.com/3/image"
-  ]],
+        %s \
+        | curl --silent --write-out "HTTPSTATUS:%%{http_code}" --request POST --form "image=@-" \
+          --header "Authorization: Bearer %s" "https://api.imgur.com/3/image"
+      ]],
         clipboard_command,
         imgur_access_token
       )
-      print("Upload command: " .. upload_command) -- Log the upload command
+      -- print("Upload command: " .. upload_command) -- Log the upload command
       local url = nil
       local error_status = nil
       local error_message = nil
@@ -894,19 +894,19 @@ vim.keymap.set({ "n", "v", "i" }, "<C-f>", function()
           local output = table.concat(data, "\n")
           local json_data, http_status = output:match("^(.*)HTTPSTATUS:(%d+)$")
           if not json_data or not http_status then
-            print("Failed to parse response and HTTP status code.")
+            -- print("Failed to parse response and HTTP status code.")
             error_status = nil
             error_message = "Unknown error"
             return
           end
-          print("Upload response JSON: " .. json_data)
-          print("HTTP status code: " .. http_status)
+          -- print("Upload response JSON: " .. json_data)
+          -- print("HTTP status code: " .. http_status)
           local response = vim.fn.json_decode(json_data)
           error_status = tonumber(http_status)
           if error_status >= 200 and error_status < 300 and response and response.success then
             url = response.data.link
             account_id = response.data.account_id
-            print("Upload successful. URL: " .. url)
+            -- print("Upload successful. URL: " .. url)
           else
             -- Extract error message from different possible response formats
             if response.data and response.data.error then
@@ -916,7 +916,7 @@ vim.keymap.set({ "n", "v", "i" }, "<C-f>", function()
             else
               error_message = "Unknown error"
             end
-            print("Upload failed. Status: " .. tostring(error_status) .. ", Error: " .. error_message)
+            -- print("Upload failed. Status: " .. tostring(error_status) .. ", Error: " .. error_message)
           end
         end,
         on_exit = function()

@@ -868,18 +868,18 @@ vim.keymap.set({ "n", "v", "i" }, "<C-f>", function()
       elseif is_linux then
         -- Linux command to get image from clipboard using xclip
         clipboard_command = [[xclip -selection clipboard -t image/png -o]]
-        -- Alternative for Wayland-based systems (uncomment if needed)
-        -- clipboard_command = [[wl-paste --type image/png]]
+      -- Alternative for Wayland-based systems (uncomment if needed)
+      -- clipboard_command = [[wl-paste --type image/png]]
       else
         vim.notify("Unsupported operating system for clipboard image upload.", vim.log.levels.ERROR)
         return
       end
       local upload_command = string.format(
         [[
-        %s \
-        | curl --silent --request POST --form "image=@-" \
-          --header "Authorization: Bearer %s" "https://api.imgur.com/3/image"
-      ]],
+    %s \
+    | curl --silent --write-out "HTTPSTATUS:%%{http_code}" --request POST --form "image=@-" \
+      --header "Authorization: Bearer %s" "https://api.imgur.com/3/image"
+  ]],
         clipboard_command,
         imgur_access_token
       )
@@ -891,16 +891,31 @@ vim.keymap.set({ "n", "v", "i" }, "<C-f>", function()
       vim.fn.jobstart(upload_command, {
         stdout_buffered = true,
         on_stdout = function(_, data)
-          local json_data = table.concat(data, "\n")
-          print("Upload response JSON: " .. json_data) -- Log the upload response
+          local output = table.concat(data, "\n")
+          local json_data, http_status = output:match("^(.*)HTTPSTATUS:(%d+)$")
+          if not json_data or not http_status then
+            print("Failed to parse response and HTTP status code.")
+            error_status = nil
+            error_message = "Unknown error"
+            return
+          end
+          print("Upload response JSON: " .. json_data)
+          print("HTTP status code: " .. http_status)
           local response = vim.fn.json_decode(json_data)
-          if response and response.success then
+          error_status = tonumber(http_status)
+          if error_status >= 200 and error_status < 300 and response and response.success then
             url = response.data.link
             account_id = response.data.account_id
-            print("Upload successful. URL: " .. url) -- Log the URL
+            print("Upload successful. URL: " .. url)
           else
-            error_status = response.status
-            error_message = response.data and response.data.error or "Unknown error"
+            -- Extract error message from different possible response formats
+            if response.data and response.data.error then
+              error_message = response.data.error
+            elseif response.errors and response.errors[1] and response.errors[1].detail then
+              error_message = response.errors[1].detail
+            else
+              error_message = "Unknown error"
+            end
             print("Upload failed. Status: " .. tostring(error_status) .. ", Error: " .. error_message)
           end
         end,
@@ -912,17 +927,13 @@ vim.keymap.set({ "n", "v", "i" }, "<C-f>", function()
             -- Insert formatted Markdown link into buffer at cursor position
             local row, col = unpack(vim.api.nvim_win_get_cursor(0))
             vim.api.nvim_buf_set_text(0, row - 1, col, row - 1, col, { markdown_url })
-          elseif account_id == vim.NIL or account_id == nil then
-            -- Access token might be invalid, refresh it and retry
-            refresh_access_token(function()
-              -- Retry the upload with the new access token
-              upload_to_imgur()
-            end)
-          elseif error_status == 401 then
+          elseif error_status == 401 or error_status == 429 then
             vim.notify("Access token expired or invalid, refreshing...", vim.log.levels.WARN)
             refresh_access_token(function()
               upload_to_imgur()
             end)
+          elseif error_status == 400 and error_message == "We don't support that file type!" then
+            vim.notify("Failed to upload image: " .. error_message, vim.log.levels.ERROR)
           else
             vim.notify("Failed to upload image to Imgur: " .. (error_message or "Unknown error"), vim.log.levels.ERROR)
           end

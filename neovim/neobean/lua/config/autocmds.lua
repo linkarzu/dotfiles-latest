@@ -66,79 +66,81 @@ vim.api.nvim_create_autocmd("FileType", {
   end,
 })
 
-vim.api.nvim_create_autocmd({ "FocusGained", "FocusLost", "WinEnter", "WinLeave", "BufEnter", "BufLeave" }, {
-  callback = function(ev)
-    local active_bg = colors.linkarzu_color10 -- darker background
-    local inactive_bg = colors.linkarzu_color07 -- brighter background
-    if ev.event == "FocusGained" or ev.event == "WinEnter" or ev.event == "BufEnter" then
-      -- Active window - darker background
-      vim.cmd("hi Normal guibg=" .. active_bg)
-      vim.cmd("hi NormalFloat guibg=" .. active_bg)
-      -- vim.cmd("hi NormalNC guibg=" .. active_bg)
-      -- vim.cmd("hi NormalFloatNC guibg=" .. active_bg)
-      vim.cmd("hi TreesitterContext guibg=" .. active_bg)
-      vim.cmd("hi TreesitterContextLineNumber guibg=" .. active_bg)
-    else
-      -- Inactive window - brighter background
-      vim.cmd("hi Normal guibg=" .. inactive_bg)
-      vim.cmd("hi NormalNC guibg=" .. inactive_bg)
-      vim.cmd("hi NormalFloat guibg=" .. inactive_bg)
-      vim.cmd("hi NormalFloatNC guibg=" .. inactive_bg)
-      vim.cmd("hi TreesitterContext guibg=" .. inactive_bg)
-      vim.cmd("hi TreesitterContextLineNumber guibg=" .. inactive_bg)
-    end
-  end,
-})
-
--- -- Debounce wrapper using vim.defer_fn
--- -- This debounce prevents to see the color switch when switching betweeen 2
--- -- buffers, it doesn't kick in if I switch between 2 different panes until I
--- -- switch to another tmux session
--- local function debounce(func, timeout)
---   local timer = nil
---   return function(...)
---     local args = { ... }
---     if timer then
---       -- Cancel any existing timer
---       timer:close()
---       timer = nil
+-- -- This is used to switch between light and dark background colors when the
+-- -- focus is lost or gained, for example when I switch from neovim to a tmux
+-- -- pane on the right, or between 2 neovim splits
+-- vim.api.nvim_create_autocmd({ "FocusGained", "FocusLost", "WinEnter", "WinLeave" }, {
+--   callback = function(ev)
+--     local active_bg = colors.linkarzu_color10 -- darker background
+--     local inactive_bg = colors.linkarzu_color07 -- brighter background
+--     if ev.event == "FocusGained" or ev.event == "WinEnter" then
+--       -- Active window - darker background
+--       vim.cmd("hi Normal guibg=" .. active_bg)
+--       vim.cmd("hi NormalFloat guibg=" .. active_bg)
+--       -- vim.cmd("hi NormalNC guibg=" .. active_bg)
+--       -- vim.cmd("hi NormalFloatNC guibg=" .. active_bg)
+--       vim.cmd("hi TreesitterContext guibg=" .. active_bg)
+--       vim.cmd("hi TreesitterContextLineNumber guibg=" .. active_bg)
+--     else
+--       -- Inactive window - brighter background
+--       vim.cmd("hi Normal guibg=" .. inactive_bg)
+--       vim.cmd("hi NormalNC guibg=" .. inactive_bg)
+--       vim.cmd("hi NormalFloat guibg=" .. inactive_bg)
+--       vim.cmd("hi NormalFloatNC guibg=" .. inactive_bg)
+--       vim.cmd("hi TreesitterContext guibg=" .. inactive_bg)
+--       vim.cmd("hi TreesitterContextLineNumber guibg=" .. inactive_bg)
 --     end
---     timer = vim.defer_fn(function()
---       func(unpack(args))
---       timer = nil
---     end, timeout)
---   end
--- end
--- -- Callback function to handle background color change
--- local function update_background(ev)
---   local active_bg = colors.linkarzu_color10 -- darker background
---   local inactive_bg = colors.linkarzu_color07 -- brighter background
---   if
---     ev.event == "FocusGained"
---     or ev.event == "WinEnter"
---     or ev.event == "BufEnter"
---     or ev.event == "TabEnter"
---     or ev.event == "BufWinEnter"
---   then
---     -- Active window or tab - darker background
---     vim.cmd("hi Normal guibg=" .. active_bg)
---     vim.cmd("hi NormalFloat guibg=" .. active_bg)
---     vim.cmd("hi TreesitterContext guibg=" .. active_bg)
---     vim.cmd("hi TreesitterContextLineNumber guibg=" .. active_bg)
---   else
---     -- Inactive window or tab - brighter background
---     vim.cmd("hi Normal guibg=" .. inactive_bg)
---     vim.cmd("hi NormalNC guibg=" .. inactive_bg)
---     vim.cmd("hi NormalFloat guibg=" .. inactive_bg)
---     vim.cmd("hi NormalFloatNC guibg=" .. inactive_bg)
---     vim.cmd("hi TreesitterContext guibg=" .. inactive_bg)
---     vim.cmd("hi TreesitterContextLineNumber guibg=" .. inactive_bg)
---   end
--- end
--- -- Create autocmd with debounce
--- vim.api.nvim_create_autocmd(
---   { "FocusGained", "FocusLost", "WinEnter", "WinLeave", "BufEnter", "BufLeave", "TabEnter", "TabLeave", "BufWinEnter" },
---   {
---     callback = debounce(update_background, 500), -- 500 ms debounce delay
---   }
--- )
+--   end,
+-- })
+
+-- -- This debounce prevents to see the color switch when switching betweeen 2
+-- -- buffers. Remember that you'll see the color switch when switching between
+-- -- tmux sessions, I haven't figured out how to add a delay there
+local function update_background(event_type)
+  local active_bg = colors.linkarzu_color10 -- darker background
+  local inactive_bg = colors.linkarzu_color07 -- brighter background
+  if event_type == "FocusGained" or event_type == "WinEnter" then
+    -- Active window - darker background
+    vim.cmd("hi Normal guibg=" .. active_bg)
+    vim.cmd("hi NormalFloat guibg=" .. active_bg)
+    vim.cmd("hi TreesitterContext guibg=" .. active_bg)
+    vim.cmd("hi TreesitterContextLineNumber guibg=" .. active_bg)
+  else
+    -- Inactive window - brighter background
+    vim.cmd("hi Normal guibg=" .. inactive_bg)
+    vim.cmd("hi NormalNC guibg=" .. inactive_bg)
+    vim.cmd("hi NormalFloat guibg=" .. inactive_bg)
+    vim.cmd("hi NormalFloatNC guibg=" .. inactive_bg)
+    vim.cmd("hi TreesitterContext guibg=" .. inactive_bg)
+    vim.cmd("hi TreesitterContextLineNumber guibg=" .. inactive_bg)
+  end
+end
+-- Debounce function for Focus events
+local debounce_timer = nil
+local function debounced_update_background(ev)
+  local event_type = ev.event -- Capture the event type
+  -- Cancel any existing timer
+  if debounce_timer then
+    vim.fn.timer_stop(debounce_timer)
+    debounce_timer = nil
+  end
+  -- Start a new timer
+  debounce_timer = vim.fn.timer_start(50, function()
+    vim.schedule(function()
+      update_background(event_type)
+      debounce_timer = nil
+    end)
+  end)
+end
+-- Immediate function for Win events
+local function immediate_update_background(ev)
+  update_background(ev.event)
+end
+-- Create autocmd for WinEnter and WinLeave with immediate update
+vim.api.nvim_create_autocmd({ "WinEnter", "WinLeave" }, {
+  callback = immediate_update_background,
+})
+-- Create autocmd for FocusGained and FocusLost with debounce
+vim.api.nvim_create_autocmd({ "FocusGained", "FocusLost" }, {
+  callback = debounced_update_background,
+})

@@ -1,0 +1,9 @@
+[manager]
+
+prepend_keymap = [
+	{ on = "<Esc>",     run = "quit",               desc = "Exit the process" },
+	{ on = "o",         run = "create",                      desc = "Create a file (ends with / for directories)" },
+	{ on = "t", run = [ "select --state=none", "arrow 0" ], desc = "Toggle the current selection state" },
+ 	{ on = [ "d", "d" ],         run = "remove",                      desc = "Trash selected files" },
+	{ on = [ "y", "y" ],         run = "yank",                        desc = "Yank selected files (copy)" },
+]

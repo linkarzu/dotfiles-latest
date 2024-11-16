@@ -217,20 +217,24 @@ setopt histignorespace
 # Custom list of commands to ignore (adjust as needed)
 # HISTIGNORE='ls*:bg*:fg*:exit*:ll*'
 
-# -n is the opposite of -z, checks if the variable is not empty, so in other
-# words, checks if the variable is set
-if [[ -n "$DISABLE_PULL" ]]; then
-  # Override the default 'exit' command for this specific tmux pane
-  function exit() {
-    tmux select-pane -L # Switch focus to the left pane
-    tmux resize-pane -Z # Maximize the left pane
-    return 0            # Return success without actually exiting
-  }
-  # Create a new EXIT command to force actual exit
-  function EXIT() {
-    builtin exit
-  }
-fi
+# # Disabled this as I close the pane with `,` when in normal mode on zsh-vi-mode
+# #
+# # When on my right tmux pane if I type exit, it will not close the pane but
+# # actually maximize it, to close it I need to type EXIT
+# # -n is the opposite of -z, checks if the variable is not empty, so in other
+# # words, checks if the variable is set
+# if [[ -n "$DISABLE_PULL" ]]; then
+#   # Override the default 'exit' command for this specific tmux pane
+#   function exit() {
+#     tmux select-pane -L # Switch focus to the left pane
+#     tmux resize-pane -Z # Maximize the left pane
+#     return 0            # Return success without actually exiting
+#   }
+#   # Create a new EXIT command to force actual exit
+#   function EXIT() {
+#     builtin exit
+#   }
+# fi
 
 # Common settings and plugins
 alias ll='ls -lh'

@@ -57,6 +57,12 @@ return {
         normal = "<Esc>",
         insert = "<Esc>",
       },
+      -- I hated this keymap with all my heart, when trying to navigate between
+      -- neovim splits I reset the chat by mistake if I was in insert mode
+      reset = {
+        normal = "",
+        insert = "",
+      },
     }
 
     -- opts.prompts = {

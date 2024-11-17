@@ -710,15 +710,14 @@ vim.keymap.set({ "n", "v", "i" }, "<C-p>", function()
   end, 100)
 end, { desc = "[P]Paste image 'assets' directory" })
 
+-- Upload images to my own imgur account (authenticated)
+--
 -- NOTE: This command is for macOS because that's the OS I use
 -- if you use Linux, it will try, but if it fails you'll have to adapt the
 -- `local upload_command` and make sure you have the dependencies needed
 --
--- NOTE: Make sure there's an image in your clipboard before running this or the
--- token will be refreshed, I don't want to add any sort of validation for this
--- now
+-- NOTE: Issue where image in clipboard was not "detected" has been fixed
 --
--- Upload images to my own imgur account (authenticated)
 -- This script uploads images to Imgur using an access token, and refreshes the token if it's expired.
 -- It reads environment variables from a specified file and updates them as needed.
 --

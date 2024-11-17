@@ -5,13 +5,10 @@ tap "jesseduffield/lazygit"
 tap "homebrew/cask-fonts"
 
 # Files that I might install
-brew "switchaudio-osx"
 cask "brave-browser"
 cask "canva"
-cask "discord"
 cask "gimp"
 cask "imageoptim"
-cask "postman"
 cask "slack"
 cask "spotify"
 cask "visual-studio-code"

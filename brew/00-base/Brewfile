@@ -30,7 +30,9 @@ brew "bat"
 brew "eza"
 brew "zsh-autosuggestions"
 brew "zsh-vi-mode"
-cask "alacritty"
+cask "kitty"
+cask "wezterm"
+
 brew "jq"
 brew "sketchybar"
 

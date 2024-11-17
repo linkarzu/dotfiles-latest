@@ -1,6 +1,6 @@
-#Random tools I normally use
+# Random tools I normally use
 
-#Adding taps (repos) on top
+# Adding taps (repos) on top
 tap "homebrew/bundle"
 tap "homebrew/services"
 tap "jesseduffield/lazygit"
@@ -8,11 +8,12 @@ tap "homebrew/cask-fonts"
 
 brew "expect"
 brew "mtr"
-#I use smartmontools to monitor disk health
+# I use smartmontools to monitor disk health
 brew "smartmontools"
 brew "tcptraceroute"
 brew "telnet"
-cask "beardedspice"
+# Beardedspice has not been maintaned in 3 years, deprecataed
+# cask "beardedspice"
 cask "betterdisplay"
 cask "google-cloud-sdk"
 cask "google-drive"
@@ -20,11 +21,13 @@ cask "microsoft-remote-desktop"
 cask "raycast"
 cask "setapp"
 cask "obs"
+cask "discord"
+cask "postman"
 
-#This errored out, I prefer to install it from the yabai script
-#brew "koekeishiya/formulae/yabai"
+# This errored out, I prefer to install it from the yabai script
+# brew "koekeishiya/formulae/yabai"
 
-#Will install wineskin later on when needed, it errors out if part of my script
-#cask "wineskin"
-#gstreamer-runtime or gstreamer.framework is installed by
-#gcenx/wine/wineskin
+# Will install wineskin later on when needed, it errors out if part of my script
+# cask "wineskin"
+# gstreamer-runtime or gstreamer.framework is installed by
+# gcenx/wine/wineskin

@@ -86,10 +86,15 @@ return {
     local gitStatusCache = {}
     local cacheTimeout = 2000 -- Cache timeout in milliseconds
 
+    local function isSymlink(path)
+      local stat = vim.loop.fs_lstat(path)
+      return stat and stat.type == "link"
+    end
+
     ---@type table<string, {symbol: string, hlGroup: string}>
     ---@param status string
     ---@return string symbol, string hlGroup
-    local function mapSymbols(status)
+    local function mapSymbols(status, is_symlink)
       local statusMap = {
     -- stylua: ignore start 
         [" M"] = { symbol = "✹", hlGroup  = "MiniDiffSignChange"}, -- Modified in the working directory
@@ -110,7 +115,17 @@ return {
       }
 
       local result = statusMap[status] or { symbol = "?", hlGroup = "NonText" }
-      return result.symbol, result.hlGroup
+      local gitSymbol = result.symbol
+      local gitHlGroup = result.hlGroup
+
+      local symlinkSymbol = is_symlink and "↩" or ""
+
+      -- Combine symlink symbol with Git status if both exist
+      local combinedSymbol = (symlinkSymbol .. gitSymbol):gsub("^%s+", ""):gsub("%s+$", "")
+      -- Change the color of the symlink icon from "MiniDiffSignDelete" to something else
+      local combinedHlGroup = is_symlink and "MiniDiffSignDelete" or gitHlGroup
+
+      return combinedSymbol, combinedHlGroup
     end
 
     ---@param cwd string
@@ -156,7 +171,8 @@ return {
           local status = gitStatusMap[relativePath]
 
           if status then
-            local symbol, hlGroup = mapSymbols(status)
+            local is_symlink = isSymlink(entry.path)
+            local symbol, hlGroup = mapSymbols(status, is_symlink)
             vim.api.nvim_buf_set_extmark(buf_id, nsMiniFiles, i - 1, 0, {
               -- NOTE: if you want the signs on the right uncomment those and comment
               -- the 3 lines after

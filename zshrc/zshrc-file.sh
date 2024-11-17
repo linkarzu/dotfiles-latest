@@ -196,7 +196,7 @@ zstyle ':completion:*:*:*:*:warnings' format ' %F{red}-- no matches found --%f'
 # Store 10,000 entries in the command history
 HISTFILE=~/.zsh_history
 HISTSIZE=10000
-SAVEHIST=10000
+SAVEHIST=20000
 # Check if the history file exists, if not, create it
 if [[ ! -f $HISTFILE ]]; then
   touch $HISTFILE

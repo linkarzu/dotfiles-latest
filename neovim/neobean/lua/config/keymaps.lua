@@ -80,6 +80,23 @@ vim.keymap.set({ "n", "v" }, "gl", "$", { desc = "[P]go to the end of the line" 
 -- In visual mode, after going to the end of the line, come back 1 character
 vim.keymap.set("v", "gl", "$h", { desc = "[P]Go to the end of the line" })
 
+-- -- These are defaults from lazyvim, but I also want them to work in insert mode
+-- -- This worked great, but it didn't work with tmux, cannot use those keys to
+-- -- switch to tmux panes anymore
+-- local function navigate_window(direction)
+--   return function()
+--     if vim.fn.mode() == "i" then
+--       vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Esc><C-w>" .. direction, true, false, true), "n", true)
+--     else
+--       vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<C-w>" .. direction, true, false, true), "n", true)
+--     end
+--   end
+-- end
+-- vim.keymap.set({ "n", "i" }, "<C-h>", navigate_window("h"), { desc = "Go to Left Window", remap = false })
+-- vim.keymap.set({ "n", "i" }, "<C-j>", navigate_window("j"), { desc = "Go to Lower Window", remap = false })
+-- vim.keymap.set({ "n", "i" }, "<C-k>", navigate_window("k"), { desc = "Go to Upper Window", remap = false })
+-- vim.keymap.set({ "n", "i" }, "<C-l>", navigate_window("l"), { desc = "Go to Right Window", remap = false })
+
 -- -- yank selected text into system clipboard
 -- -- Vim/Neovim has two clipboards: unnamed register (default) and system clipboard.
 -- --

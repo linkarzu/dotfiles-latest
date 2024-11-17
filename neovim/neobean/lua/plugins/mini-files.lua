@@ -154,12 +154,15 @@ return {
     local nsMiniFiles = vim.api.nvim_create_namespace("mini_files_git")
     local autocmd = vim.api.nvim_create_autocmd
     local _, MiniFiles = pcall(require, "mini.files")
-
+    local function isSymlink(path)
+      local stat = vim.loop.fs_lstat(path)
+      return stat and stat.type == "link"
+    end
     -- Cache for git status
     local gitStatusCache = {}
     local cacheTimeout = 2000 -- Cache timeout in milliseconds
 
-    local function mapSymbols(status)
+    local function mapSymbols(status, is_symlink)
       local statusMap = {
         -- stylua: ignore start 
         [" M"] = { symbol = "✹", hlGroup  = "MiniDiffSignChange"}, -- Modified in the working directory
@@ -179,10 +182,19 @@ return {
         -- stylua: ignore end
       }
 
-      local result = statusMap[status] or { symbol = "?", hlGroup = "NonText" }
-      return result.symbol, result.hlGroup
-    end
+      -- Default to empty string and "NonText" highlight group if not found
+      local gitStatus = statusMap[status] or { symbol = "", hlGroup = "NonText" }
+      local gitSymbol = gitStatus.symbol
+      local gitHlGroup = gitStatus.hlGroup
 
+      local symlinkSymbol = is_symlink and "↩" or ""
+
+      -- Combine symlink symbol with Git status if both exist
+      local combinedSymbol = (symlinkSymbol .. gitSymbol):gsub("^%s+", ""):gsub("%s+$", "")
+      local combinedHlGroup = is_symlink and "Directory" or gitHlGroup
+
+      return combinedSymbol, combinedHlGroup
+    end
     ---@param cwd string
     ---@param callback function
     local function fetchGitStatus(cwd, callback)
@@ -202,7 +214,7 @@ return {
     local function updateMiniWithGit(buf_id, gitStatusMap)
       vim.schedule(function()
         local nlines = vim.api.nvim_buf_line_count(buf_id)
-        local cwd = vim.fn.getcwd() --  vim.fn.expand("%:p:h")
+        local cwd = vim.fn.getcwd()
         local escapedcwd = escapePattern(cwd)
         if vim.fn.has("win32") == 1 then
           escapedcwd = escapedcwd:gsub("\\", "/")
@@ -215,20 +227,14 @@ return {
           end
           local relativePath = entry.path:gsub("^" .. escapedcwd .. "/", "")
           local status = gitStatusMap[relativePath]
+          local is_symlink = isSymlink(entry.path)
 
-          if status then
-            local symbol, hlGroup = mapSymbols(status)
-            vim.api.nvim_buf_set_extmark(buf_id, nsMiniFiles, i - 1, 0, {
-              -- NOTE: if you want the signs on the right uncomment those and comment
-              -- the 3 lines after
-              -- virt_text = { { symbol, hlGroup } },
-              -- virt_text_pos = "right_align",
-              sign_text = symbol,
-              sign_hl_group = hlGroup,
-              priority = 2,
-            })
-          else
-          end
+          local symbol, hlGroup = mapSymbols(status, is_symlink)
+          vim.api.nvim_buf_set_extmark(buf_id, nsMiniFiles, i - 1, 0, {
+            sign_text = symbol,
+            sign_hl_group = hlGroup,
+            priority = 2,
+          })
         end
       end)
     end

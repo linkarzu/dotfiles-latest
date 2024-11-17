@@ -105,6 +105,11 @@ local function update_background(event_type)
     vim.cmd("hi NormalFloat guibg=" .. active_bg)
     vim.cmd("hi TreesitterContext guibg=" .. active_bg)
     vim.cmd("hi TreesitterContextLineNumber guibg=" .. active_bg)
+    -- vim.cmd("hi MiniFilesTitleFocused guibg=" .. active_bg)
+    vim.cmd("hi MiniDiffSignChange guibg=" .. active_bg)
+    vim.cmd("hi MiniDiffSignAdd guibg=" .. active_bg)
+    vim.cmd("hi MiniDiffSignDelete guibg=" .. active_bg)
+    vim.cmd("hi NonText guibg=" .. active_bg)
   else
     -- Inactive window - brighter background
     vim.cmd("hi Normal guibg=" .. inactive_bg)
@@ -113,6 +118,11 @@ local function update_background(event_type)
     vim.cmd("hi NormalFloatNC guibg=" .. inactive_bg)
     vim.cmd("hi TreesitterContext guibg=" .. inactive_bg)
     vim.cmd("hi TreesitterContextLineNumber guibg=" .. inactive_bg)
+    -- vim.cmd("hi MiniFilesTitle guibg=" .. inactive_bg)
+    vim.cmd("hi MiniDiffSignChange guibg=" .. inactive_bg)
+    vim.cmd("hi MiniDiffSignAdd guibg=" .. inactive_bg)
+    vim.cmd("hi MiniDiffSignDelete guibg=" .. inactive_bg)
+    vim.cmd("hi NonText guibg=" .. inactive_bg)
   end
 end
 -- Debounce function for Focus events

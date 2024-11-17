@@ -1579,7 +1579,8 @@ end, { desc = "[P]Toggle checkbox" })
 
 -- Crate task or checkbox lamw25wmal
 -- These are marked with <leader>x using bullets.vim
-vim.keymap.set("i", "<C-l>", function()
+-- I used <C-l> before, but that is used for pane navigation
+vim.keymap.set("i", "<C-V>", function()
   vim.cmd("normal! i- [ ]  ")
   vim.cmd("startinsert")
 end, { desc = "[P]Toggle checkbox" })

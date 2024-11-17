@@ -59,6 +59,12 @@ return {
       },
     }
 
+    -- opts.prompts = {
+    --   Lazy = {
+    --     prompt = "Specify a custom prompt here",
+    --   },
+    -- }
+
     return opts
   end,
 }

@@ -81,17 +81,17 @@ return {
     local nsMiniFiles = vim.api.nvim_create_namespace("mini_files_git")
     local autocmd = vim.api.nvim_create_autocmd
     local _, MiniFiles = pcall(require, "mini.files")
-    local function isSymlink(path)
-      local stat = vim.loop.fs_lstat(path)
-      return stat and stat.type == "link"
-    end
+
     -- Cache for git status
     local gitStatusCache = {}
     local cacheTimeout = 2000 -- Cache timeout in milliseconds
 
-    local function mapSymbols(status, is_symlink)
+    ---@type table<string, {symbol: string, hlGroup: string}>
+    ---@param status string
+    ---@return string symbol, string hlGroup
+    local function mapSymbols(status)
       local statusMap = {
-        -- stylua: ignore start 
+    -- stylua: ignore start 
         [" M"] = { symbol = "✹", hlGroup  = "MiniDiffSignChange"}, -- Modified in the working directory
         ["M "] = { symbol = "•", hlGroup  = "MiniDiffSignChange"}, -- modified in index
         ["MM"] = { symbol = "≠", hlGroup  = "MiniDiffSignChange"}, -- modified in both working tree and index
@@ -109,21 +109,13 @@ return {
         -- stylua: ignore end
       }
 
-      -- Default to empty string and "NonText" highlight group if not found
-      local gitStatus = statusMap[status] or { symbol = "", hlGroup = "NonText" }
-      local gitSymbol = gitStatus.symbol
-      local gitHlGroup = gitStatus.hlGroup
-
-      local symlinkSymbol = is_symlink and "↩" or ""
-
-      -- Combine symlink symbol with Git status if both exist
-      local combinedSymbol = (symlinkSymbol .. gitSymbol):gsub("^%s+", ""):gsub("%s+$", "")
-      local combinedHlGroup = is_symlink and "Directory" or gitHlGroup
-
-      return combinedSymbol, combinedHlGroup
+      local result = statusMap[status] or { symbol = "?", hlGroup = "NonText" }
+      return result.symbol, result.hlGroup
     end
+
     ---@param cwd string
     ---@param callback function
+    ---@return nil
     local function fetchGitStatus(cwd, callback)
       local function on_exit(content)
         if content.code == 0 then
@@ -134,14 +126,22 @@ return {
       vim.system({ "git", "status", "--ignored", "--porcelain" }, { text = true, cwd = cwd }, on_exit)
     end
 
+    ---@param str string|nil
+    ---@return string
     local function escapePattern(str)
-      return str:gsub("([%^%$%(%)%%%.%[%]%*%+%-%?])", "%%%1")
+      if not str then
+        return ""
+      end
+      return (str:gsub("([%^%$%(%)%%%.%[%]%*%+%-%?])", "%%%1"))
     end
 
+    ---@param buf_id integer
+    ---@param gitStatusMap table
+    ---@return nil
     local function updateMiniWithGit(buf_id, gitStatusMap)
       vim.schedule(function()
         local nlines = vim.api.nvim_buf_line_count(buf_id)
-        local cwd = vim.fn.getcwd()
+        local cwd = vim.fs.root(buf_id, ".git")
         local escapedcwd = escapePattern(cwd)
         if vim.fn.has("win32") == 1 then
           escapedcwd = escapedcwd:gsub("\\", "/")
@@ -154,26 +154,27 @@ return {
           end
           local relativePath = entry.path:gsub("^" .. escapedcwd .. "/", "")
           local status = gitStatusMap[relativePath]
-          local is_symlink = isSymlink(entry.path)
 
-          local symbol, hlGroup = mapSymbols(status, is_symlink)
-          vim.api.nvim_buf_set_extmark(buf_id, nsMiniFiles, i - 1, 0, {
-            sign_text = symbol,
-            sign_hl_group = hlGroup,
-            priority = 2,
-          })
+          if status then
+            local symbol, hlGroup = mapSymbols(status)
+            vim.api.nvim_buf_set_extmark(buf_id, nsMiniFiles, i - 1, 0, {
+              -- NOTE: if you want the signs on the right uncomment those and comment
+              -- the 3 lines after
+              -- virt_text = { { symbol, hlGroup } },
+              -- virt_text_pos = "right_align",
+              sign_text = symbol,
+              sign_hl_group = hlGroup,
+              priority = 2,
+            })
+          else
+          end
         end
       end)
     end
 
-    local function is_valid_git_repo()
-      if vim.fn.isdirectory(".git") == 0 then
-        return false
-      end
-      return true
-    end
-
     -- Thanks for the idea of gettings https://github.com/refractalize/oil-git-status.nvim signs for dirs
+    ---@param content string
+    ---@return table
     local function parseGitStatus(content)
       local gitStatusMap = {}
       -- lua match is faster than vim.split (in my experience )
@@ -207,11 +208,14 @@ return {
       return gitStatusMap
     end
 
+    ---@param buf_id integer
+    ---@return nil
     local function updateGitStatus(buf_id)
-      if not is_valid_git_repo() then
+      local cwd = vim.uv.cwd()
+      if not cwd or not vim.fs.root(cwd, ".git") then
         return
       end
-      local cwd = vim.fn.expand("%:p:h")
+
       local currentTime = os.time()
       if gitStatusCache[cwd] and currentTime - gitStatusCache[cwd].time < cacheTimeout then
         updateMiniWithGit(buf_id, gitStatusCache[cwd].statusMap)
@@ -227,6 +231,7 @@ return {
       end
     end
 
+    ---@return nil
     local function clearCache()
       gitStatusCache = {}
     end

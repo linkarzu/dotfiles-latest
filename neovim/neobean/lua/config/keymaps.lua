@@ -724,7 +724,7 @@ end, { desc = "[P]Paste image 'assets' directory" })
 -- If you want to upload the images to your own imgur account, follow the
 -- registration quickstart section in https://apidocs.imgur.com/
 -- You can use postman's web version or the desktop app, the instructions tell
--- you even how to import imgur's api collection in postman
+-- you even how to import imgur's api collection in postman lamw25wmal
 --
 -- For the new postman version go to the `Imgur API` folder, then click on the
 -- `Authorization` tab, set the auth type to `oauth 2.0`, fill in the fields in

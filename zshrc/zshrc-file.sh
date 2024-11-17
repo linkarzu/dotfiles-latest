@@ -628,7 +628,14 @@ if [ "$OS" = 'Mac' ]; then
       # Bind ',' to the tmux_left_pane function
       # Moves me to my left pane in tmux and maximizes it
       zvm_bindkey vicmd ',' tmux_left_pane
+      # Move to the left tmux pane with escape
+      zvm_bindkey vicmd '^[' tmux_left_pane
+      # Insert mode bindings
+      # This allows me to quit the tmux pane on the right with escape, even when
+      # on insert mode
+      zvm_bindkey viins '^[' tmux_left_pane
     }
+    # zvm_bindkey vicmd '\e' tmux_left_pane
 
     # Disable the cursor style feature
     # I my cursor above in the cursor section

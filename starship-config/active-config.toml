@@ -1,7 +1,11 @@
 # This will show the time on a 2nd line
 # Add a "\" at the end of an item, if you want the next item to show on the same line
 format = """
+$username\
+$hostname\
+$time\
 $all\
+$directory
 $kubernetes
 $character
 """
@@ -29,7 +33,7 @@ disabled = false
 # format = '[$user@$cluster \($namespace\)](#19dfcf) '
 # format = '[$cluster \($namespace\)](#19dfcf) '
 # Apply separate colors for cluster and namespace
-format = '[$cluster](#19dfcf bold) [\($namespace\)](#37f499 bold) '
+format = '[$cluster](#19dfcf bold) [$namespace](#37f499 bold) '
 # format = 'on [⛵ ($user on )($cluster in )$context \($namespace\)](dimmed green) '
 # Only dirs that have this file inside will show the kubernetes prompt
 # detect_files = ['900-detectkubernetes.sh']
@@ -41,12 +45,12 @@ format = '[$cluster](#19dfcf bold) [\($namespace\)](#37f499 bold) '
 [username]
 style_user = '#987afb bold'
 style_root = 'white bold'
-format = '[$user]($style)'
+format = '[$user]($style).@.'
 show_always = true
 
 [hostname]
-ssh_only = false
-format = '[.@.](white bold)[$hostname](#37f499 bold)'
+ssh_only = true
+format = '(white bold)[$hostname](#37f499 bold)'
 
 [directory]
 style = '#04d1f9 bold'

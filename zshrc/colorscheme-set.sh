@@ -239,7 +239,11 @@ generate_starship_config() {
 # This will show the time on a 2nd line
 # Add a "\\" at the end of an item, if you want the next item to show on the same line
 format = """
+\$username\\
+\$hostname\\
+\$time\\
 \$all\\
+\$directory
 \$kubernetes
 \$character
 """
@@ -267,7 +271,7 @@ disabled = false
 # format = '[\$user@\$cluster \(\$namespace\)](${linkarzu_color05}) '
 # format = '[\$cluster \(\$namespace\)](${linkarzu_color05}) '
 # Apply separate colors for cluster and namespace
-format = '[\$cluster](${linkarzu_color05} bold) [\(\$namespace\)](${linkarzu_color02} bold) '
+format = '[\$cluster](${linkarzu_color05} bold) [\$namespace](${linkarzu_color02} bold) '
 # format = 'on [⛵ (\$user on )(\$cluster in )\$context \(\$namespace\)](dimmed green) '
 # Only dirs that have this file inside will show the kubernetes prompt
 # detect_files = ['900-detectkubernetes.sh']
@@ -279,12 +283,12 @@ format = '[\$cluster](${linkarzu_color05} bold) [\(\$namespace\)](${linkarzu_col
 [username]
 style_user = '${linkarzu_color04} bold'
 style_root = 'white bold'
-format = '[\$user](\$style)'
+format = '[\$user](\$style).@.'
 show_always = true
 
 [hostname]
-ssh_only = false
-format = '[.@.](white bold)[\$hostname](${linkarzu_color02} bold)'
+ssh_only = true
+format = '(white bold)[\$hostname](${linkarzu_color02} bold)'
 
 [directory]
 style = '${linkarzu_color03} bold'

@@ -9,6 +9,9 @@ return {
     opts = function()
       return {
         defaults = {
+          -- Prevents cycle cycling looping through results when reach the end
+          -- The default value is "cycle"
+          scroll_strategy = "limit",
           -- I'm adding this `find_command` based on this reddit discussion
           -- https://www.reddit.com/r/neovim/comments/1egczrs/comment/lfsotjx/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button
           -- However, it doesn't work, also tried without the setup function

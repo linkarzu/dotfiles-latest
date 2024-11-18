@@ -79,15 +79,44 @@ return {
       -- http://www.lazyvim.org/extras/editor/telescope#telescopenvim
       -- { "<leader>fF", LazyVim.pick("auto"), desc = "Find Files (cwd)" },
       --
-      { "<leader>fF", "<cmd>Telescope frecency theme=ivy<cr>", desc = "Find Files" },
+      -- { "<leader>fF", "<cmd>Telescope frecency theme=ivy<cr>", desc = "Find Files" },
+
       -- {
       --   "<leader>ff",
       --   "<cmd>Telescope frecency workspace=CWD path_display={'shorten'} theme=ivy<cr>",
       --   desc = "Find Files (Root Dir)",
       -- },
+      -- {
+      --   "<leader>ff",
+      --   "<cmd>Telescope frecency workspace=CWD theme=ivy<cr>",
+      --   desc = "Find Files (Root Dir)",
+      -- },
+      --
+
+      {
+        "<leader>fF",
+        function()
+          -- Get the directory of the currently active buffer
+          local cwd = require("telescope.utils").buffer_dir()
+          -- Use Telescope's find_files with a specific cwd
+          require("telescope.builtin").find_files(require("telescope.themes").get_ivy({
+            cwd = cwd,
+            prompt_title = "Files in " .. cwd,
+          }))
+        end,
+        desc = "Find Files (Buffer Dir)",
+      },
+
       {
         "<leader>ff",
-        "<cmd>Telescope frecency workspace=CWD theme=ivy<cr>",
+        function()
+          local cwd = vim.fn.getcwd()
+          require("telescope").extensions.frecency.frecency(require("telescope.themes").get_ivy({
+            workspace = "CWD",
+            cwd = cwd,
+            prompt_title = "FRECENCY " .. cwd,
+          }))
+        end,
         desc = "Find Files (Root Dir)",
       },
 
@@ -95,18 +124,27 @@ return {
       {
         "<leader>sG",
         function()
-          require("telescope.builtin").live_grep(require("telescope.themes").get_ivy())
+          local cwd = require("telescope.utils").buffer_dir()
+          require("telescope.builtin").live_grep(require("telescope.themes").get_ivy({
+            cwd = cwd,
+            prompt_title = "GREP " .. cwd,
+          }))
         end,
-        desc = "Grep (cwd)",
+        desc = "[P]Grep (buffer dir)",
       },
 
       -- { "<leader>sg", LazyVim.pick("live_grep", { root = false, theme = "ivy" }), desc = "Grep (Root Dir)" },
       {
         "<leader>sg",
         function()
-          require("telescope.builtin").live_grep(require("telescope.themes").get_ivy({ root = false }))
+          local cwd = vim.fn.getcwd()
+          require("telescope.builtin").live_grep(require("telescope.themes").get_ivy({
+            -- gets current working directory
+            cwd = cwd,
+            prompt_title = "GREP " .. cwd,
+          }))
         end,
-        desc = "Grep (Root Dir)",
+        desc = "[P]Grep (Root Dir)",
       },
 
       -- { "<leader>gs", "<cmd>Telescope git_status<CR>", desc = "Status" },

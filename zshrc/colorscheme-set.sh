@@ -248,6 +248,11 @@ format = """
 \$character
 """
 
+[character]
+success_symbol = '[❯❯❯❯](${linkarzu_color02} bold)'
+error_symbol = '[XXXX](${linkarzu_color11} bold)'
+vicmd_symbol = '[❮❮❮❮](${linkarzu_color04} bold)'
+
 [battery]
 disabled = true
 
@@ -333,4 +338,7 @@ if [ "$UPDATED" = true ]; then
   generate_kitty_config
   # This reloads kitty config without closing and re-opening
   kill -SIGUSR1 "$(pgrep -x kitty)"
+
+  # Also restart yabai for my skitty-notes colors
+  ~/github/dotfiles-latest/yabai/yabai_restart.sh
 fi

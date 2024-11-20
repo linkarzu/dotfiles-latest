@@ -16,6 +16,28 @@
 -- Specify leader key, this is the default in lazyvim
 vim.g.mapleader = " "
 
+-- Tried to add this vimenter autocmd in the autocmds.lua file but it was never
+-- triggered, this is because if I understand correctly Lazy.nvim delays the
+-- loading of autocmds.lua until after VeryLazy or even after VimEnter
+-- The fix is to add the autocmd to a file that’s loaded before VimEnter,
+-- such as options.lua
+-- https://github.com/LazyVim/LazyVim/issues/2592#issuecomment-2015093693
+local function augroup(name)
+  return vim.api.nvim_create_augroup("lazyvim_" .. name, { clear = true })
+end
+vim.api.nvim_create_autocmd("VimEnter", {
+  group = augroup("autoupdate"),
+  callback = function()
+    local has_updates = require("lazy.status").has_updates()
+    if has_updates then
+      vim.notify("Updating plugins...", vim.log.levels.INFO, { title = "Lazy.nvim" })
+      -- require("lazy").update({ show = false })
+      require("lazy").update()
+      vim.notify("Plugins updated successfully!", vim.log.levels.INFO, { title = "Lazy.nvim" })
+    end
+  end,
+})
+
 -- Using different colors, defining the colors in this file
 local colors = require("config.colors").load_colors()
 vim.cmd(string.format([[highlight WinBar1 guifg=%s]], colors["linkarzu_color03"]))

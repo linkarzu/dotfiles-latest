@@ -33,7 +33,8 @@ linkarzu_color01="#949ae5"
 linkarzu_color05="#19dfcf"
 linkarzu_color08="#5fa9f4"
 linkarzu_color06="#1682ef"
-# Markdown codeblock
+# Markdown codeblock, 2 to the right of background
+# https://www.colorhexa.com
 linkarzu_color07="#1c242f"
 # Comments
 linkarzu_color09="#a5afc2"
@@ -43,18 +44,21 @@ linkarzu_color10="#0D1116"
 linkarzu_color11="#f16c75"
 # Underline spellcap
 linkarzu_color12="#f1fc79"
-# line across cursor
+# line across cursor, 5 to the right of background
+# https://www.colorhexa.com
 linkarzu_color13="#314154"
 # Cursor and tmux windows text
 linkarzu_color14="#ebfafa"
-# Tmux inactive windows (7 colors to the right)
+# Tmux inactive windows, 7 colors to the right of background
+# https://www.colorhexa.com
 linkarzu_color15="#013e4a"
 # Selected text
 linkarzu_color16="#e9b3fd"
-# Lualine across
+# Lualine across, 1 color to the right of background
+# https://www.colorhexa.com/0d1116
 linkarzu_color17="#141b22"
-# Lighter markdown headings
 # Cursor color
 linkarzu_color24="#F712FF"
-# Background of inactive tmux pane
+# Background of inactive, 3 to the right of background
+# https://www.colorhexa.come tmux pane
 linkarzu_color25=#232e3b

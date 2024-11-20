@@ -3,6 +3,8 @@
 # Filename: ~/github/dotfiles-latest/colorscheme/list/linkarzu-colors.sh
 # ~/github/dotfiles-latest/colorscheme/list/linkarzu-colors.sh
 
+# These files have to be executable
+
 # Lighter markdown headings
 # 4 colors to the right for these ligher headings
 # https://www.color-hex.com/color/987afb
@@ -29,8 +31,9 @@ linkarzu_color01="#fbe260"
 linkarzu_color05="#ebfafa"
 linkarzu_color08="#811e09"
 linkarzu_color06="#f62d14"
-# Markdown codeblock
-linkarzu_color07="#1c242f"
+# Markdown codeblock, 2 to the right of background
+# https://www.colorhexa.com
+linkarzu_color07="#6d5d0c"
 # Comments
 linkarzu_color09="#a5afc2"
 # Terminal and neovim background
@@ -39,17 +42,21 @@ linkarzu_color10="#4a3f08"
 linkarzu_color11="#f62d14"
 # Underline spellcap
 linkarzu_color12="#fad61d"
-# line across cursor
-linkarzu_color13="#314154"
+# line across cursor, 5 to the right of background
+# https://www.colorhexa.com
+linkarzu_color13="#a38a12"
 # Cursor and tmux windows text
 linkarzu_color14="#ebfafa"
-# Tmux inactive windows (7 colors to the right)
+# Tmux inactive windows, 7 colors to the right of background
+# https://www.colorhexa.com
 linkarzu_color15="#4b4838"
 # Selected text
 linkarzu_color16="#e9b3fd"
-# Lualine across
+# Lualine across, 1 color to the right of background
+# https://www.colorhexa.com/0d1116
 linkarzu_color17="#3b3206"
 # Cursor color
 linkarzu_color24="#F712FF"
-# Background of inactive tmux pane
-linkarzu_color25=#232e3b
+# Background of inactive, 3 to the right of background
+# https://www.colorhexa.come tmux pane
+linkarzu_color25="#7f6c0e"

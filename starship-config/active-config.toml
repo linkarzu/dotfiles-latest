@@ -10,6 +10,11 @@ $kubernetes
 $character
 """
 
+[character]
+success_symbol = '[❯❯❯❯](#37f499 bold)'
+error_symbol = '[XXXX](#f16c75 bold)'
+vicmd_symbol = '[❮❮❮❮](#987afb bold)'
+
 [battery]
 disabled = true
 

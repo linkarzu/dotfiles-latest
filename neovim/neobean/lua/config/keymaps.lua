@@ -21,6 +21,9 @@ vim.keymap.set("n", "<S-h>", function()
     sort_mru = true,
     sort_lastused = true,
     initial_mode = "normal",
+    -- Pre-select the current buffer
+    -- ignore_current_buffer = false,
+    -- select_current = true,
     layout_config = {
       -- Set preview width, 0.7 sets it to 70% of the window width
       preview_width = 0.6,

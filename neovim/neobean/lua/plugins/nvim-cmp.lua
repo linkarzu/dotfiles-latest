@@ -38,15 +38,17 @@ return {
         end
       end
 
-      -- Add copilot source with lower priority
-      table.insert(opts.sources, 1, {
-        name = "copilot",
-        -- `group_index` in nvim-cmp is used to group completion sources
-        -- Sources with lower group numbers (like 1) appear before sources
-        -- with higher numbers (like 2).
-        group_index = 2, -- Changed from 1 to 2
-        priority = 100, -- Lower priority than snippets
-      })
+      -- -- Add copilot source with lower priority
+      -- -- I'm commenting this as remove call to nvim-cmp below
+      -- -- https://github.com/LazyVim/LazyVim/commit/af9553135da3c42ff83824db0f9dfaaa9ad5973f
+      -- table.insert(opts.sources, 1, {
+      --   name = "copilot",
+      --   -- `group_index` in nvim-cmp is used to group completion sources
+      --   -- Sources with lower group numbers (like 1) appear before sources
+      --   -- with higher numbers (like 2).
+      --   group_index = 2, -- Changed from 1 to 2
+      --   priority = 100, -- Lower priority than snippets
+      -- })
 
       opts.sorting = {
         priority_weight = 2,

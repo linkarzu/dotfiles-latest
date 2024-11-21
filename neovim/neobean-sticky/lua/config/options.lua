@@ -22,8 +22,8 @@ local colors = require("config.colors").load_colors()
 vim.cmd(string.format([[highlight WinBar1 guifg=%s]], colors["linkarzu_color03"]))
 -- -- Set the winbar to display "skitty-notes" with the specified color
 -- vim.opt.winbar = "%#WinBar1#   skitty-notes%*"
--- Set the winbar to display the current file name with the specified color
-vim.opt.winbar = "%#WinBar1# %t%*"
+-- Set the winbar to display the current file name on the left and "linkarzu" aligned to the right
+vim.opt.winbar = "%#WinBar1# %t%*%=%#WinBar1# linkarzu%*"
 
 -- -- I tried these 2 with prettier prosewrap in "preserve" mode, and I'm not sure
 -- -- what they do, I think lines are wrapped, but existing ones are not, so if I

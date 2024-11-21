@@ -28,13 +28,10 @@ end
 vim.api.nvim_create_autocmd("VimEnter", {
   group = augroup("autoupdate"),
   callback = function()
-    local has_updates = require("lazy.status").has_updates()
-    if has_updates then
-      vim.notify("Updating plugins...", vim.log.levels.INFO, { title = "Lazy.nvim" })
-      -- require("lazy").update({ show = false })
-      require("lazy").update()
-      vim.notify("Plugins updated successfully!", vim.log.levels.INFO, { title = "Lazy.nvim" })
-    end
+    local lazy = require("lazy")
+    -- Perform the update directly, regardless of cached status
+    lazy.update({ show = false })
+    -- Notify the user after the update
   end,
 })
 

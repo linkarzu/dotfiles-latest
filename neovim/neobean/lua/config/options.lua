@@ -36,6 +36,30 @@ vim.api.nvim_create_autocmd("VimEnter", {
   end,
 })
 
+-- Function to get the model of my mac, can be used by copilot-chat plugin
+local cached_computer_model = nil
+local function get_computer_model()
+  if cached_computer_model then
+    return cached_computer_model
+  end
+  local ok, handle = pcall(io.popen, "sysctl -n hw.model")
+  if not ok or not handle then
+    return nil
+  end
+  local result = handle:read("*a")
+  handle:close()
+  if result then
+    cached_computer_model = result:gsub("^%s*(.-)%s*$", "%1")
+    return cached_computer_model
+  end
+  return nil
+end
+_G.COMPUTER_MODEL = get_computer_model()
+vim.api.nvim_create_user_command("ShowComputerModel", function()
+  local model = _G.COMPUTER_MODEL or "Unknown"
+  print("Computer Model: " .. model)
+end, {})
+
 -- Using different colors, defining the colors in this file
 local colors = require("config.colors").load_colors()
 vim.cmd(string.format([[highlight WinBar1 guifg=%s]], colors["linkarzu_color03"]))

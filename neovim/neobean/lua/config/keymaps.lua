@@ -14,6 +14,9 @@
 -- For this to work, make sure you have the plugin installed
 -- vim.keymap.set("n", "<S-h>", "<cmd>BufExplorer<cr>", { desc = "[P]Open bufexplorer" })
 
+-- Quit or exit neovim, easier than to do <leader>qq
+vim.keymap.set({ "n", "v", "i" }, "<A-q>", "<cmd>qa<cr>", { desc = "[P]Quit All" })
+
 -- I'm switching from bufexplorer to telescope buffers as I get a file preview,
 -- that's basically the main benefit lamw25wmal
 vim.keymap.set("n", "<S-h>", function()

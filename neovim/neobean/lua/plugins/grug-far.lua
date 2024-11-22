@@ -1,3 +1,22 @@
+-- Filename: ~/github/dotfiles-latest/neovim/neobean/lua/plugins/grug-far.lua
+-- ~/github/dotfiles-latest/neovim/neobean/lua/plugins/grug-far.lua
+
+-- https://github.com/MagicDuck/grug-far.nvim
+
+-- I needed to replace colors["linkarzu_color10"] with "linkarzu_color10"
+-- and not only for color10, but from color01 to color20 in multiple files,
+-- hundreds of times
+--
+-- I achieved this with
+-- Search: colors\["(linkarzu_color\d+)"\]
+-- Replace: "$1"
+--
+-- I wanted to exclude 2 files from the replace, so added each file in a
+-- separate line under
+-- Files Filter:
+-- !wezterm.lua
+-- !eldritch.lua
+
 return {
   "MagicDuck/grug-far.nvim",
   --- Ensure existing keymaps and opts remain unaffected

@@ -18,7 +18,28 @@ vim.opt.signcolumn = "no"
 vim.opt.number = false
 vim.opt.relativenumber = false
 
-local colors = require("config.colors").load_colors()
+-- Auto update plugins at startup
+-- Tried to add this vimenter autocmd in the autocmds.lua file but it was never
+-- triggered, this is because if I understand correctly Lazy.nvim delays the
+-- loading of autocmds.lua until after VeryLazy or even after VimEnter
+-- The fix is to add the autocmd to a file that’s loaded before VimEnter,
+-- such as options.lua
+-- https://github.com/LazyVim/LazyVim/issues/2592#issuecomment-2015093693
+-- Only upate if there are updates
+-- https://github.com/folke/lazy.nvim/issues/702#issuecomment-1903484213
+local function augroup(name)
+  return vim.api.nvim_create_augroup("lazyvim_" .. name, { clear = true })
+end
+vim.api.nvim_create_autocmd("VimEnter", {
+  group = augroup("autoupdate"),
+  callback = function()
+    if require("lazy.status").has_updates then
+      require("lazy").update({ show = false })
+    end
+  end,
+})
+
+local colors = require("config.colors")
 vim.cmd(string.format([[highlight WinBar1 guifg=%s]], colors["linkarzu_color03"]))
 -- -- Set the winbar to display "skitty-notes" with the specified color
 -- vim.opt.winbar = "%#WinBar1#   skitty-notes%*"

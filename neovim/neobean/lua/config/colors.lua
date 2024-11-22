@@ -1,18 +1,13 @@
 -- ~/github/dotfiles-latest/neovim/neobean/lua/config/colors.lua
 
--- ~/github/dotfiles-latest/neovim/neobean/lua/config/colors.lua
-local M = {}
+-- load the colors once when the module is required and then expose the colors
+-- directly. This avoids the need to call load_colors() in every file
 
--- Add cache at module level
-local colors_cache = nil
+-- Create a table to hold the colors
+local colors = {}
 
+-- Function to load colors from the external file
 local function load_colors()
-  -- Return cached results if available
-  if colors_cache then
-    return colors_cache
-  end
-
-  local colors = {}
   local home = os.getenv("HOME")
   local active_folder = home .. "/github/dotfiles-latest/colorscheme/active"
   local active_file = active_folder .. "/active-colorscheme.sh"
@@ -32,11 +27,10 @@ local function load_colors()
   end
 
   file:close()
-
-  -- Cache the results
-  colors_cache = colors
-  return colors_cache
 end
 
-M.load_colors = load_colors
-return M
+-- Load colors when the module is required
+load_colors()
+
+-- Return the colors table directly
+return colors

@@ -3,7 +3,9 @@
 -- Filename: ~/github/dotfiles-latest/neovim/neobean/lua/plugins/colorschemes/eldritch.lua
 -- ~/github/dotfiles-latest/neovim/neobean/lua/plugins/colorschemes/eldritch.lua
 
-local colors = require("config.colors").load_colors()
+-- Require the colors.lua module and access the colors directly without
+-- additional file reads
+local colors = require("config.colors")
 
 return {
   "eldritch-theme/eldritch.nvim",

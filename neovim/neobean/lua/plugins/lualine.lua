@@ -16,7 +16,9 @@
 --   
 --   
 
-local colors = require("config.colors").load_colors()
+-- Require the colors.lua module and access the colors directly without
+-- additional file reads
+local colors = require("config.colors")
 local icons = LazyVim.config.icons
 
 -- Cache system

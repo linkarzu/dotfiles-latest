@@ -6,7 +6,9 @@
 
 -- config/autocmds.lua
 
-local colors = require("config.colors").load_colors()
+-- Require the colors.lua module and access the colors directly without
+-- additional file reads
+local colors = require("config.colors")
 
 local function augroup(name)
   return vim.api.nvim_create_augroup("lazyvim_" .. name, { clear = true })

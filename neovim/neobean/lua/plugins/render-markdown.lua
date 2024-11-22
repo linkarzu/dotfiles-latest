@@ -10,7 +10,9 @@
 -- so the inly way is the only way I was able to make it work was loading it
 -- after the config.lazy in the init.lua file lamw25wmal
 
-local colors = require("config.colors").load_colors()
+-- Require the colors.lua module and access the colors directly without
+-- additional file reads
+local colors = require("config.colors")
 
 return {
   "MeanderingProgrammer/render-markdown.nvim",

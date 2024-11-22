@@ -13,8 +13,15 @@
 -- This shows pathname on the left and hostname on the right
 -- vim.opt.winbar = "%m %f%=" .. vim.fn.systemlist("hostname")[1]
 
--- Specify leader key, this is the default in lazyvim
+-- Specify leader the default in lazyvim is " "
 vim.g.mapleader = " "
+-- In case you want to switch the leader key to backspace
+-- vim.g.mapleader = vim.api.nvim_replace_termcodes("<BS>", false, false, true)
+-- There's a delay everytime I press the leader key and that which-key is shown
+-- I want it to be immediate lamw25wmal
+vim.opt.timeout = false
+-- Default is 1,000 but lazyvim sets it to 300 which is faster
+vim.opt.timeoutlen = 0
 
 -- Auto update plugins at startup
 -- Tried to add this vimenter autocmd in the autocmds.lua file but it was never

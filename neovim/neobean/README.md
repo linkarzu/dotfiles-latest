@@ -58,7 +58,7 @@
   * [Paste issues](#paste-issues)
   * [markdown-preview.nvim image size](#markdown-previewnvim-image-size)
   * [Plugin that enables vio and vao](#plugin-that-enables-vio-and-vao)
-  * [Record macro](#record-macro)
+  * [Record macro or new macro](#record-macro-or-new-macro)
   * [Increment decrement selection](#increment-decrement-selection)
   * [Surround](#surround)
   * [Syntax highlighting (treesitter)](#syntax-highlighting-treesitter)
@@ -278,7 +278,7 @@ Minim tempor ullamco do eu pariatur minim.
 - By looking at the changelog, I realized that the plugin that does this is
   `mini.ai`, it can be enabled via `:LazyExtras`, but I added manually instead
 
-### Record macro
+### Record macro or new macro
 
 - I want to convert all the words inside '' to lowercase, as they're in
   uppercase

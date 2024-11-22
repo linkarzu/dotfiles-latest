@@ -119,6 +119,18 @@ return {
         end,
         desc = "Find Files (Root Dir)",
       },
+      {
+        "<leader><Space>",
+        function()
+          local cwd = vim.fn.getcwd()
+          require("telescope").extensions.frecency.frecency(require("telescope.themes").get_ivy({
+            workspace = "CWD",
+            cwd = cwd,
+            prompt_title = "FRECENCY " .. cwd,
+          }))
+        end,
+        desc = "Find Files (Root Dir) [Space]",
+      },
 
       -- { "<leader>sG", LazyVim.pick("live_grep"), desc = "Grep (cwd)" },
       {
@@ -164,7 +176,7 @@ return {
       },
 
       {
-        "<leader><space>",
+        "<leader><BS>",
         "<cmd>e #<cr>",
         desc = "Alternate buffer",
       },

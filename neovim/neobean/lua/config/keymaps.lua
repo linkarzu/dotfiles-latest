@@ -497,7 +497,7 @@ end, { desc = "[P]Terminal on tmux pane on the right" })
 -- 1. File path with the wordname Filename: first, then the path, and Go project name
 -- 2. Just the filepath
 -- 3. Name that I will use with `go mod init`
-vim.keymap.set({ "n", "v", "i" }, "<C-z>", function()
+vim.keymap.set({ "n", "v", "i" }, "<A-z>", function()
   local filePath = vim.fn.expand("%:~") -- Gets the file path relative to the home directory
   local fileName = vim.fn.expand("%:t") -- Gets the name of the file
   local goProjectPath = filePath:gsub("^~/", ""):gsub("/[^/]+$", "") -- Removes the ~/ at the start and the filename at the end
@@ -583,7 +583,7 @@ end, { desc = "[P]Reload current buffer" })
 -- I use a Ctrl keymap so that I can paste images in insert mode
 -- I tried using <C-v> but duh, that's used for visual block mode
 -- so don't do it
-vim.keymap.set({ "n", "v", "i" }, "<C-a>", function()
+vim.keymap.set({ "n", "v", "i" }, "<A-a>", function()
   -- The image needs to be converted to the format I use, which usually is AVIF
   -- and it takes a few seconds, a lot of time I don't know if it's being pasted
   -- or not, so I like seeing this message to know I pressed the correct keymap
@@ -623,7 +623,7 @@ vim.keymap.set({ "n", "v", "i" }, "<C-a>", function()
 end, { desc = "[P]Paste image from system clipboard" })
 
 -- This pastes images for my blogpost, I need to keep them in a different directory so I pass those options to img-clip lamw25wmal
-vim.keymap.set({ "n", "v", "i" }, "<C-p>", function()
+vim.keymap.set({ "n", "v", "i" }, "<A-b>", function()
   print("PROCESSING IMAGE WITH CUSTOM DIRECTORY STRUCTURE...")
   local function paste_image(dir_path, file_name)
     return require("img-clip").paste_image({
@@ -751,7 +751,7 @@ local refresh_token_var = "IMGUR_REFRESH_TOKEN"
 local client_id_var = "IMGUR_CLIENT_ID"
 local client_secret_var = "IMGUR_CLIENT_SECRET"
 -- Keymap setup
-vim.keymap.set({ "n", "v", "i" }, "<C-f>", function()
+vim.keymap.set({ "n", "v", "i" }, "<A-i>", function()
   vim.notify("UPLOADING IMAGE TO IMGUR...", vim.log.levels.INFO)
   -- Slight delay to show the message
   vim.defer_fn(function()
@@ -1583,7 +1583,7 @@ end, { desc = "[P]Toggle checkbox" })
 -- Crate task or checkbox lamw25wmal
 -- These are marked with <leader>x using bullets.vim
 -- I used <C-l> before, but that is used for pane navigation
-vim.keymap.set("i", "<C-V>", function()
+vim.keymap.set({ "n", "v", "i" }, "<A-l>", function()
   vim.cmd("normal! i- [ ]  ")
   vim.cmd("startinsert")
 end, { desc = "[P]Toggle checkbox" })
@@ -1631,7 +1631,7 @@ end, { desc = "[P]Convert to link (new tab)" })
 
 -- Paste a github link and add it in this format
 -- [folke/noice.nvim](https://github.com/folke/noice.nvim){:target="\_blank"}
-vim.keymap.set("i", "<C-g>", function()
+vim.keymap.set({ "n", "v", "i" }, "<A-g>", function()
   -- Insert the text in the desired format
   vim.cmd('normal! a[](){:target="_blank"} ')
   vim.cmd("normal! F(pv2F/lyF[p")

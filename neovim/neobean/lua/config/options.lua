@@ -16,6 +16,7 @@
 -- Specify leader key, this is the default in lazyvim
 vim.g.mapleader = " "
 
+-- Auto update plugins at startup
 -- Tried to add this vimenter autocmd in the autocmds.lua file but it was never
 -- triggered, this is because if I understand correctly Lazy.nvim delays the
 -- loading of autocmds.lua until after VeryLazy or even after VimEnter

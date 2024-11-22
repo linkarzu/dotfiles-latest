@@ -3,11 +3,9 @@
 -- load the colors once when the module is required and then expose the colors
 -- directly. This avoids the need to call load_colors() in every file
 
--- Create a table to hold the colors
-local colors = {}
-
 -- Function to load colors from the external file
 local function load_colors()
+  local colors = {}
   local home = os.getenv("HOME")
   local active_folder = home .. "/github/dotfiles-latest/colorscheme/active"
   local active_file = active_folder .. "/active-colorscheme.sh"
@@ -27,10 +25,16 @@ local function load_colors()
   end
 
   file:close()
+  return colors
 end
 
 -- Load colors when the module is required
-load_colors()
+local colors = load_colors()
 
--- Return the colors table directly
+-- Create highlight groups from the colors
+for name, hex in pairs(colors) do
+  vim.api.nvim_set_hl(0, name, { fg = hex })
+end
+
+-- Optionally, return the colors table if needed elsewhere
 return colors

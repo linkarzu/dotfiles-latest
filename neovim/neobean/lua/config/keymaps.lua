@@ -14,8 +14,19 @@
 -- For this to work, make sure you have the plugin installed
 -- vim.keymap.set("n", "<S-h>", "<cmd>BufExplorer<cr>", { desc = "[P]Open bufexplorer" })
 
+-- I was running out of Ctrl keys that I use for several things, like pasting
+-- images intoa file using img-clip.nvim, or uploading images to imgur, pasting
+-- the path of a file to the clipboard, etc, so I switched all of those ctrl
+-- keys to alt, you just need to configure your terminal emulator for that lamw25wmal,
+-- I configured both Ghostty and Kitty to just treat the right option key as alt
+-- in macOS, I still use the left option key for unicode characters, like ñ ó á
+-- and stuff like that in spanish, you pinchis gringos wouldn't understand
+
 -- Quit or exit neovim, easier than to do <leader>qq
 vim.keymap.set({ "n", "v", "i" }, "<A-q>", "<cmd>qa<cr>", { desc = "[P]Quit All" })
+
+-- This, by default configured as <leader>sk but I run it too often lamw25wmal
+vim.keymap.set({ "n", "v", "i" }, "<A-k>", "<cmd>Telescope keymaps<cr>", { desc = "[P]Key Maps" })
 
 -- I'm switching from bufexplorer to telescope buffers as I get a file preview,
 -- that's basically the main benefit lamw25wmal

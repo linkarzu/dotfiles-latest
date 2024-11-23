@@ -57,7 +57,7 @@ return {
             -- cursor is at
             -- I set this to true, because if the file has way too many images
             -- it will be laggy and will take time for the initial load
-            only_render_image_at_cursor = true,
+            only_render_image_at_cursor = false,
             -- markdown extensions (ie. quarto) can go here
             filetypes = { "markdown", "vimwiki" },
           },
@@ -101,7 +101,7 @@ return {
         window_overlap_clear_ft_ignore = { "cmp_menu", "cmp_docs", "" },
 
         -- auto show/hide images when the editor gains/looses focus
-        editor_only_render_when_focused = true,
+        editor_only_render_when_focused = false,
 
         -- auto show/hide images in the correct tmux window
         -- In the tmux.conf add `set -g visual-activity off`

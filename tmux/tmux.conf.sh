@@ -113,12 +113,10 @@ set -wF mode-style "fg=$linkarzu_color02,bg=$linkarzu_color13"
 # -O specifies the initial sort field: one of ‘index’, ‘name’, or ‘time’ (activity).
 # https://unix.stackexchange.com/questions/608268/how-can-i-force-tmux-to-sort-my-sessions-alphabetically
 #
-# -y at the end is a feature I requested so that the session is closed without confirmation
-# https://github.com/tmux/tmux/issues/4152
 # bind s choose-tree -Zs -O time
 # bind s choose-tree -Zs -O time -y
 bind s choose-tree -Zs -O time -F "#{session_windows}"
-# I'm waiting for -y flag change below to be applied in next release
+# -y at the end is a feature I requested so that the session is closed without confirmation
 # https://github.com/tmux/tmux/issues/4152
 # bind s choose-tree -Zs -O time -F "#{session_windows}" -y
 # bind s choose-tree -Zs -O time -F "#{?session_attached,#[fg=$linkarzu_color02],#[fg=$linkarzu_color03]}#{session_name}#[default]" -y

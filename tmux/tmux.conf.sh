@@ -162,10 +162,13 @@ bind - split-window -v
 
 # how to navigate across the different panes in a window
 # Notice I'm using vim motions
-bind h select-pane -L
-bind j select-pane -D
-bind k select-pane -U
-bind l select-pane -R
+#
+# I don't use these, I use the christoomey/vim-tmux-navigator to navigate
+# between panes using ctrl
+# bind h select-pane -L
+# bind j select-pane -D
+# bind k select-pane -U
+# bind l select-pane -R
 
 # Switch to windows 1 through 4
 # 'p' is normally used to go to the previous window, but I won't use it

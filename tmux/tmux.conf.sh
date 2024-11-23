@@ -61,6 +61,10 @@ set -g visual-activity off
 unbind Space
 bind-key Space switch-client -l
 
+# Switch between the last 3 sessions
+# I use macOS karabiner-elements mapping the "down" arrow to a bettertouchtool
+# keymap
+
 # This enables vim nagivation
 # If for example I'm in the scrolling mode (yellow) can navigate with vim motions
 # search with /, using v for visual mode, etc

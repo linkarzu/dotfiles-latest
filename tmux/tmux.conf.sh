@@ -138,7 +138,7 @@ bind -n D if -F '#{==:#{pane_mode},tree-mode}' 'send X' 'send D'
 # Search sessions using an fzf menu
 # Found this gem down here:
 # https://github.com/majjoha/dotfiles/blob/cd6f966d359e16b3a7c149f96d4edb8a83e769db/.config/tmux/tmux.conf#L41
-bind S display-popup -E -w 75% -h 75% "\
+bind M-s display-popup -E -w 75% -h 75% "\
   tmux list-sessions -F '#{?session_attached,,#{session_name}}' |\
   sed '/^$/d' |\
   fzf --reverse --header jump-to-session --preview 'tmux capture-pane -pt {}'  |\
@@ -147,7 +147,7 @@ bind S display-popup -E -w 75% -h 75% "\
 # fzf menu to kill sessions
 # Credit: video below by Waylon Walker
 # https://www.youtube.com/watch?v=QWPyYx54JbE
-bind D display-popup -E "\
+bind M-S display-popup -E "\
     tmux list-sessions -F '#{?session_attached,,#{session_name}}' |\
     fzf --reverse -m --header=kill-session |\
     xargs -I {} tmux kill-session -t {}"
@@ -191,19 +191,32 @@ bind p select-window -t 4
 # configure the alacritty 'option_as_alt' option, but that messed up my hyper key,
 # so if I enable that option in alacritty, I cant do hyper+b which is what I use for
 # tmux commands instead of ctrl+b. So instead, I'll just remap these
-unbind J
-unbind K
-unbind L
-unbind C-j
-unbind C-k
-unbind C-l
-bind J select-layout even-horizontal
-bind K select-layout even-vertical
-# bind L select-layout tiled
-bind L run-shell ~/github/dotfiles-latest/tmux/layouts/7030/apply_layout.sh
-bind C-j select-layout main-horizontal
-bind C-k select-layout main-vertical
-bind C-l run-shell ~/github/dotfiles-latest/tmux/layouts/2x3/apply_layout.sh
+# unbind J
+# unbind K
+# unbind L
+# unbind C-j
+# unbind C-k
+# unbind C-l
+# bind J select-layout even-horizontal
+# bind K select-layout even-vertical
+# # bind L select-layout tiled
+# bind L run-shell ~/github/dotfiles-latest/tmux/layouts/7030/apply_layout.sh
+# bind C-j select-layout main-horizontal
+# bind C-k select-layout main-vertical
+# bind C-l run-shell ~/github/dotfiles-latest/tmux/layouts/2x3/apply_layout.sh
+
+# Update: In karabiner elements I remapped hyper+f to ctrl+b which allows me to
+# now use the meta key, just make sure to configure option as alt in your
+# terminal if using macos, I configured it only for the right option key, as I
+# use the left option key for unicode input sequences
+# These require Ctrl-b first, then Alt+key
+bind M-j select-layout even-horizontal
+bind M-k select-layout even-vertical
+bind M-l run-shell ~/github/dotfiles-latest/tmux/layouts/7030/apply_layout.sh
+# You can also use uppercase characters with alt, this is Alt+shift+key
+bind M-J select-layout main-horizontal 
+bind M-K select-layout main-vertical
+bind M-L run-shell ~/github/dotfiles-latest/tmux/layouts/2x3/apply_layout.sh
 
 ###############################################################################
 # ThePrimeagen's tmux-sessionizer script, got 'em
@@ -347,12 +360,12 @@ unbind -T copy-mode-vi MouseDragEnd1Pane
 # https://github.com/leelavg/dotfiles/blob/897aa883a/config/tmux.conf#L30-L39
 # https://scripter.co/command-to-every-pane-window-session-in-tmux/
 # Send the same command to all panes/windows in current session
-bind C-e command-prompt -p "Command:" \
+bind M-e command-prompt -p "Command:" \
   "run \"tmux list-panes -s -F '##{session_name}:##{window_index}.##{pane_index}' \
                 | xargs -I PANE tmux send-keys -t PANE '%1' Enter\""
 
 # Send the same command to all panes/windows/sessions
-bind E command-prompt -p "Command:" \
+bind M-E command-prompt -p "Command:" \
   "run \"tmux list-panes -a -F '##{session_name}:##{window_index}.##{pane_index}' \
               | xargs -I PANE tmux send-keys -t PANE '%1' Enter\""
 
@@ -525,6 +538,7 @@ set -g @plugin 'christoomey/vim-tmux-navigator'
 set -g @plugin 'tmux-plugins/tmux-resurrect'
 # allow tmux-ressurect to capture pane contents
 set -g @resurrect-capture-pane-contents 'on'
+
 # automatically saves sessions for you every 15 minutes (this must be the last plugin)
 # https://github.com/tmux-plugins/tmux-continuum
 set -g @plugin 'tmux-plugins/tmux-continuum'

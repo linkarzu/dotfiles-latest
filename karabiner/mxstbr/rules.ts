@@ -536,6 +536,7 @@ const rules: KarabinerRules[] = [
       // hyper+- - cleanshot x capture window
       // hyper+= - cleanshot x capture area & annotate
       // hyper+tab - cleanshot capture history
+      // hyper+] - keycastr toggle casting
     },
 
     // t = "tmux" - I use these to navigate to my different tmux sessions

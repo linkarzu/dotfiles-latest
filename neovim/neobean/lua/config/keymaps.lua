@@ -470,7 +470,8 @@ end, { desc = "[P]GOLANG, execute file" })
 -- if you press `,` it will search the previous character
 -- But I just search with `f` forward and `F` backwards and press `;` to cycle
 -- lamw25wmal
-vim.keymap.set("n", ",", function()
+-- Define the function to avoid duplicating the logic
+_G.tmux_pane_function = function()
   local file_dir = vim.fn.expand("%:p:h") -- Get the directory of the current file
   local pane_width = 60
   -- Simplified this, was checking if a pane with a width of 60 existed, so if I
@@ -498,7 +499,9 @@ vim.keymap.set("n", ",", function()
     -- Simulate pressing Ctrl-l to move to the right
     vim.fn.system("tmux send-keys C-l")
   end
-end, { desc = "[P]Terminal on tmux pane on the right" })
+end
+-- Map `,` to the function
+vim.keymap.set("n", ",", _G.tmux_pane_function, { desc = "[P]Terminal on tmux pane on the right" })
 
 -- -- Open a tmux pane on the right in bash, in the same directory as the current file
 -- -- Opening it in bash because it's faster, I don't have to run my .zshrc file,

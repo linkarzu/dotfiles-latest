@@ -1,6 +1,8 @@
 -- Filename: ~/github/dotfiles-latest/neovim/neobean/lua/config/keymaps.lua
 -- ~/github/dotfiles-latest/neovim/neobean/lua/config/keymaps.lua
 
+local M = {}
+
 -- Keymaps are automatically loaded on the VeryLazy event
 -- Default keymaps that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/keymaps.lua
 -- Add any additional keymaps here
@@ -470,9 +472,12 @@ end, { desc = "[P]GOLANG, execute file" })
 -- if you press `,` it will search the previous character
 -- But I just search with `f` forward and `F` backwards and press `;` to cycle
 -- lamw25wmal
--- Define the function to avoid duplicating the logic
-_G.tmux_pane_function = function()
-  local file_dir = vim.fn.expand("%:p:h") -- Get the directory of the current file
+--
+-- I defined it as a function, because I call this function from the
+-- mini.files plugin to open the highlighted dir in a tmux pane on the right
+M.tmux_pane_function = function(dir)
+  -- if no dir is passed, use the current file's directory
+  local file_dir = dir or vim.fn.expand("%:p:h")
   local pane_width = 60
   -- Simplified this, was checking if a pane with a width of 60 existed, so if I
   -- resized my pane, shit broke
@@ -500,8 +505,11 @@ _G.tmux_pane_function = function()
     vim.fn.system("tmux send-keys C-l")
   end
 end
--- Map `,` to the function
-vim.keymap.set("n", ",", _G.tmux_pane_function, { desc = "[P]Terminal on tmux pane on the right" })
+-- If I execute the function without an argument, it will open the dir where the
+-- current file lives
+vim.keymap.set("n", ",", function()
+  M.tmux_pane_function()
+end, { desc = "[P]Terminal on tmux pane on the right" })
 
 -- -- Open a tmux pane on the right in bash, in the same directory as the current file
 -- -- Opening it in bash because it's faster, I don't have to run my .zshrc file,
@@ -2502,3 +2510,5 @@ end, { desc = "[P]source ~/.zshrc" })
 --   "<C-f>",
 --   "<cmd>silent !tmux neww ~/github/dotfiles-latest/tmux/tools/prime/tmux-sessionizer.sh<CR>"
 -- )
+
+return M

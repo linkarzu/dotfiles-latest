@@ -478,6 +478,9 @@ vim.keymap.set("n", ",", function()
   local has_panes = vim.fn.system("tmux list-panes | wc -l"):gsub("%s+", "") ~= "1"
   -- Check if the current pane is zoomed (maximized)
   local is_zoomed = vim.fn.system("tmux display-message -p '#{window_zoomed_flag}'"):gsub("%s+", "") == "1"
+  -- Escape the directory path for shell
+  -- Escape single quotes in the directory, otherwise my apple icloud dir won't work
+  local escaped_dir = file_dir:gsub("'", "'\\''")
   -- If any additional pane exists
   if has_panes then
     if is_zoomed then
@@ -491,7 +494,7 @@ vim.keymap.set("n", ",", function()
     end
   else
     -- If the right pane doesn't exist, open it with zsh and DISABLE_PULL variable
-    vim.fn.system("tmux split-window -h -l " .. pane_width .. " 'cd " .. file_dir .. " && DISABLE_PULL=1 zsh'")
+    vim.fn.system("tmux split-window -h -l " .. pane_width .. " 'cd \"" .. escaped_dir .. "\" && DISABLE_PULL=1 zsh'")
     -- Simulate pressing Ctrl-l to move to the right
     vim.fn.system("tmux send-keys C-l")
   end

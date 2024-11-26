@@ -30,6 +30,11 @@ vim.keymap.set({ "n", "v", "i" }, "<A-q>", "<cmd>qa<cr>", { desc = "[P]Quit All"
 -- This, by default configured as <leader>sk but I run it too often lamw25wmal
 vim.keymap.set({ "n", "v", "i" }, "<A-k>", "<cmd>Telescope keymaps<cr>", { desc = "[P]Key Maps" })
 
+vim.keymap.set({ "n", "v", "i" }, "<A-h>", function()
+  -- require("noice").cmd("history")
+  require("noice").cmd("all")
+end, { desc = "[P]Noice History" })
+
 -- I'm switching from bufexplorer to telescope buffers as I get a file preview,
 -- that's basically the main benefit lamw25wmal
 vim.keymap.set("n", "<S-h>", function()

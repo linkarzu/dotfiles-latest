@@ -24,7 +24,7 @@ return {
       go_out = "H",
       go_out_plus = "h",
       -- Default <BS>
-      reset = ",",
+      reset = "<BS>",
       -- Default @
       reveal_cwd = ".",
       show_help = "g?",
@@ -32,6 +32,9 @@ return {
       synchronize = "s",
       trim_left = "<",
       trim_right = ">",
+
+      -- Below I created an autocmd with the "," keymap to open the highlighted
+      -- directory in a tmux pane on the right
     })
 
     opts.windows = vim.tbl_deep_extend("force", opts.windows or {}, {
@@ -71,6 +74,31 @@ return {
 
   config = function(_, opts)
     require("mini.files").setup(opts)
+
+    -- Create an autocmd to set buffer-local mappings when a `mini.files` buffer is opened
+    -- I use this to open the highlighted directory in a tmux pane on the right
+    -- I call the `tmux_pane_functiontmux_pane_function` I defined in my
+    -- keympaps.lua file
+    vim.api.nvim_create_autocmd("FileType", {
+      pattern = "minifiles",
+      callback = function()
+        -- Set buffer-local mapping for ',' in normal mode
+        vim.keymap.set("n", ",", function()
+          -- Import 'mini.files' module
+          local mini_files = require("mini.files")
+          -- Get the current entry using 'get_fs_entry()'
+          local curr_entry = mini_files.get_fs_entry()
+          if curr_entry and curr_entry.fs_type == "directory" then
+            -- Call tmux pane function with the directory path
+            require("config.keymaps").tmux_pane_function(curr_entry.path)
+          else
+            -- Notify if not a directory or no entry is selected
+            vim.notify("Not a directory or no entry selected", vim.log.levels.WARN)
+          end
+        end, { buffer = true, noremap = true, silent = true })
+      end,
+    })
+
     ---------------------------------------------------------------------------
     ---------------------------------------------------------------------------
 

@@ -47,7 +47,7 @@ return {
           },
         },
         mini = {
-          timeout = 7000, -- timeout in milliseconds
+          timeout = 4000, -- timeout in milliseconds
           align = "center",
           position = {
             -- Centers messages top to bottom

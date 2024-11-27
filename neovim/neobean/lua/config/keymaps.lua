@@ -35,6 +35,11 @@ vim.keymap.set({ "n", "v", "i" }, "<M-h>", function()
   require("noice").cmd("all")
 end, { desc = "[P]Noice History" })
 
+-- Dismiss noice notifications
+vim.keymap.set({ "n", "v", "i" }, "<M-d>", function()
+  require("noice").cmd("dismiss")
+end, { desc = "Dismiss All" })
+
 -- Commented these 2 as I couldn't clear search results with escape
 -- I want to close split panes with escape, the default is "q"
 -- vim.keymap.set("n", "<esc>", "<cmd>close<cr>", { desc = "Close split pane" })

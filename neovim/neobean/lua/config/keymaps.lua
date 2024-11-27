@@ -35,6 +35,7 @@ vim.keymap.set({ "n", "v", "i" }, "<A-h>", function()
   require("noice").cmd("all")
 end, { desc = "[P]Noice History" })
 
+-- Commented these 2 as I couldn't clear search results with escape
 -- I want to close split panes with escape, the default is "q"
 -- vim.keymap.set("n", "<esc>", "<cmd>close<cr>", { desc = "Close split pane" })
 -- I also want to close split panes with escape in terminal mode
@@ -577,12 +578,16 @@ end, { desc = "[P]Insert filename with path and go project name at cursor" })
 --   vim.api.nvim_buf_set_lines(0, row, row, false, { "" })
 -- end, { desc = "[P]Insert filename with path at cursor" })
 
--- Copy file path / filepath to the clipboard
-vim.keymap.set("n", "<leader>fp", function()
+-- Function to copy file path to clipboard
+local function copy_filepath_to_clipboard()
   local filePath = vim.fn.expand("%:~") -- Gets the file path relative to the home directory
   vim.fn.setreg("+", filePath) -- Copy the file path to the clipboard register
   print("File path copied to clipboard: " .. filePath) -- Optional: print message to confirm
-end, { desc = "[P]Copy file path to clipboard" })
+end
+-- Keymaps for copying file path to clipboard
+-- vim.keymap.set("n", "<leader>fp", copy_filepath_to_clipboard, { desc = "[P]Copy file path to clipboard" })
+-- I couldn't use <A-p> because its used for previous reference
+vim.keymap.set({ "n", "v", "i" }, "<A-c>", copy_filepath_to_clipboard, { desc = "[P]Copy file path to clipboard" })
 
 -- -- Paste file path with the wordname Filename: first
 -- vim.keymap.set("n", "<leader>fz", function()

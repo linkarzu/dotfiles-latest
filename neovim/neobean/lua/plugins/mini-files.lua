@@ -121,6 +121,41 @@ return {
           end
         end, { buffer = true, noremap = true, silent = true, desc = "Copy file/directory to clipboard" })
 
+        vim.keymap.set("n", "yz", function()
+          local curr_entry = require("mini.files").get_fs_entry()
+          if curr_entry then
+            local path = curr_entry.path
+            local name = vim.fn.fnamemodify(path, ":t") -- Extract the file or directory name
+            local parent_dir = vim.fn.fnamemodify(path, ":h") -- Get the parent directory
+            local timestamp = os.date("%y%m%d%H%M%S") -- Append timestamp to avoid duplicates
+            local zip_path = string.format("/tmp/%s_%s.zip", name, timestamp) -- Path in macOS's tmp directory
+            -- Create the zip file
+            local zip_cmd = string.format(
+              "cd %s && zip -r %s %s",
+              vim.fn.shellescape(parent_dir),
+              vim.fn.shellescape(zip_path),
+              vim.fn.shellescape(name)
+            )
+            local result = vim.fn.system(zip_cmd)
+            if vim.v.shell_error ~= 0 then
+              vim.notify("Failed to create zip file: " .. result, vim.log.levels.ERROR)
+              return
+            end
+            -- Copy the zip file to the system clipboard
+            local copy_cmd =
+              string.format([[osascript -e 'set the clipboard to POSIX file "%s"' ]], vim.fn.fnameescape(zip_path))
+            local copy_result = vim.fn.system(copy_cmd)
+            if vim.v.shell_error ~= 0 then
+              vim.notify("Failed to copy zip file to clipboard: " .. copy_result, vim.log.levels.ERROR)
+              return
+            end
+            vim.notify(zip_path, vim.log.levels.INFO)
+            vim.notify("Zipped and copied to clipboard: ", vim.log.levels.INFO)
+          else
+            vim.notify("No file or directory selected", vim.log.levels.WARN)
+          end
+        end, { buffer = true, noremap = true, silent = true, desc = "Zip and copy to clipboard" })
+
         -- Paste the current file or directory from the system clipboard into the current directory in mini.files
         -- NOTE: This works only on macOS
         vim.keymap.set("n", "P", function()

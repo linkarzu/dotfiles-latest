@@ -205,6 +205,22 @@ return {
           mini_files.synchronize() -- Refresh mini.files to show updated directory content
           vim.notify("Paste operation completed successfully.", vim.log.levels.INFO)
         end, { buffer = true, noremap = true, silent = true, desc = "Paste from clipboard" })
+
+        -- Define <M-c> to copy the current file or directory path (relative to home) to clipboard
+        vim.keymap.set("n", "<M-c>", function()
+          -- Get the current entry (file or directory)
+          local curr_entry = mini_files.get_fs_entry()
+          if curr_entry then
+            -- Convert path to be relative to home directory
+            local home_dir = vim.fn.expand("~")
+            local relative_path = curr_entry.path:gsub("^" .. home_dir, "~")
+            vim.fn.setreg("+", relative_path) -- Copy the relative path to the clipboard register
+            vim.notify(relative_path, vim.log.levels.INFO)
+            vim.notify("Path copied to clipboard: ", vim.log.levels.INFO)
+          else
+            vim.notify("No file or directory selected", vim.log.levels.WARN)
+          end
+        end, { buffer = true, noremap = true, silent = true, desc = "Copy relative path to clipboard" })
       end,
     })
 

@@ -104,6 +104,7 @@ local function update_background(event_type)
   if event_type == "FocusGained" or event_type == "WinEnter" then
     -- Active window - darker background
     vim.cmd("hi Normal guibg=" .. active_bg)
+    vim.cmd("hi NormalNC guibg=" .. active_bg)
     vim.cmd("hi NormalFloat guibg=" .. active_bg)
     vim.cmd("hi TreesitterContext guibg=" .. active_bg)
     vim.cmd("hi TreesitterContextLineNumber guibg=" .. active_bg)
@@ -112,6 +113,11 @@ local function update_background(event_type)
     vim.cmd("hi MiniDiffSignAdd guibg=" .. active_bg)
     vim.cmd("hi MiniDiffSignDelete guibg=" .. active_bg)
     vim.cmd("hi NonText guibg=" .. active_bg)
+    vim.cmd("hi WinBar guibg=" .. active_bg)
+    -- These 2 statusline colors replace the lualine color when lualine is not
+    -- enabled
+    vim.cmd("hi StatusLine guibg=" .. active_bg)
+    vim.cmd("hi StatusLineNC guibg=" .. active_bg)
   else
     -- Inactive window - brighter background
     vim.cmd("hi Normal guibg=" .. inactive_bg)
@@ -125,6 +131,11 @@ local function update_background(event_type)
     vim.cmd("hi MiniDiffSignAdd guibg=" .. inactive_bg)
     vim.cmd("hi MiniDiffSignDelete guibg=" .. inactive_bg)
     vim.cmd("hi NonText guibg=" .. inactive_bg)
+    vim.cmd("hi WinBar guibg=" .. inactive_bg)
+    -- These 2 statusline colors replace the lualine color when lualine is not
+    -- enabled
+    vim.cmd("hi StatusLine guibg=" .. inactive_bg)
+    vim.cmd("hi StatusLineNC guibg=" .. inactive_bg)
   end
 end
 -- Debounce function for Focus events

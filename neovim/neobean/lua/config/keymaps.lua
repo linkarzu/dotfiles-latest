@@ -2374,19 +2374,22 @@ vim.keymap.set("n", "<leader>mD", function()
   print("All marks deleted.")
 end, { desc = "[P]Delete all marks" })
 
--- Open current file in finder
-vim.keymap.set("n", "<leader>fO", function()
+-- Function to open current file in Finder or ForkLift
+local function open_in_file_manager()
   local file_path = vim.fn.expand("%:p")
   if file_path ~= "" then
     -- -- Open in Finder or in ForkLift
     -- local command = "open -R " .. vim.fn.shellescape(file_path)
     local command = "open -a ForkLift " .. vim.fn.shellescape(file_path)
     vim.fn.system(command)
-    print("Opened file in Finder: " .. file_path)
+    print("Opened file in ForkLift: " .. file_path)
   else
     print("No file is currently open")
   end
-end, { desc = "[P]Open current file in Finder" })
+end
+
+vim.keymap.set({ "n", "v", "i" }, "<M-f>", open_in_file_manager, { desc = "[P]Open current file in file explorer" })
+vim.keymap.set("n", "<leader>fO", open_in_file_manager, { desc = "[P]Open current file in file explorer" })
 
 -- Open current file in Neovide
 vim.keymap.set("n", "<leader>fN", function()

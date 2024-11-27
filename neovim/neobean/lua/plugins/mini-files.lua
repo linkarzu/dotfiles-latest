@@ -100,7 +100,7 @@ return {
 
         -- Copy the current file or directory to the lamw25wmal system clipboard
         -- NOTE: This works only on macOS
-        vim.keymap.set("n", "Y", function()
+        vim.keymap.set("n", "yy", function()
           -- Get the current entry (file or directory)
           local curr_entry = mini_files.get_fs_entry()
           if curr_entry then
@@ -113,7 +113,8 @@ return {
             if vim.v.shell_error ~= 0 then
               vim.notify("Copy failed: " .. result, vim.log.levels.ERROR)
             else
-              vim.notify("Copied to clipboard: " .. path, vim.log.levels.INFO)
+              vim.notify(path, vim.log.levels.INFO)
+              vim.notify("Copied to system clipboard", vim.log.levels.INFO)
             end
           else
             vim.notify("No file or directory selected", vim.log.levels.WARN)

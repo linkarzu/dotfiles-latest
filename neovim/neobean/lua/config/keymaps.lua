@@ -36,9 +36,9 @@ vim.keymap.set({ "n", "v", "i" }, "<A-h>", function()
 end, { desc = "[P]Noice History" })
 
 -- I want to close split panes with escape, the default is "q"
-vim.keymap.set("n", "<esc>", "<cmd>close<cr>", { desc = "Close split pane" })
+-- vim.keymap.set("n", "<esc>", "<cmd>close<cr>", { desc = "Close split pane" })
 -- I also want to close split panes with escape in terminal mode
-vim.keymap.set("n", "<esc>", "<C-W>c", { desc = "Delete Window", remap = true })
+-- vim.keymap.set("n", "<esc>", "<C-W>c", { desc = "Delete Window", remap = true })
 
 -- I'm switching from bufexplorer to telescope buffers as I get a file preview,
 -- that's basically the main benefit lamw25wmal

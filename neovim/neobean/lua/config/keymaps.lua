@@ -587,7 +587,8 @@ end, { desc = "[P]Insert filename with path and go project name at cursor" })
 local function copy_filepath_to_clipboard()
   local filePath = vim.fn.expand("%:~") -- Gets the file path relative to the home directory
   vim.fn.setreg("+", filePath) -- Copy the file path to the clipboard register
-  print("File path copied to clipboard: " .. filePath) -- Optional: print message to confirm
+  vim.notify(filePath, vim.log.levels.INFO)
+  vim.notify("Path copied to clipboard: ", vim.log.levels.INFO)
 end
 -- Keymaps for copying file path to clipboard
 -- vim.keymap.set("n", "<leader>fp", copy_filepath_to_clipboard, { desc = "[P]Copy file path to clipboard" })

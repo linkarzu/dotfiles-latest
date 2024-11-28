@@ -22,6 +22,11 @@ return {
     local s = ls.snippet
     local t = ls.text_node
     local i = ls.insert_node
+    local f = ls.function_node
+
+    local function clipboard()
+      return vim.fn.getreg("+")
+    end
 
     -- Custom snippets
     -- the "all" after ls.add_snippets("all" is the filetype, you can know a
@@ -68,13 +73,17 @@ return {
 
     -- Generate snippets for all languages
     local snippets = {}
+
     for _, lang in ipairs(languages) do
       table.insert(snippets, create_code_block_snippet(lang))
     end
 
     table.insert(
       snippets,
-      s("chirpy", {
+      s({
+        trig = "chirpy",
+        name = "Disable markdownlint and prettier for chirpy",
+      }, {
         t({
           " ",
           "<!-- markdownlint-disable -->",
@@ -104,7 +113,10 @@ return {
 
     table.insert(
       snippets,
-      s("markdownlint", {
+      s({
+        trig = "markdownlint",
+        name = "Add markdownlint disable and restore headings",
+      }, {
         t({
           " ",
           "<!-- markdownlint-disable -->",
@@ -122,7 +134,10 @@ return {
 
     table.insert(
       snippets,
-      s("prettier-ignore", {
+      s({
+        trig = "prettierignore",
+        name = "Add prettier ignore start and end headings",
+      }, {
         t({
           " ",
           "<!-- prettier-ignore-start -->",
@@ -140,7 +155,10 @@ return {
 
     table.insert(
       snippets,
-      s("link", {
+      s({
+        trig = "link",
+        name = "Add this -> []()",
+      }, {
         t("["),
         i(1),
         t("]("),
@@ -151,7 +169,10 @@ return {
 
     table.insert(
       snippets,
-      s("linkt", {
+      s({
+        trig = "linkt",
+        name = 'Add this -> [](){:target="_blank"}',
+      }, {
         t("["),
         i(1),
         t("]("),
@@ -162,10 +183,28 @@ return {
 
     table.insert(
       snippets,
-      s("todo", {
+      s({
+        trig = "todo",
+        name = "Add TODO: item",
+      }, {
         t("<!-- TODO: "),
         i(1),
         t(" -->"),
+      })
+    )
+
+    -- Paste clipboard contents in link section, move cursor to ()
+    table.insert(
+      snippets,
+      s({
+        trig = "linkclip",
+        name = "Paste clipboard contents as a markdown link",
+      }, {
+        t("["),
+        i(1),
+        t("]("),
+        f(clipboard, {}),
+        t(")"),
       })
     )
 
@@ -175,15 +214,24 @@ return {
     --                         all the filetypes
     -- #####################################################################
     ls.add_snippets("all", {
-      s("workflow", {
+      s({
+        trig = "workflow",
+        name = "Add this -> lamw25wmal",
+      }, {
         t("lamw25wmal"),
       }),
 
-      s("lam", {
+      s({
+        trig = "lam",
+        name = "Add this -> lamw25wmal",
+      }, {
         t("lamw25wmal"),
       }),
 
-      s("mw25", {
+      s({
+        trig = "mw25",
+        name = "Add this -> lamw25wmal",
+      }, {
         t("lamw25wmal"),
       }),
     })

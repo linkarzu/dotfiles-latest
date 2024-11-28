@@ -136,6 +136,8 @@ local function update_background(event_type)
     -- enabled
     vim.cmd("hi StatusLine guibg=" .. inactive_bg)
     vim.cmd("hi StatusLineNC guibg=" .. inactive_bg)
+    -- I don't want to see the cursorline when window is unfocused
+    vim.cmd("hi CursorLine  guibg=" .. inactive_bg)
   end
 end
 -- Debounce function for Focus events

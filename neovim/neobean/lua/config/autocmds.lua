@@ -104,8 +104,10 @@ local function update_background(event_type)
   if event_type == "FocusGained" or event_type == "WinEnter" then
     -- Active window - darker background
     vim.cmd("hi Normal guibg=" .. active_bg)
-    vim.cmd("hi NormalNC guibg=" .. active_bg)
+    -- Commented so that when focus another pane inactive background changes
+    -- vim.cmd("hi NormalNC guibg=" .. active_bg)
     vim.cmd("hi NormalFloat guibg=" .. active_bg)
+    vim.cmd("hi NormalFloatNC guibg=" .. active_bg)
     vim.cmd("hi TreesitterContext guibg=" .. active_bg)
     vim.cmd("hi TreesitterContextLineNumber guibg=" .. active_bg)
     -- vim.cmd("hi MiniFilesTitleFocused guibg=" .. active_bg)
@@ -118,6 +120,8 @@ local function update_background(event_type)
     -- enabled
     vim.cmd("hi StatusLine guibg=" .. active_bg)
     vim.cmd("hi StatusLineNC guibg=" .. active_bg)
+    -- This is the background of the folded lines
+    vim.cmd("hi Folded guibg=" .. active_bg)
   else
     -- Inactive window - brighter background
     vim.cmd("hi Normal guibg=" .. inactive_bg)
@@ -137,7 +141,9 @@ local function update_background(event_type)
     vim.cmd("hi StatusLine guibg=" .. inactive_bg)
     vim.cmd("hi StatusLineNC guibg=" .. inactive_bg)
     -- I don't want to see the cursorline when window is unfocused
-    vim.cmd("hi CursorLine  guibg=" .. inactive_bg)
+    vim.cmd("hi CursorLine guibg=" .. inactive_bg)
+    -- This is the background of the folded lines
+    vim.cmd("hi Folded guibg=" .. inactive_bg)
   end
 end
 -- Debounce function for Focus events

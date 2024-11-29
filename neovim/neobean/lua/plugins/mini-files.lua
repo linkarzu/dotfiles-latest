@@ -100,7 +100,7 @@ return {
 
         -- Copy the current file or directory to the lamw25wmal system clipboard
         -- NOTE: This works only on macOS
-        vim.keymap.set("n", "yy", function()
+        vim.keymap.set("n", "yc", function()
           -- Get the current entry (file or directory)
           local curr_entry = mini_files.get_fs_entry()
           if curr_entry then

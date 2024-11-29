@@ -221,6 +221,109 @@ return {
             vim.notify("No file or directory selected", vim.log.levels.WARN)
           end
         end, { buffer = true, noremap = true, silent = true, desc = "Copy relative path to clipboard" })
+
+        -- Preview the selected image in a popup window
+        vim.keymap.set("n", "i", function()
+          local curr_entry = mini_files.get_fs_entry()
+          if curr_entry and curr_entry.fs_type == "file" then
+            local ext = vim.fn.fnamemodify(curr_entry.path, ":e"):lower()
+            local supported_image_exts = { "png", "jpg", "jpeg", "gif", "bmp", "webp", "avif" }
+            -- Check if the file has a supported image extension
+            if vim.tbl_contains(supported_image_exts, ext) then
+              -- Save mini.files state (current path and focused entry)
+              local current_dir = vim.fn.fnamemodify(curr_entry.path, ":h")
+              local focused_entry = vim.fn.fnamemodify(curr_entry.path, ":t") -- Extract filename
+              -- Create a floating window for the image preview
+              local width = math.floor(vim.o.columns * 0.6)
+              local height = math.floor(vim.o.lines * 0.6)
+              local col = math.floor((vim.o.columns - width) / 2)
+              local row = math.floor((vim.o.lines - height) / 2)
+              local buf = vim.api.nvim_create_buf(false, true) -- Create a scratch buffer
+              local win = vim.api.nvim_open_win(buf, true, {
+                relative = "editor",
+                row = row,
+                col = col,
+                width = width,
+                height = height,
+                style = "minimal",
+                border = "rounded",
+              })
+              -- Use image.nvim to render the image
+              local img = require("image").from_file(curr_entry.path, {
+                id = "mini_files_image_preview",
+                window = win, -- Bind the image to the popup window
+                buffer = buf, -- Bind the image to the popup buffer
+                x = 0,
+                y = 0,
+                width = width,
+                height = math.floor(height * 0.8), -- Use 80% of the popup height for the image
+                with_virtual_padding = true,
+              })
+              -- Render the image
+              if img ~= nil then
+                img:render()
+              end
+              -- Use `stat` or `ls` to get the file size in bytes
+              local file_size_bytes = ""
+              if vim.fn.has("mac") == 1 or vim.fn.has("unix") == 1 then
+                -- For macOS or Linux systems
+                local handle = io.popen(
+                  "stat -f%z "
+                    .. vim.fn.shellescape(curr_entry.path)
+                    .. " || ls -l "
+                    .. vim.fn.shellescape(curr_entry.path)
+                    .. " | awk '{print $5}'"
+                )
+                if handle then
+                  file_size_bytes = handle:read("*a"):gsub("%s+$", "") -- Trim trailing whitespace
+                  handle:close()
+                end
+              else
+                -- Fallback message if the command isn't available
+                file_size_bytes = "0"
+              end
+              -- Convert the size to MB (if valid)
+              local file_size_mb = tonumber(file_size_bytes) and tonumber(file_size_bytes) / (1024 * 1024) or 0
+              local file_size_mb_str = string.format("%.2f", file_size_mb) -- Format to 2 decimal places as a string
+              -- Add newlines to separate the image and text
+              vim.api.nvim_buf_set_lines(buf, math.floor(height * 0.8), -1, false, { "", "", "" }) -- Add 3 empty lines
+              -- Add image information (filename and size)
+              local image_info = {}
+              table.insert(image_info, "Image File: " .. focused_entry) -- Add only the filename
+              if tonumber(file_size_bytes) > 0 then
+                table.insert(image_info, "Size: " .. file_size_mb_str .. " MB") -- Use the formatted string
+              else
+                table.insert(image_info, "Size: Unable to detect") -- Fallback if size isn't found
+              end
+              vim.api.nvim_buf_set_lines(buf, math.floor(height * 0.8), -1, false, image_info)
+              -- Keymap for closing the popup and reopening mini.files
+              local function reopen_mini_files()
+                if img ~= nil then
+                  img:clear()
+                end
+                vim.api.nvim_win_close(win, true)
+                -- Reopen mini.files in the same directory
+                require("mini.files").open(current_dir, true)
+                vim.defer_fn(function()
+                  -- Simulate navigation to the file by searching for the line matching the file
+                  local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false) -- Get all lines in the buffer
+                  for i, line in ipairs(lines) do
+                    if line:match(focused_entry) then
+                      vim.api.nvim_win_set_cursor(0, { i, 0 }) -- Move cursor to the matching line
+                      break
+                    end
+                  end
+                end, 50) -- Small delay to ensure mini.files is initialized
+              end
+              vim.keymap.set("n", "<esc>", reopen_mini_files, { buffer = buf, noremap = true, silent = true })
+              vim.keymap.set("n", "q", reopen_mini_files, { buffer = buf, noremap = true, silent = true })
+            else
+              vim.notify("Not an image file.", vim.log.levels.WARN)
+            end
+          else
+            vim.notify("No file selected or not a file.", vim.log.levels.WARN)
+          end
+        end, { buffer = true, noremap = true, silent = true, desc = "Preview image in popup" })
       end,
     })
 

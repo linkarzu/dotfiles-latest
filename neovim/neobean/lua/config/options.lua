@@ -19,9 +19,9 @@ vim.g.mapleader = " "
 -- vim.g.mapleader = vim.api.nvim_replace_termcodes("<BS>", false, false, true)
 -- There's a delay everytime I press the leader key and that which-key is shown
 -- I want it to be immediate lamw25wmal
-vim.opt.timeout = false
+vim.opt.timeout = true
 -- Default is 1,000 but lazyvim sets it to 300 which is faster
-vim.opt.timeoutlen = 0
+vim.opt.timeoutlen = 100
 
 -- Auto update plugins at startup
 -- Tried to add this vimenter autocmd in the autocmds.lua file but it was never

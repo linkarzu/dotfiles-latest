@@ -5,8 +5,7 @@
 local wezterm = require("wezterm")
 
 -- Load the colors from my existing neobean colors.lua file
-local colors_module = dofile(os.getenv("HOME") .. "/github/dotfiles-latest/neovim/neobean/lua/config/colors.lua")
-local colors = colors_module.load_colors()
+local colors = dofile(os.getenv("HOME") .. "/github/dotfiles-latest/neovim/neobean/lua/config/colors.lua")
 
 -- This will hold the configuration.
 local config = wezterm.config_builder()

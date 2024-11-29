@@ -32,8 +32,10 @@ end
 local colors = load_colors()
 
 -- Create highlight groups from the colors
-for name, hex in pairs(colors) do
-  vim.api.nvim_set_hl(0, name, { fg = hex })
+if vim then
+  for name, hex in pairs(colors) do
+    vim.api.nvim_set_hl(0, name, { fg = hex })
+  end
 end
 
 -- Optionally, return the colors table if needed elsewhere

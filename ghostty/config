@@ -90,7 +90,7 @@ command = zsh --login -c "if command -v tmux >/dev/null 2>&1; then tmux attach |
 # left padding to 2 and the right padding to 4. If you want to set both
 # paddings to the same value, you can use a single value. For example,
 # `window-padding-x = 2` will set both paddings to 2.
-window-padding-x = 6,0
+window-padding-x = 4,2
 
 # Vertical window padding. This applies padding between the terminal cells and
 # the top and bottom window borders. The value is in points, meaning that it
@@ -109,7 +109,7 @@ window-padding-x = 6,0
 # top padding to 2 and the bottom padding to 4. If you want to set both
 # paddings to the same value, you can use a single value. For example,
 # `window-padding-y = 2` will set both paddings to 2.
-window-padding-y = 8,0
+window-padding-y = 6,0
 
 font-family = "JetBrainsMono Nerd Font"
 font-size = 15

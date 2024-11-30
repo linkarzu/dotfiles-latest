@@ -40,4 +40,15 @@ return {
 
     return opts
   end,
+  keys = {
+    {
+      -- Toggle copilotchat, the default is <leader>aa
+      "<M-o>",
+      function()
+        return require("CopilotChat").toggle()
+      end,
+      desc = "[P]Toggle (CopilotChat)",
+      mode = { "n", "i", "v" },
+    },
+  },
 }

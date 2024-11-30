@@ -38,6 +38,12 @@ return {
               ["d"] = require("telescope.actions").delete_buffer,
               -- I'm also used to quitting bufexplorer with q instead of escape
               ["<esc>"] = require("telescope.actions").close,
+              -- I probably should use ctrl+key but since I use these already in
+              -- lazygit they'll stay like this for now
+              ["J"] = require("telescope.actions").preview_scrolling_down,
+              ["K"] = require("telescope.actions").preview_scrolling_up,
+              ["H"] = require("telescope.actions").preview_scrolling_left,
+              ["L"] = require("telescope.actions").preview_scrolling_right,
             },
             -- When in insert mode, I want to quit telescope when I press escape
             -- instead of going to normal mode, to go to normal mode I can press
@@ -45,6 +51,12 @@ return {
             -- https://www.reddit.com/r/neovim/comments/1ghzlx4/comment/lv3jg0n/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button
             i = {
               ["<esc>"] = require("telescope.actions").close,
+              -- I probably should use ctrl+key but since I use these already in
+              -- lazygit they'll stay like this for now
+              ["J"] = require("telescope.actions").preview_scrolling_down,
+              ["K"] = require("telescope.actions").preview_scrolling_up,
+              ["H"] = require("telescope.actions").preview_scrolling_left,
+              ["L"] = require("telescope.actions").preview_scrolling_right,
             },
           },
         },

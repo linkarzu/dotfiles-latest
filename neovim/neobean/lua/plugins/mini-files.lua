@@ -222,8 +222,31 @@ return {
           end
         end, { buffer = true, noremap = true, silent = true, desc = "Copy relative path to clipboard" })
 
-        -- Preview the selected image in a popup window
+        -- Preview the selected image in macOS Quick Look
+        --
+        -- NOTE: This is for macOS, to preview in a neovim popup see below
+        --
+        -- This wonderful Idea was suggested by @iduran in my youtube video:
+        -- https://youtu.be/BzblG2eV8dU
         vim.keymap.set("n", "i", function()
+          local curr_entry = mini_files.get_fs_entry()
+          if curr_entry then
+            -- Preview the file using Quick Look
+            vim.system({ "qlmanage", "-p", curr_entry.path }, {
+              stdout = false,
+              stderr = false,
+            })
+            -- Activate Quick Look window after a small delay
+            vim.defer_fn(function()
+              vim.system({ "osascript", "-e", 'tell application "qlmanage" to activate' })
+            end, 200)
+          else
+            vim.notify("No file selected", vim.log.levels.WARN)
+          end
+        end, { buffer = true, noremap = true, silent = true, desc = "Preview with macOS Quick Look" })
+
+        -- Preview the selected image in a neovim popup window
+        vim.keymap.set("n", "<M-i>", function()
           -- Clear any existing images before rendering the new one
           require("image").clear()
           local curr_entry = mini_files.get_fs_entry()

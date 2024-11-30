@@ -32,6 +32,11 @@ if vim.fn.executable("lazygit") == 1 then
   end, { desc = "Lazygit (Root Dir)" })
 end
 
+-- Restart Neovim
+vim.keymap.set({ "n", "v", "i" }, "<M-r>", function()
+  os.execute('open "btt://execute_assigned_actions_for_trigger/?uuid=481BDF1F-D0C3-4B5A-94D2-BD3C881FAA6F"')
+end, { desc = "[P]Restart Neovim via BTT" })
+
 -- Quit or exit neovim, easier than to do <leader>qq
 vim.keymap.set({ "n", "v", "i" }, "<M-q>", "<cmd>qa<cr>", { desc = "[P]Quit All" })
 

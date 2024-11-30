@@ -24,6 +24,14 @@ local M = {}
 -- in macOS, I still use the left option key for unicode characters, like ñ ó á
 -- and stuff like that in spanish, you pinchis gringos wouldn't understand
 
+-- By default lazygit opens with <leader>gg, but I use it way too much, so need
+-- something faster
+if vim.fn.executable("lazygit") == 1 then
+  vim.keymap.set("n", "<M-g>", function()
+    Snacks.lazygit({ cwd = LazyVim.root.git() })
+  end, { desc = "Lazygit (Root Dir)" })
+end
+
 -- Quit or exit neovim, easier than to do <leader>qq
 vim.keymap.set({ "n", "v", "i" }, "<M-q>", "<cmd>qa<cr>", { desc = "[P]Quit All" })
 
@@ -1680,7 +1688,7 @@ end, { desc = "[P]Convert to link (new tab)" })
 
 -- Paste a github link and add it in this format
 -- [folke/noice.nvim](https://github.com/folke/noice.nvim){:target="\_blank"}
-vim.keymap.set({ "n", "v", "i" }, "<M-g>", function()
+vim.keymap.set({ "n", "v", "i" }, "<M-t>", function()
   -- Insert the text in the desired format
   vim.cmd('normal! a[](){:target="_blank"} ')
   vim.cmd("normal! F(pv2F/lyF[p")

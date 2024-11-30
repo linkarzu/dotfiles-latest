@@ -522,6 +522,30 @@
               {
                 "to": [
                   {
+                    "shell_command": "open -a 'Windows App.app'"
+                  }
+                ],
+                "description": "Open -a 'Windows App.app'",
+                "type": "basic",
+                "from": {
+                  "key_code": "6",
+                  "modifiers": {
+                    "mandatory": [
+                      "any"
+                    ]
+                  }
+                },
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "hyper_sublayer_a",
+                    "value": 1
+                  }
+                ]
+              },
+              {
+                "to": [
+                  {
                     "shell_command": "open -a 'Spotify.app'"
                   }
                 ],
@@ -714,10 +738,10 @@
               {
                 "to": [
                   {
-                    "shell_command": "open -a 'Preview.app'"
+                    "shell_command": "open -a 'OBS.app'"
                   }
                 ],
-                "description": "Open -a 'Preview.app'",
+                "description": "Open -a 'OBS.app'",
                 "type": "basic",
                 "from": {
                   "key_code": "o",
@@ -744,7 +768,7 @@
                 "description": "Open -a 'Brave Browser.app'",
                 "type": "basic",
                 "from": {
-                  "key_code": "p",
+                  "key_code": "b",
                   "modifiers": {
                     "mandatory": [
                       "any"
@@ -858,13 +882,37 @@
               {
                 "to": [
                   {
+                    "shell_command": "open -a 'Discord.app'"
+                  }
+                ],
+                "description": "Open -a 'Discord.app'",
+                "type": "basic",
+                "from": {
+                  "key_code": "d",
+                  "modifiers": {
+                    "mandatory": [
+                      "any"
+                    ]
+                  }
+                },
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "hyper_sublayer_a",
+                    "value": 1
+                  }
+                ]
+              },
+              {
+                "to": [
+                  {
                     "shell_command": "open -a '1Password.app'"
                   }
                 ],
                 "description": "Open -a '1Password.app'",
                 "type": "basic",
                 "from": {
-                  "key_code": "d",
+                  "key_code": "p",
                   "modifiers": {
                     "mandatory": [
                       "any"
@@ -1002,10 +1050,10 @@
               {
                 "to": [
                   {
-                    "shell_command": "open -a 'Windows App.app'"
+                    "shell_command": "open -a 'Recut.app'"
                   }
                 ],
-                "description": "Open -a 'Windows App.app'",
+                "description": "Open -a 'Recut.app'",
                 "type": "basic",
                 "from": {
                   "key_code": "r",

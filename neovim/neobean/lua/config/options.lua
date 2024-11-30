@@ -23,6 +23,9 @@ vim.opt.timeout = true
 -- Default is 1,000 but lazyvim sets it to 300 which is faster
 vim.opt.timeoutlen = 100
 
+-- I never used relative line numbers, so fuck that
+vim.opt.relativenumber = false
+
 -- Auto update plugins at startup
 -- Tried to add this vimenter autocmd in the autocmds.lua file but it was never
 -- triggered, this is because if I understand correctly Lazy.nvim delays the

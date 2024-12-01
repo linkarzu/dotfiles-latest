@@ -17,11 +17,25 @@
 vim.g.mapleader = " "
 -- In case you want to switch the leader key to backspace
 -- vim.g.mapleader = vim.api.nvim_replace_termcodes("<BS>", false, false, true)
--- There's a delay everytime I press the leader key and that which-key is shown
--- I want it to be immediate lamw25wmal
+
+-- It turns out, I didn't want which key to show up immediately, I delayed which
+-- key to only show after 1.5 seconds, so I added a delay in wht which-key
+-- plugin configuration file
+--
+-- if I need to quickly search for a key, I press <M-k>
+--
+-- Old note: There's a delay everytime I press the leader key and that which-key
+-- is shown I want it to be immediate lamw25wmal
+--
+-- timeout = true means Neovim will wait for potential mapping completions
+-- timeoutlen = 1000 gives you 1 second to complete a key mapping sequence
+-- Note: This is just the maximum wait time - if you type the complete mapping
+-- faster (e.g., <leader>ff in 200ms), it executes immediately without waiting
+-- for the full 1000ms. LazyVim defaults to 300ms, but I will test the more
+-- relaxed default of 1000ms here.
 vim.opt.timeout = true
--- Default is 1,000 but lazyvim sets it to 300 which is faster
-vim.opt.timeoutlen = 100
+-- Default neovim is 1,000 but lazyvim sets it to 300
+vim.opt.timeoutlen = 1000
 
 -- I never used relative line numbers, so fuck that
 vim.opt.relativenumber = false

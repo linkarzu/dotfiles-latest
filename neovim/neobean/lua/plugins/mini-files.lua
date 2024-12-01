@@ -600,5 +600,7 @@ return {
         end
       end,
     })
+
+    -- End of git status section
   end,
 }

@@ -26,7 +26,7 @@ return {
     require("telescope").setup({
       extensions = {
         frecency = {
-          show_scores = true, -- Default: false
+          show_scores = false, -- Default: false
           -- If `true`, it shows confirmation dialog before any entries are removed from the DB
           -- If you want not to be bothered with such things and to remove stale results silently
           -- set db_safe_mode=false and auto_validate=true

@@ -4,9 +4,6 @@
 local M = {}
 
 M.setup = function()
-  ---------------------------------------------------------------------------
-  ---------------------------------------------------------------------------
-
   -- -- All of the section below is to show the git status on files found here
   -- -- https://www.reddit.com/r/neovim/comments/1c37m7c/is_there_a_way_to_get_the_minifiles_plugin_to/
   -- -- Which points to

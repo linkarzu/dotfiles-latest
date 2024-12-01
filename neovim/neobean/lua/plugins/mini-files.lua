@@ -46,6 +46,7 @@ return {
       -- directory in a tmux pane on the right
     })
 
+    -- Here I define my custom keymaps in a centralized place
     opts.custom_keymaps = {
       open_tmux_pane = ",",
       copy_to_clipboard = "<space>yy",

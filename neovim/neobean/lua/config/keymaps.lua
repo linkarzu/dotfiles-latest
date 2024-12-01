@@ -34,6 +34,8 @@ end
 
 -- Restart Neovim
 vim.keymap.set({ "n", "v", "i" }, "<M-r>", function()
+  -- Save all modified buffers, autosave may not have kicked in sometimes
+  vim.cmd("wall")
   os.execute('open "btt://execute_assigned_actions_for_trigger/?uuid=481BDF1F-D0C3-4B5A-94D2-BD3C881FAA6F"')
 end, { desc = "[P]Restart Neovim via BTT" })
 

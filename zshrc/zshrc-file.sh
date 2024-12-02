@@ -130,6 +130,7 @@ create_symlink ~/github/dotfiles-latest/yazi/ ~/.config/yazi
 create_symlink ~/github/dotfiles-latest/btop/ ~/.config/btop
 create_symlink ~/github/dotfiles-latest/neovim/neobean/spell/ ~/github/dotfiles-latest/neovim/neobean-sticky/spell
 create_symlink ~/github/dotfiles-latest/neovim/neobean/snippets/ ~/github/dotfiles-latest/neovim/neobean-sticky/snippets
+create_symlink ~/github/dotfiles-latest/neovim/neobean/lua/config/modules/ ~/github/dotfiles-latest/neovim/neobean-sticky/lua/config/modules
 # Notice I also have the "nvim" directory below and I have it pointing to my
 # "neobean" config.
 # If I don't do this, my daily note with hyper+t+r won't work

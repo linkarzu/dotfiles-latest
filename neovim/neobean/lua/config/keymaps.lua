@@ -520,12 +520,12 @@ end, { desc = "[P]GOLANG, execute file" })
 -- end, { desc = "[P]Open (toggle) current dir in right tmux pane" })
 
 -- Toggle a tmux pane on the right in zsh, in the same directory as the current file
+--
 -- Notice I'm setting the variable DISABLE_PULL=1, because in my zshrc file,
 -- I check if this variable is set, if it is, I don't pull github repos, to save time
--- `,` is normally used when searching with 'f' or 't' to reverse the find,
--- if you press `,` it will search the previous character
--- But I just search with `f` forward and `F` backwards and press `;` to cycle
--- lamw25wmal
+--
+-- I keep track of the opened dir lamw25wmal, and if it changes, the next time I
+-- bring up the tmux pane, it will open the path of the new dir
 --
 -- I defined it as a function, because I call this function from the
 -- mini.files plugin to open the highlighted dir in a tmux pane on the right
@@ -544,6 +544,16 @@ M.tmux_pane_function = function(dir)
   -- If any additional pane exists
   if has_panes then
     if is_zoomed then
+      -- Compare the stored pane directory with the current file directory
+      if vim.g.tmux_pane_dir ~= escaped_dir then
+        -- If different, cd into the new dir
+        vim.fn.system("tmux send-keys -t :.+ 'cd \"" .. escaped_dir .. "\"' Enter")
+        -- Update the stored directory to the new one
+        vim.g.tmux_pane_dir = escaped_dir
+        -- print("Directories do NOT match!")
+      else
+        -- print("Directories match!")
+      end
       -- If zoomed, unzoom and switch to right pane
       vim.fn.system("tmux resize-pane -Z")
       -- Simulate pressing Ctrl-l to move to the right
@@ -553,6 +563,11 @@ M.tmux_pane_function = function(dir)
       vim.fn.system("tmux resize-pane -Z")
     end
   else
+    -- Store the initial directory in a Neovim variable
+    if vim.g.tmux_pane_dir == nil then
+      vim.g.tmux_pane_dir = escaped_dir
+      -- print("Stored tmux pane dir: " .. vim.g.tmux_pane_dir)
+    end
     -- If the right pane doesn't exist, open it with zsh and DISABLE_PULL variable
     vim.fn.system("tmux split-window -h -l " .. pane_width .. " 'cd \"" .. escaped_dir .. "\" && DISABLE_PULL=1 zsh'")
     -- Simulate pressing Ctrl-l to move to the right

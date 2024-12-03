@@ -40,9 +40,17 @@ vim.keymap.set({ "n", "v", "i" }, "<M-r>", function()
 end, { desc = "[P]Restart Neovim via BTT" })
 
 -- By default, CTRL-U and CTRL-D scroll by half a screen (50% of the window height)
--- Scroll by 10 lines, zz keeps the cursor centered
-vim.keymap.set("n", "<C-d>", "10jzz")
-vim.keymap.set("n", "<C-u>", "10kzz")
+-- Scroll by 35% of the window height and keep the cursor centered
+local scroll_percentage = 0.35
+-- Scroll by a percentage of the window height and keep the cursor centered
+vim.keymap.set("n", "<C-d>", function()
+  local lines = math.floor(vim.api.nvim_win_get_height(0) * scroll_percentage)
+  vim.cmd("normal! " .. lines .. "jzz")
+end, { noremap = true, silent = true })
+vim.keymap.set("n", "<C-u>", function()
+  local lines = math.floor(vim.api.nvim_win_get_height(0) * scroll_percentage)
+  vim.cmd("normal! " .. lines .. "kzz")
+end, { noremap = true, silent = true })
 
 -- When jumping with ctrl+d and u the cursors stays in the middle
 -- vim.keymap.set("n", "<C-d>", "<C-d>zz")
@@ -414,7 +422,6 @@ vim.keymap.set("n", "<leader>cb", function()
   local first_line = vim.fn.getline(1) -- Get the first line of the file
   if string.match(first_line, "^#!/") then -- If first line contains shebang
     local escaped_file = vim.fn.shellescape(file) -- Properly escape the file name for shell commands
-
     -- Execute the script on a tmux pane on the right. On my mac I use zsh, so
     -- running this script with bash to not execute my zshrc file after
     -- vim.cmd("silent !tmux split-window -h -l 60 'bash -c \"" .. escaped_file .. "; exec bash\"'")
@@ -1164,7 +1171,6 @@ vim.keymap.set("n", "<leader>if", function()
     local image_pattern = "%[.-%]%((.-)%)"
     -- Extract relative image path
     local _, _, image_path = string.find(line, image_pattern)
-
     return image_path
   end
   -- Get the image path

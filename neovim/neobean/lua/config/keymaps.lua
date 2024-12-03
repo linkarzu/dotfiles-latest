@@ -73,10 +73,11 @@ vim.keymap.set("n", "<S-h>", function()
     -- select_current = true,
     layout_config = {
       -- Set preview width, 0.7 sets it to 70% of the window width
-      preview_width = 0.6,
+      preview_width = 0.45,
     },
   }))
 end, { desc = "[P]Open telescope buffers" })
+
 -- vim.keymap.del("n", "<S-l>")
 
 -- Snipe has been updated so this keymap changed, I moved the keymap to the

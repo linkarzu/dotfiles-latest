@@ -48,7 +48,7 @@ M.setup = function(opts)
           if vim.v.shell_error ~= 0 then
             vim.notify("Copy failed: " .. result, vim.log.levels.ERROR)
           else
-            vim.notify(path, vim.log.levels.INFO)
+            vim.notify(vim.fn.fnamemodify(path, ":t"), vim.log.levels.INFO)
             vim.notify("Copied to system clipboard", vim.log.levels.INFO)
           end
         else
@@ -95,7 +95,7 @@ M.setup = function(opts)
       -- Paste the current file or directory from the system clipboard into the current directory in mini.files
       -- NOTE: This works only on macOS
       vim.keymap.set("n", keymaps.paste_from_clipboard, function()
-        vim.notify("Starting the paste operation...", vim.log.levels.INFO)
+        -- vim.notify("Starting the paste operation...", vim.log.levels.INFO)
         if not mini_files then
           vim.notify("mini.files module not loaded.", vim.log.levels.ERROR)
           return
@@ -107,7 +107,7 @@ M.setup = function(opts)
         end
         local curr_dir = curr_entry.fs_type == "directory" and curr_entry.path
           or vim.fn.fnamemodify(curr_entry.path, ":h") -- Use parent directory if entry is a file
-        vim.notify("Current directory: " .. curr_dir, vim.log.levels.INFO)
+        -- vim.notify("Current directory: " .. curr_dir, vim.log.levels.INFO)
         local script = [[
             tell application "System Events"
               try
@@ -137,9 +137,9 @@ M.setup = function(opts)
           vim.notify("Paste operation failed: " .. result, vim.log.levels.ERROR)
           return
         end
-        vim.notify("Pasted " .. source_path .. " to " .. dest_path, vim.log.levels.INFO)
+        -- vim.notify("Pasted " .. source_path .. " to " .. dest_path, vim.log.levels.INFO)
         mini_files.synchronize() -- Refresh mini.files to show updated directory content
-        vim.notify("Paste operation completed successfully.", vim.log.levels.INFO)
+        vim.notify("Pasted successfully.", vim.log.levels.INFO)
       end, { buffer = buf_id, noremap = true, silent = true, desc = "Paste from clipboard" })
 
       -- Copy the current file or directory path (relative to home) to clipboard
@@ -151,7 +151,7 @@ M.setup = function(opts)
           local home_dir = vim.fn.expand("~")
           local relative_path = curr_entry.path:gsub("^" .. home_dir, "~")
           vim.fn.setreg("+", relative_path) -- Copy the relative path to the clipboard register
-          vim.notify(relative_path, vim.log.levels.INFO)
+          vim.notify(vim.fn.fnamemodify(relative_path, ":t"), vim.log.levels.INFO)
           vim.notify("Path copied to clipboard: ", vim.log.levels.INFO)
         else
           vim.notify("No file or directory selected", vim.log.levels.WARN)

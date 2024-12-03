@@ -547,11 +547,15 @@ M.tmux_pane_function = function(dir)
     vim.fn.system("tmux split-window -h -l " .. pane_width .. " 'cd \"" .. escaped_dir .. "\" && DISABLE_PULL=1 zsh'")
     -- Simulate pressing Ctrl-l to move to the right
     vim.fn.system("tmux send-keys C-l")
+    -- I have a really strange issue, when opening a tmux pane for the FIRST TIME
+    -- zsh-vi-mode can only move out of that pane if I press escape and then get to insert mode
+    -- So when opening the pane for the first time, I'm sending Escape and 'i'
+    vim.fn.system("tmux send-keys Escape i")
   end
 end
 -- If I execute the function without an argument, it will open the dir where the
 -- current file lives
-vim.keymap.set("n", ",", function()
+vim.keymap.set("n", "<M-t>", function()
   M.tmux_pane_function()
 end, { desc = "[P]Terminal on tmux pane on the right" })
 

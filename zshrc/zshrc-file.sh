@@ -615,27 +615,30 @@ if [ "$OS" = 'Mac' ]; then
     function tmux_left_pane() {
       tmux select-pane -L
       tmux resize-pane -Z
-      zle reset-prompt # Refresh the prompt after switching panes
+      # zle reset-prompt # Refresh the prompt after switching panes
     }
 
     # Register the function as a ZLE widget
-    zle -N tmux_left_pane
+    # zle -N tmux_left_pane
+    zvm_define_widget tmux_left_pane
 
     function zvm_after_lazy_keybindings() {
       # Remap to go to the beginning of the line
       zvm_bindkey vicmd 'gh' beginning-of-line
       # Remap to go to the end of the line
       zvm_bindkey vicmd 'gl' end-of-line
-      # Bind ',' to the tmux_left_pane function
       # Moves me to my left pane in tmux and maximizes it
-      zvm_bindkey vicmd ',' tmux_left_pane
-      # Move to the left tmux pane with escape
-      zvm_bindkey vicmd '^[' tmux_left_pane
-      # Insert mode bindings
-      # This allows me to quit the tmux pane on the right with escape, even when
-      # on insert mode
-      zvm_bindkey viins '^[' tmux_left_pane
+      # Bind Alt-t to the tmux_left_pane function in normal and insert mode
+      # To know that alt-t is ^[t I used `/bin/cat -v` and then pressed alt-t
+      zvm_bindkey vicmd '^[t' tmux_left_pane
+      zvm_bindkey viins '^[t' tmux_left_pane
+      # I used ',' to switch to left pane and maximize it  before switching to alt-t
+      # zvm_bindkey vicmd ',' tmux_left_pane
+      # Move to the left tmux pane with escape on normal and insert mode
+      # zvm_bindkey vicmd '^[' tmux_left_pane
+      # zvm_bindkey viins '^[' tmux_left_pane
     }
+
     # zvm_bindkey vicmd '\e' tmux_left_pane
 
     # Disable the cursor style feature

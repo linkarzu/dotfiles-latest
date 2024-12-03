@@ -48,7 +48,7 @@ return {
 
     -- Here I define my custom keymaps in a centralized place
     opts.custom_keymaps = {
-      open_tmux_pane = ",",
+      open_tmux_pane = "<M-t>",
       copy_to_clipboard = "<space>yy",
       zip_and_copy = "<space>yz",
       paste_from_clipboard = "<space>p",

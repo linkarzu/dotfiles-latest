@@ -44,6 +44,11 @@ vim.keymap.set({ "n", "v", "i" }, "<M-R>", function()
   os.execute('open "btt://execute_assigned_actions_for_trigger/?uuid=481BDF1F-D0C3-4B5A-94D2-BD3C881FAA6F"')
 end, { desc = "[P]Restart Neovim via BTT" })
 
+-- Disable this keymap overriding it with a no-operation function (noop)
+-- Otherwise when by mistake press <M-r> to restart neovim, it does "r" to
+-- replace
+vim.keymap.set({ "n", "v", "i" }, "<M-r>", "<Nop>", { desc = "[P] Disabled No operation for <M-r>" })
+
 -- By default, CTRL-U and CTRL-D scroll by half a screen (50% of the window height)
 -- Scroll by 35% of the window height and keep the cursor centered
 local scroll_percentage = 0.35

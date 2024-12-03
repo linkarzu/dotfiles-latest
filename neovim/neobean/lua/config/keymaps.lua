@@ -39,6 +39,15 @@ vim.keymap.set({ "n", "v", "i" }, "<M-r>", function()
   os.execute('open "btt://execute_assigned_actions_for_trigger/?uuid=481BDF1F-D0C3-4B5A-94D2-BD3C881FAA6F"')
 end, { desc = "[P]Restart Neovim via BTT" })
 
+-- By default, CTRL-U and CTRL-D scroll by half a screen (50% of the window height)
+-- Scroll by 10 lines, zz keeps the cursor centered
+vim.keymap.set("n", "<C-d>", "10jzz")
+vim.keymap.set("n", "<C-u>", "10kzz")
+
+-- When jumping with ctrl+d and u the cursors stays in the middle
+-- vim.keymap.set("n", "<C-d>", "<C-d>zz")
+-- vim.keymap.set("n", "<c-u>", "<c-u>zz")
+
 -- Quit or exit neovim, easier than to do <leader>qq
 vim.keymap.set({ "n", "v", "i" }, "<M-q>", "<cmd>qa<cr>", { desc = "[P]Quit All" })
 
@@ -330,10 +339,6 @@ vim.keymap.set("n", "Y", "y$", { desc = "[P]Yank to end of line" })
 -- If you want to return back to ctrl+d and ctrl+u
 -- vim.keymap.set("n", "gk", "<C-u>zz", { desc = "[P]Go up a half screen" })
 -- vim.keymap.set("n", "gj", "<C-d>zz", { desc = "[P]Go down a half screen" })
-
--- When jumping with ctrl+d and u the cursors stays in the middle
-vim.keymap.set("n", "<C-d>", "<C-d>zz")
-vim.keymap.set("n", "<c-u>", "<c-u>zz")
 
 -- Move lines up and down in visual mode
 vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv", { desc = "[P]Move line down in visual mode" })

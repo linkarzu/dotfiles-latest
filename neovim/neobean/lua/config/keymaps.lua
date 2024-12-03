@@ -33,9 +33,14 @@ if vim.fn.executable("lazygit") == 1 then
 end
 
 -- Restart Neovim
-vim.keymap.set({ "n", "v", "i" }, "<M-r>", function()
+vim.keymap.set({ "n", "v", "i" }, "<M-R>", function()
   -- Save all modified buffers, autosave may not have kicked in sometimes
   vim.cmd("wall")
+  -- Check if a right pane exists, if it does close it
+  local has_panes = vim.fn.system("tmux list-panes | wc -l"):gsub("%s+", "") ~= "1"
+  if has_panes then
+    vim.fn.system("tmux kill-pane -t :.+")
+  end
   os.execute('open "btt://execute_assigned_actions_for_trigger/?uuid=481BDF1F-D0C3-4B5A-94D2-BD3C881FAA6F"')
 end, { desc = "[P]Restart Neovim via BTT" })
 

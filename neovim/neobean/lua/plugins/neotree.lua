@@ -43,6 +43,14 @@ return {
         end,
         desc = "[P]Toggle current file in NeoTree",
       },
+      {
+        "<leader>R",
+        function()
+          require("neo-tree.command").execute({ toggle = true, dir = vim.uv.cwd() })
+        end,
+        desc = "Explorer NeoTree (cwd)",
+      },
+
       -- {
       --   "<leader>r",
       --   function()

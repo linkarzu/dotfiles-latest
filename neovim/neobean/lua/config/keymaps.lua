@@ -530,6 +530,8 @@ end, { desc = "[P]GOLANG, execute file" })
 -- I defined it as a function, because I call this function from the
 -- mini.files plugin to open the highlighted dir in a tmux pane on the right
 M.tmux_pane_function = function(dir)
+  -- NOTE: variable that controls the auto-cd behavior
+  local auto_cd_to_new_dir = true
   -- if no dir is passed, use the current file's directory
   local file_dir = dir or vim.fn.expand("%:p:h")
   local pane_width = 60
@@ -545,7 +547,7 @@ M.tmux_pane_function = function(dir)
   if has_panes then
     if is_zoomed then
       -- Compare the stored pane directory with the current file directory
-      if vim.g.tmux_pane_dir ~= escaped_dir then
+      if auto_cd_to_new_dir and vim.g.tmux_pane_dir ~= escaped_dir then
         -- If different, cd into the new dir
         vim.fn.system("tmux send-keys -t :.+ 'cd \"" .. escaped_dir .. "\"' Enter")
         -- Update the stored directory to the new one

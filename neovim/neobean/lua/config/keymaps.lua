@@ -72,6 +72,23 @@ vim.keymap.set({ "n", "v", "i" }, "<M-q>", "<cmd>qa<cr>", { desc = "[P]Quit All"
 -- This, by default configured as <leader>sk but I run it too often lamw25wmal
 vim.keymap.set({ "n", "v", "i" }, "<M-k>", "<cmd>Telescope keymaps<cr>", { desc = "[P]Key Maps" })
 
+-- List git branches with telescope to quickly switch to a new branch
+vim.keymap.set("n", "<M-b>", function()
+  require("telescope.builtin").git_branches(require("telescope.themes").get_ivy({
+    initial_mode = "normal",
+    layout_config = {
+      -- Adjust the preview width for better visibility
+      preview_width = 0.5,
+    },
+    attach_mappings = function(_, map)
+      -- Remap <Space> to checkout the currently selected branch
+      -- map("i", "<Space>", require("telescope.actions").select_default)
+      map("n", "<Space>", require("telescope.actions").select_default)
+      return true
+    end,
+  }))
+end, { desc = "[P]Checkout Git branch in telescope" })
+
 vim.keymap.set({ "n", "v", "i" }, "<M-h>", function()
   -- require("noice").cmd("history")
   require("noice").cmd("all")
@@ -731,7 +748,7 @@ vim.keymap.set({ "n", "v", "i" }, "<M-a>", function()
 end, { desc = "[P]Paste image from system clipboard" })
 
 -- This pastes images for my blogpost, I need to keep them in a different directory so I pass those options to img-clip lamw25wmal
-vim.keymap.set({ "n", "v", "i" }, "<M-b>", function()
+vim.keymap.set({ "n", "v", "i" }, "<M-1>", function()
   print("PROCESSING IMAGE WITH CUSTOM DIRECTORY STRUCTURE...")
   local function paste_image(dir_path, file_name)
     return require("img-clip").paste_image({

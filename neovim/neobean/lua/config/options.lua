@@ -41,7 +41,8 @@ vim.opt.timeout = true
 vim.opt.timeoutlen = 1000
 
 -- I never used relative line numbers, so fuck that
-vim.opt.relativenumber = false
+-- Edit a few days after, I'll give them a try again, so re-enabled them
+vim.opt.relativenumber = true
 
 -- Auto update plugins at startup
 -- Tried to add this vimenter autocmd in the autocmds.lua file but it was never

@@ -78,12 +78,21 @@ return {
 
   keys = {
     {
+      -- Open the directory of the file currently being edited
+      -- If the file doesn't exist because you maybe switched to a new git branch
+      -- open the current working directory
       "<leader>e",
       function()
-        require("mini.files").open(vim.api.nvim_buf_get_name(0), true)
+        local buf_name = vim.api.nvim_buf_get_name(0)
+        if vim.fn.filereadable(buf_name) == 1 or vim.fn.isdirectory(vim.fn.fnamemodify(buf_name, ":p:h")) == 1 then
+          require("mini.files").open(buf_name, true)
+        else
+          require("mini.files").open(vim.uv.cwd(), true)
+        end
       end,
-      desc = "Open mini.files (Directory of Current File)",
+      desc = "Open mini.files (Directory of Current File or CWD if not exists)",
     },
+    -- Open the current working directory
     {
       "<leader>E",
       function()

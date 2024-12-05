@@ -23,6 +23,7 @@ return {
       {
         "<leader>r",
         function()
+          local buf_name = vim.api.nvim_buf_get_name(0)
           -- Function to check if NeoTree is open in any window
           local function is_neo_tree_open()
             for _, win in ipairs(vim.api.nvim_list_wins()) do
@@ -33,15 +34,21 @@ return {
             end
             return false
           end
-          if is_neo_tree_open() then
-            -- Close NeoTree if it's open
-            vim.cmd("Neotree close")
+          -- Check if the current file exists
+          if vim.fn.filereadable(buf_name) == 1 or vim.fn.isdirectory(vim.fn.fnamemodify(buf_name, ":p:h")) == 1 then
+            if is_neo_tree_open() then
+              -- Close NeoTree if it's open
+              vim.cmd("Neotree close")
+            else
+              -- Open NeoTree and reveal the current file
+              vim.cmd("Neotree reveal")
+            end
           else
-            -- Open NeoTree if it's not open
-            vim.cmd("Neotree reveal")
+            -- If the file doesn't exist, execute the logic for <leader>R
+            require("neo-tree.command").execute({ toggle = true, dir = vim.uv.cwd() })
           end
         end,
-        desc = "[P]Toggle current file in NeoTree",
+        desc = "[P]Toggle current file in NeoTree or open cwd if file doesn't exist",
       },
       {
         "<leader>R",

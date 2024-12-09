@@ -329,3 +329,14 @@ ApplicationSets
 ApplicationSet
 passthrough
 datacenters
+KVM
+hypervisor
+microkernel
+paravirtualization
+XenServer
+Proxmox
+VE
+LXC
+Dom0
+VNC
+proxmox

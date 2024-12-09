@@ -31,12 +31,22 @@ return {
         -- end,
       })
 
-      -- Modify existing sources priorities
-      for _, source in ipairs(opts.sources) do
-        if source.name == "luasnip" then
-          source.priority = 1000 -- Highest priority for snippets
-        end
-      end
+      -- Adjust source priorities, I always want my luasnip snippets to show
+      -- before copilot
+      opts.sources = vim.tbl_deep_extend("force", opts.sources or {}, {
+        -- Ensure luasnip is first in the list
+        { name = "luasnip", priority = 1000, group_index = 1 },
+        { name = "copilot", priority = 100, group_index = 2 },
+      })
+
+      -- -- Modify existing sources priorities
+      -- for _, source in ipairs(opts.sources) do
+      --   if source.name == "luasnip" then
+      --     source.priority = 1000 -- Highest priority for snippets
+      --   elseif source.name == "copilot" then
+      --     source.priority = 100 -- Lower priority than snippets
+      --   end
+      -- end
 
       -- -- Add copilot source with lower priority
       -- -- I'm commenting this as remove call to nvim-cmp below

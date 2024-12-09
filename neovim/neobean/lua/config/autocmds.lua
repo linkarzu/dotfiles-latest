@@ -120,6 +120,7 @@ local function update_background(event_type)
     -- enabled
     vim.cmd("hi StatusLine guibg=" .. active_bg)
     vim.cmd("hi StatusLineNC guibg=" .. active_bg)
+    vim.cmd("hi CursorLine guibg=" .. colors.linkarzu_color13)
     -- This is the background of the folded lines
     vim.cmd("hi Folded guibg=" .. active_bg)
   else

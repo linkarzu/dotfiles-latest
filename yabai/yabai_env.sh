@@ -21,7 +21,7 @@ apps_transp_ignore="(kitty|CleanShot X)"
 
 # This keeps apps always below, seems to be working fine when I switch to other
 # apps
-apps_mgoff_below="(Calculator|iStat Menus|Hammerspoon|BetterDisplay|GIMP|Notes|Activity Monitor|App StoreSoftware Update|CleanShot X|TestRig|Gemini|Raycast|OBS Studio|Cisco Packet Tracer|Stickies|kitty|ProLevel|Photo Booth|Hand Mirror|SteerMouse)"
+apps_mgoff_below="(Calculator|iStat Menus|Hammerspoon|BetterDisplay|GIMP|Notes|Activity Monitor|App StoreSoftware Update|CleanShot X|TestRig|Gemini|Raycast|OBS Studio|Cisco Packet Tracer|Stickies|kitty|ProLevel|Photo Booth|Hand Mirror|SteerMouse|remote-viewer)"
 
 # This keeps apps always on the top
 apps_mgoff_above="()"

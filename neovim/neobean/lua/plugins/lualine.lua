@@ -53,14 +53,14 @@ vim.api.nvim_create_autocmd({ "BufWritePost", "BufEnter" }, {
   end,
 })
 
--- Cached hostname and its background color
-local hostname = vim.fn.hostname()
-local last_char = hostname:sub(-1)
-local hostname_bg_color = ({
-  ["1"] = colors["linkarzu_color02"],
-  ["2"] = colors["linkarzu_color08"],
-  ["3"] = colors["linkarzu_color06"],
-})[last_char] or colors["linkarzu_color04"]
+-- -- Cached hostname and its background color
+-- local hostname = vim.fn.hostname()
+-- local last_char = hostname:sub(-1)
+-- local hostname_bg_color = ({
+--   ["1"] = colors["linkarzu_color02"],
+--   ["2"] = colors["linkarzu_color08"],
+--   ["3"] = colors["linkarzu_color06"],
+-- })[last_char] or colors["linkarzu_color04"]
 
 -- Cached language mappings
 local lang_map = {
@@ -86,7 +86,7 @@ local function should_show_spell_status()
 end
 
 local function get_spell_status()
-  return "Spell: " .. (lang_map[vim.bo.spelllang] or vim.bo.spelllang)
+  return (lang_map[vim.bo.spelllang] or vim.bo.spelllang)
 end
 
 local function get_file_permissions()
@@ -99,21 +99,21 @@ local function get_file_permissions()
   return permissions, (owner_permissions == "rwx") and colors["linkarzu_color02"] or colors["linkarzu_color03"]
 end
 
-local function has_additional_components()
-  return should_show_permissions() or should_show_spell_status()
-end
-
-local function create_hostname_component(condition)
-  return {
-    function()
-      return vim.fn.hostname()
-    end,
-    color = { fg = hostname_bg_color, bg = colors["linkarzu_color17"], gui = "bold" },
-    separator = { right = "" },
-    padding = 1,
-    cond = condition,
-  }
-end
+-- local function has_additional_components()
+--   return should_show_permissions() or should_show_spell_status()
+-- end
+--
+-- local function create_hostname_component(condition)
+--   return {
+--     function()
+--       return vim.fn.hostname()
+--     end,
+--     color = { fg = hostname_bg_color, bg = colors["linkarzu_color17"], gui = "bold" },
+--     separator = { right = "" },
+--     padding = 1,
+--     cond = condition,
+--   }
+-- end
 
 local function create_separator(condition)
   return {
@@ -203,22 +203,22 @@ return {
     -- HOSTNAME right separator
     table.insert(opts.sections.lualine_x, 5, create_separator()) -- For hostname, no condition needed
 
-    -- HOSTNAME components
-    local hostname_with_others = create_hostname_component(has_additional_components)
-    local hostname_simple = create_hostname_component(function()
-      return not has_additional_components()
-    end)
-    table.insert(opts.sections.lualine_x, 6, hostname_with_others)
-    table.insert(opts.sections.lualine_x, 7, hostname_simple)
+    -- -- HOSTNAME components
+    -- local hostname_with_others = create_hostname_component(has_additional_components)
+    -- local hostname_simple = create_hostname_component(function()
+    --   return not has_additional_components()
+    -- end)
+    -- table.insert(opts.sections.lualine_x, 6, hostname_with_others)
+    -- table.insert(opts.sections.lualine_x, 7, hostname_simple)
 
-    -- HOSTNAME left separator
-    table.insert(opts.sections.lualine_x, 8, {
-      function()
-        return ""
-      end,
-      color = { fg = colors["linkarzu_color14"], bg = colors["linkarzu_color17"] },
-      separator = { left = "", right = "" },
-      padding = 0,
-    })
+    -- -- HOSTNAME left separator
+    -- table.insert(opts.sections.lualine_x, 8, {
+    --   function()
+    --     return ""
+    --   end,
+    --   color = { fg = colors["linkarzu_color14"], bg = colors["linkarzu_color17"] },
+    --   separator = { left = "", right = "" },
+    --   padding = 0,
+    -- })
   end,
 }

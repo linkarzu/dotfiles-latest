@@ -53,8 +53,10 @@ vim.opt.winbar = "%#WinBar1# %t%*%=%#WinBar1# linkarzu %*"
 -- -- enough
 -- --
 -- -- Wrap lines at convenient points, this comes enabled by default in lazyvim
--- vim.opt.linebreak = true
+vim.opt.linebreak = false
+
 -- -- Disable line wrap, set to false by default in lazyvim
+vim.opt.wrap = false
 
 -- -- This is my old way of updating the winbar but it stopped working, it
 -- -- wasn't showing the entire path, it was being truncated in some dirs

@@ -1,6 +1,10 @@
 -- Filename: ~/github/dotfiles-latest/neovim/neobean/lua/plugins/nvim-cmp.lua
 -- ~/github/dotfiles-latest/neovim/neobean/lua/plugins/nvim-cmp.lua
 --
+-- A completion engine plugin for neovim written in Lua. Completion sources are
+-- installed from external repositories and "sourced".
+-- https://github.com/hrsh7th/nvim-cmp
+--
 -- I don't want to accept a snippet or an autocomplete when pressing enter, but
 -- instead accept them with ctrl+y
 
@@ -35,8 +39,13 @@ return {
       -- before copilot
       opts.sources = vim.tbl_deep_extend("force", opts.sources or {}, {
         -- Ensure luasnip is first in the list
-        { name = "luasnip", priority = 1000, group_index = 1 },
-        { name = "copilot", priority = 100, group_index = 2 },
+        -- I want that my lsp completions are always first, this includes
+        -- marskman links
+        { name = "nvim_lsp", priority = 1000, group_index = 1 },
+        { name = "luasnip", priority = 900, group_index = 2 },
+        -- Copilot is a nosy mf usually with fucked up suggestions, so I just
+        -- want the mf to stay last
+        { name = "copilot", priority = 100, group_index = 3 },
       })
 
       -- -- Modify existing sources priorities

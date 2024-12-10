@@ -198,7 +198,7 @@ return {
       snippets,
       s({
         trig = "linkclip",
-        name = "Paste clipboard contents as a markdown link",
+        name = "Paste clipboard as .md link",
       }, {
         t("["),
         i(1),

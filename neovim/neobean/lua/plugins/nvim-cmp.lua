@@ -14,6 +14,7 @@
 return {
   {
     "hrsh7th/nvim-cmp",
+    dependencies = { "hrsh7th/cmp-emoji" },
     opts = function(_, opts)
       local cmp = require("cmp")
       opts.mapping = vim.tbl_deep_extend("force", opts.mapping, {
@@ -43,9 +44,10 @@ return {
         -- marskman links
         { name = "nvim_lsp", priority = 1000, group_index = 1 },
         { name = "luasnip", priority = 900, group_index = 2 },
+        { name = "emoji", priority = 800, group_index = 3 },
         -- Copilot is a nosy mf usually with fucked up suggestions, so I just
         -- want the mf to stay last
-        { name = "copilot", priority = 100, group_index = 3 },
+        { name = "copilot", priority = 100, group_index = 4 },
       })
 
       -- -- Modify existing sources priorities

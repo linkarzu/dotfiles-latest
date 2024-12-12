@@ -6,9 +6,7 @@
 -- Function to load colors from the external file
 local function load_colors()
   local colors = {}
-  local home = os.getenv("HOME")
-  local active_folder = home .. "/github/dotfiles-latest/colorscheme/active"
-  local active_file = active_folder .. "/active-colorscheme.sh"
+  local active_file = vim.fn.stdpath("config") .. "/lua/config/active-colorscheme.sh"
 
   local file = io.open(active_file, "r")
   if not file then

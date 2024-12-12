@@ -31,6 +31,7 @@ return {
         "css",
         "templ",
         "php",
+        "promql",
       },
     },
   },

@@ -358,6 +358,11 @@ bind-key -T copy-mode-extended 'l' send -X end-of-line \; switch-client -T copy-
 # don't exit copy mode when dragging with mouse
 unbind -T copy-mode-vi MouseDragEnd1Pane
 
+# Bind Alt-t <M-t> in copy-mode
+# This allows me to toggle my neovim terminal even if I'm in tmux copy-mode
+bind-key -T copy-mode M-t run-shell "~/github/dotfiles-latest/tmux/tools/linkarzu/simple_toggle.sh"
+bind-key -T copy-mode-vi M-t run-shell "~/github/dotfiles-latest/tmux/tools/linkarzu/simple_toggle.sh"
+
 # https://github.com/leelavg/dotfiles/blob/897aa883a/config/tmux.conf#L30-L39
 # https://scripter.co/command-to-every-pane-window-session-in-tmux/
 # Send the same command to all panes/windows in current session

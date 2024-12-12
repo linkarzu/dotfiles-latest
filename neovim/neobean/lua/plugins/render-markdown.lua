@@ -78,6 +78,14 @@ return {
         scope_highlight = nil,
       },
     },
+    html = {
+      -- Turn on / off all HTML rendering
+      enabled = true,
+      comment = {
+        -- Turn on / off HTML comment concealing
+        conceal = false,
+      },
+    },
     heading = {
       sign = false,
       icons = { "󰎤 ", "󰎧 ", "󰎪 ", "󰎭 ", "󰎱 ", "󰎳 " },

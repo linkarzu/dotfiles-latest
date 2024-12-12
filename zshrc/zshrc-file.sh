@@ -613,7 +613,14 @@ if [ "$OS" = 'Mac' ]; then
 
     # Function to switch to the left tmux pane and maximize it
     function tmux_left_pane() {
-      tmux select-pane -L
+      # This defines if the tmux pane created by neovim is on the right or
+      # bottom, make sure you also configure the neovi keymap to match
+      export TMUX_PANE_DIRECTION="bottom"
+      if [[ $TMUX_PANE_DIRECTION == "right" ]]; then
+        tmux select-pane -L # Move to the left (opposite of right)
+      elif [[ $TMUX_PANE_DIRECTION == "bottom" ]]; then
+        tmux select-pane -U # Move to the top (opposite of bottom)
+      fi
       tmux resize-pane -Z
       # zle reset-prompt # Refresh the prompt after switching panes
     }

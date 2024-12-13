@@ -111,6 +111,7 @@ create_symlink ~/github/dotfiles-latest/neovim/neobean/lua/plugins/telescope.lua
 create_symlink ~/github/dotfiles-latest/neovim/neobean/lua/plugins/auto-save.lua ~/github/dotfiles-latest/neovim/neobean-sticky/lua/plugins/auto-save.lua
 create_symlink ~/github/dotfiles-latest/neovim/neobean/lua/plugins/mini-files.lua ~/github/dotfiles-latest/neovim/neobean-sticky/lua/plugins/mini-files.lua
 create_symlink ~/github/dotfiles-latest/neovim/neobean/lua/plugins/render-markdown.lua ~/github/dotfiles-latest/neovim/neobean-sticky/lua/plugins/render-markdown.lua
+create_symlink ~/github/dotfiles-latest/neovim/neobean/lua/plugins/core.lua ~/github/dotfiles-latest/neovim/neobean-sticky/lua/plugins/core.lua
 create_symlink ~/github/dotfiles-latest/neovim/neobean/init.lua ~/github/dotfiles-latest/neovim/neobean-sticky/init.lua
 create_symlink ~/github/dotfiles-latest/lazygit/config.yml "$HOME/Library/Application Support/lazygit/config.yml"
 

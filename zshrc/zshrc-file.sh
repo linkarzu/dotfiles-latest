@@ -131,12 +131,12 @@ create_symlink ~/github/dotfiles-latest/btop/ ~/.config/btop
 create_symlink ~/github/dotfiles-latest/neovim/neobean/spell/ ~/github/dotfiles-latest/neovim/neobean-sticky/spell
 create_symlink ~/github/dotfiles-latest/neovim/neobean/snippets/ ~/github/dotfiles-latest/neovim/neobean-sticky/snippets
 create_symlink ~/github/dotfiles-latest/neovim/neobean/lua/config/modules/ ~/github/dotfiles-latest/neovim/neobean-sticky/lua/config/modules
-# Notice I also have the "nvim" directory below and I have it pointing to my
-# "neobean" config.
-# If I don't do this, my daily note with hyper+t+r won't work
-# If you want to open the daily note with a different distro, update the "nvim"
-# symlink, for example you can change it from "neobean" to "lazyvim"
-create_symlink ~/github/dotfiles-latest/neovim/neobean/ ~/.config/nvim
+# # Notice I also have the "nvim" directory below and I have it pointing to my
+# # "neobean" config.
+# # If I don't do this, my daily note with hyper+t+r won't work
+# # If you want to open the daily note with a different distro, update the "nvim"
+# # symlink, for example you can change it from "neobean" to "lazyvim"
+# create_symlink ~/github/dotfiles-latest/neovim/neobean/ ~/.config/nvim
 # create_symlink ~/github/dotfiles-latest/sketchybar/felixkratz ~/.config/sketchybar
 # create_symlink ~/github/dotfiles-latest/sketchybar/default ~/.config/sketchybar
 # create_symlink ~/github/dotfiles-latest/sketchybar/neutonfoo ~/.config/sketchybar
@@ -428,10 +428,10 @@ if [ "$OS" = 'Mac' ]; then
   #
   # Notice that both "v" and "nvim" start "neobean"
   # "vk" opens kickstart and "vl" opens lazyvim
-  alias v='export NVIM_APPNAME="neobean" && /opt/homebrew/bin/nvim'
-  alias vq='export NVIM_APPNAME="quarto-nvim-kickstarter" && /opt/homebrew/bin/nvim'
-  alias vk='export NVIM_APPNAME="kickstart.nvim" && /opt/homebrew/bin/nvim'
-  alias vl='export NVIM_APPNAME="lazyvim" && /opt/homebrew/bin/nvim'
+  alias v='export NVIM_APPNAME="neobean" && nvim'
+  alias vq='export NVIM_APPNAME="quarto-nvim-kickstarter" && nvim'
+  alias vk='export NVIM_APPNAME="kickstart.nvim" && nvim'
+  alias vl='export NVIM_APPNAME="lazyvim" && nvim'
   # I'm also leaving this "nvim" alias, which points to the "nvim" APPNAME, but
   # that APPNAME in fact points to my "neobean" config in the symlinks section
   # If I don't do this, my daily note doesn't work
@@ -442,7 +442,7 @@ if [ "$OS" = 'Mac' ]; then
   # If you don't understand what I mean by "daily note" go and watch my daily
   # note video
   # https://youtu.be/W3hgsMoUcqo
-  alias nvim='export NVIM_APPNAME="nvim" && /opt/homebrew/bin/nvim'
+  # alias nvim='export NVIM_APPNAME="nvim" && nvim'
 
   # https://github.com/antlr/antlr4/blob/master/doc/getting-started.md#unix
   # Add antlr-4.13.1-complete.jar to your CLASSPATH

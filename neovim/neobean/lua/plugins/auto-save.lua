@@ -7,9 +7,8 @@
 -- Filename: ~/github/dotfiles-latest/neovim/neobean/lua/plugins/auto-save.lua
 -- ~/github/dotfiles-latest/neovim/neobean/lua/plugins/auto-save.lua
 
--- Add the following code to set up the autocommand for printing the message
+-- Autocommand for printing the autosaved message
 local group = vim.api.nvim_create_augroup("autosave", {})
-
 vim.api.nvim_create_autocmd("User", {
   pattern = "AutoSaveWritePost",
   group = group,
@@ -26,19 +25,7 @@ return {
     cmd = "ASToggle", -- optional for lazy loading on command
     event = { "InsertLeave", "TextChanged" }, -- optional for lazy loading on trigger events
     opts = {
-      --
-      -- All of these are just the defaults
-      --
       enabled = true, -- start auto-save when the plugin is loaded (i.e. when your package manager loads it)
-      -- execution_message = {
-      --   enabled = true,
-      --   message = function() -- message to print on save
-      --     -- return ("AutoSave: saved at " .. vim.fn.strftime("%H:%M:%S"))
-      --     return "AutoSaved"
-      --   end,
-      --   dim = 0.18, -- dim the color of `message`
-      --   cleaning_interval = 1250, -- (milliseconds) automatically clean MsgArea after displaying `message`. See :h MsgArea
-      -- },
       trigger_events = { -- See :h events
         -- -- vim events that trigger an immediate save
         -- immediate_save = { "BufLeave", "FocusLost" },
@@ -55,19 +42,16 @@ return {
       condition = function(buf)
         -- Disable auto-save for the harpoon plugin, otherwise it just opens and closes
         -- https://github.com/ThePrimeagen/harpoon/issues/434
-        if vim.bo[buf].filetype == "harpoon" then
-          return false
-        end
-        local fn = vim.fn
-        local utils = require("auto-save.utils.data")
+        --
         -- don't save for `sql` file types
         -- I do this so when working with dadbod the file is not saved every time
         -- I make a change, and a SQL query executed
         -- Run `:set filetype?` on a dadbod query to make sure of the filetype
-        if utils.not_in(fn.getbufvar(buf, "&filetype"), { "mysql" }) then
-          return true
+        local filetype = vim.bo[buf].filetype
+        if filetype == "harpoon" or filetype == "mysql" then
+          return false
         end
-        return false
+        return true
       end,
       write_all_buffers = false, -- write all buffers when the current one meets `condition`
       -- Do not execute autocmds when saving

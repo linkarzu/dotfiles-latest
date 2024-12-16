@@ -86,7 +86,7 @@ return {
         CursorLine = { bg = colors["linkarzu_color13"] },
 
         -- I do the line below to change the color of bold text
-        ["@markup.strong"] = { fg = colors["linkarzu_color04"], bold = true },
+        ["@markup.strong"] = { fg = colors["linkarzu_color24"], bold = true },
 
         -- Inline code in markdown
         ["@markup.raw.markdown_inline"] = { fg = colors["linkarzu_color02"] },
@@ -153,9 +153,9 @@ return {
 
         DiagnosticInfo = { fg = colors["linkarzu_color03"] },
         DiagnosticHint = { fg = colors["linkarzu_color02"] },
-        DiagnosticWarn = { fg = colors["linkarzu_color08"] },
+        DiagnosticWarn = { fg = colors["linkarzu_color12"] },
         DiagnosticOk = { fg = colors["linkarzu_color04"] },
-        DiagnosticError = { fg = colors["linkarzu_color05"] },
+        DiagnosticError = { fg = colors["linkarzu_color11"] },
         RenderMarkdownQuote = { fg = colors["linkarzu_color12"] },
 
         -- visual mode selection

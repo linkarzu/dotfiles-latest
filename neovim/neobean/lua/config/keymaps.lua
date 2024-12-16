@@ -607,7 +607,7 @@ M.tmux_pane_function = function(dir)
 end
 -- If I execute the function without an argument, it will open the dir where the
 -- current file lives
-vim.keymap.set("n", "<M-t>", function()
+vim.keymap.set({ "n", "v", "i" }, "<M-t>", function()
   M.tmux_pane_function()
 end, { desc = "[P]Terminal on tmux pane on the right" })
 

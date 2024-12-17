@@ -26,6 +26,10 @@
 <!-- toc -->
 
 - [Install Instructions](#install-instructions)
+  * [Check if you have an alias for nvim](#check-if-you-have-an-alias-for-nvim)
+  * [Install pre-requisites](#install-pre-requisites)
+  * [Clone my repo](#clone-my-repo)
+  * [How do I start using Neovim?](#how-do-i-start-using-neovim)
 - [Plugins](#plugins)
   * [colorscheme](#colorscheme)
   * [completion](#completion)
@@ -89,10 +93,97 @@
 
 ## Install Instructions
 
+### Check if you have an alias for nvim
+
+- Before continuing, make sure the `nvim` command isn't aliased (personally, I
+  did have it aliased in the past)
+- If **not** aliased, notice that nvim points directly to the neovim executable
+
+```bash
+which nvim
+```
+
+```bash
+❯❯❯❯ which nvim
+/opt/homebrew/bin/nvim
+```
+
+- If aliased something similar to this is shown:
+
+```bash
+❯❯❯❯ which nvim
+nvim: aliased to export NVIM_APPNAME="nvim" && /opt/homebrew/bin/nvim
+```
+
+- If you have your command aliased, when you see `nvim` below in the guide, you
+  will probably have to run nvim using the full path as seen below
+
+```bash
+# instead of this:
+NVIM_APPNAME=linkarzu/dotfiles-latest/neovim/neobean nvim
+
+# You would run this:
+NVIM_APPNAME=linkarzu/dotfiles-latest/neovim/neobean /opt/homebrew/bin/nvim
+```
+
+- You can create an alias in your `.bashrc` or `.zshrc` file, just add this
+
+```bash
+alias neobean='NVIM_APPNAME=linkarzu/dotfiles-latest/neovim/neobean nvim'
+```
+
+- Then to run this config, just run `neobean`
+
+### Install pre-requisites
+
 > Install requires Neovim 0.9+. Always review the code before installing a
 > configuration.
 
-Clone the repository and install the plugins:
+- My neovim version is 0.10.2
+
+```bash
+nvim -v
+```
+
+```bash
+linkarzu.@.[24/12/17]
+~/Library/Mobile Documents/com~apple~CloudDocs/spice
+kubernetes
+❯❯❯❯ nvim -v
+NVIM v0.10.2
+Build type: Release
+LuaJIT 2.1.1732813678
+Run "nvim -V1 -v" for more info
+```
+
+- To `view and paste images` you need to install a few things
+
+```bash
+brew install imagemagick
+brew install pkg-config
+brew install lua
+brew install pngpaste
+```
+
+- I have a detailed video on how I set up neovim for images, similar to the way
+  you work with images in [Obsidian](https://obsidian.md/)
+- It's quite long (that's what she said) but I cover everything in detail
+- **Click on the image below to watch the video:**
+
+<div align="left">
+    <a href="https://youtu.be/0O3kqGwNzTI">
+        <img
+          src="../../assets/img/imgs/neovim-view-paste-images.avif"
+          alt="View and paste images in Neovim like in Obsidian"
+          width="600"
+        />
+    </a>
+</div>
+
+### Clone my repo
+
+- This repo contains all my dotfiles, keep reading if you want to just download
+  my neobean dir
 
 ```sh
 git clone git@github.com:linkarzu/dotfiles-latest ~/.config/linkarzu/dotfiles-latest
@@ -104,11 +195,75 @@ Open Neovim with this config:
 NVIM_APPNAME=linkarzu/dotfiles-latest/neovim/neobean nvim
 ```
 
+- If you don't want to clone my entire repo, but instead just download my
+  neobean folder, I have a video in which I cover this
+- **Click on the image below to watch the video:**
+
+<div align="left">
+    <a href="https://youtu.be/xN1hdY1cc3E">
+        <img
+          src="../../assets/img/imgs/neovim-install-multiple-distros.avif"
+          alt="Download and test multiple Neovim distros and configurations | Without affecting your current config"
+          width="600"
+        />
+    </a>
+</div>
+
+### How do I start using Neovim?
+
+- Start by taking notes in neovim, I mean editing markdown files
+- If you use Obsidian, try switching the editing of your notes to Neovim
+- I have a video in which I go over my markdown workflow, so I highly recommend
+  you check it out:
+  - [My complete Neovim markdown setup and workflow in 2024](https://youtu.be/c0cuvzK1SDo){:target="\_blank"}
+- If you experience any errors or have any issues, let me know down in the
+  comments and me or others can try to help
+- **Click on the image below to watch the video:**
+
+<div align="left">
+    <a href="https://youtu.be/c0cuvzK1SDo">
+        <img
+          src="../../assets/img/imgs/241217-thux-markdown-setup-2024.avif"
+          alt="My complete Neovim markdown setup and workflow in 2024"
+          width="600"
+        />
+    </a>
+</div>
+
 ## Plugins
 
 ### colorscheme
 
-- [eldritch-theme/eldritch.nvim](https://dotfyle.com/plugins/eldritch-theme/eldritch.nvim)
+- I use a custom colorscheme based off of
+  [eldritch-theme/eldritch.nvim](https://dotfyle.com/plugins/eldritch-theme/eldritch.nvim)
+- This colorscheme is already part of my config, so once you download and run my
+  config you should get it applied automatically
+- **Click on the image below to watch the video:**
+
+<div align="left">
+    <a href="https://youtu.be/WIATPUK33XU">
+        <img
+          src="../../assets/img/imgs/241217-thux-dark-eldritch.avif"
+          alt="Dark Eldritch colorscheme variant in Neovim"
+          width="600"
+        />
+    </a>
+</div>
+
+- I also have a video in which I go over a colorscheme selector I created that
+  changes my colors not only in Neovim, but also in SketchyBar, my terminal,
+  tmux, starship and more
+- **Click on the image below to watch the video:**
+
+<div align="left">
+    <a href="https://youtu.be/SBU2YRv02Mc">
+        <img
+          src="../../assets/img/imgs/241217-thux-colorscheme-selector.avif"
+          alt="Colorscheme selector to change the colors in kitty, tmux, starship, neovim, sketchybar and more"
+          width="600"
+        />
+    </a>
+</div>
 
 ### completion
 

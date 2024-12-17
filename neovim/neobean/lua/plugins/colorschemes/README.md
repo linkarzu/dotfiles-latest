@@ -1,7 +1,7 @@
 # Import this dir in the lazy.lua config
 
-I'm moving all the themes inside this directory
-For this to work, make sure you import this dir in the lazy.lua
+- I'm moving all the themes inside this directory
+- For this to work, make sure you import this dir in the lazy.lua
 
 ```bash
 require("lazy").setup({

@@ -215,7 +215,7 @@ NVIM_APPNAME=linkarzu/dotfiles-latest/neovim/neobean nvim
 - If you use Obsidian, try switching the editing of your notes to Neovim
 - I have a video in which I go over my markdown workflow, so I highly recommend
   you check it out:
-  - [My complete Neovim markdown setup and workflow in 2024](https://youtu.be/c0cuvzK1SDo){:target="\_blank"}
+  - [My complete Neovim markdown setup and workflow in 2024](https://youtu.be/c0cuvzK1SDo)
 - If you experience any errors or have any issues, let me know down in the
   comments and me or others can try to help
 - **Click on the image below to watch the video:**

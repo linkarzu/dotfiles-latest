@@ -110,7 +110,10 @@ end, { desc = "Dismiss All" })
 vim.keymap.set("n", "<S-h>", function()
   require("telescope.builtin").buffers(require("telescope.themes").get_ivy({
     sort_mru = true,
-    sort_lastused = true,
+    -- -- Sorts current and last buffer to the top and selects the lastused (default: false)
+    -- -- Leave this at false, otherwise when put in normal mode, the buffer
+    -- -- below is selected, not the one at the top
+    sort_lastused = false,
     initial_mode = "normal",
     -- Pre-select the current buffer
     -- ignore_current_buffer = false,

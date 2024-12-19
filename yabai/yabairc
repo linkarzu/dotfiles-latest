@@ -101,7 +101,7 @@ fi
 yabai -m config window_opacity on
 # yabai -m config window_opacity off
 
-opacity_value=0.90
+opacity_value=0.87
 
 # Make the below apps transparent
 yabai -m signal --add event=window_focused app="^${apps_transparent}$" action="yabai -m config active_window_opacity $opacity_value"

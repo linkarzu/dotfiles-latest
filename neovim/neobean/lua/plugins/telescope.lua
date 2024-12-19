@@ -204,6 +204,10 @@ return {
         "<cmd>TodoTelescope keywords=PERF,HACK,TODO,NOTE,FIX<cr>",
         desc = "[P]TODO list ALL (Telescope)",
       },
+
+      -- fzf-lua takes over this keymap, since I disaled fzf-lua, this keymap is
+      -- gone, so I need to add it here for it to work
+      { "<leader>sh", "<cmd>Telescope help_tags<cr>", desc = "Help Pages" },
     },
   },
 }

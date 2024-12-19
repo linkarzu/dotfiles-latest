@@ -125,6 +125,18 @@ vim.keymap.set("n", "<S-h>", function()
   }))
 end, { desc = "[P]Open telescope buffers" })
 
+-- -- -- Open buffers with fzf-lua
+-- vim.keymap.set("n", "<S-h>", function()
+--   require("fzf-lua").buffers({
+--     sort_mru = true, -- Sort buffers by most recently used
+--     sort_lastused = true, -- Sort by last used
+--     preview = {
+--       layout = "vertical", -- Set preview layout to vertical
+--       vertical = "down:45%", -- 45% of window height for the preview
+--     },
+--   })
+-- end, { desc = "[P]fzf-lua buffers" })
+
 -- vim.keymap.del("n", "<S-l>")
 
 -- Snipe has been updated so this keymap changed, I moved the keymap to the

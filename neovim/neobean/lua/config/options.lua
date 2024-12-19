@@ -276,6 +276,15 @@ if vim.g.neovide then
   -- scrolled down the file, this fixed it, found in:
   -- https://github.com/neovide/neovide/issues/1550
   vim.g.neovide_scroll_animation_length = 0
+
+  vim.g.neovide_input_macos_option_key_is_meta = "only_right"
+
+  -- Neovide cursor color
+  vim.opt.guicursor = {
+    "n-v-c-sm:block-Cursor", -- Use 'Cursor' highlight for normal, visual, and command modes
+    "i-ci-ve:ver25-lCursor", -- Use 'lCursor' highlight for insert and visual-exclusive modes
+    "r-cr:hor20-CursorIM", -- Use 'CursorIM' for replace mode
+  }
 end
 
 -- Allow clipboard copy paste in neovim

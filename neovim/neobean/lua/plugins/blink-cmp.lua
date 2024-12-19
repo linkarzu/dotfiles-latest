@@ -1,0 +1,31 @@
+return {
+  "saghen/blink.cmp",
+  -- opts = {
+  --   sources = {
+  --     -- add lazydev to your completion providers
+  --     default = { "lsp", "path", "snippets", "buffer", "lazydev", "luasnip" },
+  --     providers = {
+  --       luasnip = {
+  --         name = "Buffer",
+  --         module = "blink.cmp.sources.luasnip",
+  --         score_offset = 160,
+  --       },
+  --       lazydev = {
+  --         name = "LazyDev",
+  --         module = "lazydev.integrations.blink",
+  --         score_offset = 100, -- show at a higher priority than lsp
+  --       },
+  --       -- snippets = {
+  --       --   name = "Snippets",
+  --       --   module = "blink.cmp.sources.snippets",
+  --       --   score_offset = 150,
+  --       -- },
+  --       buffer = {
+  --         name = "Buffer",
+  --         module = "blink.cmp.sources.buffer",
+  --         score_offset = 10,
+  --       },
+  --     },
+  --   },
+  -- },
+}

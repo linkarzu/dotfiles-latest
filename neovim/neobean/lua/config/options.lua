@@ -44,6 +44,9 @@ vim.opt.timeoutlen = 1000
 -- Edit a few days after, I'll give them a try again, so re-enabled them
 vim.opt.relativenumber = true
 
+-- I find the animations a bit laggy
+vim.g.snacks_animate = false
+
 -- Auto update plugins at startup
 -- Tried to add this vimenter autocmd in the autocmds.lua file but it was never
 -- triggered, this is because if I understand correctly Lazy.nvim delays the

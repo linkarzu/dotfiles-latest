@@ -7,3 +7,29 @@ gui:
 keybinding:
   universal:
     quit: <esc>
+
+os:
+  # This allows me to open Neovide when press "e" to edit a file in lazygit, it
+  # works when I'm inside neovim
+  # https://github.com/jesseduffield/lazygit/blob/master/docs/Config.md#configuring-file-editing
+  # Otherwise, the snacks neovim plugin has configured the `nvim-remote` preset
+  # by default
+  # https://github.com/folke/snacks.nvim/blob/main/docs/lazygit.md
+  #
+  # You can add `>/dev/null 2>&1 &` at the end of each option so that the
+  # lazygit in the terminal is not locked while neovide is open
+  # edit: 'NVIM_APPNAME="neobean" Neovide {{filename}} >/dev/null 2>&1 &'
+  # editAtLine: 'NVIM_APPNAME="neobean" Neovide -- {{filename}} --line={{line}} >/dev/null 2>&1 &'
+  edit: 'NVIM_APPNAME="neobean" Neovide {{filename}}'
+  editAtLine: 'NVIM_APPNAME="neobean" Neovide -- {{filename}} --line={{line}}'
+  #
+  # editAtLineAndWait: 'NVIM_APPNAME="neobean" Neovide -- {{filename}} --line={{line}}'
+  #
+  # If this is set to true, when editing a file from lazygit, it opens it in the
+  # terminal, instead of Neovide, and you cannot go back to lazygit
+  editInTerminal: false
+
+  # # This is the snacks neovim plugin default option, if you want to use it,
+  # # comment all the options above
+  # # https://github.com/folke/snacks.nvim/blob/main/docs/lazygit.md
+  # editPreset: "nvim-remote"

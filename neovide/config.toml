@@ -14,7 +14,11 @@ srgb = false
 tabs = true
 theme = "auto"
 title-hidden = true
-vsync = true
+# If vsync is disabled, you can set `neovide_refresh_rate` to the refresh
+# rate of your physical hardware. I set the refresh rate in the neobean
+# options.lua file
+# https://github.com/neovide/neovide/issues/2093
+vsync = false
 wsl = false
 
 [font]

@@ -17,11 +17,14 @@ return {
     dependencies = { "hrsh7th/cmp-emoji" },
     opts = function(_, opts)
       local cmp = require("cmp")
+
       opts.mapping = vim.tbl_deep_extend("force", opts.mapping, {
         -- Found this tip related to cmp.config.disable here
         -- https://www.reddit.com/r/neovim/comments/19054s4/help_how_do_i_auto_complete_with_tab_in_lazyvim/
+        -- Disablig enter to accept completion, if at the end of typing
+        -- something, and you want to go to the line below, if you press enter,
+        -- the completion will be accepted
         ["<CR>"] = cmp.config.disable,
-
         -- -- Below are defaults for lazyvim.org config
         -- -- http://www.lazyvim.org/plugins/coding#nvim-cmp-2
         -- ["<C-b>"] = cmp.mapping.scroll_docs(-4),

@@ -1,31 +1,49 @@
 return {
   "saghen/blink.cmp",
-  -- opts = {
-  --   sources = {
-  --     -- add lazydev to your completion providers
-  --     default = { "lsp", "path", "snippets", "buffer", "lazydev", "luasnip" },
-  --     providers = {
-  --       luasnip = {
-  --         name = "Buffer",
-  --         module = "blink.cmp.sources.luasnip",
-  --         score_offset = 160,
-  --       },
-  --       lazydev = {
-  --         name = "LazyDev",
-  --         module = "lazydev.integrations.blink",
-  --         score_offset = 100, -- show at a higher priority than lsp
-  --       },
-  --       -- snippets = {
-  --       --   name = "Snippets",
-  --       --   module = "blink.cmp.sources.snippets",
-  --       --   score_offset = 150,
-  --       -- },
-  --       buffer = {
-  --         name = "Buffer",
-  --         module = "blink.cmp.sources.buffer",
-  --         score_offset = 10,
-  --       },
-  --     },
-  --   },
-  -- },
+  enabled = false,
+  opts = {
+    sources = {
+      compat = { "luasnip" },
+      default = { "lsp", "path", "snippets", "buffer", "copilot" },
+      providers = {
+        luasnip = {
+          name = "luasnip",
+          enabled = true,
+          module = "blink.compat.source",
+          kind = "Snippet",
+          score_offset = 900, -- the higher the number, the higher the priority
+        },
+        lsp = {
+          name = "lsp",
+          enabled = true,
+          module = "blink.cmp.sources.lsp",
+          kind = "LSP",
+          score_offset = 1000, -- the higher the number, the higher the priority
+        },
+        -- Third class citizen mf always talking shit
+        copilot = {
+          name = "copilot",
+          enabled = true,
+          module = "blink-cmp-copilot",
+          kind = "Copilot",
+          score_offset = 0, -- the higher the number, the higher the priority
+          async = true,
+        },
+      },
+    },
+    snippets = {
+      expand = function(snippet)
+        require("luasnip").lsp_expand(snippet)
+      end,
+      active = function(filter)
+        if filter and filter.direction then
+          return require("luasnip").jumpable(filter.direction)
+        end
+        return require("luasnip").in_snippet()
+      end,
+      jump = function(direction)
+        require("luasnip").jump(direction)
+      end,
+    },
+  },
 }

@@ -220,5 +220,12 @@ return {
     --   separator = { left = "", right = "" },
     --   padding = 0,
     -- })
+
+    -- The default value for this is:
+    -- opts.extensions = { "neo-tree", "lazy", "fzf" }
+    -- Removing neo-tree from here, makes lualine NOT change when I switch to
+    -- neo-tree, and that's what I want, when in neo-tree I want to see the
+    -- branch I'm on, otherwise the default behaviour shows you the :pwd
+    opts.extensions = { "lazy", "fzf" }
   end,
 }

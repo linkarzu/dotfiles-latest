@@ -240,6 +240,17 @@ vim.opt.spelllang = { "en" }
 --                             Neovide section
 -- ############################################################################
 
+-- NOTE: When in LazyGit if inside or outside neovim, if you want to edit files with
+-- Neovide, you have to set the os.edit option in the
+-- ~/github/dotfiles-latest/lazygit/config.yml file
+
+-- NOTE: Also remember that there are settings in the file:
+-- ~/github/dotfiles-latest/neovide/config.toml
+
+-- NOTE: Text looks a bit bolder in Neovide, it doesn't bother me, but I think
+-- there's no way to fix it, see:
+-- https://github.com/neovide/neovide/issues/1231
+
 -- The copy and paste sections were found on:
 -- https://neovide.dev/faq.html#how-can-i-use-cmd-ccmd-v-to-copy-and-paste
 if vim.g.neovide then
@@ -250,6 +261,12 @@ if vim.g.neovide then
   vim.keymap.set("c", "<D-v>", "<C-R>+") -- Paste command mode
   vim.keymap.set("i", "<D-v>", '<ESC>l"+Pli') -- Paste insert mode
 
+  -- This allows me to use cmd+v to paste stuff into neovide
+  vim.api.nvim_set_keymap("", "<D-v>", "+p<CR>", { noremap = true, silent = true })
+  vim.api.nvim_set_keymap("!", "<D-v>", "<C-R>+", { noremap = true, silent = true })
+  vim.api.nvim_set_keymap("t", "<D-v>", "<C-R>+", { noremap = true, silent = true })
+  vim.api.nvim_set_keymap("v", "<D-v>", "<C-R>+", { noremap = true, silent = true })
+
   -- Specify the font used by Neovide
   -- vim.o.guifont = "MesloLGM_Nerd_Font:h14"
   vim.o.guifont = "JetBrainsMono Nerd Font:h15"
@@ -257,9 +274,13 @@ if vim.g.neovide then
   -- lowered to increase battery life
   -- This setting is only effective when not using vsync,
   -- for example by passing --no-vsync on the commandline.
-  vim.g.neovide_refresh_rate = 60
+  --
+  -- NOTE: vsync is configured in the neovide/config.toml file, I disabled it and set
+  -- this to 120 even though my monitor is 75Hz, had a similar case in wezterm,
+  -- see: https://github.com/wez/wezterm/issues/6334
+  vim.g.neovide_refresh_rate = 120
   -- This is how fast the cursor animation "moves", default 0.06
-  vim.g.neovide_cursor_animation_length = 0.04
+  vim.g.neovide_cursor_animation_length = 0.06
   -- Default 0.7
   vim.g.neovide_cursor_trail_size = 0.7
 
@@ -270,28 +291,26 @@ if vim.g.neovide then
   vim.g.neovide_cursor_vfx_mode = "sonicboom"
   -- vim.g.neovide_cursor_vfx_mode = "ripple"
   -- vim.g.neovide_cursor_vfx_mode = "wireframe"
-  -- vim.g.neovide_cursor_vfx_mode = "wireframe"
 
   -- Really weird issue in which my winbar would be drawn multiple times as I
   -- scrolled down the file, this fixed it, found in:
   -- https://github.com/neovide/neovide/issues/1550
   vim.g.neovide_scroll_animation_length = 0
 
+  -- This allows me to use the right "alt" key in macOS, because I have some
+  -- neovim keymaps that use alt, like alt+t for the terminal
+  -- https://youtu.be/33gQ9p-Zp0I
   vim.g.neovide_input_macos_option_key_is_meta = "only_right"
 
-  -- Neovide cursor color
+  -- Neovide cursor color, remember to set these in your colorscheme, I have
+  -- mine set in ~/github/dotfiles-latest/neovim/neobean/lua/plugins/colorschemes/eldritch.lua
+  -- Otherwise, my cursor was white
   vim.opt.guicursor = {
     "n-v-c-sm:block-Cursor", -- Use 'Cursor' highlight for normal, visual, and command modes
     "i-ci-ve:ver25-lCursor", -- Use 'lCursor' highlight for insert and visual-exclusive modes
     "r-cr:hor20-CursorIM", -- Use 'CursorIM' for replace mode
   }
 end
-
--- Allow clipboard copy paste in neovim
-vim.api.nvim_set_keymap("", "<D-v>", "+p<CR>", { noremap = true, silent = true })
-vim.api.nvim_set_keymap("!", "<D-v>", "<C-R>+", { noremap = true, silent = true })
-vim.api.nvim_set_keymap("t", "<D-v>", "<C-R>+", { noremap = true, silent = true })
-vim.api.nvim_set_keymap("v", "<D-v>", "<C-R>+", { noremap = true, silent = true })
 
 -- ############################################################################
 --                           End of Neovide section

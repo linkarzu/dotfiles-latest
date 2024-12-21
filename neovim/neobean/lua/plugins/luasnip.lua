@@ -10,6 +10,7 @@
 
 return {
   "L3MON4D3/LuaSnip",
+  enabled = true,
   opts = function(_, opts)
     local ls = require("luasnip")
 
@@ -77,6 +78,7 @@ return {
       s({
         trig = "chirpy",
         name = "Disable markdownlint and prettier for chirpy",
+        desc = "Disable markdownlint and prettier for chirpy",
       }, {
         t({
           " ",
@@ -110,6 +112,7 @@ return {
       s({
         trig = "markdownlint",
         name = "Add markdownlint disable and restore headings",
+        desc = "Add markdownlint disable and restore headings",
       }, {
         t({
           " ",
@@ -131,6 +134,7 @@ return {
       s({
         trig = "prettierignore",
         name = "Add prettier ignore start and end headings",
+        desc = "Add prettier ignore start and end headings",
       }, {
         t({
           " ",
@@ -152,6 +156,7 @@ return {
       s({
         trig = "linkt",
         name = 'Add this -> [](){:target="_blank"}',
+        desc = 'Add this -> [](){:target="_blank"}',
       }, {
         t("["),
         i(1),
@@ -166,6 +171,7 @@ return {
       s({
         trig = "todo",
         name = "Add TODO: item",
+        desc = "Add TODO: item",
       }, {
         t("<!-- TODO: "),
         i(1),
@@ -179,6 +185,7 @@ return {
       s({
         trig = "linkclip",
         name = "Paste clipboard as .md link",
+        desc = "Paste clipboard as .md link",
       }, {
         t("["),
         i(1),
@@ -197,6 +204,7 @@ return {
       s({
         trig = "workflow",
         name = "Add this -> lamw25wmal",
+        desc = "Add this -> lamw25wmal",
       }, {
         t("lamw25wmal"),
       }),
@@ -204,6 +212,7 @@ return {
       s({
         trig = "lam",
         name = "Add this -> lamw25wmal",
+        desc = "Add this -> lamw25wmal",
       }, {
         t("lamw25wmal"),
       }),
@@ -211,11 +220,11 @@ return {
       s({
         trig = "mw25",
         name = "Add this -> lamw25wmal",
+        desc = "Add this -> lamw25wmal",
       }, {
         t("lamw25wmal"),
       }),
     })
-
     return opts
   end,
 }

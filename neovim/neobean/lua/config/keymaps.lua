@@ -75,7 +75,7 @@ vim.keymap.set({ "n", "v", "i" }, "<M-k>", "<cmd>Telescope keymaps<cr>", { desc 
 -- List git branches with telescope to quickly switch to a new branch
 vim.keymap.set("n", "<M-b>", function()
   require("telescope.builtin").git_branches(require("telescope.themes").get_ivy({
-    initial_mode = "normal",
+    initial_mode = "insert",
     layout_config = {
       -- Adjust the preview width for better visibility
       preview_width = 0.5,

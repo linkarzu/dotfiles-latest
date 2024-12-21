@@ -280,7 +280,7 @@ if vim.g.neovide then
   -- see: https://github.com/wez/wezterm/issues/6334
   vim.g.neovide_refresh_rate = 120
   -- This is how fast the cursor animation "moves", default 0.06
-  vim.g.neovide_cursor_animation_length = 0.06
+  vim.g.neovide_cursor_animation_length = 0.04
   -- Default 0.7
   vim.g.neovide_cursor_trail_size = 0.7
 

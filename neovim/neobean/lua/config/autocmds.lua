@@ -14,23 +14,23 @@ local function augroup(name)
   return vim.api.nvim_create_augroup("lazyvim_" .. name, { clear = true })
 end
 
--- This is for dadbod-ui auto completion
--- https://github.com/kristijanhusak/vim-dadbod-completion/issues/53#issuecomment-1705335855
-local cmp = require("cmp")
-local autocomplete_group = vim.api.nvim_create_augroup("vimrc_autocompletion", { clear = true })
-vim.api.nvim_create_autocmd("FileType", {
-  pattern = { "sql", "mysql", "plsql" },
-  callback = function()
-    cmp.setup.buffer({
-      sources = {
-        { name = "vim-dadbod-completion" },
-        { name = "buffer" },
-        { name = "luasnip" },
-      },
-    })
-  end,
-  group = autocomplete_group,
-})
+-- -- This is for dadbod-ui auto completion
+-- -- https://github.com/kristijanhusak/vim-dadbod-completion/issues/53#issuecomment-1705335855
+-- local cmp = require("cmp")
+-- local autocomplete_group = vim.api.nvim_create_augroup("vimrc_autocompletion", { clear = true })
+-- vim.api.nvim_create_autocmd("FileType", {
+--   pattern = { "sql", "mysql", "plsql" },
+--   callback = function()
+--     cmp.setup.buffer({
+--       sources = {
+--         { name = "vim-dadbod-completion" },
+--         { name = "buffer" },
+--         { name = "luasnip" },
+--       },
+--     })
+--   end,
+--   group = autocomplete_group,
+-- })
 
 -- close some filetypes with <esc>
 vim.api.nvim_create_autocmd("FileType", {

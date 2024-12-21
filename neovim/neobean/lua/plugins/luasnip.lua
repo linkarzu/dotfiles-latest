@@ -34,7 +34,11 @@ return {
 
     -- Helper function to create code block snippets
     local function create_code_block_snippet(lang)
-      return s(lang, {
+      return s({
+        trig = lang,
+        name = "Codeblock",
+        desc = lang .. " codeblock",
+      }, {
         t({ "```" .. lang, "" }),
         i(1),
         t({ "", "```" }),

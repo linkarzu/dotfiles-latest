@@ -13,12 +13,6 @@ return {
   opts = function(_, opts)
     local ls = require("luasnip")
 
-    -- Preserve existing opts from LazyVim
-    opts = vim.tbl_deep_extend("force", opts, {
-      history = true,
-      delete_check_events = "TextChanged",
-    })
-
     local s = ls.snippet
     local t = ls.text_node
     local i = ls.insert_node
@@ -150,20 +144,6 @@ return {
           " ",
           "<!-- prettier-ignore-end -->",
         }),
-      })
-    )
-
-    table.insert(
-      snippets,
-      s({
-        trig = "link",
-        name = "Add this -> []()",
-      }, {
-        t("["),
-        i(1),
-        t("]("),
-        i(2),
-        t(")"),
       })
     )
 

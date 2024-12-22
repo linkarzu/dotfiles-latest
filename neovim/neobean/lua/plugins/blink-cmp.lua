@@ -24,13 +24,15 @@ return {
           -- suggestions, I want those to show only if there are no LSP
           -- suggestions
           fallbacks = { "snippets", "luasnip", "buffer" },
-          score_offset = 1000, -- the higher the number, the higher the priority
+          score_offset = 90, -- the higher the number, the higher the priority
         },
         luasnip = {
           name = "luasnip",
           enabled = true,
           module = "blink.cmp.sources.luasnip",
-          score_offset = 950, -- the higher the number, the higher the priority
+          min_keyword_length = 2,
+          fallbacks = { "snippets" },
+          score_offset = 85, -- the higher the number, the higher the priority
         },
         path = {
           name = "Path",
@@ -53,14 +55,14 @@ return {
           name = "snippets",
           enabled = true,
           module = "blink.cmp.sources.snippets",
-          score_offset = 900, -- the higher the number, the higher the priority
+          score_offset = 80, -- the higher the number, the higher the priority
         },
         -- Example on how to configure dadbod found in the main repo
         -- https://github.com/kristijanhusak/vim-dadbod-completion
         dadbod = {
           name = "Dadbod",
           module = "vim_dadbod_completion.blink",
-          score_offset = 950, -- the higher the number, the higher the priority
+          score_offset = 85, -- the higher the number, the higher the priority
         },
         -- Third class citizen mf always talking shit
         copilot = {
@@ -68,6 +70,7 @@ return {
           enabled = true,
           module = "blink-cmp-copilot",
           kind = "Copilot",
+          min_keyword_length = 2,
           score_offset = -100, -- the higher the number, the higher the priority
           async = true,
         },

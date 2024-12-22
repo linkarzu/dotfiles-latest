@@ -20,6 +20,10 @@ return {
           enabled = true,
           module = "blink.cmp.sources.lsp",
           kind = "LSP",
+          -- When linking markdown notes, I would get snippets and text in the
+          -- suggestions, I want those to show only if there are no LSP
+          -- suggestions
+          fallbacks = { "snippets", "luasnip", "buffer" },
           score_offset = 1000, -- the higher the number, the higher the priority
         },
         luasnip = {
@@ -27,6 +31,23 @@ return {
           enabled = true,
           module = "blink.cmp.sources.luasnip",
           score_offset = 950, -- the higher the number, the higher the priority
+        },
+        path = {
+          name = "Path",
+          module = "blink.cmp.sources.path",
+          score_offset = 3,
+          -- When typing a path, I would get snippets and text in the
+          -- suggestions, I want those to show only if there are no path
+          -- suggestions
+          fallbacks = { "snippets", "luasnip", "buffer" },
+          opts = {
+            trailing_slash = false,
+            label_trailing_slash = true,
+            get_cwd = function(context)
+              return vim.fn.expand(("#%d:p:h"):format(context.bufnr))
+            end,
+            show_hidden_files_by_default = true,
+          },
         },
         snippets = {
           name = "snippets",

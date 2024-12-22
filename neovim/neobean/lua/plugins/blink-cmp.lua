@@ -11,8 +11,11 @@
 return {
   "saghen/blink.cmp",
   enabled = true,
-  opts = {
-    sources = {
+  opts = function(_, opts)
+    -- Merge custom sources with the existing ones from lazyvim
+    -- NOTE: by default lazyvim already includes the lazydev source, so not
+    -- adding it here again
+    opts.sources = vim.tbl_deep_extend("force", opts.sources or {}, {
       default = { "lsp", "path", "snippets", "buffer", "copilot", "luasnip", "dadbod" },
       providers = {
         lsp = {
@@ -80,11 +83,12 @@ return {
           async = true,
         },
       },
-    },
+    })
+
     -- This comes from the luasnip extra, if you don't add it, won't be able to
     -- jump forward or backward in luasnip snippets
     -- https://www.lazyvim.org/extras/coding/luasnip#blinkcmp-optional
-    snippets = {
+    opts.snippets = {
       expand = function(snippet)
         require("luasnip").lsp_expand(snippet)
       end,
@@ -97,13 +101,14 @@ return {
       jump = function(direction)
         require("luasnip").jump(direction)
       end,
-    },
+    }
+
     -- The default preset used by lazyvim accepts completions with enter
     -- I don't like using enter because if on markdown and typing
     -- something, but you want to go to the line below, if you press enter,
     -- the completion will be accepted
     -- https://cmp.saghen.dev/configuration/keymap.html#default
-    keymap = {
+    opts.keymap = {
       preset = "default",
       ["<Tab>"] = { "snippet_forward", "fallback" },
       ["<S-Tab>"] = { "snippet_backward", "fallback" },
@@ -118,6 +123,8 @@ return {
 
       ["<C-space>"] = { "show", "show_documentation", "hide_documentation" },
       ["<C-e>"] = { "hide", "fallback" },
-    },
-  },
+    }
+
+    return opts
+  end,
 }

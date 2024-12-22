@@ -21,5 +21,20 @@ return {
         },
       })
     end,
+    keys = {
+      -- I want to use telescope to find files
+      {
+        "<leader><Space>",
+        function()
+          local cwd = vim.fn.getcwd()
+          require("telescope").extensions.frecency.frecency(require("telescope.themes").get_ivy({
+            workspace = "CWD",
+            cwd = cwd,
+            prompt_title = "FRECENCY " .. cwd,
+          }))
+        end,
+        desc = "Find Files (Root Dir) [Space]",
+      },
+    },
   },
 }

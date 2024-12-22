@@ -51,6 +51,11 @@ return {
             show_hidden_files_by_default = true,
           },
         },
+        buffer = {
+          name = "Buffer",
+          module = "blink.cmp.sources.buffer",
+          min_keyword_length = 2,
+        },
         snippets = {
           name = "snippets",
           enabled = true,

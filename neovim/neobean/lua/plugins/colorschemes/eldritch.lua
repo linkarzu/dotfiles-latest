@@ -183,6 +183,17 @@ return {
 
         -- Colorcolumn that helps me with markdown guidelines
         ColorColumn = { bg = colors["linkarzu_color13"] },
+
+        FzfLuaFzfPrompt = { fg = colors["linkarzu_color04"], bg = colors["linkarzu_color10"] },
+        FzfLuaCursorLine = { fg = colors["linkarzu_color02"], bg = colors["linkarzu_color10"] },
+        FzfLuaTitle = { fg = colors["linkarzu_color03"], bg = colors["linkarzu_color10"] },
+        FzfLuaSearch = { fg = colors["linkarzu_color14"], bg = colors["linkarzu_color10"] },
+        FzfLuaBorder = { fg = colors["linkarzu_color02"], bg = colors["linkarzu_color10"] },
+        FzfLuaNormal = { fg = colors["linkarzu_color14"], bg = colors["linkarzu_color10"] },
+
+        TelescopeNormal = { fg = colors["linkarzu_color14"], bg = colors["linkarzu_color10"] },
+        TelescopeMultiSelection = { fg = colors["linkarzu_color02"], bg = colors["linkarzu_color10"] },
+        TelescopeSelection = { fg = colors["linkarzu_color14"], bg = colors["linkarzu_color13"] },
       }
 
       -- Apply all highlight definitions at once

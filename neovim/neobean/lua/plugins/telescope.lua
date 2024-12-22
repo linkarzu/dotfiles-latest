@@ -157,19 +157,20 @@ return {
         desc = "[P]Grep (buffer dir)",
       },
 
+      -- I want to grep with fzf-lua, so disabling/disable this keymap for telescope
       -- { "<leader>sg", LazyVim.pick("live_grep", { root = false, theme = "ivy" }), desc = "Grep (Root Dir)" },
-      {
-        "<leader>sg",
-        function()
-          local cwd = vim.fn.getcwd()
-          require("telescope.builtin").live_grep(require("telescope.themes").get_ivy({
-            -- gets current working directory
-            cwd = cwd,
-            prompt_title = "GREP " .. cwd,
-          }))
-        end,
-        desc = "[P]Grep (Root Dir)",
-      },
+      -- {
+      --   "<leader>sg",
+      --   function()
+      --     local cwd = vim.fn.getcwd()
+      --     require("telescope.builtin").live_grep(require("telescope.themes").get_ivy({
+      --       -- gets current working directory
+      --       cwd = cwd,
+      --       prompt_title = "GREP " .. cwd,
+      --     }))
+      --   end,
+      --   desc = "[P]Grep (Root Dir)",
+      -- },
 
       -- { "<leader>gs", "<cmd>Telescope git_status<CR>", desc = "Status" },
       {

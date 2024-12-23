@@ -491,7 +491,8 @@ const rules: KarabinerRules[] = [
       // j: app("Alacritty"),
       // j: app("WezTerm"),
       j: app("Ghostty"),
-      k: app("Google Chrome"),
+      k: app("Zen Browser"),
+      // k: app("Google Chrome"),
       // l: app("Obsidian"),
       semicolon: app("ChatGPT"),
       quote: app("System Settings"),
@@ -694,7 +695,7 @@ const rules: KarabinerRules[] = [
         ],
       },
       // Move to left tab in browsers
-      h: {
+      l: {
         to: [
           {
             key_code: "open_bracket",
@@ -703,7 +704,7 @@ const rules: KarabinerRules[] = [
         ],
       },
       // Move to right tab in browsers
-      l: {
+      h: {
         to: [
           {
             key_code: "close_bracket",

@@ -594,10 +594,10 @@
               {
                 "to": [
                   {
-                    "shell_command": "open -a 'Google Chrome.app'"
+                    "shell_command": "open -a 'Zen Browser.app'"
                   }
                 ],
-                "description": "Open -a 'Google Chrome.app'",
+                "description": "Open -a 'Zen Browser.app'",
                 "type": "basic",
                 "from": {
                   "key_code": "k",
@@ -2497,7 +2497,7 @@
                 ],
                 "type": "basic",
                 "from": {
-                  "key_code": "h",
+                  "key_code": "l",
                   "modifiers": {
                     "mandatory": [
                       "any"
@@ -2524,7 +2524,7 @@
                 ],
                 "type": "basic",
                 "from": {
-                  "key_code": "l",
+                  "key_code": "h",
                   "modifiers": {
                     "mandatory": [
                       "any"

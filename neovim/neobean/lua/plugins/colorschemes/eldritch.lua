@@ -77,9 +77,10 @@ return {
     -- This function is found in the documentation
     on_highlights = function(highlights)
       local highlight_definitions = {
-        -- nvim-spectre highlight colors
-        DiffChange = { bg = colors["linkarzu_color02"], fg = "black" },
-        DiffDelete = { bg = colors["linkarzu_color01"], fg = "black" },
+        -- nvim-spectre or grug-far.nvim highlight colors
+        DiffChange = { bg = colors["linkarzu_color03"], fg = "black" },
+        DiffDelete = { bg = colors["linkarzu_color11"], fg = "black" },
+        DiffAdd = { bg = colors["linkarzu_color02"], fg = "black" },
         TelescopeResultsDiffDelete = { bg = colors["linkarzu_color01"], fg = "black" },
 
         -- horizontal line that goes across where cursor is

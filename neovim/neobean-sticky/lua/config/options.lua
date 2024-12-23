@@ -18,6 +18,9 @@ vim.opt.signcolumn = "no"
 vim.opt.number = false
 vim.opt.relativenumber = false
 
+-- I find the animations a bit laggy
+vim.g.snacks_animate = false
+
 -- Auto update plugins at startup
 -- Tried to add this vimenter autocmd in the autocmds.lua file but it was never
 -- triggered, this is because if I understand correctly Lazy.nvim delays the

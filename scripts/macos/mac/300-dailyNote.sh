@@ -58,7 +58,7 @@ if ! tmux has-session -t="$tmux_session_name" 2>/dev/null; then
   # + tells neovim to execute a command after opening and G goes to last line
   # Opened neovim with export NVIM_APPNAME='neobean' && nvim lamw25wmal
   # Otherwise the instance that was opened always had plugin updates, even though it was neobean
-  tmux new-session -d -s "$tmux_session_name" -c "$note_dir" "export NVIM_APPNAME='neobean' && nvim +norm\ Go +startinsert $full_path"
+  tmux new-session -d -s "$tmux_session_name" -c "$note_dir" "NVIM_APPNAME=neobean nvim +norm\ Go +startinsert $full_path"
   # tmux new-session -d -s "$tmux_session_name" "nvim +norm\ G $full_path"
   # Create a new tmux session with the note name in detached mode and start neovim with the daily note
   # tmux new-session -d -s "$tmux_session_name" "nvim $full_path"
@@ -66,7 +66,7 @@ fi
 
 # Check if neovim is running, if not open it
 if ! tmux list-panes -t "$tmux_session_name" -F "#{pane_current_command}" | grep -q "nvim"; then
-  tmux send-keys -t "$tmux_session_name" "export NVIM_APPNAME='neobean' && nvim" C-m
+  tmux send-keys -t "$tmux_session_name" "NVIM_APPNAME=neobean nvim" C-m
   tmux send-keys -t "$tmux_session_name" "s"
 fi
 

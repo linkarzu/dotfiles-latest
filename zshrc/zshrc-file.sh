@@ -431,10 +431,17 @@ if [ "$OS" = 'Mac' ]; then
   #
   # Notice that both "v" and "nvim" start "neobean"
   # "vk" opens kickstart and "vl" opens lazyvim
-  alias v='export NVIM_APPNAME="neobean" && nvim'
-  alias vq='export NVIM_APPNAME="quarto-nvim-kickstarter" && nvim'
-  alias vk='export NVIM_APPNAME="kickstart.nvim" && nvim'
-  alias vl='export NVIM_APPNAME="lazyvim" && nvim'
+  #
+  # NOTE: Previously I was doing:
+  # v='export NVIM_APPNAME="neobean" && nvim'
+  # Notice this exports the NVIM_APPNAME variable, so if after that I just run `nvim` it
+  # will run the last config, thanks to @dulajdisanayaka for bringing it up in my video:
+  # "Is Neovide just for Visual Effects? | Open LazyGit files, Disable Plugins, TMUX and more"
+  # https://youtu.be/rNYtfA4zlO4
+  alias v='NVIM_APPNAME=neobean nvim'
+  alias vq='NVIM_APPNAME=quarto-nvim-kickstarter nvim'
+  alias vk='NVIM_APPNAME=kickstart.nvim nvim'
+  alias vl='NVIM_APPNAME=lazyvim nvim'
   # I'm also leaving this "nvim" alias, which points to the "nvim" APPNAME, but
   # that APPNAME in fact points to my "neobean" config in the symlinks section
   # If I don't do this, my daily note doesn't work
@@ -445,7 +452,7 @@ if [ "$OS" = 'Mac' ]; then
   # If you don't understand what I mean by "daily note" go and watch my daily
   # note video
   # https://youtu.be/W3hgsMoUcqo
-  # alias nvim='export NVIM_APPNAME="nvim" && nvim'
+  # alias nvim='NVIM_APPNAME=nvim nvim'
 
   # https://github.com/antlr/antlr4/blob/master/doc/getting-started.md#unix
   # Add antlr-4.13.1-complete.jar to your CLASSPATH

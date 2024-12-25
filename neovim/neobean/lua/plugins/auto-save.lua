@@ -7,6 +7,10 @@
 -- Filename: ~/github/dotfiles-latest/neovim/neobean/lua/plugins/auto-save.lua
 -- ~/github/dotfiles-latest/neovim/neobean/lua/plugins/auto-save.lua
 
+-- My related YouTube video
+-- Save neovim files automatically with auto-save.nvim
+-- https://youtu.be/W5fjlU4tSpw
+
 -- Autocommand for printing the autosaved message
 local group = vim.api.nvim_create_augroup("autosave", {})
 vim.api.nvim_create_autocmd("User", {

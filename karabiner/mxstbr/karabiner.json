@@ -340,56 +340,6 @@
             ]
           },
           {
-            "description": "right_control -> homerow 2",
-            "manipulators": [
-              {
-                "from": {
-                  "key_code": "right_control"
-                },
-                "to": [
-                  {
-                    "key_code": "right_control"
-                  }
-                ],
-                "to_if_alone": [
-                  {
-                    "key_code": "spacebar",
-                    "modifiers": [
-                      "left_command",
-                      "left_option"
-                    ]
-                  }
-                ],
-                "type": "basic"
-              }
-            ]
-          },
-          {
-            "description": "right_option -> homerow 3",
-            "manipulators": [
-              {
-                "from": {
-                  "key_code": "right_option"
-                },
-                "to": [
-                  {
-                    "key_code": "right_option"
-                  }
-                ],
-                "to_if_alone": [
-                  {
-                    "key_code": "delete_or_backspace",
-                    "modifiers": [
-                      "left_command",
-                      "left_option"
-                    ]
-                  }
-                ],
-                "type": "basic"
-              }
-            ]
-          },
-          {
             "description": "Hyper Key sublayer \"a\"",
             "manipulators": [
               {

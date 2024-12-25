@@ -403,53 +403,53 @@ const rules: KarabinerRules[] = [
     ],
   },
 
-  // This is used as a homerow app shortcut
-  {
-    description: "right_control -> homerow 2",
-    manipulators: [
-      {
-        from: {
-          key_code: "right_control",
-        },
-        to: [
-          {
-            key_code: "right_control",
-          },
-        ],
-        to_if_alone: [
-          {
-            key_code: "spacebar",
-            modifiers: ["left_command", "left_option"],
-          },
-        ],
-        type: "basic",
-      },
-    ],
-  },
+  // // This is used as a homerow app shortcut
+  // {
+  //   description: "right_control -> homerow 2",
+  //   manipulators: [
+  //     {
+  //       from: {
+  //         key_code: "right_control",
+  //       },
+  //       to: [
+  //         {
+  //           key_code: "right_control",
+  //         },
+  //       ],
+  //       to_if_alone: [
+  //         {
+  //           key_code: "spacebar",
+  //           modifiers: ["left_command", "left_option"],
+  //         },
+  //       ],
+  //       type: "basic",
+  //     },
+  //   ],
+  // },
 
-  // This is used as a homerow app shortcut
-  {
-    description: "right_option -> homerow 3",
-    manipulators: [
-      {
-        from: {
-          key_code: "right_option",
-        },
-        to: [
-          {
-            key_code: "right_option",
-          },
-        ],
-        to_if_alone: [
-          {
-            key_code: "delete_or_backspace",
-            modifiers: ["left_command", "left_option"],
-          },
-        ],
-        type: "basic",
-      },
-    ],
-  },
+  // // This is used as a homerow app shortcut
+  // {
+  //   description: "right_option -> homerow 3",
+  //   manipulators: [
+  //     {
+  //       from: {
+  //         key_code: "right_option",
+  //       },
+  //       to: [
+  //         {
+  //           key_code: "right_option",
+  //         },
+  //       ],
+  //       to_if_alone: [
+  //         {
+  //           key_code: "delete_or_backspace",
+  //           modifiers: ["left_command", "left_option"],
+  //         },
+  //       ],
+  //       type: "basic",
+  //     },
+  //   ],
+  // },
 
   // I couldn't get this work with the magic mouse because it only detects button1 in the karabiner event viewer
   // You need to enable pro mode in karabiner for the work with the apple mouse

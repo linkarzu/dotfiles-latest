@@ -305,6 +305,50 @@ esac
 # macOS-specific configurations
 if [ "$OS" = 'Mac' ]; then
 
+  # This below is to automate the process of creating the
+  # com.linkarzu.autoPushGithub.plist file which will run every X seconds and
+  # automaticaly push changes to some github repos
+  #
+  # Check if the com.linkarzu.autoPushGithub.plist file exists, create it if missing
+  PLIST_PATH="$HOME/Library/LaunchAgents/com.linkarzu.autoPushGithub.plist"
+  SCRIPT_PATH="$HOME/github/dotfiles-latest/scripts/macos/mac/400-autoPushGithub.sh"
+
+  if [ ! -f "$PLIST_PATH" ]; then
+    echo "Creating $PLIST_PATH..."
+    cat <<EOF >"$PLIST_PATH"
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.linkarzu.autoPushGithub</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>$SCRIPT_PATH</string>
+    </array>
+    <key>StartInterval</key>
+    <integer>180</integer>
+    <key>StandardOutPath</key>
+    <string>/tmp/autoPushGithub.out</string>
+    <key>StandardErrorPath</key>
+    <string>/tmp/autoPushGithub.err</string>
+</dict>
+</plist>
+EOF
+    echo "Created $PLIST_PATH."
+  fi
+
+  # Check if the plist file is loaded, and load it if not
+  # If you want to verify manually if running, run
+  # launchctl list | grep -i autopush
+  # First column (-) means the job is NOT currently running. Normal as our script runs every X seconds
+  # Second Column (0) means the job ran successfully the last execution, other values mean error
+  if ! launchctl list | grep -q "com.linkarzu.autoPushGithub"; then
+    echo "Loading $PLIST_PATH..."
+    launchctl load "$PLIST_PATH"
+    echo "$PLIST_PATH loaded."
+  fi
+
   install_xterm_kitty_terminfo() {
     # Attempt to get terminfo for xterm-kitty
     if ! infocmp xterm-kitty &>/dev/null; then

@@ -3,7 +3,12 @@
 # Filename: ~/github/dotfiles-latest/scripts/macos/mac/400-autoPushGithub.sh
 # ~/github/dotfiles-latest/scripts/macos/mac/400-autoPushGithub.sh
 
-# List of repositories
+# This script will be executed automatically every X amount of seconds by the
+# ~/Library/LaunchAgents/com.linkarzu.autoPushGithub.plist file
+# This file above will automatically be created and loaded by my zshrc file, so
+# no need to create it manually
+
+# List of repositories to push to
 REPO_LIST=(
   "$HOME/Library/Mobile Documents/com~apple~CloudDocs/github/skitty"
   "$HOME/github/obsidian_main"

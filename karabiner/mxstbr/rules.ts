@@ -694,8 +694,8 @@ const rules: KarabinerRules[] = [
           },
         ],
       },
-      // Move to left tab in browsers
-      l: {
+      // Move to left (or up) tab in browsers
+      h: {
         to: [
           {
             key_code: "open_bracket",
@@ -703,8 +703,8 @@ const rules: KarabinerRules[] = [
           },
         ],
       },
-      // Move to right tab in browsers
-      h: {
+      // Move to right (or down) tab in browsers
+      l: {
         to: [
           {
             key_code: "close_bracket",

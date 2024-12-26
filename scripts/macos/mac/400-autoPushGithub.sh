@@ -14,6 +14,13 @@ REPO_LIST=(
   "$HOME/github/obsidian_main"
 )
 
+# Define the push interval in seconds
+# Make sure this matches the frequency of the launch agent
+# NOTE: This does not cover the case in which the file is modified at min 1,
+# launch agent executes at min 3, skips the update, so I have to wait other 3
+# minutes (5 in total) for the next update, I don't care, that's fine
+PUSH_INTERVAL=180
+
 # Function to display macOS notifications
 display_notification() {
   local message="$1"
@@ -31,6 +38,17 @@ for REPO_PATH in "${REPO_LIST[@]}"; do
     display_notification "Failed to navigate to $REPO_PATH" "Error"
     continue
   }
+
+  # Check if any files were modified within the last PUSH_INTERVAL seconds
+  # -newermt stands for “newer than modification time.”
+  # This will find Files Modified Within the Last X Seconds, and if ther are
+  # RECENT_MODIFICATIONS will contain a non-empty list of file paths
+  RECENT_MODIFICATIONS=$(find . -type f -newermt "-${PUSH_INTERVAL} seconds" 2>/dev/null)
+  # If RECENT_MODIFICATIONS is not empty (-n), it skips pushing changes for this repository
+  if [[ -n "$RECENT_MODIFICATIONS" ]]; then
+    echo "Skipping push for $REPO_PATH due to recent modifications."
+    continue
+  fi
 
   # Check for changes or commits not pushed
   UNCOMMITTED_CHANGES=$(git status --porcelain)

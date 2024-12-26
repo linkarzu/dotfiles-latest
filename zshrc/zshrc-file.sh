@@ -313,6 +313,8 @@ if [ "$OS" = 'Mac' ]; then
   PLIST_PATH="$HOME/Library/LaunchAgents/com.linkarzu.autoPushGithub.plist"
   SCRIPT_PATH="$HOME/github/dotfiles-latest/scripts/macos/mac/400-autoPushGithub.sh"
 
+  # NOTE: If you modify the StartInterval below, make sure to also change it in
+  # the ~/github/dotfiles-latest/scripts/macos/mac/400-autoPushGithub.sh script
   if [ ! -f "$PLIST_PATH" ]; then
     echo "Creating $PLIST_PATH..."
     cat <<EOF >"$PLIST_PATH"

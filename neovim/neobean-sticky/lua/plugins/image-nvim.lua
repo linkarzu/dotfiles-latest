@@ -77,7 +77,7 @@ return {
             only_render_image_at_cursor = true,
             -- Enabling "markdown" below allows you to view html images in .md files
             -- https://github.com/3rd/image.nvim/issues/234
-            filetypes = { "html", "xhtml", "htm", "markdown" },
+            filetypes = { "html", "xhtml", "htm" },
           },
           -- This is disabled by default
           -- Detect and render images referenced in CSS files

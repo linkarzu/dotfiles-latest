@@ -1489,6 +1489,29 @@ vim.keymap.set("n", "<leader>md", function()
   vim.api.nvim_buf_set_lines(current_buffer, start_row, end_row + 1, false, new_lines)
 end, { desc = "[P]Toggle bullet point (dash)" })
 
+-- Toggle checklist bullet point `- [ ]` or `- [x]` on the current line
+vim.keymap.set("n", "<M-x>", function()
+  -- Get the current cursor position and buffer
+  local cursor_pos = vim.api.nvim_win_get_cursor(0)
+  local current_buffer = vim.api.nvim_get_current_buf()
+  local row = cursor_pos[1] - 1
+
+  -- Get the current line
+  local line = vim.api.nvim_buf_get_lines(current_buffer, row, row + 1, false)[1]
+
+  -- Check if the line contains `- [ ]` or `- [x]`
+  if line:match("^%s*%- %[ %]") then
+    -- Toggle to `- [x]`
+    line = line:gsub("^%s*%- %[ %]", "- [x]")
+  elseif line:match("^%s*%- %[x%]") then
+    -- Toggle to `- [ ]`
+    line = line:gsub("^%s*%- %[x%]", "- [ ]")
+  end
+
+  -- Update the line in the buffer
+  vim.api.nvim_buf_set_lines(current_buffer, row, row + 1, false, { line })
+end, { desc = "[P]Toggle checklist bullet point - [ ] <-> - [x]" })
+
 -- -- Toggle bullet point at the beginning of the current line in normal mode
 -- vim.keymap.set("n", "<leader>ml", function()
 --   -- Notify that the function is being executed

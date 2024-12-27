@@ -1,5 +1,8 @@
 -- https://github.com/HakonHarnes/img-clip.nvim
 
+-- Filename: ~/github/dotfiles-latest/neovim/neobean-sticky/lua/plugins/img-clip.lua
+-- ~/github/dotfiles-latest/neovim/neobean-sticky/lua/plugins/img-clip.lua
+
 return {
   "HakonHarnes/img-clip.nvim",
   event = "VeryLazy",

@@ -650,7 +650,8 @@ EOF
     # --paging=never - doesnt pipe it through less
     alias cat='bat --paging=never --style=plain'
     alias catt='bat'
-    alias cata='bat --show-all --paging=never'
+    # alias cata='bat --show-all --paging=never'
+    alias cata='bat --show-all --paging=never --style=plain'
   fi
 
   # Zsh Vi Mode

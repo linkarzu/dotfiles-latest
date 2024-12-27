@@ -99,6 +99,44 @@ vim.keymap.set({ "n", "v", "i" }, "<M-d>", function()
   require("noice").cmd("dismiss")
 end, { desc = "Dismiss All" })
 
+-- Iterate through incomplete tasks in telescope
+-- You can confirm in your teminal lamw25wmal with:
+-- rg "^\s*-\s\[ \]" test-markdown.md
+vim.keymap.set("n", "<leader>tt", function()
+  require("telescope.builtin").grep_string(require("telescope.themes").get_ivy({
+    prompt_title = "Incomplete Tasks",
+    -- search = "- \\[ \\]", -- Fixed search term for tasks
+    search = "^- \\[ \\]", -- Ensure "- [ ]" is at the beginning of the line
+    search_dirs = { vim.fn.getcwd() }, -- Restrict search to the current working directory
+    use_regex = true, -- Enable regex for the search term
+    initial_mode = "normal", -- Start in normal mode
+    layout_config = {
+      preview_width = 0.5, -- Adjust preview width
+    },
+    additional_args = function()
+      return { "--no-ignore" } -- Include files ignored by .gitignore
+    end,
+  }))
+end, { desc = "[P]Search for incomplete tasks" })
+
+-- Iterate throuth completed tasks in telescope lamw25wmal
+vim.keymap.set("n", "<leader>tc", function()
+  require("telescope.builtin").grep_string(require("telescope.themes").get_ivy({
+    prompt_title = "Completed Tasks",
+    -- search = [[- \[x\] `done:]], -- Regex to match the text "`- [x] `done:"
+    search = "^- \\[x\\] `done:", -- Matches lines starting with "- [x] `done:"
+    search_dirs = { vim.fn.getcwd() }, -- Restrict search to the current working directory
+    use_regex = true, -- Enable regex for the search term
+    initial_mode = "normal", -- Start in normal mode
+    layout_config = {
+      preview_width = 0.5, -- Adjust preview width
+    },
+    additional_args = function()
+      return { "--no-ignore" } -- Include files ignored by .gitignore
+    end,
+  }))
+end, { desc = "[P]Search for completed tasks" })
+
 -- Commented these 2 as I couldn't clear search results with escape
 -- I want to close split panes with escape, the default is "q"
 -- vim.keymap.set("n", "<esc>", "<cmd>close<cr>", { desc = "Close split pane" })

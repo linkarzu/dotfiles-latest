@@ -1957,8 +1957,17 @@ end, { desc = "[P]Toggle checkbox" })
 -- These are marked with <leader>x using bullets.vim
 -- I used <C-l> before, but that is used for pane navigation
 vim.keymap.set({ "n", "v", "i" }, "<M-l>", function()
-  vim.cmd("normal! i- [ ]  ")
-  vim.cmd("startinsert")
+  -- Get the current line and cursor position
+  local line = vim.api.nvim_get_current_line()
+  local cursor = vim.api.nvim_win_get_cursor(0)
+  -- Check if the line starts with a bullet or "- ", and remove it
+  local updated_line = line:gsub("^%s*[-*]%s*", "", 1)
+  -- Update the line
+  vim.api.nvim_set_current_line(updated_line)
+  -- Move the cursor back to its original position
+  vim.api.nvim_win_set_cursor(0, { cursor[1], #updated_line })
+  -- Insert the checkbox
+  vim.api.nvim_put({ "- [ ] " }, "c", true, true)
 end, { desc = "[P]Toggle checkbox" })
 
 -- In visual mode, surround the selected text with markdown link syntax

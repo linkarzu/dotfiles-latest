@@ -1534,14 +1534,22 @@ end, { desc = "[P]Toggle bullet point (dash)" })
 --
 -- If an item is moved to that heading, it will be added the `done` label
 vim.keymap.set("n", "<M-x>", function()
+  -- Customizable variables
+  -- NOTE: Customize the completion label
+  local label_done = "done:"
+  -- NOTE: Customize the timestamp format
+  local timestamp = os.date("%y%m%d-%H%M")
+  -- local timestamp = os.date("%y%m%d")
+  -- NOTE: Customize the heading and its level
+  local tasks_heading = "## Completed tasks"
   -- Save the view to preserve folds
   vim.cmd("mkview")
   local api = vim.api
   -- Retrieve buffer & lines
   local buf = api.nvim_get_current_buf()
-  local cursor_pos = api.nvim_win_get_cursor(0)
+  local cursor_pos = vim.api.nvim_win_get_cursor(0)
   local start_line = cursor_pos[1] - 1
-  local lines = api.nvim_buf_get_lines(buf, 0, -1, false)
+  local lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
   local total_lines = #lines
   -- If cursor is beyond last line, do nothing
   if start_line >= total_lines then
@@ -1595,10 +1603,10 @@ vim.keymap.set("n", "<M-x>", function()
   local has_untoggled_index = nil
   for i, line in ipairs(chunk) do
     -- Replace `[done: ...]` -> `` `done: ...` ``
-    chunk[i] = line:gsub("%[done:([^%]]+)%]", "`done:%1`")
+    chunk[i] = line:gsub("%[done:([^%]]+)%]", "`" .. label_done .. "%1`")
     -- Replace `[untoggled]` -> `` `untoggled` ``
     chunk[i] = chunk[i]:gsub("%[untoggled%]", "`untoggled`")
-    if chunk[i]:match("`done:.-`") then
+    if chunk[i]:match("`" .. label_done .. ".-`") then
       has_done_index = i
       break
     end
@@ -1645,47 +1653,35 @@ vim.keymap.set("n", "<M-x>", function()
     for idx = chunk_start, chunk_end do
       lines[idx + 1] = new_chunk[idx - chunk_start + 1]
     end
-    api.nvim_buf_set_lines(buf, 0, -1, false, lines)
+    vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
   end
   ------------------------------------------------------------------------------
   -- 6. Main toggle logic
   ------------------------------------------------------------------------------
-  local timestamp = os.date("%y%m%d-%H%M%S")
   if has_done_index then
-    ----------------------------------------------------------------------------
-    -- Case A: Currently has `done: ...`, so toggle to `untoggled`, bullet->- [ ]
-    ----------------------------------------------------------------------------
-    -- Remove existing label from the line that has it
-    chunk[has_done_index] = removeLabel(chunk[has_done_index]):gsub("`done:.-`", "`untoggled`")
-    -- Also bullet-> [ ]
+    chunk[has_done_index] = removeLabel(chunk[has_done_index]):gsub("`" .. label_done .. ".-`", "`untoggled`")
     chunk[1] = bulletToBlank(chunk[1])
     chunk[1] = removeLabel(chunk[1])
     chunk[1] = insertLabelAfterBracket(chunk[1], "`untoggled`")
     updateBufferWithChunk(chunk)
   elseif has_untoggled_index then
-    ----------------------------------------------------------------------------
-    -- Case B: Found `untoggled`, so toggle to `done: <timestamp>`, bullet-> - [x]
-    ----------------------------------------------------------------------------
     chunk[has_untoggled_index] =
-      removeLabel(chunk[has_untoggled_index]):gsub("`untoggled`", "`done: " .. timestamp .. "`")
+      removeLabel(chunk[has_untoggled_index]):gsub("`untoggled`", "`" .. label_done .. " " .. timestamp .. "`")
     chunk[1] = bulletToX(chunk[1])
     chunk[1] = removeLabel(chunk[1])
-    chunk[1] = insertLabelAfterBracket(chunk[1], "`done: " .. timestamp .. "`")
+    chunk[1] = insertLabelAfterBracket(chunk[1], "`" .. label_done .. " " .. timestamp .. "`")
     updateBufferWithChunk(chunk)
   else
-    ----------------------------------------------------------------------------
-    -- Case C: No label => bullet-> - [x], add `done: ...`, then move it under heading
-    ----------------------------------------------------------------------------
     chunk[1] = bulletToX(chunk[1])
-    chunk[1] = insertLabelAfterBracket(chunk[1], "`done: " .. timestamp .. "`")
+    chunk[1] = insertLabelAfterBracket(chunk[1], "`" .. label_done .. " " .. timestamp .. "`")
     -- Remove chunk from the original lines
     for i = chunk_end, chunk_start, -1 do
       table.remove(lines, i + 1)
     end
-    -- Append chunk under '## completed tasks'
+    -- Append chunk under 'tasks_heading'
     local heading_index = nil
     for i, line in ipairs(lines) do
-      if line:match("^##%s+completed tasks") then
+      if line:match("^" .. tasks_heading) then
         heading_index = i
         break
       end
@@ -1701,7 +1697,7 @@ vim.keymap.set("n", "<M-x>", function()
         table.remove(lines, after_last_item)
       end
     else
-      table.insert(lines, "## completed tasks")
+      table.insert(lines, tasks_heading)
       for _, cLine in ipairs(chunk) do
         table.insert(lines, cLine)
       end
@@ -1710,7 +1706,7 @@ vim.keymap.set("n", "<M-x>", function()
         table.remove(lines, after_last_item)
       end
     end
-    api.nvim_buf_set_lines(buf, 0, -1, false, lines)
+    vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
   end
   -- Restore the view to preserve folds
   vim.cmd("loadview")

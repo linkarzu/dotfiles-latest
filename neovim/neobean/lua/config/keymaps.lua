@@ -1508,6 +1508,27 @@ vim.keymap.set("n", "<M-x>", function()
     return
   end
   ------------------------------------------------------------------------------
+  -- (A) Move upwards to find the bullet line (if user is somewhere in the chunk)
+  ------------------------------------------------------------------------------
+  while start_line > 0 do
+    local line_text = lines[start_line + 1]
+    -- Stop if we find a blank line or a bullet line
+    if line_text == "" or line_text:match("^%s*%-") then
+      break
+    end
+    start_line = start_line - 1
+  end
+  -- Now we might be on a blank line or a bullet line
+  -- If we landed on a blank line, move down one (so we don't use the blank line).
+  if lines[start_line + 1] == "" and start_line < (total_lines - 1) then
+    start_line = start_line + 1
+  end
+  -- If it's still not a bullet line, we have nowhere to toggle
+  if not lines[start_line + 1]:match("^%s*%-") then
+    -- Not a valid bullet line; do nothing
+    return
+  end
+  ------------------------------------------------------------------------------
   -- 1. Identify the chunk boundaries
   ------------------------------------------------------------------------------
   local chunk_start = start_line
@@ -1525,24 +1546,20 @@ vim.keymap.set("n", "<M-x>", function()
     table.insert(chunk, lines[i + 1])
   end
   ------------------------------------------------------------------------------
-  -- 2. Check if chunk has [completed: ...] or [untoggled], and transform them
+  -- 2. Check if chunk has [completed: ...] or [untoggled], then transform them
   ------------------------------------------------------------------------------
   local has_completed_index = nil
   local has_untoggled_index = nil
   for i, line in ipairs(chunk) do
     -- Replace `[completed: ...]` with `` `completed: ...` ``
-    -- We capture everything after 'completed:' up to the closing bracket
     chunk[i] = line:gsub("%[completed:([^%]]+)%]", "`completed:%1`")
     -- Replace `[untoggled]` with `` `untoggled` ``
     chunk[i] = chunk[i]:gsub("%[untoggled%]", "`untoggled`")
-    -- After replacing, check if the new line contains `` `completed: ...` ``
-    -- or `` `untoggled` `` to see which state it was in.
     if chunk[i]:match("`completed:.-`") then
       has_completed_index = i
       break
     end
   end
-  -- If we didn't detect `` `completed: ...` ``, look for `` `untoggled` ``.
   if not has_completed_index then
     for i, line in ipairs(chunk) do
       if line:match("`untoggled`") then
@@ -1586,17 +1603,15 @@ vim.keymap.set("n", "<M-x>", function()
     chunk[1] = bulletToX(chunk[1])
     updateBufferWithChunk(chunk)
   else
-    -- Case C: No label => bullet -> - [x], add `` `completed: ...` ``, then
-    -- move it under '## completed tasks'
+    -- Case C: No label => bullet -> - [x], add `` `completed: ...` ``, then move it
+    -- under '## completed tasks' heading
     chunk[1] = bulletToX(chunk[1])
     chunk[#chunk] = chunk[#chunk] .. " `completed: " .. timestamp .. "`"
     -- Remove chunk from the original lines
     for i = chunk_end, chunk_start, -1 do
       table.remove(lines, i + 1)
     end
-    ----------------------------------------------------------------------------
-    -- 6. Append chunk under '## completed tasks' (no extra blank line insertion)
-    ----------------------------------------------------------------------------
+    -- Append chunk under '## completed tasks'
     local heading_index = nil
     for i, line in ipairs(lines) do
       if line:match("^##%s+completed tasks") then
@@ -1619,7 +1634,6 @@ vim.keymap.set("n", "<M-x>", function()
       for _, cLine in ipairs(chunk) do
         table.insert(lines, cLine)
       end
-      -- Because we appended to the end, check if there's a blank line after
       local after_last_item = #lines + 1
       if lines[after_last_item] == "" then
         table.remove(lines, after_last_item)
@@ -1627,7 +1641,7 @@ vim.keymap.set("n", "<M-x>", function()
     end
     api.nvim_buf_set_lines(buf, 0, -1, false, lines)
   end
-end, { desc = "[P]Toggle task item, and move to '## completed tasks' in same file" })
+end, { desc = "Toggle bullet even if cursor is on multi-line text" })
 
 -- -- Toggle bullet point at the beginning of the current line in normal mode
 -- vim.keymap.set("n", "<leader>ml", function()

@@ -32,6 +32,7 @@ brew "zsh-autosuggestions"
 brew "zsh-vi-mode"
 cask "kitty"
 cask "wezterm"
+cask "ghostty"
 
 brew "jq"
 brew "sketchybar"

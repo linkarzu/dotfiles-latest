@@ -1519,13 +1519,18 @@ vim.keymap.set("n", "<M-x>", function()
     start_line = start_line - 1
   end
   -- Now we might be on a blank line or a bullet line
-  -- If we landed on a blank line, move down one (so we don't use the blank line).
   if lines[start_line + 1] == "" and start_line < (total_lines - 1) then
     start_line = start_line + 1
   end
-  -- If it's still not a bullet line, we have nowhere to toggle
-  if not lines[start_line + 1]:match("^%s*%-") then
-    -- Not a valid bullet line; do nothing
+  ------------------------------------------------------------------------------
+  -- (B) Validate that it's actually a task bullet, i.e. '- [ ]' or '- [x]'
+  ------------------------------------------------------------------------------
+  local bullet_line = lines[start_line + 1]
+  -- This pattern allows optional whitespace, then '-', a space, then '[x ]'
+  -- e.g.: "- [ ]" or "- [x]"
+  if not bullet_line:match("^%s*%- %[[x ]%]") then
+    -- Not a task bullet => show a message and return
+    print("Not a task bullet: no action taken.")
     return
   end
   ------------------------------------------------------------------------------
@@ -1604,7 +1609,7 @@ vim.keymap.set("n", "<M-x>", function()
     updateBufferWithChunk(chunk)
   else
     -- Case C: No label => bullet -> - [x], add `` `completed: ...` ``, then move it
-    -- under '## completed tasks' heading
+    -- under '## completed tasks'
     chunk[1] = bulletToX(chunk[1])
     chunk[#chunk] = chunk[#chunk] .. " `completed: " .. timestamp .. "`"
     -- Remove chunk from the original lines
@@ -1641,7 +1646,7 @@ vim.keymap.set("n", "<M-x>", function()
     end
     api.nvim_buf_set_lines(buf, 0, -1, false, lines)
   end
-end, { desc = "Toggle bullet even if cursor is on multi-line text" })
+end, { desc = "Toggle bullet even if cursor is on multi-line text, validating tasks" })
 
 -- -- Toggle bullet point at the beginning of the current line in normal mode
 -- vim.keymap.set("n", "<leader>ml", function()

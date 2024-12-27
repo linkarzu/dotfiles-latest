@@ -1,5 +1,6 @@
 return {
   "nvimdev/dashboard-nvim",
+  enabled = vim.g.neovim_mode ~= "skitty", -- Disable lualine for skitty mode
   lazy = false, -- As https://github.com/nvimdev/dashboard-nvim/pull/450, dashboard-nvim shouldn't be lazy-loaded to properly handle stdin.
   opts = function()
     -- Font Name: ANSI Shadow

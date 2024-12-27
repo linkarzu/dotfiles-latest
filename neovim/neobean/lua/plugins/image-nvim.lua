@@ -58,7 +58,8 @@ return {
             -- cursor is at
             -- I set this to true, because if the file has way too many images
             -- it will be laggy and will take time for the initial load
-            only_render_image_at_cursor = true,
+            -- only_render_image_at_cursor = true,
+            only_render_image_at_cursor = vim.g.neovim_mode == "skitty" and false or true,
             -- markdown extensions (ie. quarto) can go here
             filetypes = { "markdown", "vimwiki", "html" },
           },
@@ -96,14 +97,17 @@ return {
         -- This is what I changed to make my images look smaller, like a
         -- thumbnail, the default value is 50
         -- max_height_window_percentage = 20,
-        max_height_window_percentage = 40,
+        -- max_height_window_percentage = 40,
+        -- 40 for my default nvim config and 30 for skitty
+        max_height_window_percentage = vim.g.neovim_mode == "skitty" and 30 or 40,
 
         -- toggles images when windows are overlapped
         window_overlap_clear_enabled = false,
         window_overlap_clear_ft_ignore = { "cmp_menu", "cmp_docs", "" },
 
         -- auto show/hide images when the editor gains/looses focus
-        editor_only_render_when_focused = true,
+        -- editor_only_render_when_focused = true,
+        editor_only_render_when_focused = vim.g.neovim_mode == "skitty" and false or true,
 
         -- auto show/hide images in the correct tmux window
         -- In the tmux.conf add `set -g visual-activity off`

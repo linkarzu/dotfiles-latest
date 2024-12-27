@@ -1,5 +1,8 @@
 -- https://github.com/HakonHarnes/img-clip.nvim
 
+-- Filename: ~/github/dotfiles-latest/neovim/neobean/lua/plugins/img-clip.lua
+-- ~/github/dotfiles-latest/neovim/neobean/lua/plugins/img-clip.lua
+
 return {
   "HakonHarnes/img-clip.nvim",
   event = "VeryLazy",
@@ -27,9 +30,14 @@ return {
       -- In my case, I want images to be where the file is, so I set it to true
       relative_to_current_file = true, ---@type boolean
 
-      -- I want to save the images in a directory named after the current file,
-      -- but I want the name of the dir to end with `-img`
-      dir_path = function()
+      -- -- I want to save the images in a directory named after the current file,
+      -- -- but I want the name of the dir to end with `-img`
+      -- dir_path = function()
+      --   return vim.fn.expand("%:t:r") .. "-img"
+      -- end,
+
+      -- Conditional dir_path based on skitty mode
+      dir_path = vim.g.neovim_mode == "skitty" and "img" or function()
         return vim.fn.expand("%:t:r") .. "-img"
       end,
 
@@ -99,7 +107,9 @@ return {
         -- template = "![$CURSOR]($FILE_PATH)", ---@type string
         --
         -- -- This will just statically type "Image" in the alternative text
-        template = "![Image]($FILE_PATH)", ---@type string
+        -- template = "![Image]($FILE_PATH)", ---@type string
+        -- Conditional template for skitty mode
+        template = vim.g.neovim_mode == "skitty" and "![i]($FILE_PATH)" or "![Image]($FILE_PATH)",
         --
         -- -- This will dynamically configure the alternative text to show the
         -- -- same that you configured as the "file_name" above

@@ -131,7 +131,8 @@ end
 return {
   "nvim-lualine/lualine.nvim",
   event = "VeryLazy",
-  enabled = true,
+  -- enabled = true,
+  enabled = vim.g.neovim_mode ~= "skitty", -- Disable lualine for skitty mode
   opts = function(_, opts)
     opts.sections.lualine_c = {
       {

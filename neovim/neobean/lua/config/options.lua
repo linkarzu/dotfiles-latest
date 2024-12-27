@@ -40,33 +40,151 @@ vim.opt.timeout = true
 -- Default neovim is 1,000 but lazyvim sets it to 300
 vim.opt.timeoutlen = 1000
 
--- I never used relative line numbers, so fuck that
--- Edit a few days after, I'll give them a try again, so re-enabled them
-vim.opt.relativenumber = true
-
 -- I find the animations a bit laggy
 vim.g.snacks_animate = false
 
--- Auto update plugins at startup
--- Tried to add this vimenter autocmd in the autocmds.lua file but it was never
--- triggered, this is because if I understand correctly Lazy.nvim delays the
--- loading of autocmds.lua until after VeryLazy or even after VimEnter
--- The fix is to add the autocmd to a file that’s loaded before VimEnter,
--- such as options.lua
--- https://github.com/LazyVim/LazyVim/issues/2592#issuecomment-2015093693
--- Only upate if there are updates
--- https://github.com/folke/lazy.nvim/issues/702#issuecomment-1903484213
-local function augroup(name)
-  return vim.api.nvim_create_augroup("lazyvim_" .. name, { clear = true })
-end
-vim.api.nvim_create_autocmd("VimEnter", {
-  group = augroup("autoupdate"),
-  callback = function()
-    if require("lazy.status").has_updates then
-      require("lazy").update({ show = false })
+-- Conditional settings based on mode
+if vim.g.neovim_mode == "skitty" then
+  vim.opt.laststatus = 2
+  vim.opt.statusline = "%m"
+
+  -- Line numbers
+  vim.opt.number = false
+  vim.opt.relativenumber = false
+
+  -- Disable the gutter
+  vim.opt.signcolumn = "no"
+
+  -- Text width and wrapping
+  vim.opt.textwidth = 33
+
+  -- -- I tried these 2 with prettier prosewrap in "preserve" mode, and I'm not sure
+  -- -- what they do, I think lines are wrapped, but existing ones are not, so if I
+  -- -- have files with really long lines, they will remain the same, also LF
+  -- -- characters were introduced at the end of each line, not sure, didn't test
+  -- -- enough
+  -- --
+  -- -- Wrap lines at convenient points, this comes enabled by default in lazyvim
+  vim.opt.linebreak = false
+
+  -- -- Disable line wrap, set to false by default in lazyvim
+  vim.opt.wrap = false
+
+  -- No colorcolumn in skitty
+  vim.opt.colorcolumn = ""
+
+  local colors = require("config.colors")
+  vim.cmd(string.format([[highlight WinBar1 guifg=%s]], colors["linkarzu_color03"]))
+  -- -- Set the winbar to display "skitty-notes" with the specified color
+  -- vim.opt.winbar = "%#WinBar1#   skitty-notes%*"
+  -- Set the winbar to display the current file name on the left and "linkarzu" aligned to the right
+  vim.opt.winbar = "%#WinBar1# %t%*%=%#WinBar1# linkarzu %*"
+else
+  -- I never used relative line numbers, so fuck that
+  -- Edit a few days after, I'll give them a try again, so re-enabled them
+  vim.opt.relativenumber = true
+
+  -- When text reaches this limit, it automatically wraps to the next line.
+  -- This WILL NOT auto wrap existing lines, or if you paste a long line into a
+  -- file it will not wrap it as well
+  -- https://www.reddit.com/r/neovim/comments/1av26kw/i_tried_to_figure_it_out_but_i_give_up_how_do_i/
+  vim.opt.textwidth = 80
+
+  -- Above option applies the setting to ALL file types, if you want to apply it
+  -- to specific files only
+  -- vim.api.nvim_create_autocmd("FileType", {
+  --   pattern = "markdown",
+  --   -- pattern = {"python", "javascript", "html"},
+  --   callback = function()
+  --     vim.opt_local.textwidth = 80
+  --   end,
+  -- })
+
+  -- -- Disable line wrap, set to false by default in lazyvim
+  vim.opt.wrap = true
+
+  -- Shows colorcolumn that helps me with markdown guidelines.
+  -- This is the vertical bar that shows the 80 character limit
+  -- This applies to ALL file types
+  vim.opt.colorcolumn = "80"
+
+  -- -- To apply it to markdown files only
+  -- vim.api.nvim_create_autocmd("BufWinEnter", {
+  --   pattern = { "*.md" },
+  --   callback = function()
+  --     vim.opt.colorcolumn = "80"
+  --     vim.opt.textwidth = 80
+  --   end,
+  -- })
+
+  -- Winbar
+  -- Require the colors.lua module and access the colors directly without
+  -- additional file reads
+  local colors = require("config.colors")
+  vim.cmd(string.format([[highlight WinBar1 guifg=%s]], colors["linkarzu_color03"]))
+  vim.cmd(string.format([[highlight WinBar2 guifg=%s]], colors["linkarzu_color02"]))
+  -- Function to get the full path and replace the home directory with ~
+  local function get_winbar_path()
+    local full_path = vim.fn.expand("%:p")
+    return full_path:gsub(vim.fn.expand("$HOME"), "~")
+  end
+  -- Function to get the number of open buffers using the :ls command
+  local function get_buffer_count()
+    local buffers = vim.fn.execute("ls")
+    local count = 0
+    -- Match only lines that represent buffers, typically starting with a number followed by a space
+    for line in string.gmatch(buffers, "[^\r\n]+") do
+      if string.match(line, "^%s*%d+") then
+        count = count + 1
+      end
     end
-  end,
-})
+    return count
+  end
+  -- Function to update the winbar
+  local function update_winbar()
+    local home_replaced = get_winbar_path()
+    local buffer_count = get_buffer_count()
+    vim.opt.winbar = "%#WinBar1#%m "
+      .. "%#WinBar2#("
+      .. buffer_count
+      .. ") "
+      .. "%#WinBar1#"
+      .. home_replaced
+      .. "%*%=%#WinBar2#"
+    -- I don't need the hostname as I have it in lualine
+    -- .. vim.fn.systemlist("hostname")[1]
+  end
+  -- Autocmd to update the winbar on BufEnter and WinEnter events
+  vim.api.nvim_create_autocmd({ "BufEnter", "WinEnter" }, {
+    callback = update_winbar,
+  })
+end
+
+-- -- I tried these 2 with prettier prosewrap in "preserve" mode, and I'm not sure
+-- -- what they do, I think lines are wrapped, but existing ones are not, so if I
+-- -- have files with really long lines, they will remain the same, also LF
+-- -- characters were introduced at the end of each line, not sure, didn't test
+-- -- enough
+-- --
+-- -- Wrap lines at convenient points, this comes enabled by default in lazyvim
+-- vim.opt.linebreak = true
+
+-- -- This is my old way of updating the winbar but it stopped working, it
+-- -- wasn't showing the entire path, it was being truncated in some dirs
+-- vim.opt.winbar = "%#WinBar1#%m %f%*%=%#WinBar2#" .. vim.fn.systemlist("hostname")[1]
+
+-- Enable autochdir to automatically change the working directory to the current file's directory
+-- If you go inside a subdir, neotree will open that dir as the root
+-- vim.opt.autochdir = true
+
+-- Keeps my cursor in the middle whenever possible
+-- This didn't work as expected, but the `stay-centered.lua` plugin did the trick
+-- vim.opt.scrolloff = 999
+
+-- If set to 0 it shows all the symbols in a file, like bulletpoints and
+-- codeblock languages, obsidian.nvim works better with 1 or 2
+-- Set it to 2 if using kitty or codeblocks will look weird
+vim.opt.conceallevel = 0
 
 -- Function to get the model of my mac, can be used by copilot-chat plugin
 local function get_computer_model()
@@ -91,104 +209,26 @@ vim.api.nvim_create_user_command("ShowComputerModel", function()
   print("Computer Model: " .. model)
 end, {})
 
--- Require the colors.lua module and access the colors directly without
--- additional file reads
-local colors = require("config.colors")
-vim.cmd(string.format([[highlight WinBar1 guifg=%s]], colors["linkarzu_color03"]))
-vim.cmd(string.format([[highlight WinBar2 guifg=%s]], colors["linkarzu_color02"]))
--- Function to get the full path and replace the home directory with ~
-local function get_winbar_path()
-  local full_path = vim.fn.expand("%:p")
-  return full_path:gsub(vim.fn.expand("$HOME"), "~")
+-- Auto update plugins at startup
+-- Tried to add this vimenter autocmd in the autocmds.lua file but it was never
+-- triggered, this is because if I understand correctly Lazy.nvim delays the
+-- loading of autocmds.lua until after VeryLazy or even after VimEnter
+-- The fix is to add the autocmd to a file that’s loaded before VimEnter,
+-- such as options.lua
+-- https://github.com/LazyVim/LazyVim/issues/2592#issuecomment-2015093693
+-- Only upate if there are updates
+-- https://github.com/folke/lazy.nvim/issues/702#issuecomment-1903484213
+local function augroup(name)
+  return vim.api.nvim_create_augroup("lazyvim_" .. name, { clear = true })
 end
--- Function to get the number of open buffers using the :ls command
-local function get_buffer_count()
-  local buffers = vim.fn.execute("ls")
-  local count = 0
-  -- Match only lines that represent buffers, typically starting with a number followed by a space
-  for line in string.gmatch(buffers, "[^\r\n]+") do
-    if string.match(line, "^%s*%d+") then
-      count = count + 1
+vim.api.nvim_create_autocmd("VimEnter", {
+  group = augroup("autoupdate"),
+  callback = function()
+    if require("lazy.status").has_updates then
+      require("lazy").update({ show = false })
     end
-  end
-  return count
-end
--- Function to update the winbar
-local function update_winbar()
-  local home_replaced = get_winbar_path()
-  local buffer_count = get_buffer_count()
-  vim.opt.winbar = "%#WinBar1#%m "
-    .. "%#WinBar2#("
-    .. buffer_count
-    .. ") "
-    .. "%#WinBar1#"
-    .. home_replaced
-    .. "%*%=%#WinBar2#"
-  -- I don't need the hostname as I have it in lualine
-  -- .. vim.fn.systemlist("hostname")[1]
-end
--- Autocmd to update the winbar on BufEnter and WinEnter events
-vim.api.nvim_create_autocmd({ "BufEnter", "WinEnter" }, {
-  callback = update_winbar,
+  end,
 })
-
--- -- I tried these 2 with prettier prosewrap in "preserve" mode, and I'm not sure
--- -- what they do, I think lines are wrapped, but existing ones are not, so if I
--- -- have files with really long lines, they will remain the same, also LF
--- -- characters were introduced at the end of each line, not sure, didn't test
--- -- enough
--- --
--- -- Wrap lines at convenient points, this comes enabled by default in lazyvim
--- vim.opt.linebreak = true
--- -- Disable line wrap, set to false by default in lazyvim
-vim.opt.wrap = true
-
--- -- This is my old way of updating the winbar but it stopped working, it
--- -- wasn't showing the entire path, it was being truncated in some dirs
--- vim.opt.winbar = "%#WinBar1#%m %f%*%=%#WinBar2#" .. vim.fn.systemlist("hostname")[1]
-
--- If set to 0 it shows all the symbols in a file, like bulletpoints and
--- codeblock languages, obsidian.nvim works better with 1 or 2
--- Set it to 2 if using kitty or codeblocks will look weird
-vim.opt.conceallevel = 0
-
--- Enable autochdir to automatically change the working directory to the current file's directory
--- If you go inside a subdir, neotree will open that dir as the root
--- vim.opt.autochdir = true
-
--- Keeps my cursor in the middle whenever possible
--- This didn't work as expected, but the `stay-centered.lua` plugin did the trick
--- vim.opt.scrolloff = 999
-
--- When text reaches this limit, it automatically wraps to the next line.
--- This WILL NOT auto wrap existing lines, or if you paste a long line into a
--- file it will not wrap it as well
--- https://www.reddit.com/r/neovim/comments/1av26kw/i_tried_to_figure_it_out_but_i_give_up_how_do_i/
-vim.opt.textwidth = 80
-
--- Above option applies the setting to ALL file types, if you want to apply it
--- to specific files only
--- vim.api.nvim_create_autocmd("FileType", {
---   pattern = "markdown",
---   -- pattern = {"python", "javascript", "html"},
---   callback = function()
---     vim.opt_local.textwidth = 80
---   end,
--- })
-
--- Shows colorcolumn that helps me with markdown guidelines.
--- This is the vertical bar that shows the 80 character limit
--- This applies to ALL file types
-vim.opt.colorcolumn = "80"
-
--- -- To apply it to markdown files only
--- vim.api.nvim_create_autocmd("BufWinEnter", {
---   pattern = { "*.md" },
---   callback = function()
---     vim.opt.colorcolumn = "80"
---     vim.opt.textwidth = 80
---   end,
--- })
 
 -- I added `localoptions` to save the language spell settings, otherwise, the
 -- language of my markdown documents was not remembered if I set it to spanish

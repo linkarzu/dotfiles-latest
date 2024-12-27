@@ -1489,12 +1489,12 @@ vim.keymap.set("n", "<leader>md", function()
   vim.api.nvim_buf_set_lines(current_buffer, start_row, end_row + 1, false, new_lines)
 end, { desc = "[P]Toggle bullet point (dash)" })
 
--- If there is no `untoggled` or `completed` label on an item, mark it as done
+-- If there is no `untoggled` or `done` label on an item, mark it as done
 -- and move it to the "## completed tasks" markdown heading in the same file, if
 -- the heading does not exist, it will be created, if it exists, items will be
 -- appended to it at the top
 --
--- If an item is moved to that heading, it will be added the `completed` label
+-- If an item is moved to that heading, it will be added the `done` label
 vim.keymap.set("n", "<M-x>", function()
   local api = vim.api
   -- Retrieve buffer & lines
@@ -1526,8 +1526,6 @@ vim.keymap.set("n", "<M-x>", function()
   -- (B) Validate that it's actually a task bullet, i.e. '- [ ]' or '- [x]'
   ------------------------------------------------------------------------------
   local bullet_line = lines[start_line + 1]
-  -- This pattern allows optional whitespace, then '-', a space, then '[x ]'
-  -- e.g.: "- [ ]" or "- [x]"
   if not bullet_line:match("^%s*%- %[[x ]%]") then
     -- Not a task bullet => show a message and return
     print("Not a task bullet: no action taken.")
@@ -1551,21 +1549,21 @@ vim.keymap.set("n", "<M-x>", function()
     table.insert(chunk, lines[i + 1])
   end
   ------------------------------------------------------------------------------
-  -- 2. Check if chunk has [completed: ...] or [untoggled], then transform them
+  -- 2. Check if chunk has [done: ...] or [untoggled], then transform them
   ------------------------------------------------------------------------------
-  local has_completed_index = nil
+  local has_done_index = nil
   local has_untoggled_index = nil
   for i, line in ipairs(chunk) do
-    -- Replace `[completed: ...]` with `` `completed: ...` ``
-    chunk[i] = line:gsub("%[completed:([^%]]+)%]", "`completed:%1`")
-    -- Replace `[untoggled]` with `` `untoggled` ``
+    -- Replace `[done: ...]` -> `` `done: ...` ``
+    chunk[i] = line:gsub("%[done:([^%]]+)%]", "`done:%1`")
+    -- Replace `[untoggled]` -> `` `untoggled` ``
     chunk[i] = chunk[i]:gsub("%[untoggled%]", "`untoggled`")
-    if chunk[i]:match("`completed:.-`") then
-      has_completed_index = i
+    if chunk[i]:match("`done:.-`") then
+      has_done_index = i
       break
     end
   end
-  if not has_completed_index then
+  if not has_done_index then
     for i, line in ipairs(chunk) do
       if line:match("`untoggled`") then
         has_untoggled_index = i
@@ -1576,16 +1574,32 @@ vim.keymap.set("n", "<M-x>", function()
   ------------------------------------------------------------------------------
   -- 3. Helpers to toggle bullet
   ------------------------------------------------------------------------------
+  -- Convert '- [ ]' to '- [x]'
   local function bulletToX(line)
-    -- Convert '- [ ]' to '- [x]'
     return line:gsub("^(%s*%- )%[%s*%]", "%1[x]")
   end
+  -- Convert '- [x]' to '- [ ]'
   local function bulletToBlank(line)
-    -- Convert '- [x]' to '- [ ]'
     return line:gsub("^(%s*%- )%[x%]", "%1[ ]")
   end
   ------------------------------------------------------------------------------
-  -- 4. Update the buffer with new chunk lines (in place)
+  -- 4. Insert or remove label *after* the bracket
+  ------------------------------------------------------------------------------
+  local function insertLabelAfterBracket(line, label)
+    local prefix = line:match("^(%s*%- %[[x ]%])")
+    if not prefix then
+      return line
+    end
+    local rest = line:sub(#prefix + 1)
+    return prefix .. " " .. label .. rest
+  end
+  local function removeLabel(line)
+    -- If there's a label (like `` `done: ...` `` or `` `untoggled` ``) right after
+    -- '- [x]' or '- [ ]', remove it
+    return line:gsub("^(%s*%- %[[x ]%])%s+`.-`", "%1")
+  end
+  ------------------------------------------------------------------------------
+  -- 5. Update the buffer with new chunk lines (in place)
   ------------------------------------------------------------------------------
   local function updateBufferWithChunk(new_chunk)
     for idx = chunk_start, chunk_end do
@@ -1594,24 +1608,36 @@ vim.keymap.set("n", "<M-x>", function()
     api.nvim_buf_set_lines(buf, 0, -1, false, lines)
   end
   ------------------------------------------------------------------------------
-  -- 5. Main toggle logic
+  -- 6. Main toggle logic
   ------------------------------------------------------------------------------
   local timestamp = os.date("%y%m%d-%H%M%S")
-  if has_completed_index then
-    -- Case A: Found `` `completed: ...` `` => Toggle to `` `untoggled` ``, bullet -> - [ ]
-    chunk[has_completed_index] = chunk[has_completed_index]:gsub("`completed:.-`", "`untoggled`")
+  if has_done_index then
+    ----------------------------------------------------------------------------
+    -- Case A: Currently has `done: ...`, so toggle to `untoggled`, bullet->- [ ]
+    ----------------------------------------------------------------------------
+    -- Remove existing label from the line that has it
+    chunk[has_done_index] = removeLabel(chunk[has_done_index]):gsub("`done:.-`", "`untoggled`")
+    -- Also bullet-> [ ]
     chunk[1] = bulletToBlank(chunk[1])
+    chunk[1] = removeLabel(chunk[1])
+    chunk[1] = insertLabelAfterBracket(chunk[1], "`untoggled`")
     updateBufferWithChunk(chunk)
   elseif has_untoggled_index then
-    -- Case B: Found `` `untoggled` `` => Toggle to `` `completed: ...` ``, bullet -> - [x]
-    chunk[has_untoggled_index] = chunk[has_untoggled_index]:gsub("`untoggled`", "`completed: " .. timestamp .. "`")
+    ----------------------------------------------------------------------------
+    -- Case B: Found `untoggled`, so toggle to `done: <timestamp>`, bullet-> - [x]
+    ----------------------------------------------------------------------------
+    chunk[has_untoggled_index] =
+      removeLabel(chunk[has_untoggled_index]):gsub("`untoggled`", "`done: " .. timestamp .. "`")
     chunk[1] = bulletToX(chunk[1])
+    chunk[1] = removeLabel(chunk[1])
+    chunk[1] = insertLabelAfterBracket(chunk[1], "`done: " .. timestamp .. "`")
     updateBufferWithChunk(chunk)
   else
-    -- Case C: No label => bullet -> - [x], add `` `completed: ...` ``, then move it
-    -- under '## completed tasks'
+    ----------------------------------------------------------------------------
+    -- Case C: No label => bullet-> - [x], add `done: ...`, then move it under heading
+    ----------------------------------------------------------------------------
     chunk[1] = bulletToX(chunk[1])
-    chunk[#chunk] = chunk[#chunk] .. " `completed: " .. timestamp .. "`"
+    chunk[1] = insertLabelAfterBracket(chunk[1], "`done: " .. timestamp .. "`")
     -- Remove chunk from the original lines
     for i = chunk_end, chunk_start, -1 do
       table.remove(lines, i + 1)
@@ -1646,7 +1672,7 @@ vim.keymap.set("n", "<M-x>", function()
     end
     api.nvim_buf_set_lines(buf, 0, -1, false, lines)
   end
-end, { desc = "Toggle bullet even if cursor is on multi-line text, validating tasks" })
+end, { desc = "[P]Toggle task and move it to 'done'" })
 
 -- -- Toggle bullet point at the beginning of the current line in normal mode
 -- vim.keymap.set("n", "<leader>ml", function()

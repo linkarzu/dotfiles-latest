@@ -101,25 +101,25 @@ create_symlink ~/github/dotfiles-latest/wezterm/wezterm.lua ~/.config/wezterm/we
 create_symlink ~/github/dotfiles-latest/yabai/yabairc ~/.yabairc
 create_symlink ~/github/dotfiles-latest/.prettierrc.yaml ~/.prettierrc.yaml
 create_symlink ~/github/dotfiles-latest/vscode/settings.json "$HOME/Library/Application Support/Code/User/settings.json"
-# Below symlinks are dumb and I need to find a better way to create a new neovim config and
-# just override the settings that I don't need, don't have time for that right now
-create_symlink ~/github/dotfiles-latest/neovim/neobean/lua/config/autocmds.lua ~/github/dotfiles-latest/neovim/neobean-sticky/lua/config/autocmds.lua
-create_symlink ~/github/dotfiles-latest/neovim/neobean/lua/config/colors.lua ~/github/dotfiles-latest/neovim/neobean-sticky/lua/config/colors.lua
-create_symlink ~/github/dotfiles-latest/neovim/neobean/lua/config/highlights.lua ~/github/dotfiles-latest/neovim/neobean-sticky/lua/config/highlights.lua
-create_symlink ~/github/dotfiles-latest/neovim/neobean/lua/config/keymaps.lua ~/github/dotfiles-latest/neovim/neobean-sticky/lua/config/keymaps.lua
-create_symlink ~/github/dotfiles-latest/neovim/neobean/lua/plugins/telescope.lua ~/github/dotfiles-latest/neovim/neobean-sticky/lua/plugins/telescope.lua
-create_symlink ~/github/dotfiles-latest/neovim/neobean/lua/plugins/auto-save.lua ~/github/dotfiles-latest/neovim/neobean-sticky/lua/plugins/auto-save.lua
-create_symlink ~/github/dotfiles-latest/neovim/neobean/lua/plugins/mini-files.lua ~/github/dotfiles-latest/neovim/neobean-sticky/lua/plugins/mini-files.lua
-create_symlink ~/github/dotfiles-latest/neovim/neobean/lua/plugins/render-markdown.lua ~/github/dotfiles-latest/neovim/neobean-sticky/lua/plugins/render-markdown.lua
-create_symlink ~/github/dotfiles-latest/neovim/neobean/lua/plugins/core.lua ~/github/dotfiles-latest/neovim/neobean-sticky/lua/plugins/core.lua
-create_symlink ~/github/dotfiles-latest/neovim/neobean/lua/plugins/luasnip.lua ~/github/dotfiles-latest/neovim/neobean-sticky/lua/plugins/luasnip.lua
-create_symlink ~/github/dotfiles-latest/neovim/neobean/lua/plugins/stay-centered.lua ~/github/dotfiles-latest/neovim/neobean-sticky/lua/plugins/stay-centered.lua
-create_symlink ~/github/dotfiles-latest/neovim/neobean/init.lua ~/github/dotfiles-latest/neovim/neobean-sticky/init.lua
 create_symlink ~/github/dotfiles-latest/lazygit/config.yml "$HOME/Library/Application Support/lazygit/config.yml"
+
+# # Below symlinks are dumb and I need to find a better way to create a new neovim config and
+# # just override the settings that I don't need, don't have time for that right now
+# create_symlink ~/github/dotfiles-latest/neovim/neobean/lua/config/autocmds.lua ~/github/dotfiles-latest/neovim/neobean-sticky/lua/config/autocmds.lua
+# create_symlink ~/github/dotfiles-latest/neovim/neobean/lua/config/colors.lua ~/github/dotfiles-latest/neovim/neobean-sticky/lua/config/colors.lua
+# create_symlink ~/github/dotfiles-latest/neovim/neobean/lua/config/highlights.lua ~/github/dotfiles-latest/neovim/neobean-sticky/lua/config/highlights.lua
+# create_symlink ~/github/dotfiles-latest/neovim/neobean/lua/config/keymaps.lua ~/github/dotfiles-latest/neovim/neobean-sticky/lua/config/keymaps.lua
+# create_symlink ~/github/dotfiles-latest/neovim/neobean/lua/plugins/telescope.lua ~/github/dotfiles-latest/neovim/neobean-sticky/lua/plugins/telescope.lua
+# create_symlink ~/github/dotfiles-latest/neovim/neobean/lua/plugins/auto-save.lua ~/github/dotfiles-latest/neovim/neobean-sticky/lua/plugins/auto-save.lua
+# create_symlink ~/github/dotfiles-latest/neovim/neobean/lua/plugins/mini-files.lua ~/github/dotfiles-latest/neovim/neobean-sticky/lua/plugins/mini-files.lua
+# create_symlink ~/github/dotfiles-latest/neovim/neobean/lua/plugins/render-markdown.lua ~/github/dotfiles-latest/neovim/neobean-sticky/lua/plugins/render-markdown.lua
+# create_symlink ~/github/dotfiles-latest/neovim/neobean/lua/plugins/core.lua ~/github/dotfiles-latest/neovim/neobean-sticky/lua/plugins/core.lua
+# create_symlink ~/github/dotfiles-latest/neovim/neobean/lua/plugins/luasnip.lua ~/github/dotfiles-latest/neovim/neobean-sticky/lua/plugins/luasnip.lua
+# create_symlink ~/github/dotfiles-latest/neovim/neobean/lua/plugins/stay-centered.lua ~/github/dotfiles-latest/neovim/neobean-sticky/lua/plugins/stay-centered.lua
+# create_symlink ~/github/dotfiles-latest/neovim/neobean/init.lua ~/github/dotfiles-latest/neovim/neobean-sticky/init.lua
 
 # Creating symlinks for directories
 create_symlink ~/github/dotfiles-latest/neovim/neobean/ ~/.config/neobean
-create_symlink ~/github/dotfiles-latest/neovim/neobean-sticky/ ~/.config/neobean-sticky
 create_symlink ~/github/dotfiles-latest/neovim/quarto-nvim-kickstarter/ ~/.config/quarto-nvim-kickstarter
 create_symlink ~/github/dotfiles-latest/neovim/kickstart.nvim/ ~/.config/kickstart.nvim
 create_symlink ~/github/dotfiles-latest/neovim/lazyvim/ ~/.config/lazyvim
@@ -131,9 +131,12 @@ create_symlink ~/github/dotfiles-latest/ghostty/ ~/.config/ghostty
 create_symlink ~/github/dotfiles-latest/rio/ ~/.config/rio
 create_symlink ~/github/dotfiles-latest/yazi/ ~/.config/yazi
 create_symlink ~/github/dotfiles-latest/btop/ ~/.config/btop
-create_symlink ~/github/dotfiles-latest/neovim/neobean/spell/ ~/github/dotfiles-latest/neovim/neobean-sticky/spell
-create_symlink ~/github/dotfiles-latest/neovim/neobean/snippets/ ~/github/dotfiles-latest/neovim/neobean-sticky/snippets
-create_symlink ~/github/dotfiles-latest/neovim/neobean/lua/config/modules/ ~/github/dotfiles-latest/neovim/neobean-sticky/lua/config/modules
+
+# create_symlink ~/github/dotfiles-latest/neovim/neobean-sticky/ ~/.config/neobean-sticky
+# create_symlink ~/github/dotfiles-latest/neovim/neobean/spell/ ~/github/dotfiles-latest/neovim/neobean-sticky/spell
+# create_symlink ~/github/dotfiles-latest/neovim/neobean/snippets/ ~/github/dotfiles-latest/neovim/neobean-sticky/snippets
+# create_symlink ~/github/dotfiles-latest/neovim/neobean/lua/config/modules/ ~/github/dotfiles-latest/neovim/neobean-sticky/lua/config/modules
+
 # # Notice I also have the "nvim" directory below and I have it pointing to my
 # # "neobean" config.
 # # If I don't do this, my daily note with hyper+t+r won't work

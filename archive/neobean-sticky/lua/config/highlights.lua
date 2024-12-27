@@ -1,0 +1,1 @@
+/Users/linkarzu/github/dotfiles-latest/neovim/neobean/lua/config/highlights.lua

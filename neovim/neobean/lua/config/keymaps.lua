@@ -1530,7 +1530,7 @@ end, { desc = "[P]Toggle bullet point (dash)" })
 -- If there is no `untoggled` or `done` label on an item, mark it as done
 -- and move it to the "## completed tasks" markdown heading in the same file, if
 -- the heading does not exist, it will be created, if it exists, items will be
--- appended to it at the top
+-- appended to it at the top lamw25wmal
 --
 -- If an item is moved to that heading, it will be added the `done` label
 vim.keymap.set("n", "<M-x>", function()

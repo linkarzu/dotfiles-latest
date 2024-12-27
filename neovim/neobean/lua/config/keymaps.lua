@@ -1489,44 +1489,29 @@ vim.keymap.set("n", "<leader>md", function()
   vim.api.nvim_buf_set_lines(current_buffer, start_row, end_row + 1, false, new_lines)
 end, { desc = "[P]Toggle bullet point (dash)" })
 
--- If there is no [untoggled] or [completed] label on an item, mark it as done
--- and move it to the "done" folder in same location of original <filename.md>
--- file, this new file will have the name <filename-done.md>
+-- If there is no `untoggled` or `completed` label on an item, mark it as done
+-- and move it to the "## completed tasks" markdown heading in the same file, if
+-- the heading does not exist, it will be created, if it exists, items will be
+-- appended to it at the top
 --
--- If an item is moved to that file, it will be added the [completed] label
---
--- If an item already has any of those 2 labels, they will not be moved anymore,
--- just switch the labels between [untoggled] and [completed]
---
--- To move files out of the done folder, you'll have to do it manually
+-- If an item is moved to that heading, it will be added the `completed` label
 vim.keymap.set("n", "<M-x>", function()
   local api = vim.api
-  local fn = vim.fn
-
-  -- Debug: Start
-  print("== <M-x> keymap triggered ==")
-
-  -- Retrieve buffer/cursor info
+  -- Retrieve buffer & lines
   local buf = api.nvim_get_current_buf()
-  local cursor_pos = vim.api.nvim_win_get_cursor(0)
+  local cursor_pos = api.nvim_win_get_cursor(0)
   local start_line = cursor_pos[1] - 1
   local lines = api.nvim_buf_get_lines(buf, 0, -1, false)
   local total_lines = #lines
-
-  -- Debug: Show some basic info about the environment
-  print("Current buffer:", buf, "start_line:", start_line, "total_lines:", total_lines)
-
+  -- If cursor is beyond last line, do nothing
   if start_line >= total_lines then
-    print("Cursor is beyond the last line; no action taken.")
     return
   end
-
   ------------------------------------------------------------------------------
   -- 1. Identify the chunk boundaries
   ------------------------------------------------------------------------------
   local chunk_start = start_line
   local chunk_end = start_line
-
   while chunk_end + 1 < total_lines do
     local next_line = lines[chunk_end + 2]
     if next_line == "" or next_line:match("^%s*%-") then
@@ -1534,149 +1519,115 @@ vim.keymap.set("n", "<M-x>", function()
     end
     chunk_end = chunk_end + 1
   end
-
-  -- Debug: Boundaries found
-  print("Chunk boundaries identified: chunk_start =", chunk_start, "chunk_end =", chunk_end)
-
-  -- Gather the lines for this chunk
+  -- Collect the chunk lines
   local chunk = {}
   for i = chunk_start, chunk_end do
     table.insert(chunk, lines[i + 1])
   end
-
-  -- Debug: Show the lines we extracted as the chunk
-  print("Extracted chunk:\n", vim.inspect(chunk))
-
   ------------------------------------------------------------------------------
-  -- 2. Check all lines for [completed: ...] or [untoggled]
+  -- 2. Check if chunk has [completed: ...] or [untoggled], and transform them
   ------------------------------------------------------------------------------
   local has_completed_index = nil
   local has_untoggled_index = nil
-
   for i, line in ipairs(chunk) do
-    if line:match("%[completed:.-%]") then
+    -- Replace `[completed: ...]` with `` `completed: ...` ``
+    -- We capture everything after 'completed:' up to the closing bracket
+    chunk[i] = line:gsub("%[completed:([^%]]+)%]", "`completed:%1`")
+    -- Replace `[untoggled]` with `` `untoggled` ``
+    chunk[i] = chunk[i]:gsub("%[untoggled%]", "`untoggled`")
+    -- After replacing, check if the new line contains `` `completed: ...` ``
+    -- or `` `untoggled` `` to see which state it was in.
+    if chunk[i]:match("`completed:.-`") then
       has_completed_index = i
       break
     end
   end
-
+  -- If we didn't detect `` `completed: ...` ``, look for `` `untoggled` ``.
   if not has_completed_index then
     for i, line in ipairs(chunk) do
-      if line:match("%[untoggled%]") then
+      if line:match("`untoggled`") then
         has_untoggled_index = i
         break
       end
     end
   end
-
-  -- Debug: Results of label checks
-  print("has_completed_index =", tostring(has_completed_index), "has_untoggled_index =", tostring(has_untoggled_index))
-
   ------------------------------------------------------------------------------
-  -- 3. Small helpers to toggle bullet
+  -- 3. Helpers to toggle bullet
   ------------------------------------------------------------------------------
   local function bulletToX(line)
     -- Convert '- [ ]' to '- [x]'
     return line:gsub("^(%s*%- )%[%s*%]", "%1[x]")
   end
-
   local function bulletToBlank(line)
     -- Convert '- [x]' to '- [ ]'
     return line:gsub("^(%s*%- )%[x%]", "%1[ ]")
   end
-
   ------------------------------------------------------------------------------
-  -- 4. Update the buffer with new chunk lines
+  -- 4. Update the buffer with new chunk lines (in place)
   ------------------------------------------------------------------------------
   local function updateBufferWithChunk(new_chunk)
-    -- Debug
-    print("Updating buffer with new_chunk:\n", vim.inspect(new_chunk))
-
     for idx = chunk_start, chunk_end do
       lines[idx + 1] = new_chunk[idx - chunk_start + 1]
     end
     api.nvim_buf_set_lines(buf, 0, -1, false, lines)
   end
-
   ------------------------------------------------------------------------------
   -- 5. Main toggle logic
   ------------------------------------------------------------------------------
   local timestamp = os.date("%y%m%d-%H%M%S")
-
   if has_completed_index then
-    ----------------------------------------------------------------------------
-    -- Case A: Found [completed: ...] => Toggle to [untoggled], bullet -> - [ ]
-    ----------------------------------------------------------------------------
-    print("== Case A triggered: [completed: ...] detected at line index", has_completed_index, "==")
-
-    chunk[has_completed_index] = chunk[has_completed_index]:gsub("%[completed:.-%]", "[untoggled]")
+    -- Case A: Found `` `completed: ...` `` => Toggle to `` `untoggled` ``, bullet -> - [ ]
+    chunk[has_completed_index] = chunk[has_completed_index]:gsub("`completed:.-`", "`untoggled`")
     chunk[1] = bulletToBlank(chunk[1])
     updateBufferWithChunk(chunk)
   elseif has_untoggled_index then
-    ----------------------------------------------------------------------------
-    -- Case B: Found [untoggled] => Toggle to [completed: <timestamp>], bullet -> - [x]
-    ----------------------------------------------------------------------------
-    print("== Case B triggered: [untoggled] detected at line index", has_untoggled_index, "==")
-
-    chunk[has_untoggled_index] = chunk[has_untoggled_index]:gsub("%[untoggled%]", "[completed: " .. timestamp .. "]")
+    -- Case B: Found `` `untoggled` `` => Toggle to `` `completed: ...` ``, bullet -> - [x]
+    chunk[has_untoggled_index] = chunk[has_untoggled_index]:gsub("`untoggled`", "`completed: " .. timestamp .. "`")
     chunk[1] = bulletToX(chunk[1])
     updateBufferWithChunk(chunk)
   else
-    ----------------------------------------------------------------------------
-    -- Case C: No label => bullet -> - [x], add [completed: ...], move chunk
-    ----------------------------------------------------------------------------
-    print("== Case C triggered: no labels found, moving chunk to done file ==")
-
+    -- Case C: No label => bullet -> - [x], add `` `completed: ...` ``, then
+    -- move it under '## completed tasks'
     chunk[1] = bulletToX(chunk[1])
-    chunk[#chunk] = chunk[#chunk] .. " [completed: " .. timestamp .. "]"
-
-    -- Debug: Show chunk before removing it from source file
-    print("Final chunk to remove from source:\n", vim.inspect(chunk))
-
+    chunk[#chunk] = chunk[#chunk] .. " `completed: " .. timestamp .. "`"
+    -- Remove chunk from the original lines
     for i = chunk_end, chunk_start, -1 do
       table.remove(lines, i + 1)
     end
-    api.nvim_buf_set_lines(buf, 0, -1, false, lines)
-
     ----------------------------------------------------------------------------
-    -- Write chunk to done/<filename>-done.md
+    -- 6. Append chunk under '## completed tasks' (no extra blank line insertion)
     ----------------------------------------------------------------------------
-    local current_file = fn.expand("%:p")
-    local current_dir = fn.fnamemodify(current_file, ":h")
-    local base_name = fn.fnamemodify(current_file, ":t:r")
-    local done_dir = current_dir .. "/done"
-    local done_file = done_dir .. "/" .. base_name .. "-done.md"
-
-    if fn.isdirectory(done_dir) == 0 then
-      print("Creating 'done' directory at:", done_dir)
-      fn.mkdir(done_dir, "p")
+    local heading_index = nil
+    for i, line in ipairs(lines) do
+      if line:match("^##%s+completed tasks") then
+        heading_index = i
+        break
+      end
     end
-
-    print("Appending to done file:", done_file)
-    print("Chunk to append:\n", vim.inspect(chunk))
-    fn.writefile(chunk, done_file, "a")
-
-    ----------------------------------------------------------------------------
-    -- 6. Force a save on done_file (hidden buffer approach)
-    ----------------------------------------------------------------------------
-    local done_bufnr = fn.bufadd(done_file)
-    fn.bufload(done_bufnr)
-
-    print("Writing (force) to done_bufnr =", done_bufnr, "File:", done_file)
-
-    api.nvim_buf_call(done_bufnr, function()
-      -- Force the write silently, no confirmation prompts
-      vim.cmd("silent! write!")
-    end)
-
-    vim.cmd("bdelete! " .. done_bufnr)
-
-    print("Done file has been written and buffer closed:", done_file)
+    if heading_index then
+      for _, cLine in ipairs(chunk) do
+        table.insert(lines, heading_index + 1, cLine)
+        heading_index = heading_index + 1
+      end
+      -- Remove any blank line right after newly inserted chunk
+      local after_last_item = heading_index + 1
+      if lines[after_last_item] == "" then
+        table.remove(lines, after_last_item)
+      end
+    else
+      table.insert(lines, "## completed tasks")
+      for _, cLine in ipairs(chunk) do
+        table.insert(lines, cLine)
+      end
+      -- Because we appended to the end, check if there's a blank line after
+      local after_last_item = #lines + 1
+      if lines[after_last_item] == "" then
+        table.remove(lines, after_last_item)
+      end
+    end
+    api.nvim_buf_set_lines(buf, 0, -1, false, lines)
   end
-
-  -- Debug: All done
-  print("== <M-x> keymap operation completed ==")
-end, { desc = "[P]Toggle task item, and move to done file" })
+end, { desc = "[P]Toggle task item, and move to '## completed tasks' in same file" })
 
 -- -- Toggle bullet point at the beginning of the current line in normal mode
 -- vim.keymap.set("n", "<leader>ml", function()

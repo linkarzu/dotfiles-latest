@@ -1489,28 +1489,58 @@ vim.keymap.set("n", "<leader>md", function()
   vim.api.nvim_buf_set_lines(current_buffer, start_row, end_row + 1, false, new_lines)
 end, { desc = "[P]Toggle bullet point (dash)" })
 
--- Toggle checklist bullet point `- [ ]` or `- [x]` on the current line
 vim.keymap.set("n", "<M-x>", function()
-  -- Get the current cursor position and buffer
-  local cursor_pos = vim.api.nvim_win_get_cursor(0)
-  local current_buffer = vim.api.nvim_get_current_buf()
-  local row = cursor_pos[1] - 1
+  local api = vim.api
+  local fn = vim.fn
 
-  -- Get the current line
-  local line = vim.api.nvim_buf_get_lines(current_buffer, row, row + 1, false)[1]
+  -- Get buffer + cursor info
+  local buf = api.nvim_get_current_buf()
+  local cursor_pos = api.nvim_win_get_cursor(0)
+  local start_line = cursor_pos[1] - 1 -- zero-based
+  local all_lines = api.nvim_buf_get_lines(buf, 0, -1, false)
+  local total_lines = #all_lines
 
-  -- Check if the line contains `- [ ]` or `- [x]`
-  if line:match("^%s*%- %[ %]") then
-    -- Toggle to `- [x]`
-    line = line:gsub("^%s*%- %[ %]", "- [x]")
-  elseif line:match("^%s*%- %[x%]") then
-    -- Toggle to `- [ ]`
-    line = line:gsub("^%s*%- %[x%]", "- [ ]")
+  if start_line >= total_lines then
+    return
   end
 
-  -- Update the line in the buffer
-  vim.api.nvim_buf_set_lines(current_buffer, row, row + 1, false, { line })
-end, { desc = "[P]Toggle checklist bullet point - [ ] <-> - [x]" })
+  -- Find the chunk boundaries
+  local chunk_start = start_line
+  local chunk_end = start_line
+
+  while chunk_end + 1 < total_lines do
+    local next_line = all_lines[chunk_end + 2] -- zero-based index + 1
+    -- Delimiter check: blank line or line starting with '-' means stop.
+    if next_line == "" or next_line:match("^%s*%-") then
+      break
+    end
+    chunk_end = chunk_end + 1
+  end
+
+  -- Extract the chunk
+  local chunk = {}
+  for i = chunk_start, chunk_end do
+    table.insert(chunk, all_lines[i + 1])
+  end
+
+  -- Remove the chunk from the current buffer
+  api.nvim_buf_set_lines(buf, chunk_start, chunk_end + 1, false, {})
+
+  -- Determine paths for 'done' folder and '-done.md' file
+  local current_file = fn.expand("%:p") -- e.g. /path/to/skitty-notes.md
+  local current_dir = fn.fnamemodify(current_file, ":h") -- /path/to
+  local base_name = fn.fnamemodify(current_file, ":t:r") -- skitty-notes (w/o extension)
+  local done_dir = current_dir .. "/done"
+  local done_file = done_dir .. "/" .. base_name .. "-done.md"
+
+  -- Create 'done' folder if it doesn't exist
+  if fn.isdirectory(done_dir) == 0 then
+    fn.mkdir(done_dir, "p")
+  end
+
+  -- Append the chunk to the done file
+  fn.writefile(chunk, done_file, "a")
+end, { desc = "[P]Move item chunk to done/<file>-done.md" })
 
 -- -- Toggle bullet point at the beginning of the current line in normal mode
 -- vim.keymap.set("n", "<leader>ml", function()

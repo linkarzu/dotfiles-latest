@@ -1534,6 +1534,8 @@ end, { desc = "[P]Toggle bullet point (dash)" })
 --
 -- If an item is moved to that heading, it will be added the `done` label
 vim.keymap.set("n", "<M-x>", function()
+  -- Save the view to preserve folds
+  vim.cmd("mkview")
   local api = vim.api
   -- Retrieve buffer & lines
   local buf = api.nvim_get_current_buf()
@@ -1710,6 +1712,8 @@ vim.keymap.set("n", "<M-x>", function()
     end
     api.nvim_buf_set_lines(buf, 0, -1, false, lines)
   end
+  -- Restore the view to preserve folds
+  vim.cmd("loadview")
 end, { desc = "[P]Toggle task and move it to 'done'" })
 
 -- -- Toggle bullet point at the beginning of the current line in normal mode

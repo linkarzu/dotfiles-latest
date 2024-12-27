@@ -6,7 +6,7 @@
 -- Function to load colors from the external file
 local function load_colors()
   local colors = {}
-  local active_file = vim.fn.stdpath("config") .. "/lua/config/active-colorscheme.sh"
+  local active_file = os.getenv("HOME") .. "/github/dotfiles-latest/neovim/neobean/lua/config/active-colorscheme.sh"
 
   local file = io.open(active_file, "r")
   if not file then
@@ -29,12 +29,12 @@ end
 -- Load colors when the module is required
 local colors = load_colors()
 
--- Create highlight groups from the colors
-if vim then
+-- Check if the 'vim' global exists (i.e., if running in Neovim)
+if _G.vim then
   for name, hex in pairs(colors) do
     vim.api.nvim_set_hl(0, name, { fg = hex })
   end
 end
 
--- Optionally, return the colors table if needed elsewhere
+-- Return the colors table for external usage (like wezterm)
 return colors

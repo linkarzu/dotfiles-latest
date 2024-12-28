@@ -61,7 +61,9 @@ for REPO_PATH in "${REPO_LIST[@]}"; do
   # -newermt stands for “newer than modification time.”
   # This will find Files Modified Within the Last X Seconds, and if ther are
   # RECENT_MODIFICATIONS will contain a non-empty list of file paths
-  RECENT_MODIFICATIONS=$(find . -type f -newermt "-${PUSH_INTERVAL} seconds" 2>/dev/null)
+  # Ignore the .git dir as commands like git pull may modify stuff and we'll skip updates
+  RECENT_MODIFICATIONS=$(find . -type f -not -path './.git/*' -newermt "-${PUSH_INTERVAL} seconds" 2>/dev/null)
+  echo "DEBUG: Recent modifications for $REPO_PATH: $RECENT_MODIFICATIONS"
   # If RECENT_MODIFICATIONS is not empty (-n), it skips pushing changes for this repository
   if [[ -n "$RECENT_MODIFICATIONS" ]]; then
     echo "Skipping push for $REPO_PATH due to recent modifications."

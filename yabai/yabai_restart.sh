@@ -38,3 +38,6 @@ done
 # After yabai is restarted, I want kitty to be moved to a specific position on
 # the screen as it will be my "sticky notes", I also set its size
 ~/github/dotfiles-latest/yabai/positions/kitty-pos.sh
+
+# Restart Neovim
+open "btt://execute_assigned_actions_for_trigger/?uuid=481BDF1F-D0C3-4B5A-94D2-BD3C881FAA6F"

@@ -43,11 +43,18 @@ for REPO_PATH in "${REPO_LIST[@]}"; do
   # push if modifying from multiple devices
   # Rebasing re-applies your local commits on top of the latest commits from
   # the remote branch, avoiding unnecessary merge commits
-  if ! git pull --rebase 2>/tmp/git_error.log; then
-    ERROR_MSG=$(</tmp/git_error.log)
-    display_notification "Pull failed: $ERROR_MSG" "Git Pull Error"
-    echo "Skipping push for $REPO_PATH due to pull failure."
-    continue
+  # Check for unstaged changes and skip pull if found
+  if [[ -n $(git status --porcelain) ]]; then
+    echo "Unstaged changes detected in $REPO_PATH. Skipping pull."
+  else
+    # Pull the latest changes
+    # if ! git pull --rebase >>/tmp/git_error.log 2>&1; then
+    if ! git pull --rebase >/dev/null 2>>/tmp/git_error.log; then
+      ERROR_MSG=$(</tmp/git_error.log)
+      display_notification "Pull failed: $ERROR_MSG" "Git Pull Error"
+      echo "Skipping push for $REPO_PATH due to pull failure."
+      continue
+    fi
   fi
 
   # Check if any files were modified within the last PUSH_INTERVAL seconds
@@ -73,7 +80,7 @@ for REPO_PATH in "${REPO_LIST[@]}"; do
       # Commit with a timestamp message and computer name
       COMPUTER_NAME=$(scutil --get ComputerName)
       TIMESTAMP=$(date '+%y%m%d-%H%M%S')
-      if git commit -m "$COMPUTER_NAME-$TIMESTAMP" 2>/tmp/git_error.log; then
+      if ! git commit -m "$COMPUTER_NAME-$TIMESTAMP" >>/tmp/git_error.log 2>&1; then
         echo "Committed: $COMPUTER_NAME-$TIMESTAMP"
       else
         ERROR_MSG=$(</tmp/git_error.log)
@@ -83,7 +90,7 @@ for REPO_PATH in "${REPO_LIST[@]}"; do
     fi
 
     # Push changes
-    if git push 2>/tmp/git_error.log; then
+    if ! git push >>/tmp/git_error.log 2>&1; then
       REPO_NAME=$(basename "$REPO_PATH")
       SUCCESS_MESSAGES+="\n$REPO_NAME $COMPUTER_NAME-$TIMESTAMP"
     else
@@ -95,8 +102,8 @@ for REPO_PATH in "${REPO_LIST[@]}"; do
     echo "No changes to push for $REPO_PATH."
   fi
 
-  # Cleanup temporary error log
-  rm -f /tmp/git_error.log
+  # Don't delete the file, It will be deleted when I restart the computer
+  # rm -f /tmp/git_error.log
 done
 
 # Display all success messages in a single notification

@@ -25,6 +25,7 @@ PUSH_INTERVAL=180
 display_notification() {
   local message="$1"
   local title="$2"
+  echo "DEBUG: Sending notification with title='$title' and message='$message'"
   osascript -e "display notification \"$message\" with title \"$title\""
 }
 
@@ -35,6 +36,7 @@ SUCCESS_MESSAGES=""
 for REPO_PATH in "${REPO_LIST[@]}"; do
   # Navigate to the repository
   cd "$REPO_PATH" || {
+    echo "DEBUG: Failed to navigate to $REPO_PATH"
     display_notification "Failed to navigate to $REPO_PATH" "Error"
     continue
   }
@@ -45,15 +47,17 @@ for REPO_PATH in "${REPO_LIST[@]}"; do
   # the remote branch, avoiding unnecessary merge commits
   # Check for unstaged changes and skip pull if found
   if [[ -n $(git status --porcelain) ]]; then
-    echo "Unstaged changes detected in $REPO_PATH. Skipping pull."
+    echo "DEBUG: Unstaged changes detected in $REPO_PATH. Skipping pull."
   else
     # Pull the latest changes
     # if ! git pull --rebase >>/tmp/git_error.log 2>&1; then
     if ! git pull --rebase >/dev/null 2>>/tmp/git_error.log; then
       ERROR_MSG=$(</tmp/git_error.log)
+      echo "DEBUG: Pull failed for $REPO_PATH with error: $ERROR_MSG"
       display_notification "Pull failed: $ERROR_MSG" "Git Pull Error"
-      echo "Skipping push for $REPO_PATH due to pull failure."
       continue
+    else
+      echo "DEBUG: Pull completed successfully for $REPO_PATH"
     fi
   fi
 
@@ -66,7 +70,7 @@ for REPO_PATH in "${REPO_LIST[@]}"; do
   echo "DEBUG: Recent modifications for $REPO_PATH: $RECENT_MODIFICATIONS"
   # If RECENT_MODIFICATIONS is not empty (-n), it skips pushing changes for this repository
   if [[ -n "$RECENT_MODIFICATIONS" ]]; then
-    echo "Skipping push for $REPO_PATH due to recent modifications."
+    echo "DEBUG: Skipping push for $REPO_PATH due to recent modifications."
     continue
   fi
 
@@ -83,11 +87,12 @@ for REPO_PATH in "${REPO_LIST[@]}"; do
       COMPUTER_NAME=$(scutil --get ComputerName)
       TIMESTAMP=$(date '+%y%m%d-%H%M%S')
       if ! git commit -m "$COMPUTER_NAME-$TIMESTAMP" >>/tmp/git_error.log 2>&1; then
-        echo "Committed: $COMPUTER_NAME-$TIMESTAMP"
-      else
         ERROR_MSG=$(</tmp/git_error.log)
+        echo "DEBUG: Displaying notification for commit failure"
         display_notification "Commit failed: $ERROR_MSG" "Git Commit Error"
         continue
+      else
+        echo "DEBUG: Commit successful for $REPO_PATH"
       fi
     fi
 
@@ -95,20 +100,25 @@ for REPO_PATH in "${REPO_LIST[@]}"; do
     if git push >>/tmp/git_error.log 2>&1; then
       REPO_NAME=$(basename "$REPO_PATH")
       SUCCESS_MESSAGES+="\n$REPO_NAME $COMPUTER_NAME-$TIMESTAMP"
+      echo "DEBUG: Push successful for $REPO_PATH"
     else
       ERROR_MSG=$(</tmp/git_error.log)
+      echo "DEBUG: Displaying notification for push failure"
       display_notification "Push failed: $ERROR_MSG" "Git Push Error"
       continue
     fi
   else
-    echo "No changes to push for $REPO_PATH."
+    echo "DEBUG: No changes to push for $REPO_PATH."
   fi
-
   # Don't delete the file, It will be deleted when I restart the computer
   # rm -f /tmp/git_error.log
 done
 
 # Display all success messages in a single notification
+echo "DEBUG: Final SUCCESS_MESSAGES: $SUCCESS_MESSAGES"
 if [[ -n "$SUCCESS_MESSAGES" ]]; then
+  echo "DEBUG: Displaying success notification"
   display_notification "Repositories updated:$SUCCESS_MESSAGES" "Git Push Success"
+else
+  echo "DEBUG: No repositories updated during this run."
 fi

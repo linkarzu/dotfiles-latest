@@ -77,7 +77,7 @@ color7                $linkarzu_color14
 color15               $linkarzu_color14
 # Cursor colors
 cursor                $linkarzu_color24
-cursor_text_color     $linkarzu_color14
+cursor_text_color     $linkarzu_color24
 # Tab bar colors
 active_tab_foreground  $linkarzu_color10
 active_tab_background   $linkarzu_color02

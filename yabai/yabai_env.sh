@@ -10,7 +10,8 @@
 apps_transparent="(Spotify|Neovide|Code|WezTerm|Ghostty)"
 
 # Apps that I want to always show, even when I have a transparent app focused
-apps_transp_ignore="(kitty|CleanShot X)"
+apps_transp_ignore="(kitty)"
+# apps_transp_ignore="(kitty|CleanShot X)"
 
 # Apps excluded from window management, so you can resize them and move them around
 # This is basically the ignore list

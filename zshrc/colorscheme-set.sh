@@ -76,7 +76,7 @@ color14               $linkarzu_color03
 color7                $linkarzu_color14
 color15               $linkarzu_color14
 # Cursor colors
-cursor                $linkarzu_color02
+cursor                $linkarzu_color24
 cursor_text_color     $linkarzu_color14
 # Tab bar colors
 active_tab_foreground  $linkarzu_color10
@@ -318,7 +318,6 @@ if [ "$UPDATED" = true ]; then
   # I want to copy the colorscheme_file to my neobean config for folks that
   # don't use my colorscheme selector
   cp "$colorscheme_file" "$HOME/github/dotfiles-latest/neovim/neobean/lua/config/active-colorscheme.sh"
-  cp "$colorscheme_file" "$HOME/github/dotfiles-latest/neovim/neobean-sticky/lua/config/active-colorscheme.sh"
 
   # Source the active colorscheme to load variables
   source "$active_file"

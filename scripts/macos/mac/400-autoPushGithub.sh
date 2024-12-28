@@ -39,6 +39,17 @@ for REPO_PATH in "${REPO_LIST[@]}"; do
     continue
   }
 
+  # Pull the latest changes, otherwise you will get errors and won't be able to
+  # push if modifying from multiple devices
+  # Rebasing re-applies your local commits on top of the latest commits from
+  # the remote branch, avoiding unnecessary merge commits
+  if ! git pull --rebase 2>/tmp/git_error.log; then
+    ERROR_MSG=$(</tmp/git_error.log)
+    display_notification "Pull failed: $ERROR_MSG" "Git Pull Error"
+    echo "Skipping push for $REPO_PATH due to pull failure."
+    continue
+  fi
+
   # Check if any files were modified within the last PUSH_INTERVAL seconds
   # -newermt stands for “newer than modification time.”
   # This will find Files Modified Within the Last X Seconds, and if ther are

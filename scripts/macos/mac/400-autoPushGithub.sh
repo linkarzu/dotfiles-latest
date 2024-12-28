@@ -90,7 +90,7 @@ for REPO_PATH in "${REPO_LIST[@]}"; do
     fi
 
     # Push changes
-    if ! git push >>/tmp/git_error.log 2>&1; then
+    if git push >>/tmp/git_error.log 2>&1; then
       REPO_NAME=$(basename "$REPO_PATH")
       SUCCESS_MESSAGES+="\n$REPO_NAME $COMPUTER_NAME-$TIMESTAMP"
     else

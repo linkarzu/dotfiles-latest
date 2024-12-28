@@ -5,6 +5,7 @@
 
 return {
   "CopilotC-Nvim/CopilotChat.nvim",
+  enabled = vim.g.neovim_mode ~= "skitty", -- Disable for skitty mode
   opts = function(_, opts)
     -- Initialize options
     opts = opts or {}

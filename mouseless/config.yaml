@@ -1,5 +1,8 @@
 # https://github.com/croian/mouseless-issues
 # https://rgbcolorpicker.com/0-1
+#
+# NOTE: Config does not support symlinks, created issue below:
+# https://github.com/croian/mouseless-issues/issues/110
 
 app_version: 0.2.2
 behavior_configs:

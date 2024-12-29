@@ -2044,6 +2044,30 @@
               {
                 "to": [
                   {
+                    "shell_command": "open raycast://extensions/raycast/navigation/switch-windows"
+                  }
+                ],
+                "description": "Open raycast://extensions/raycast/navigation/switch-windows",
+                "type": "basic",
+                "from": {
+                  "key_code": "l",
+                  "modifiers": {
+                    "mandatory": [
+                      "any"
+                    ]
+                  }
+                },
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "hyper_sublayer_r",
+                    "value": 1
+                  }
+                ]
+              },
+              {
+                "to": [
+                  {
                     "shell_command": "open raycast://extensions/vishaltelangre/google-drive/index"
                   }
                 ],

@@ -665,7 +665,7 @@ const rules: KarabinerRules[] = [
     r: {
       j: open("raycast://extensions/lardissone/raindrop-io/search"),
       k: open("raycast://extensions/mblode/google-search/index"),
-      // l: open("raycast://extensions/KevinBatdorf/obsidian/searchNoteCommand"),
+      l: open("raycast://extensions/raycast/navigation/switch-windows"),
       semicolon: open("raycast://extensions/vishaltelangre/google-drive/index"),
       quote: open("raycast://extensions/mathieudutour/wolfram-alpha/index"),
       y: open(

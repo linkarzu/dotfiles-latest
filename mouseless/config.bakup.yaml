@@ -1,0 +1,109 @@
+app_version: 0.2.2
+behavior_configs:
+  - hide_cursor_on_click: false
+    hide_location: bottom_left
+    move_duration_ms: 100
+    move_real_cursor_with_virtual: false
+    multi_action_timeout_ms: 400
+    name: main_behavior
+    tap_threshold_ms: 200
+classname: AppConfig
+grid_configs:
+  - always_show_subgrid: false
+    grid_defn:
+      - border_width: 0.0
+        callback: build_cell_strings
+        num_cells_x: 26
+        num_cells_y: 1
+      - border_width: 1.0
+        callback: build_cell_strings
+        num_cells_x: 1
+        num_cells_y: 26
+      - border_width: 0.0
+        callback: apply_strings_and_subgrid_to_cells
+        num_cells_x: 2
+        num_cells_y: 1
+    mouse_action_keys: ABCDEFGHIJKLMNOPQRSTUVWXYZ
+    name: full_alpha
+    strategy: subgrid
+    subgrid_dims:
+      - 8
+      - 3
+    subgrid_mouse_action_keys: QWERUIOPASDFJKL;ZXCVM,./
+  - always_show_subgrid: false
+    grid_defn:
+      - border_width: 0.0
+        callback: build_cell_strings
+        num_cells_x: 1
+        num_cells_y: 26
+      - border_width: 1.0
+        callback: build_cell_strings
+        num_cells_x: 26
+        num_cells_y: 1
+      - border_width: 0.0
+        callback: apply_strings_and_subgrid_to_cells
+        num_cells_x: 2
+        num_cells_y: 1
+    mouse_action_keys: ABCDEFGHIJKLMNOPQRSTUVWXYZ
+    name: vertical_alpha
+    strategy: subgrid
+    subgrid_dims:
+      - 4
+      - 6
+    subgrid_mouse_action_keys: QWERASDFZXCVUIOPJKL;M,./
+keymaps:
+  - entries:
+      close dialog: OptionRight
+      cycle click count: null
+      cycle mouse action type: null
+      cycle mouse button: null
+      edit config: Tab
+      execute mouse action: Space
+      hide overlay: OptionRight
+      hold for drag: CommandLeft
+      hold for move: OptionLeft
+      hold for right button: CommandRight
+      release hold/drag: OptionRight
+      repeat last mouse action: null
+      show overlay: CommandLeft tap
+      switch monitor left: ShiftLeft tap
+      switch monitor right: ShiftRight tap
+      toggle overlay: null
+    name: mac
+monitor_assignments: auto
+name: ""
+style_configs:
+  - always_on_subgrid_rgba:
+      - 1.0
+      - 1.0
+      - 1.0
+      - 0.3
+    background_rgba:
+      - 0.0
+      - 0.0
+      - 0.0
+      - 0.35
+    font_size_multiplier: 0.5
+    grid_rgba:
+      - 0.9
+      - 1.0
+      - 1.0
+      - 1.0
+    name: dark_bg
+    subgrid_font_size_multiplier: 0.75
+    subgrid_rgba:
+      - 1.0
+      - 1.0
+      - 1.0
+      - 0.9
+    subgrid_text_rgba:
+      - 1.0
+      - 1.0
+      - 1.0
+      - 0.5
+    text_rgba:
+      - 1.0
+      - 1.0
+      - 1.0
+      - 0.65
+    window_opacity: 1.0

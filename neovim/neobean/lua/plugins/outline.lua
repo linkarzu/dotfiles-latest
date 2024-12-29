@@ -20,7 +20,7 @@ return {
     },
     outline_window = {
       -- Percentage or integer of columns
-      width = 35,
+      width = 33,
     },
   },
 }

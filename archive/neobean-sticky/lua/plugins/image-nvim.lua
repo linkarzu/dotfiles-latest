@@ -1,7 +1,7 @@
 -- https://github.com/3rd/image.nvim
 --
--- Filename: ~/github/dotfiles-latest/neovim/neobean/lua/plugins/image-nvim.lua
--- ~/github/dotfiles-latest/neovim/neobean/lua/plugins/image-nvim.lua
+-- Filename: ~/github/dotfiles-latest/archive/neobean-sticky/lua/plugins/image-nvim.lua
+-- ~/github/dotfiles-latest/archive/neobean-sticky/lua/plugins/image-nvim.lua
 
 -- For dependencies see
 -- `~/github/dotfiles-latest/neovim/neobean/README.md`

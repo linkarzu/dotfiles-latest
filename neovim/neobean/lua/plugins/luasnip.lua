@@ -19,6 +19,36 @@ return {
     local i = ls.insert_node
     local f = ls.function_node
 
+    -- Function to load snippets for my youtube videos from a text file
+    local function load_snippets_from_file(file_path)
+      local snippets = {}
+      local file = io.open(file_path, "r")
+      if not file then
+        vim.notify("Could not open snippets file: " .. file_path, vim.log.levels.ERROR)
+        return snippets
+      end
+      local lines = {}
+      for line in file:lines() do
+        if line == "" then
+          -- Create a snippet if two lines (title and URL) are grouped
+          if #lines == 2 then
+            local title, url = lines[1], lines[2]
+            table.insert(snippets, s({ trig = title }, { t(title), t({ "", url }) }))
+          end
+          lines = {}
+        else
+          table.insert(lines, line)
+        end
+      end
+      -- Handle the last snippet if the file doesn't end with a blank line
+      if #lines == 2 then
+        local title, url = lines[1], lines[2]
+        table.insert(snippets, s({ trig = title }, { t(title), t({ "", url }) }))
+      end
+      file:close()
+      return snippets
+    end
+
     local function clipboard()
       return vim.fn.getreg("+")
     end
@@ -256,6 +286,13 @@ return {
         t("lamw25wmal"),
       }),
     })
+
+    -- Path to the text file containing video snippets
+    local snippets_file = vim.fn.expand("~/github/obsidian_main/300-youtube/youtube-video-list.txt")
+    local video_snippets = load_snippets_from_file(snippets_file)
+    -- Add the youtube videos snippets to the "all" filetype
+    ls.add_snippets("all", video_snippets)
+
     return opts
   end,
 }

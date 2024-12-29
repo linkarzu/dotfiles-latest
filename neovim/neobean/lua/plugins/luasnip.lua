@@ -199,6 +199,33 @@ return {
       })
     )
 
+    -- Inserting "my dotfiles" link
+    table.insert(
+      snippets,
+      s({
+        trig = "dotfiles latest",
+        name = "Adds -> [my dotfiles](https://github.com/linkarzu/dotfiles-latest)",
+        desc = "Add link to https://github.com/linkarzu/dotfiles-latest",
+      }, {
+        t("[my dotfiles](https://github.com/linkarzu/dotfiles-latest)"),
+      })
+    )
+
+    table.insert(
+      snippets,
+      s({
+        trig = "support me",
+        name = "Inserts links (Ko-fi, Twitter, TikTok)",
+        desc = "Inserts links (Ko-fi, Twitter, TikTok)",
+      }, {
+        t({
+          "☕ Support me -> https://ko-fi.com/linkarzu",
+          "☑ My Twitter -> https://x.com/link_arzu",
+          "❤‍🔥 My tiktok -> https://www.tiktok.com/@linkarzu",
+        }),
+      })
+    )
+
     ls.add_snippets("markdown", snippets)
 
     -- #####################################################################

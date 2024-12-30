@@ -126,6 +126,7 @@ else
   local colors = require("config.colors")
   vim.cmd(string.format([[highlight WinBar1 guifg=%s]], colors["linkarzu_color03"]))
   vim.cmd(string.format([[highlight WinBar2 guifg=%s]], colors["linkarzu_color02"]))
+  vim.cmd(string.format([[highlight WinBar3 guifg=%s gui=bold]], colors["linkarzu_color24"]))
   -- Function to get the full path and replace the home directory with ~
   local function get_winbar_path()
     local full_path = vim.fn.expand("%:p")
@@ -151,9 +152,12 @@ else
       .. "%#WinBar2#("
       .. buffer_count
       .. ") "
-      .. "%#WinBar1#"
+      -- this shows the filename on the left
+      .. "%#WinBar3#"
+      .. vim.fn.expand("%:t")
+      -- This shows the file path on the right
+      .. "%*%=%#WinBar1#"
       .. home_replaced
-      .. "%*%=%#WinBar2#"
     -- I don't need the hostname as I have it in lualine
     -- .. vim.fn.systemlist("hostname")[1]
   end

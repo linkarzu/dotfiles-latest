@@ -71,7 +71,9 @@ if vim.g.neovim_mode == "skitty" then
   -- If this is "false", when I'm typing around the 28/33 character, I see the screen
   -- scrolling to the right, and I don't want that, setting it to true seems to
   -- fix that
-  vim.opt.wrap = true
+  -- Problem if set to true is that markdown links don't wrap, so they span
+  -- across multiple lines
+  vim.opt.wrap = false
 
   -- No colorcolumn in skitty
   vim.opt.colorcolumn = ""

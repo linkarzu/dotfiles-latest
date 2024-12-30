@@ -47,6 +47,8 @@ return {
           -- After accepting the completion, delete the ";" character from the
           -- final inserted text
           transform_items = function(ctx, items)
+            -- WARNING: Explicitly referencing ctx otherwise I was getting an "unused" warning
+            local _ = ctx
             -- Get the current line and cursor position
             local line = vim.api.nvim_get_current_line()
             local col = vim.api.nvim_win_get_cursor(0)[2]

@@ -43,9 +43,8 @@ return {
           -- to expand the "bash" snippet, if the trigger_text is ";" I have to
           -- type ";bash"
           should_show_items = function()
-            local line = vim.api.nvim_get_current_line()
             local col = vim.api.nvim_win_get_cursor(0)[2]
-            local before_cursor = line:sub(1, col)
+            local before_cursor = vim.api.nvim_get_current_line():sub(1, col)
             -- NOTE: remember that `trigger_text` is modified at the top of the file
             return before_cursor:match(trigger_text .. "%w*$") ~= nil
           end,
@@ -54,32 +53,26 @@ return {
           transform_items = function(ctx, items)
             -- WARNING: Explicitly referencing ctx otherwise I was getting an "unused" warning
             local _ = ctx
-            -- Get the current line and cursor position
-            local line = vim.api.nvim_get_current_line()
             local col = vim.api.nvim_win_get_cursor(0)[2]
-            local before_cursor = line:sub(1, col)
-            -- Check if we have the trigger character
+            local before_cursor = vim.api.nvim_get_current_line():sub(1, col)
             local trigger_pos = before_cursor:find(trigger_text .. "[^" .. trigger_text .. "]*$")
             if trigger_pos then
-              -- Modify each completion item to remove the character
               for _, item in ipairs(items) do
-                local original_text = item.insertText or item.label
-                -- Create a TextEdit that will replace from the character to the cursor
                 item.textEdit = {
-                  newText = original_text,
+                  newText = item.insertText or item.label,
                   range = {
-                    start = {
-                      line = vim.api.nvim_win_get_cursor(0)[1] - 1,
-                      character = trigger_pos - 1,
-                    },
-                    ["end"] = {
-                      line = vim.api.nvim_win_get_cursor(0)[1] - 1,
-                      character = col,
-                    },
+                    start = { line = vim.fn.line(".") - 1, character = trigger_pos - 1 },
+                    ["end"] = { line = vim.fn.line(".") - 1, character = col },
                   },
                 }
               end
             end
+            -- NOTE: After the transformation, I have to reload the luasnip source
+            -- Otherwise really crazy shit happens and I spent way too much time
+            -- figurig this out
+            vim.schedule(function()
+              require("blink.cmp").reload("luasnip")
+            end)
             return items
           end,
         },

@@ -256,21 +256,6 @@ return {
       })
     )
 
-    table.insert(
-      snippets,
-      s({
-        trig = "youtube video template",
-        name = "Inserts youtube video template",
-        desc = "Inserts youtube video template",
-      }, {
-        t({
-          "☕ Support me -> https://ko-fi.com/linkarzu",
-          "☑ My Twitter -> https://x.com/link_arzu",
-          "❤‍🔥 My tiktok -> https://www.tiktok.com/@linkarzu",
-        }),
-      })
-    )
-
     -- Add a snippet for inserting a video markdown template
     table.insert(
       snippets,

@@ -301,6 +301,49 @@ return {
       })
     )
 
+    -- Basic bash script template
+    table.insert(
+      snippets,
+      s({
+        trig = "bashex",
+        name = "Basic bash script example",
+        desc = "Simple bash script template",
+      }, {
+        t({
+          "```bash",
+          "#!/bin/bash",
+          "",
+          "echo 'helix'",
+          "echo 'deeznuts'",
+          "```",
+          "",
+        }),
+      })
+    )
+
+    -- Basic Python script template
+    table.insert(
+      snippets,
+      s({
+        trig = "pythonex",
+        name = "Basic Python script example",
+        desc = "Simple Python script template",
+      }, {
+        t({
+          "```python",
+          "#!/usr/bin/env python3",
+          "",
+          "def main():",
+          "    print('helix dizpython')",
+          "",
+          "if __name__ == '__main__':",
+          "    main()",
+          "```",
+          "",
+        }),
+      })
+    )
+
     ls.add_snippets("markdown", snippets)
 
     -- Path to the text file containing video snippets

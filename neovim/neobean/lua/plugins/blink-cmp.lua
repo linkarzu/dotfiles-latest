@@ -36,7 +36,7 @@ return {
           min_keyword_length = 4,
           fallbacks = { "snippets" },
           score_offset = 85, -- the higher the number, the higher the priority
-          max_items = 3, -- Maximum number of items to display in the menu
+          max_items = 6, -- Maximum number of items to display in the menu
           opts = {
             -- I have several youtube video snippets that cause noise, so I want
             -- to reduce fuzziness a bit, so that matches are more exact

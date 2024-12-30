@@ -1,7 +1,8 @@
 gui:
   theme:
     selectedLineBgColor:
-      - cyan
+      # - "#314154"
+      - "#013e4a"
 
 # Keybindings
 keybinding:
@@ -33,3 +34,11 @@ os:
   # # comment all the options above
   # # https://github.com/folke/snacks.nvim/blob/main/docs/lazygit.md
   # editPreset: "nvim-remote"
+
+git:
+  paging:
+    colorArg: always
+    # For this to work, first install `brew install git-delta`
+    # https://github.com/dandavison/delta
+    # https://github.com/jesseduffield/lazygit/issues/155#issuecomment-2260986940
+    pager: delta --dark --paging=never --syntax-theme base16-256 -s

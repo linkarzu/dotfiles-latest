@@ -67,8 +67,11 @@ if vim.g.neovim_mode == "skitty" then
   -- -- Wrap lines at convenient points, this comes enabled by default in lazyvim
   vim.opt.linebreak = false
 
-  -- -- Disable line wrap, set to false by default in lazyvim
-  vim.opt.wrap = false
+  -- Set to false by default in lazyvim
+  -- If this is "false", when I'm typing around the 28/33 character, I see the screen
+  -- scrolling to the right, and I don't want that, setting it to true seems to
+  -- fix that
+  vim.opt.wrap = true
 
   -- No colorcolumn in skitty
   vim.opt.colorcolumn = ""

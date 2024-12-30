@@ -13,8 +13,7 @@ return {
   enabled = true,
   opts = function(_, opts)
     -- Merge custom sources with the existing ones from lazyvim
-    -- NOTE: by default lazyvim already includes the lazydev source, so not
-    -- adding it here again
+    -- NOTE: by default lazyvim already includes the lazydev source, so not adding it here again
     opts.sources = vim.tbl_deep_extend("force", opts.sources or {}, {
       default = { "lsp", "path", "snippets", "buffer", "copilot", "luasnip", "dadbod" },
       providers = {
@@ -33,18 +32,49 @@ return {
           name = "luasnip",
           enabled = true,
           module = "blink.cmp.sources.luasnip",
-          min_keyword_length = 4,
+          min_keyword_length = 2,
           fallbacks = { "snippets" },
-          score_offset = 85, -- the higher the number, the higher the priority
-          max_items = 6, -- Maximum number of items to display in the menu
-          opts = {
-            -- I have several youtube video snippets that cause noise, so I want
-            -- to reduce fuzziness a bit, so that matches are more exact
-            fuzzy = {
-              use_typo_resistance = false, -- reduce fuzziness
-              use_proximity = false,
-            },
-          },
+          score_offset = 85,
+          max_items = 8,
+          -- Only show luasnip items if I type the ; character, so
+          -- to expand the "bash" snippet, I have to type ";bash"
+          should_show_items = function()
+            local line = vim.api.nvim_get_current_line()
+            local col = vim.api.nvim_win_get_cursor(0)[2]
+            local before_cursor = line:sub(1, col)
+            return before_cursor:match(";%w*$") ~= nil
+          end,
+          -- After accepting the completion, delete the ";" character from the
+          -- final inserted text
+          transform_items = function(ctx, items)
+            -- Get the current line and cursor position
+            local line = vim.api.nvim_get_current_line()
+            local col = vim.api.nvim_win_get_cursor(0)[2]
+            local before_cursor = line:sub(1, col)
+            -- Check if we have the trigger character
+            local semicolon_pos = before_cursor:find(";[^;]*$")
+            if semicolon_pos then
+              -- Modify each completion item to remove the character
+              for _, item in ipairs(items) do
+                local original_text = item.insertText or item.label
+                -- Create a TextEdit that will replace from the character to the cursor
+                item.textEdit = {
+                  newText = original_text,
+                  range = {
+                    start = {
+                      line = vim.api.nvim_win_get_cursor(0)[1] - 1,
+                      character = semicolon_pos - 1,
+                    },
+                    ["end"] = {
+                      line = vim.api.nvim_win_get_cursor(0)[1] - 1,
+                      character = col,
+                    },
+                  },
+                }
+              end
+            end
+            return items
+          end,
         },
         path = {
           name = "Path",

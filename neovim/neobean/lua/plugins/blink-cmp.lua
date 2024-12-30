@@ -8,6 +8,9 @@
 -- https://github.com/saghen/blink.cmp
 -- Documentation site: https://cmp.saghen.dev/
 
+-- NOTE: Specify the trigger character(s) used for luasnip
+local trigger_text = ";"
+
 return {
   "saghen/blink.cmp",
   enabled = true,
@@ -36,16 +39,18 @@ return {
           fallbacks = { "snippets" },
           score_offset = 85,
           max_items = 8,
-          -- Only show luasnip items if I type the ; character, so
-          -- to expand the "bash" snippet, I have to type ";bash"
+          -- Only show luasnip items if I type the trigger_text characters, so
+          -- to expand the "bash" snippet, if the trigger_text is ";" I have to
+          -- type ";bash"
           should_show_items = function()
             local line = vim.api.nvim_get_current_line()
             local col = vim.api.nvim_win_get_cursor(0)[2]
             local before_cursor = line:sub(1, col)
-            return before_cursor:match(";%w*$") ~= nil
+            -- NOTE: remember that `trigger_text` is modified at the top of the file
+            return before_cursor:match(trigger_text .. "%w*$") ~= nil
           end,
-          -- After accepting the completion, delete the ";" character from the
-          -- final inserted text
+          -- After accepting the completion, delete the trigger_text characters
+          -- from the final inserted text
           transform_items = function(ctx, items)
             -- WARNING: Explicitly referencing ctx otherwise I was getting an "unused" warning
             local _ = ctx
@@ -54,8 +59,8 @@ return {
             local col = vim.api.nvim_win_get_cursor(0)[2]
             local before_cursor = line:sub(1, col)
             -- Check if we have the trigger character
-            local semicolon_pos = before_cursor:find(";[^;]*$")
-            if semicolon_pos then
+            local trigger_pos = before_cursor:find(trigger_text .. "[^" .. trigger_text .. "]*$")
+            if trigger_pos then
               -- Modify each completion item to remove the character
               for _, item in ipairs(items) do
                 local original_text = item.insertText or item.label
@@ -65,7 +70,7 @@ return {
                   range = {
                     start = {
                       line = vim.api.nvim_win_get_cursor(0)[1] - 1,
-                      character = semicolon_pos - 1,
+                      character = trigger_pos - 1,
                     },
                     ["end"] = {
                       line = vim.api.nvim_win_get_cursor(0)[1] - 1,

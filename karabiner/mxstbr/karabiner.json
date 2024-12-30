@@ -568,10 +568,10 @@
               {
                 "to": [
                   {
-                    "shell_command": "open -a 'ChatGPT.app'"
+                    "shell_command": "open -a 'Claude.app'"
                   }
                 ],
-                "description": "Open -a 'ChatGPT.app'",
+                "description": "Open -a 'Claude.app'",
                 "type": "basic",
                 "from": {
                   "key_code": "semicolon",

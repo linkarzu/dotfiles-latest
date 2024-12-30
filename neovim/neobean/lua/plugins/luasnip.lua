@@ -33,7 +33,7 @@ return {
           -- Create a snippet if two lines (title and URL) are grouped
           if #lines == 2 then
             local title, url = lines[1], lines[2]
-            table.insert(snippets, s({ trig = title }, { t(title), t({ "", url }) }))
+            table.insert(snippets, s({ trig = "yt - " .. title }, { t(title), t({ "", url }) }))
           end
           lines = {}
         else
@@ -43,7 +43,7 @@ return {
       -- Handle the last snippet if the file doesn't end with a blank line
       if #lines == 2 then
         local title, url = lines[1], lines[2]
-        table.insert(snippets, s({ trig = title }, { t(title), t({ "", url }) }))
+        table.insert(snippets, s({ trig = "yt - " .. title }, { t(title), t({ "", url }) }))
       end
       file:close()
       return snippets
@@ -256,7 +256,73 @@ return {
       })
     )
 
+    table.insert(
+      snippets,
+      s({
+        trig = "youtube video template",
+        name = "Inserts youtube video template",
+        desc = "Inserts youtube video template",
+      }, {
+        t({
+          "☕ Support me -> https://ko-fi.com/linkarzu",
+          "☑ My Twitter -> https://x.com/link_arzu",
+          "❤‍🔥 My tiktok -> https://www.tiktok.com/@linkarzu",
+        }),
+      })
+    )
+
+    -- Add a snippet for inserting a video markdown template
+    table.insert(
+      snippets,
+      s({
+        trig = "video template",
+        name = "Insert video markdown template",
+        desc = "Insert video markdown template",
+      }, {
+        t("## "),
+        i(1, "cursor"),
+        t(" video"),
+        t({ "", "", "All of the details and the demo are covered in the video:", "" }),
+        t({ "", "If you don't like watching videos, the keymaps are in " }),
+        t("[my dotfiles](https://github.com/linkarzu/dotfiles-latest)"),
+        t({
+          "",
+          "",
+          "```bash",
+          "If you find this video helpful and want to support me",
+          "https://ko-fi.com/linkarzu",
+          "",
+          "Follow me on twitter",
+          "https://x.com/link_arzu",
+          "",
+          "My dotfiles",
+          "https://github.com/linkarzu/dotfiles-latest",
+          "",
+          "Videos mentioned in this video:",
+          "",
+          "#linkarzu",
+          "",
+          "1:00 - VIDEO video 1",
+          "2:00 - VIDEO video 2",
+          "```",
+          "",
+          "Video timeline:",
+          "",
+          "```bash",
+          "0:00 -",
+          "```",
+          "",
+        }),
+      })
+    )
+
     ls.add_snippets("markdown", snippets)
+
+    -- Path to the text file containing video snippets
+    local snippets_file = vim.fn.expand("~/github/obsidian_main/300-youtube/youtube-video-list.txt")
+    local video_snippets = load_snippets_from_file(snippets_file)
+    -- Add the youtube videos snippets to the "all" filetype
+    ls.add_snippets("markdown", video_snippets)
 
     -- #####################################################################
     --                         all the filetypes
@@ -286,12 +352,6 @@ return {
         t("lamw25wmal"),
       }),
     })
-
-    -- Path to the text file containing video snippets
-    local snippets_file = vim.fn.expand("~/github/obsidian_main/300-youtube/youtube-video-list.txt")
-    local video_snippets = load_snippets_from_file(snippets_file)
-    -- Add the youtube videos snippets to the "all" filetype
-    ls.add_snippets("all", video_snippets)
 
     return opts
   end,

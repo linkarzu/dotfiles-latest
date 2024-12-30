@@ -33,9 +33,18 @@ return {
           name = "luasnip",
           enabled = true,
           module = "blink.cmp.sources.luasnip",
-          min_keyword_length = 2,
+          min_keyword_length = 4,
           fallbacks = { "snippets" },
           score_offset = 85, -- the higher the number, the higher the priority
+          max_items = 3, -- Maximum number of items to display in the menu
+          opts = {
+            -- I have several youtube video snippets that cause noise, so I want
+            -- to reduce fuzziness a bit, so that matches are more exact
+            fuzzy = {
+              use_typo_resistance = false, -- reduce fuzziness
+              use_proximity = false,
+            },
+          },
         },
         path = {
           name = "Path",
@@ -56,13 +65,17 @@ return {
         },
         buffer = {
           name = "Buffer",
+          enabled = true,
+          max_items = 3,
           module = "blink.cmp.sources.buffer",
-          min_keyword_length = 2,
+          min_keyword_length = 4,
         },
         snippets = {
           name = "snippets",
           enabled = true,
+          max_items = 3,
           module = "blink.cmp.sources.snippets",
+          min_keyword_length = 4,
           score_offset = 80, -- the higher the number, the higher the priority
         },
         -- Example on how to configure dadbod found in the main repo
@@ -78,7 +91,7 @@ return {
           enabled = true,
           module = "blink-cmp-copilot",
           kind = "Copilot",
-          min_keyword_length = 2,
+          min_keyword_length = 6,
           score_offset = -100, -- the higher the number, the higher the priority
           async = true,
         },

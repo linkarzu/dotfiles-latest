@@ -350,7 +350,7 @@ return {
     local snippets_file = vim.fn.expand("~/github/obsidian_main/300-youtube/youtube-video-list.txt")
     local video_snippets = load_snippets_from_file(snippets_file)
     -- Add the youtube videos snippets to the "all" filetype
-    ls.add_snippets("markdown", video_snippets)
+    ls.add_snippets("all", video_snippets)
 
     -- #####################################################################
     --                         all the filetypes

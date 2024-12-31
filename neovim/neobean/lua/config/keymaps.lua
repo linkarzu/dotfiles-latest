@@ -36,6 +36,11 @@ local M = {}
 -- because the window looks bigger
 vim.keymap.set("n", "<M-g>", ":LazyGit<CR>", { desc = "Lazygit (Root Dir)" })
 
+-- Select the hunk under the cursor
+vim.keymap.set("n", "<M-2>", function()
+  require("mini.diff").textobject()
+end, { desc = "[P]Select Current Hunk in Visual Mode" })
+
 -- Restart Neovim
 vim.keymap.set({ "n", "v", "i" }, "<M-R>", function()
   -- Save all modified buffers, autosave may not have kicked in sometimes

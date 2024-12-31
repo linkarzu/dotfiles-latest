@@ -25,6 +25,7 @@ local icons = LazyVim.config.icons
 local cache = {
   branch = "",
   branch_color = nil,
+  commit_hash = "",
   file_permissions = { perms = "", color = colors["linkarzu_color03"] },
 }
 
@@ -34,6 +35,18 @@ vim.api.nvim_create_autocmd({ "BufEnter", "FocusGained" }, {
     -- Update git branch
     cache.branch = vim.fn.system("git rev-parse --abbrev-ref HEAD"):gsub("\n", "")
     cache.branch_color = (cache.branch == "live") and { fg = colors["linkarzu_color11"], gui = "bold" } or nil
+    -- Update commit hash only for dotfiles-latest repo
+    local git_dir = vim.fn.system("git rev-parse --git-dir 2>/dev/null"):gsub("\n", "")
+    if git_dir ~= "" then
+      local repo_root = vim.fn.system("git rev-parse --show-toplevel 2>/dev/null"):gsub("\n", "")
+      if repo_root:match("dotfiles%-latest$") then
+        cache.commit_hash = vim.fn.system("git rev-parse --short=7 HEAD"):gsub("\n", "")
+      else
+        cache.commit_hash = ""
+      end
+    else
+      cache.commit_hash = ""
+    end
   end,
 })
 
@@ -158,13 +171,24 @@ return {
     -- Configure lualine_b with branch and color condition
     opts.sections.lualine_b = {
       {
-        "branch",
+        function()
+          -- Return branch name and commit hash if available
+          return cache.branch .. (cache.commit_hash ~= "" and " " .. cache.commit_hash or "")
+        end,
         color = function()
           -- Use the cached branch color directly
           return cache.branch_color
         end,
         separator = { right = "" },
       },
+      -- {
+      --   "branch",
+      --   color = function()
+      --     -- Use the cached branch color directly
+      --     return cache.branch_color
+      --   end,
+      --   separator = { right = "" },
+      -- },
       {
         get_venv_name,
         color = { fg = colors["linkarzu_color10"], bg = colors["linkarzu_color02"], gui = "bold" },

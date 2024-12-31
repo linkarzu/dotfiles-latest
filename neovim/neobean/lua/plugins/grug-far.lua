@@ -16,6 +16,15 @@
 -- Files Filter:
 -- !wezterm.lua
 -- !eldritch.lua
+--
+-- I needed to change this
+-- { desc = "Lazygit (Root Dir)" }
+--  for this in all my keymaps
+-- { desc = "Lazygit (Root Dir)", lhs = "", mode = "n" }
+--
+-- So did this
+-- \{ desc = "(.*?)" }
+-- { desc = "$1", lhs = "", mode = "n" }
 
 return {
   "MagicDuck/grug-far.nvim",

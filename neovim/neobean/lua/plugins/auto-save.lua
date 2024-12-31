@@ -18,7 +18,8 @@ vim.api.nvim_create_autocmd("User", {
   group = group,
   callback = function(opts)
     if opts.data.saved_buffer ~= nil then
-      print("AutoSaved at " .. vim.fn.strftime("%H:%M:%S"))
+      -- print("AutoSaved at " .. vim.fn.strftime("%H:%M:%S"))
+      print("AutoSaved")
     end
   end,
 })

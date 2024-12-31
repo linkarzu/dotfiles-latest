@@ -345,3 +345,6 @@ LunarVim
 AstroNvim
 dockerfiles
 dockerfile
+fallbacks
+luasnip
+neovide

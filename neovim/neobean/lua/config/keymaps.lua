@@ -108,6 +108,9 @@ vim.keymap.set({ "n", "v", "i" }, "<M-d>", function()
   require("noice").cmd("dismiss")
 end, { desc = "Dismiss All" })
 
+-- HACK: Manage Markdown tasks in Neovim similar to Obsidian | Telescope to List Completed and Pending Tasks
+-- https://youtu.be/59hvZl077hM
+--
 -- Iterate through incomplete tasks in telescope
 -- You can confirm in your teminal lamw25wmal with:
 -- rg "^\s*-\s\[ \]" test-markdown.md
@@ -128,6 +131,9 @@ vim.keymap.set("n", "<leader>tt", function()
   }))
 end, { desc = "[P]Search for incomplete tasks" })
 
+-- HACK: Manage Markdown tasks in Neovim similar to Obsidian | Telescope to List Completed and Pending Tasks
+-- https://youtu.be/59hvZl077hM
+--
 -- Iterate throuth completed tasks in telescope lamw25wmal
 vim.keymap.set("n", "<leader>tc", function()
   require("telescope.builtin").grep_string(require("telescope.themes").get_ivy({
@@ -152,6 +158,9 @@ end, { desc = "[P]Search for completed tasks" })
 -- I also want to close split panes with escape in terminal mode
 -- vim.keymap.set("n", "<esc>", "<C-W>c", { desc = "Delete Window", remap = true })
 
+-- HACK: How I navigate between buffers in neovim
+-- https://youtu.be/ldfxEda_mzc
+--
 -- I'm switching from bufexplorer to telescope buffers as I get a file preview,
 -- that's basically the main benefit lamw25wmal
 vim.keymap.set("n", "<S-h>", function()
@@ -294,6 +303,9 @@ vim.keymap.set("v", "gl", "$h", { desc = "[P]Go to the end of the line" })
 -- -- The `"+` register represents the system clipboard.
 vim.keymap.set({ "n", "v" }, "<leader>y", [["+y]], { desc = "[P]Yank to system clipboard" })
 
+-- HACK: Paste unformatted text from Neovim to Slack, Discord, Word or any other app
+-- https://youtu.be/S3drTCO7Ct4
+--
 -- NOTE: New method of yanking text without LF (Line Feed) characters
 -- This method is preferred because the old method requires a lot of edge cases,
 -- for example codeblocks, or blockquotes which use `>`
@@ -518,6 +530,9 @@ vim.keymap.set(
 -- The command to switch is `:e #`
 -- `:e` is used to `edit-a-file`, see `help :e`
 
+-- HACK: Alternate between the last 2 tmux sessions or neovim buffers, blazingly fast, with a keymap
+-- https://youtu.be/HWs3YEj05K4
+--
 -- Switch to the alternate buffer lamw25wmal
 vim.keymap.set({ "n", "i", "v" }, "<M-BS>", "<cmd>e #<cr>", { desc = "[P]Alternate buffer" })
 
@@ -632,6 +647,9 @@ end, { desc = "[P]GOLANG, execute file" })
 --   end
 -- end, { desc = "[P]Open (toggle) current dir in right tmux pane" })
 
+-- HACK: Neovim Toggle Terminal on Tmux Pane at the Bottom (or Right)
+-- https://youtu.be/33gQ9p-Zp0I
+--
 -- Toggle a tmux pane on the right in zsh, in the same directory as the current file
 --
 -- Notice I'm setting the variable DISABLE_PULL=1, because in my zshrc file,
@@ -808,6 +826,9 @@ end, { desc = "[P]Reload current buffer" })
 --                             Image section
 -- ############################################################################
 
+-- HACK: View and paste images in Neovim like in Obsidian
+-- https://youtu.be/0O3kqGwNzTI
+--
 -- Paste images
 -- I use a Ctrl keymap so that I can paste images in insert mode
 -- I tried using <C-v> but duh, that's used for visual block mode
@@ -942,6 +963,9 @@ vim.keymap.set({ "n", "v", "i" }, "<M-1>", function()
   end, 100)
 end, { desc = "[P]Paste image 'assets' directory" })
 
+-- HACK: Upload images from Neovim to Imgur
+-- https://youtu.be/Lzl_0SzbUBo
+--
 -- Upload images to my own imgur account (authenticated)
 --
 -- NOTE: This command is for macOS because that's the OS I use
@@ -1271,6 +1295,9 @@ end, { desc = "[P]Paste image to Imgur" })
 
 -- ############################################################################
 
+-- HACK: Upload images from Neovim to Imgur
+-- https://youtu.be/Lzl_0SzbUBo
+--
 -- Open image under cursor in the Preview app (macOS)
 vim.keymap.set("n", "<leader>io", function()
   local function get_image_path()
@@ -1309,6 +1336,9 @@ end, { desc = "[P](macOS) Open image under cursor in Preview" })
 
 -- ############################################################################
 
+-- HACK: Upload images from Neovim to Imgur
+-- https://youtu.be/Lzl_0SzbUBo
+--
 -- Open image under cursor in Finder (macOS)
 --
 -- THIS ONLY WORKS IF YOU'RE NNNNNOOOOOOTTTTT USING ABSOLUTE PATHS,
@@ -1351,6 +1381,9 @@ end, { desc = "[P](macOS) Open image under cursor in Finder" })
 
 -- ############################################################################
 
+-- HACK: Upload images from Neovim to Imgur
+-- https://youtu.be/Lzl_0SzbUBo
+--
 -- Delete image file under cursor using trash app (macOS)
 vim.keymap.set("n", "<leader>id", function()
   local function get_image_path()
@@ -1441,6 +1474,9 @@ end, { desc = "[P](macOS) Delete image file under cursor" })
 
 -- ############################################################################
 
+-- HACK: Upload images from Neovim to Imgur
+-- https://youtu.be/Lzl_0SzbUBo
+--
 -- Refresh the images in the current buffer
 -- Useful if you delete an actual image file and want to see the changes
 -- without having to re-open neovim
@@ -1456,6 +1492,9 @@ end, { desc = "[P]Refresh images" })
 
 -- ############################################################################
 
+-- HACK: Upload images from Neovim to Imgur
+-- https://youtu.be/Lzl_0SzbUBo
+--
 -- Set up a keymap to clear all images in the current buffer
 vim.keymap.set("n", "<leader>ic", function()
   -- This is the command that clears the images
@@ -1468,6 +1507,9 @@ end, { desc = "[P]Clear images" })
 -- ############################################################################
 --                         Begin of markdown section
 -- ############################################################################
+
+-- HACK: My complete Neovim markdown setup and workflow in 2024
+-- https://youtu.be/c0cuvzK1SDo
 
 -- Mappings for creating new groups that don't exist
 -- When I press leader, I want to modify the name of the options shown
@@ -1567,6 +1609,9 @@ vim.keymap.set("n", "<leader>md", function()
   vim.api.nvim_buf_set_lines(current_buffer, start_row, end_row + 1, false, new_lines)
 end, { desc = "[P]Toggle bullet point (dash)" })
 
+-- HACK: Manage Markdown tasks in Neovim similar to Obsidian | Telescope to List Completed and Pending Tasks
+-- https://youtu.be/59hvZl077hM
+--
 -- If there is no `untoggled` or `done` label on an item, mark it as done
 -- and move it to the "## completed tasks" markdown heading in the same file, if
 -- the heading does not exist, it will be created, if it exists, items will be
@@ -1777,6 +1822,9 @@ end, { desc = "[P]Toggle task and move it to 'done'" })
 --   end
 -- end, { desc = "Toggle bullet point at the beginning of the current line" })
 
+-- HACK: neovim spell multiple languages
+-- https://youtu.be/uLFAMYFmpkE
+--
 -- Keymap to switch spelling language to English lamw25wmal
 -- To save the language settings configured on each buffer, you need to add
 -- "localoptions" to vim.opt.sessionoptions in the `lua/config/options.lua` file
@@ -1785,18 +1833,27 @@ vim.keymap.set("n", "<leader>msle", function()
   vim.cmd("echo 'Spell language set to English'")
 end, { desc = "[P]Spelling language English" })
 
+-- HACK: neovim spell multiple languages
+-- https://youtu.be/uLFAMYFmpkE
+--
 -- Keymap to switch spelling language to Spanish lamw25wmal
 vim.keymap.set("n", "<leader>msls", function()
   vim.opt.spelllang = "es"
   vim.cmd("echo 'Spell language set to Spanish'")
 end, { desc = "[P]Spelling language Spanish" })
 
+-- HACK: neovim spell multiple languages
+-- https://youtu.be/uLFAMYFmpkE
+--
 -- Keymap to switch spelling language to both spanish and english lamw25wmal
 vim.keymap.set("n", "<leader>mslb", function()
   vim.opt.spelllang = "en,es"
   vim.cmd("echo 'Spell language set to Spanish and English'")
 end, { desc = "[P]Spelling language Spanish and English" })
 
+-- HACK: neovim spell multiple languages
+-- https://youtu.be/uLFAMYFmpkE
+--
 -- Show spelling suggestions / spell suggestions
 vim.keymap.set("n", "<leader>mss", function()
   -- Simulate pressing "z=" with "m" option using feedkeys
@@ -1810,17 +1867,26 @@ vim.keymap.set("n", "<leader>mss", function()
   -- vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("z=", true, false, true), "m", true)
 end, { desc = "[P]Spelling suggestions" })
 
+-- HACK: neovim spell multiple languages
+-- https://youtu.be/uLFAMYFmpkE
+--
 -- markdown good, accept spell suggestion
 -- Add word under the cursor as a good word
 vim.keymap.set("n", "<leader>msg", function()
   vim.cmd("normal! zg")
 end, { desc = "[P]Spelling add word to spellfile" })
 
+-- HACK: neovim spell multiple languages
+-- https://youtu.be/uLFAMYFmpkE
+--
 -- Undo zw, remove the word from the entry in 'spellfile'.
 vim.keymap.set("n", "<leader>msu", function()
   vim.cmd("normal! zug")
 end, { desc = "[P]Spelling undo, remove word from list" })
 
+-- HACK: neovim spell multiple languages
+-- https://youtu.be/uLFAMYFmpkE
+--
 -- Repeat the replacement done by |z=| for all matches with the replaced word
 -- in the current window.
 vim.keymap.set("n", "<leader>msr", function()
@@ -1986,13 +2052,16 @@ end, { desc = "[P]BOLD toggle bold markers" })
 --   end
 -- end, { desc = "[P]BOLD toggle on current word or selection" })
 
--- Crate task or checkbox lamw25wmal
--- These are marked with <leader>x using bullets.vim
-vim.keymap.set("n", "<leader>ml", function()
-  vim.cmd("normal! i- [ ]  ")
-  vim.cmd("startinsert")
-end, { desc = "[P]Toggle checkbox" })
+-- -- Crate task or checkbox lamw25wmal
+-- -- These are marked with <leader>x using bullets.vim
+-- vim.keymap.set("n", "<leader>ml", function()
+--   vim.cmd("normal! i- [ ]  ")
+--   vim.cmd("startinsert")
+-- end, { desc = "[P]Toggle checkbox" })
 
+-- HACK: Manage Markdown tasks in Neovim similar to Obsidian | Telescope to List Completed and Pending Tasks
+-- https://youtu.be/59hvZl077hM
+--
 -- Crate task or checkbox lamw25wmal
 -- These are marked with <leader>x using bullets.vim
 -- I used <C-l> before, but that is used for pane navigation
@@ -2093,6 +2162,9 @@ end, { desc = "[P]Paste Github link" })
 --                           Folding section
 -------------------------------------------------------------------------------
 
+-- HACK: Fold markdown headings in Neovim with a keymap
+-- https://youtu.be/EYczZLNEnIY
+--
 -- Use <CR> to fold when in normal mode
 -- To see help about folds use `:help fold`
 vim.keymap.set("n", "<CR>", function()
@@ -2157,6 +2229,9 @@ local function fold_markdown_headings(levels)
   vim.fn.winrestview(saved_view)
 end
 
+-- HACK: Fold markdown headings in Neovim with a keymap
+-- https://youtu.be/EYczZLNEnIY
+--
 -- Keymap for unfolding markdown headings of level 2 or above
 -- Changed all the markdown folding and unfolding keymaps from <leader>mfj to
 -- zj, zk, zl, z; and zu respectively lamw25wmal
@@ -2167,6 +2242,9 @@ vim.keymap.set("n", "zu", function()
   vim.cmd("normal! zR") -- Unfold all headings
 end, { desc = "[P]Unfold all headings level 2 or above" })
 
+-- HACK: Fold markdown headings in Neovim with a keymap
+-- https://youtu.be/EYczZLNEnIY
+--
 -- gk jummps to the markdown heading above and then folds it
 -- zi by default toggles folding, but I don't need it lamw25wmal
 vim.keymap.set("n", "zi", function()
@@ -2178,6 +2256,9 @@ vim.keymap.set("n", "zi", function()
   vim.cmd("normal! za")
 end, { desc = "[P]Fold the heading cursor currently on" })
 
+-- HACK: Fold markdown headings in Neovim with a keymap
+-- https://youtu.be/EYczZLNEnIY
+--
 -- Keymap for folding markdown headings of level 1 or above
 vim.keymap.set("n", "zj", function()
   -- vim.keymap.set("n", "<leader>mfj", function()
@@ -2188,6 +2269,9 @@ vim.keymap.set("n", "zj", function()
   fold_markdown_headings({ 6, 5, 4, 3, 2, 1 })
 end, { desc = "[P]Fold all headings level 1 or above" })
 
+-- HACK: Fold markdown headings in Neovim with a keymap
+-- https://youtu.be/EYczZLNEnIY
+--
 -- Keymap for folding markdown headings of level 2 or above
 -- I know, it reads like "madafaka" but "k" for me means "2"
 vim.keymap.set("n", "zk", function()
@@ -2199,6 +2283,9 @@ vim.keymap.set("n", "zk", function()
   fold_markdown_headings({ 6, 5, 4, 3, 2 })
 end, { desc = "[P]Fold all headings level 2 or above" })
 
+-- HACK: Fold markdown headings in Neovim with a keymap
+-- https://youtu.be/EYczZLNEnIY
+--
 -- Keymap for folding markdown headings of level 3 or above
 vim.keymap.set("n", "zl", function()
   -- vim.keymap.set("n", "<leader>mfl", function()
@@ -2209,6 +2296,9 @@ vim.keymap.set("n", "zl", function()
   fold_markdown_headings({ 6, 5, 4, 3 })
 end, { desc = "[P]Fold all headings level 3 or above" })
 
+-- HACK: Fold markdown headings in Neovim with a keymap
+-- https://youtu.be/EYczZLNEnIY
+--
 -- Keymap for folding markdown headings of level 4 or above
 vim.keymap.set("n", "z;", function()
   -- vim.keymap.set("n", "<leader>mf;", function()
@@ -2245,6 +2335,9 @@ vim.keymap.set("n", "<leader>td", function()
   end
 end, { desc = "[P]TODO toggle item done or not" })
 
+-- HACK: Create table of contents in neovim with markdown-toc
+-- https://youtu.be/BVyrXsZ_ViA
+--
 -- Generate/update a Markdown TOC
 -- To generate the TOC I use the markdown-toc plugin
 -- https://github.com/jonschlinkert/markdown-toc
@@ -2333,11 +2426,17 @@ local function update_markdown_toc(heading2, heading3)
   vim.cmd("loadview")
 end
 
+-- HACK: Create table of contents in neovim with markdown-toc
+-- https://youtu.be/BVyrXsZ_ViA
+--
 -- Keymap for English TOC
 vim.keymap.set("n", "<leader>mtt", function()
   update_markdown_toc("## Contents", "### Table of contents")
 end, { desc = "[P]Insert/update Markdown TOC (English)" })
 
+-- HACK: Create table of contents in neovim with markdown-toc
+-- https://youtu.be/BVyrXsZ_ViA
+--
 -- Keymap for Spanish TOC lamw25wmal
 vim.keymap.set("n", "<leader>mts", function()
   update_markdown_toc("## Contenido", "### Tabla de contenido")
@@ -2449,6 +2548,9 @@ end, { desc = "[P]Return to position before jumping" })
 --   vim.cmd("nohlsearch")
 -- end, { desc = "[P]Go to next markdown header" })
 
+-- HACK: Jump between markdown headings in lazyvim
+-- https://youtu.be/9S7Zli9hzTE
+--
 -- Search UP for a markdown header
 -- Make sure to follow proper markdown convention, and you have a single H1
 -- heading at the very top of the file
@@ -2466,6 +2568,9 @@ vim.keymap.set({ "n", "v" }, "gk", function()
   vim.cmd("nohlsearch")
 end, { desc = "[P]Go to previous markdown header" })
 
+-- HACK: Jump between markdown headings in lazyvim
+-- https://youtu.be/9S7Zli9hzTE
+--
 -- Search DOWN for a markdown header
 -- Make sure to follow proper markdown convention, and you have a single H1
 -- heading at the very top of the file
@@ -2617,6 +2722,9 @@ local function switch_to_daily_note(date_line)
   vim.cmd("edit " .. vim.fn.fnameescape(full_path))
 end
 
+-- HACK: Open your daily note in Neovim with a single keymap
+-- https://youtu.be/W3hgsMoUcqo
+--
 -- Keymap to switch to the daily note or create it if it does not exist
 vim.keymap.set("n", "<leader>fd", function()
   local current_line = vim.api.nvim_get_current_line()
@@ -2764,6 +2872,9 @@ end
 vim.keymap.set({ "n", "v", "i" }, "<M-f>", open_in_file_manager, { desc = "[P]Open current file in file explorer" })
 vim.keymap.set("n", "<leader>fO", open_in_file_manager, { desc = "[P]Open current file in file explorer" })
 
+-- HACK: Is Neovide just for Visual Effects? | Open LazyGit files, Disable Plugins, TMUX and more
+-- https://youtu.be/rNYtfA4zlO4
+--
 -- Open current file in Neovide
 vim.keymap.set("n", "<leader>fN", function()
   local file_path = vim.fn.expand("%:p")

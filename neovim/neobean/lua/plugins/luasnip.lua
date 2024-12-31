@@ -280,7 +280,7 @@ return {
           "Follow me on twitter",
           "https://x.com/link_arzu",
           "",
-          "My dotfiles",
+          "My dotfiles (remember to star them)",
           "https://github.com/linkarzu/dotfiles-latest",
           "",
           "Videos mentioned in this video:",

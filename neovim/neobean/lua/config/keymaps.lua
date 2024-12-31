@@ -167,6 +167,37 @@ vim.keymap.set("n", "<S-h>", function()
   }))
 end, { desc = "[P]Open telescope buffers" })
 
+-- Unfinished attempt ty try to get the final config of a plugin, see reddit:
+-- https://www.reddit.com/r/neovim/comments/1hmmfpn/how_can_i_see_the_final_fully_merged_config_of/
+vim.keymap.set("n", "<leader>fP", function()
+  vim.ui.input({ prompt = "Plugin name: " }, function(plugin_name)
+    if not plugin_name or plugin_name == "" then
+      return
+    end
+    -- Create a new buffer for the configuration
+    local buf = vim.api.nvim_create_buf(false, true)
+    vim.bo[buf].buftype = "nofile"
+    vim.bo[buf].bufhidden = "wipe"
+    vim.bo[buf].swapfile = false
+    vim.bo[buf].filetype = "lua"
+    -- Get the plugin configuration
+    local plugin_config = require("lazy.core.config").plugins[plugin_name]
+    -- Convert the config to string and split into lines
+    local header = {
+      "Plugin Configuration for: " .. plugin_name,
+      "------------------------",
+    }
+    local config_lines = vim.split(vim.inspect(plugin_config), "\n")
+    -- Combine header and config lines
+    local all_lines = vim.list_extend(header, config_lines)
+    -- Set the buffer content
+    vim.api.nvim_buf_set_lines(buf, 0, -1, false, all_lines)
+    -- Open in a right split
+    vim.cmd("vsplit")
+    vim.api.nvim_win_set_buf(vim.api.nvim_get_current_win(), buf)
+  end)
+end, { desc = "[P]Inspect plugin merge config" })
+
 -- -- -- Open buffers with fzf-lua
 -- vim.keymap.set("n", "<S-h>", function()
 --   require("fzf-lua").buffers({

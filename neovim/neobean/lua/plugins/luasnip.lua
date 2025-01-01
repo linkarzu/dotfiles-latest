@@ -281,6 +281,7 @@ return {
         desc = "Inserts links (Ko-fi, Twitter, TikTok)",
       }, {
         t({
+          "Members only discord -> https://www.youtube.com/channel/UCrSIvbFncPSlK6AdwE2QboA/join",
           "☕ Support me -> https://ko-fi.com/linkarzu",
           "☑ My Twitter -> https://x.com/link_arzu",
           "❤‍🔥 My tiktok -> https://www.tiktok.com/@linkarzu",
@@ -306,6 +307,9 @@ return {
           "",
           "",
           "```bash",
+          "Members only discord",
+          "https://www.youtube.com/channel/UCrSIvbFncPSlK6AdwE2QboA/join",
+          "",
           "If you find this video helpful and want to support me",
           "https://ko-fi.com/linkarzu",
           "",

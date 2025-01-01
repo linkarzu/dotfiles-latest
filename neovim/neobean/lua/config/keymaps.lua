@@ -1638,6 +1638,7 @@ vim.keymap.set("n", "<M-x>", function()
   local total_lines = #lines
   -- If cursor is beyond last line, do nothing
   if start_line >= total_lines then
+    vim.cmd("loadview")
     return
   end
   ------------------------------------------------------------------------------
@@ -1662,6 +1663,7 @@ vim.keymap.set("n", "<M-x>", function()
   if not bullet_line:match("^%s*%- %[[x ]%]") then
     -- Not a task bullet => show a message and return
     print("Not a task bullet: no action taken.")
+    vim.cmd("loadview")
     return
   end
   ------------------------------------------------------------------------------
@@ -1749,6 +1751,7 @@ vim.keymap.set("n", "<M-x>", function()
     chunk[1] = removeLabel(chunk[1])
     chunk[1] = insertLabelAfterBracket(chunk[1], "`untoggled`")
     updateBufferWithChunk(chunk)
+    vim.notify("Untoggled", vim.log.levels.INFO)
   elseif has_untoggled_index then
     chunk[has_untoggled_index] =
       removeLabel(chunk[has_untoggled_index]):gsub("`untoggled`", "`" .. label_done .. " " .. timestamp .. "`")
@@ -1756,7 +1759,13 @@ vim.keymap.set("n", "<M-x>", function()
     chunk[1] = removeLabel(chunk[1])
     chunk[1] = insertLabelAfterBracket(chunk[1], "`" .. label_done .. " " .. timestamp .. "`")
     updateBufferWithChunk(chunk)
+    vim.notify("Completed", vim.log.levels.INFO)
   else
+    -- Save original window view before modifications
+    local win = api.nvim_get_current_win()
+    local view = api.nvim_win_call(win, function()
+      return vim.fn.winsaveview()
+    end)
     chunk[1] = bulletToX(chunk[1])
     chunk[1] = insertLabelAfterBracket(chunk[1], "`" .. label_done .. " " .. timestamp .. "`")
     -- Remove chunk from the original lines
@@ -1791,9 +1800,17 @@ vim.keymap.set("n", "<M-x>", function()
         table.remove(lines, after_last_item)
       end
     end
+    -- Update buffer content
     vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
+    vim.notify("Completed", vim.log.levels.INFO)
+    -- Restore window view to preserve scroll position
+    api.nvim_win_call(win, function()
+      vim.fn.winrestview(view)
+    end)
   end
-  -- Restore the view to preserve folds
+  -- Write changes and restore view to preserve folds
+  -- "Update" saves only if the buffer has been modified since the last save
+  vim.cmd("silent update")
   vim.cmd("loadview")
 end, { desc = "[P]Toggle task and move it to 'done'" })
 

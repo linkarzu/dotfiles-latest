@@ -131,7 +131,7 @@ else
   vim.cmd(string.format([[highlight WinBar3 guifg=%s gui=bold]], colors["linkarzu_color24"]))
   -- Function to get the full path and replace the home directory with ~
   local function get_winbar_path()
-    local full_path = vim.fn.expand("%:p")
+    local full_path = vim.fn.expand("%:p:h")
     return full_path:gsub(vim.fn.expand("$HOME"), "~")
   end
   -- Function to get the number of open buffers using the :ls command

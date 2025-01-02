@@ -1,6 +1,12 @@
 # To get the default values
 # ghostty +show-config --default --docs > ~/github/dotfiles-latest/ghostty/config-default
 
+# To get syntax highlighting in neovim, see
+# ~/github/dotfiles-latest/neovim/neobean/lua/plugins/ghostty.lua
+
+# HACK: How to setup the Ghostty terminal, is it just hype? READ PINNED MESSAGE
+# https://youtu.be/rCiq5CyFFhA
+
 # No way of reloading config via command yet, only via keymap cmd+shift+,
 # Created a script to do it so that its reloaded with my colorscheme selector
 

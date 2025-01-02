@@ -32,6 +32,7 @@ return {
         "templ",
         "php",
         "promql",
+        "glsl",
       },
     },
   },

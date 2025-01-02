@@ -1,6 +1,5 @@
 // credits: https://github.com/rymdlego
 
-const vec3 bg = vec3(0.133, 0.153, 0.180);
 const float speed = 0.2;
 const float cube_size = 1.0;
 const float cube_brightness = 1.0;
@@ -102,17 +101,14 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
         cubeColor = mix(cubeColor.rgb, vec3(0.0,0.0,0.0), 1.0);
         color += cubeColor;
         cubes = vec4(color, 1.0) * vec4(1.0 - (totalDist/MAX_DIST));
-        // cubes = vec4(bg,1.0) + (vec4(color, 1.0) * vec4(1.0 - (totalDist/MAX_DIST)));
-        cubes = vec4(bg,1.0) + vec4(cubes.rgb*0.02*cube_brightness, 0.1);
+        cubes = vec4(cubes.rgb*0.02*cube_brightness, 0.1);
     } 
-    else
-    {
-        cubes = vec4(bg, 1.0);
+    else {
+        cubes = vec4(0.0);
     }
 
     vec2 uv = fragCoord/iResolution.xy;
     vec4 terminalColor = texture(iChannel0, uv);
-    float mask = 1.0 - step(0.5, dot(terminalColor.rgb, vec3(1.0)));
-    vec3 blendedColor = mix(terminalColor.rgb, cubes.rgb, mask);
+    vec3 blendedColor = terminalColor.rgb + cubes.rgb;
     fragColor = vec4(blendedColor, terminalColor.a);
 }

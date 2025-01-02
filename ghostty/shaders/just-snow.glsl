@@ -29,7 +29,7 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
 	for (int i = 0; i < LAYERS; i++) {
 		float fi = float(i);
 		vec2 q =-uv*(1.0 + fi * DEPTH);
-		q += vec2(q.y * (WIDTH * mod(fi * 7.238917, 1.0) - WIDTH * 0.5), SPEED * iTime / (1.0 + fi * DEPTH * 0.03));
+		q += vec2(q.y * (WIDTH * mod(fi * 7.238917, 1.0) - WIDTH * 0.5), -SPEED * iTime / (1.0 + fi * DEPTH * 0.03));
 		vec3 n = vec3(floor(q), 31.189 + fi);
 		vec3 m = floor(n) * 0.00001 + fract(n);
 		vec3 mp = (31415.9 + m) / fract(p * m);

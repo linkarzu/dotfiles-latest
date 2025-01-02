@@ -842,6 +842,10 @@ const rules: KarabinerRules[] = [
       k: open(
         "btt://execute_assigned_actions_for_trigger/?uuid=92B63395-5930-463A-9301-57BA344D6981"
       ),
+      // Restart Ghostty
+      g: open(
+        "btt://execute_assigned_actions_for_trigger/?uuid=DAB53833-E0D1-4FF6-A411-3B02E3C55153"
+      ),
     },
 
     // c = "colorscheme selector"

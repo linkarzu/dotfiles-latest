@@ -970,6 +970,8 @@ vim.keymap.set({ "n", "v", "i" }, "<M-1>", function()
 end, { desc = "[P]Paste image 'assets' directory" })
 
 -- Rename image under cursor lamw25wmal
+-- If the image is referenced multiple times in the file, it will also rename
+-- all the other occurrences in the file
 vim.keymap.set("n", "<leader>iR", function()
   local function get_image_path()
     -- Get the current line
@@ -1026,43 +1028,40 @@ vim.keymap.set("n", "<leader>iR", function()
       -- Get the old and new filenames (without path)
       local old_filename = vim.fn.fnamemodify(absolute_image_path, ":t")
       local new_filename = vim.fn.fnamemodify(new_absolute_path, ":t")
-      -- Debug prints
-      print("Old filename:", old_filename)
-      print("New filename:", new_filename)
+      -- -- Debug prints
+      -- print("Old filename:", old_filename)
+      -- print("New filename:", new_filename)
       -- Get buffer content
       local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
-      print("Number of lines in buffer:", #lines)
+      -- print("Number of lines in buffer:", #lines)
       -- Replace the text in each line that contains the old filename
       for i = 0, #lines - 1 do
         local line = lines[i + 1]
-        local start_idx = line:find(old_filename, 1, true)
-        if start_idx then
-          print("Found match in line", i + 1, "at position", start_idx)
-          print("Line before:", line)
-          -- Use nvim_buf_set_text for precise replacement
+        -- First find the image markdown pattern with explicit end
+        local img_start, img_end = line:find("!%[.-%]%(.-%)")
+        if img_start and img_end then
+          -- Get just the exact markdown part without any extras
+          local markdown_part = line:match("!%[.-%]%(.-%)")
+          -- Replace old filename with new filename
+          local escaped_old = old_filename:gsub("[%-%.%+%[%]%(%)%$%^%%%?%*]", "%%%1")
+          local escaped_new = new_filename:gsub("[%%]", "%%%%")
+          -- Replace in the exact markdown part
+          local new_markdown = markdown_part:gsub(escaped_old, escaped_new)
+          -- Replace that exact portion in the line
           vim.api.nvim_buf_set_text(
-            0, -- buffer number (0 = current buffer)
-            i, -- start line
-            start_idx - 1, -- start column
-            i, -- end line
-            start_idx + #old_filename - 1, -- end column
-            { new_filename } -- replacement text
+            0,
+            i,
+            img_start - 1,
+            i,
+            img_start + #markdown_part - 1, -- Use exact length of markdown part
+            { new_markdown }
           )
-          -- Debug: verify the change
-          local new_line = vim.api.nvim_buf_get_lines(0, i, i + 1, false)[1]
-          print("Line after:", new_line)
         end
       end
-      -- Force buffer write
-      vim.cmd("write!")
-      -- Clear and refresh image display
-      require("image").clear()
-      vim.cmd("edit!")
+      -- "Update" saves only if the buffer has been modified since the last save
+      vim.cmd("update")
       vim.api.nvim_echo({
-        { "Image renamed successfully:\n", "Normal" },
-        { absolute_image_path, "Normal" },
-        { " -> ", "Normal" },
-        { new_absolute_path, "Normal" },
+        { "Image renamed successfully", "Normal" },
       }, false, {})
     else
       vim.api.nvim_echo({

@@ -25,6 +25,13 @@
 -- So did this
 -- \{ desc = "(.*?)" }
 -- { desc = "$1", lhs = "", mode = "n" }
+--
+-- To add `{:target="\_blank"}` to links that don't have it
+-- \[(.*?)\]\((http[s]?:\/\/.*?)\)(?:[^{]|$)
+-- [$1]($2){:target="_blank"}
+
+-- See ~/github/dotfiles-latest/neovim/neobean/README.md for more multiline
+-- examples
 
 return {
   "MagicDuck/grug-far.nvim",

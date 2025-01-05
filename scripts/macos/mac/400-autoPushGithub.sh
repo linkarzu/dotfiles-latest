@@ -8,9 +8,26 @@
 # This file above will automatically be created and loaded by my zshrc file, so
 # no need to create it manually
 
+# Configure logging
+LOG_DIR="$HOME/.logs/git_autopush"
+mkdir -p "$LOG_DIR"
+LOG_FILE="$LOG_DIR/autopush_$(date '+%Y%m').log"
+
+log_message() {
+  local level="$1"
+  local repo="$2"
+  local message="$3"
+  local timestamp=$(date '+%Y-%m-%d %H:%M:%S')
+  echo "[$timestamp] [$level] [$repo] $message" | tee -a "$LOG_FILE"
+}
+
 # List of repositories to push to
+#
+# NOTE: Don't keep the repos below in google drive, iCloud orsimilar, as you'll be
+# receiving some weird notifications about
+# fatal: mmap failed: Resource deadlock avoided
 REPO_LIST=(
-  "$HOME/Library/Mobile Documents/com~apple~CloudDocs/github/skitty"
+  "$HOME/github/skitty"
   "$HOME/github/obsidian_main"
 )
 
@@ -25,7 +42,8 @@ PUSH_INTERVAL=180
 display_notification() {
   local message="$1"
   local title="$2"
-  echo "DEBUG: Sending notification with title='$title' and message='$message'"
+  local repo="$3"
+  log_message "NOTIFY" "$repo" "Notification: $title - $message"
   osascript -e "display notification \"$message\" with title \"$title\""
 }
 
@@ -34,12 +52,26 @@ SUCCESS_MESSAGES=""
 
 # Loop through each repository
 for REPO_PATH in "${REPO_LIST[@]}"; do
+  REPO_NAME=$(basename "$REPO_PATH")
+  ERROR_LOG="$LOG_DIR/${REPO_NAME}_error.log"
+
   # Navigate to the repository
   cd "$REPO_PATH" || {
-    echo "DEBUG: Failed to navigate to $REPO_PATH"
-    display_notification "Failed to navigate to $REPO_PATH" "Error"
+    log_message "ERROR" "$REPO_NAME" "Failed to navigate to $REPO_PATH"
+    display_notification "Failed to navigate to directory" "Error" "$REPO_NAME"
     continue
   }
+
+  log_message "INFO" "$REPO_NAME" "Starting git operations"
+
+  # Check for iCloud sync status if repo is in iCloud
+  if [[ "$REPO_PATH" == *"Mobile Documents"* ]]; then
+    if [[ -n $(find . -name "*.icloud") ]]; then
+      log_message "WARN" "$REPO_NAME" "iCloud files still syncing - found .icloud files"
+      display_notification "Skipping due to iCloud sync in progress" "Warning" "$REPO_NAME"
+      continue
+    fi
+  fi
 
   # Pull the latest changes, otherwise you will get errors and won't be able to
   # push if modifying from multiple devices
@@ -47,30 +79,30 @@ for REPO_PATH in "${REPO_LIST[@]}"; do
   # the remote branch, avoiding unnecessary merge commits
   # Check for unstaged changes and skip pull if found
   if [[ -n $(git status --porcelain) ]]; then
-    echo "DEBUG: Unstaged changes detected in $REPO_PATH. Skipping pull."
+    log_message "INFO" "$REPO_NAME" "Unstaged changes detected. Skipping pull."
   else
     # Pull the latest changes
     # if ! git pull --rebase >>/tmp/git_error.log 2>&1; then
-    if ! git pull --rebase >/dev/null 2>>/tmp/git_error.log; then
-      ERROR_MSG=$(</tmp/git_error.log)
-      echo "DEBUG: Pull failed for $REPO_PATH with error: $ERROR_MSG"
-      display_notification "Pull failed: $ERROR_MSG" "Git Pull Error"
+    if ! git pull --rebase 2>"$ERROR_LOG"; then
+      ERROR_MSG=$(cat "$ERROR_LOG")
+      log_message "ERROR" "$REPO_NAME" "Pull failed: $ERROR_MSG"
+      display_notification "Pull failed - check logs" "Git Pull Error" "$REPO_NAME"
       continue
     else
-      echo "DEBUG: Pull completed successfully for $REPO_PATH"
+      log_message "INFO" "$REPO_NAME" "Pull completed successfully"
     fi
   fi
 
   # Check if any files were modified within the last PUSH_INTERVAL seconds
-  # -newermt stands for “newer than modification time.”
+  # -newermt stands for "newer than modification time."
   # This will find Files Modified Within the Last X Seconds, and if ther are
   # RECENT_MODIFICATIONS will contain a non-empty list of file paths
   # Ignore the .git dir as commands like git pull may modify stuff and we'll skip updates
   RECENT_MODIFICATIONS=$(find . -type f -not -path './.git/*' -newermt "-${PUSH_INTERVAL} seconds" 2>/dev/null)
-  echo "DEBUG: Recent modifications for $REPO_PATH: $RECENT_MODIFICATIONS"
   # If RECENT_MODIFICATIONS is not empty (-n), it skips pushing changes for this repository
   if [[ -n "$RECENT_MODIFICATIONS" ]]; then
-    echo "DEBUG: Skipping push for $REPO_PATH due to recent modifications."
+    log_message "INFO" "$REPO_NAME" "Skipping push due to recent modifications"
+    log_message "DEBUG" "$REPO_NAME" "Modified files: $RECENT_MODIFICATIONS"
     continue
   fi
 
@@ -80,45 +112,45 @@ for REPO_PATH in "${REPO_LIST[@]}"; do
 
   if [[ -n "$UNCOMMITTED_CHANGES" || "$UNPUSHED_COMMITS" -gt 0 ]]; then
     if [[ -n "$UNCOMMITTED_CHANGES" ]]; then
+      log_message "INFO" "$REPO_NAME" "Staging changes"
       # Stage all changes
       git add .
 
       # Commit with a timestamp message and computer name
       COMPUTER_NAME=$(scutil --get ComputerName)
       TIMESTAMP=$(date '+%y%m%d-%H%M%S')
-      if ! git commit -m "$COMPUTER_NAME-$TIMESTAMP" >>/tmp/git_error.log 2>&1; then
-        ERROR_MSG=$(</tmp/git_error.log)
-        echo "DEBUG: Displaying notification for commit failure"
-        display_notification "Commit failed: $ERROR_MSG" "Git Commit Error"
+      if ! git commit -m "$COMPUTER_NAME-$TIMESTAMP" 2>"$ERROR_LOG"; then
+        ERROR_MSG=$(cat "$ERROR_LOG")
+        log_message "ERROR" "$REPO_NAME" "Commit failed: $ERROR_MSG"
+        display_notification "Commit failed - check logs" "Git Commit Error" "$REPO_NAME"
         continue
       else
-        echo "DEBUG: Commit successful for $REPO_PATH"
+        log_message "INFO" "$REPO_NAME" "Changes committed successfully"
       fi
     fi
 
     # Push changes
-    if git push >>/tmp/git_error.log 2>&1; then
-      REPO_NAME=$(basename "$REPO_PATH")
-      SUCCESS_MESSAGES+="\n$REPO_NAME $COMPUTER_NAME-$TIMESTAMP"
-      echo "DEBUG: Push successful for $REPO_PATH"
+    if ! git push 2>"$ERROR_LOG"; then
+      ERROR_MSG=$(cat "$ERROR_LOG")
+      log_message "ERROR" "$REPO_NAME" "Push failed: $ERROR_MSG"
+      display_notification "Push failed - check logs" "Git Push Error" "$REPO_NAME"
     else
-      ERROR_MSG=$(</tmp/git_error.log)
-      echo "DEBUG: Displaying notification for push failure"
-      display_notification "Push failed: $ERROR_MSG" "Git Push Error"
-      continue
+      SUCCESS_MESSAGES+="\n$REPO_NAME $COMPUTER_NAME-$TIMESTAMP"
+      log_message "SUCCESS" "$REPO_NAME" "Push completed successfully"
     fi
   else
-    echo "DEBUG: No changes to push for $REPO_PATH."
+    log_message "INFO" "$REPO_NAME" "No changes to push"
   fi
   # Don't delete the file, It will be deleted when I restart the computer
   # rm -f /tmp/git_error.log
 done
 
 # Display all success messages in a single notification
-echo "DEBUG: Final SUCCESS_MESSAGES: $SUCCESS_MESSAGES"
 if [[ -n "$SUCCESS_MESSAGES" ]]; then
-  echo "DEBUG: Displaying success notification"
-  display_notification "Repositories updated:$SUCCESS_MESSAGES" "Git Push Success"
+  display_notification "Repositories updated:$SUCCESS_MESSAGES" "Git Push Success" "ALL"
 else
-  echo "DEBUG: No repositories updated during this run."
+  log_message "INFO" "ALL" "No repositories updated during this run"
 fi
+
+# Cleanup old logs (keep last 7 days)
+find "$LOG_DIR" -name "*.log" -mtime +7 -delete

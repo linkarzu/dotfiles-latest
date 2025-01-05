@@ -144,113 +144,134 @@ end
 return {
   "nvim-lualine/lualine.nvim",
   event = "VeryLazy",
-  -- enabled = true,
-  enabled = vim.g.neovim_mode ~= "skitty", -- Disable lualine for skitty mode
+  enabled = true,
+  -- enabled = vim.g.neovim_mode ~= "skitty", -- Disable lualine for skitty mode
   opts = function(_, opts)
-    opts.sections.lualine_c = {
-      {
-        "diagnostics",
-        symbols = {
-          error = icons.diagnostics.Error,
-          warn = icons.diagnostics.Warn,
-          info = icons.diagnostics.Info,
-          hint = icons.diagnostics.Hint,
+    if vim.g.neovim_mode == "skitty" then
+      -- For skitty mode, only keep section_x and disable all others
+      opts.sections = {
+        lualine_a = {},
+        lualine_b = {},
+        lualine_c = {},
+        lualine_x = {
+          {
+            "diff",
+            symbols = {
+              added = icons.git.added,
+              modified = icons.git.modified,
+              removed = icons.git.removed,
+            },
+          },
         },
-      },
-    }
+        lualine_y = {},
+        lualine_z = {},
+      }
+    else
+      opts.sections.lualine_c = {
+        {
+          "diagnostics",
+          symbols = {
+            error = icons.diagnostics.Error,
+            warn = icons.diagnostics.Warn,
+            info = icons.diagnostics.Info,
+            hint = icons.diagnostics.Hint,
+          },
+        },
+      }
 
-    -- Configure lualine_y with progress and location
-    opts.sections.lualine_y = {
-      { "progress", separator = " ", padding = { left = 1, right = 0 } },
-      { "location", padding = { left = 0, right = 1 } },
-    }
+      -- Configure lualine_y with progress and location
+      opts.sections.lualine_y = {
+        { "progress", separator = " ", padding = { left = 1, right = 0 } },
+        { "location", padding = { left = 0, right = 1 } },
+      }
 
-    -- Disable lualine_z section which shows the time
-    opts.sections.lualine_z = {}
+      -- Disable lualine_z section which shows the time
+      opts.sections.lualine_z = {}
 
-    -- Configure lualine_b with branch and color condition
-    opts.sections.lualine_b = {
-      {
-        function()
-          -- Return branch name and commit hash if available
-          return cache.branch .. (cache.commit_hash ~= "" and " " .. cache.commit_hash or "")
-        end,
+      -- Configure lualine_b with branch and color condition
+      opts.sections.lualine_b = {
+        {
+          function()
+            -- Return branch name and commit hash if available
+            return cache.branch .. (cache.commit_hash ~= "" and " " .. cache.commit_hash or "")
+          end,
+          color = function()
+            -- Use the cached branch color directly
+            return cache.branch_color
+          end,
+          separator = { right = "" },
+        },
+        -- {
+        --   "branch",
+        --   color = function()
+        --     -- Use the cached branch color directly
+        --     return cache.branch_color
+        --   end,
+        --   separator = { right = "" },
+        -- },
+        {
+          get_venv_name,
+          color = { fg = colors["linkarzu_color10"], bg = colors["linkarzu_color02"], gui = "bold" },
+          separator = { right = "" },
+        },
+      }
+
+      -- SPELLING left separator
+      table.insert(opts.sections.lualine_x, 1, create_separator(should_show_spell_status))
+
+      -- SPELLING component
+      table.insert(opts.sections.lualine_x, 2, {
+        get_spell_status, -- Display spell status text
+        cond = should_show_spell_status,
         color = function()
-          -- Use the cached branch color directly
-          return cache.branch_color
+          return { fg = get_spell_bg_color(), bg = colors["linkarzu_color17"], gui = "bold" }
         end,
-        separator = { right = "" },
-      },
-      -- {
-      --   "branch",
-      --   color = function()
-      --     -- Use the cached branch color directly
-      --     return cache.branch_color
+        separator = { left = "", right = "" },
+        padding = 1,
+      })
+
+      -- PERMISSIONS left separator
+      table.insert(opts.sections.lualine_x, 3, create_separator(should_show_permissions))
+
+      -- PERMISSIONS component
+      table.insert(opts.sections.lualine_x, 4, {
+        get_file_permissions, -- Display permissions text
+        cond = should_show_permissions,
+        color = function()
+          local _, bg_color = get_file_permissions()
+          return { fg = bg_color, bg = colors["linkarzu_color17"], gui = "bold" }
+        end,
+        separator = { left = "", right = "" },
+        padding = 1,
+      })
+
+      -- HOSTNAME right separator
+      table.insert(opts.sections.lualine_x, 5, create_separator()) -- For hostname, no condition needed
+
+      -- -- HOSTNAME components
+      -- local hostname_with_others = create_hostname_component(has_additional_components)
+      -- local hostname_simple = create_hostname_component(function()
+      --   return not has_additional_components()
+      -- end)
+      -- table.insert(opts.sections.lualine_x, 6, hostname_with_others)
+      -- table.insert(opts.sections.lualine_x, 7, hostname_simple)
+
+      -- -- HOSTNAME left separator
+      -- table.insert(opts.sections.lualine_x, 8, {
+      --   function()
+      --     return ""
       --   end,
-      --   separator = { right = "" },
-      -- },
-      {
-        get_venv_name,
-        color = { fg = colors["linkarzu_color10"], bg = colors["linkarzu_color02"], gui = "bold" },
-        separator = { right = "" },
-      },
-    }
+      --   color = { fg = colors["linkarzu_color14"], bg = colors["linkarzu_color17"] },
+      --   separator = { left = "", right = "" },
+      --   padding = 0,
+      -- })
 
-    -- SPELLING left separator
-    table.insert(opts.sections.lualine_x, 1, create_separator(should_show_spell_status))
-
-    -- SPELLING component
-    table.insert(opts.sections.lualine_x, 2, {
-      get_spell_status, -- Display spell status text
-      cond = should_show_spell_status,
-      color = function()
-        return { fg = get_spell_bg_color(), bg = colors["linkarzu_color17"], gui = "bold" }
-      end,
-      separator = { left = "", right = "" },
-      padding = 1,
-    })
-
-    -- PERMISSIONS left separator
-    table.insert(opts.sections.lualine_x, 3, create_separator(should_show_permissions))
-
-    -- PERMISSIONS component
-    table.insert(opts.sections.lualine_x, 4, {
-      get_file_permissions, -- Display permissions text
-      cond = should_show_permissions,
-      color = function()
-        local _, bg_color = get_file_permissions()
-        return { fg = bg_color, bg = colors["linkarzu_color17"], gui = "bold" }
-      end,
-      separator = { left = "", right = "" },
-      padding = 1,
-    })
-
-    -- HOSTNAME right separator
-    table.insert(opts.sections.lualine_x, 5, create_separator()) -- For hostname, no condition needed
-
-    -- -- HOSTNAME components
-    -- local hostname_with_others = create_hostname_component(has_additional_components)
-    -- local hostname_simple = create_hostname_component(function()
-    --   return not has_additional_components()
-    -- end)
-    -- table.insert(opts.sections.lualine_x, 6, hostname_with_others)
-    -- table.insert(opts.sections.lualine_x, 7, hostname_simple)
-
-    -- -- HOSTNAME left separator
-    -- table.insert(opts.sections.lualine_x, 8, {
-    --   function()
-    --     return ""
-    --   end,
-    --   color = { fg = colors["linkarzu_color14"], bg = colors["linkarzu_color17"] },
-    --   separator = { left = "", right = "" },
-    --   padding = 0,
-    -- })
-
-    -- The default value for this is:
-    -- opts.extensions = { "neo-tree", "lazy", "fzf" }
-    -- Removing neo-tree from here, makes lualine NOT change when I switch to
-    -- neo-tree, and that's what I want, when in neo-tree I want to see the
-    -- branch I'm on, otherwise the default behaviour shows you the :pwd
-    opts.extensions = { "lazy", "fzf" }
+      -- The default value for this is:
+      -- opts.extensions = { "neo-tree", "lazy", "fzf" }
+      -- Removing neo-tree from here, makes lualine NOT change when I switch to
+      -- neo-tree, and that's what I want, when in neo-tree I want to see the
+      -- branch I'm on, otherwise the default behaviour shows you the :pwd
+      opts.extensions = { "lazy", "fzf" }
+    end
   end,
 }

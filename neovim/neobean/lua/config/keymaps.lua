@@ -969,6 +969,110 @@ vim.keymap.set({ "n", "v", "i" }, "<M-1>", function()
   end, 100)
 end, { desc = "[P]Paste image 'assets' directory" })
 
+-- Rename image under cursor lamw25wmal
+vim.keymap.set("n", "<leader>iR", function()
+  local function get_image_path()
+    -- Get the current line
+    local line = vim.api.nvim_get_current_line()
+    -- Pattern to match image path in Markdown
+    local image_pattern = "%[.-%]%((.-)%)"
+    -- Extract relative image path
+    local _, _, image_path = string.find(line, image_pattern)
+    return image_path
+  end
+  -- Get the image path
+  local image_path = get_image_path()
+  if not image_path then
+    vim.api.nvim_echo({ { "No image found under the cursor", "WarningMsg" } }, false, {})
+    return
+  end
+  -- Check if it's a URL
+  if string.sub(image_path, 1, 4) == "http" then
+    vim.api.nvim_echo({ { "URL images cannot be renamed.", "WarningMsg" } }, false, {})
+    return
+  end
+  -- Get absolute paths
+  local current_file_path = vim.fn.expand("%:p:h")
+  local absolute_image_path = current_file_path .. "/" .. image_path
+  -- Check if file exists
+  if vim.fn.filereadable(absolute_image_path) == 0 then
+    vim.api.nvim_echo(
+      { { "Image file does not exist:\n", "ErrorMsg" }, { absolute_image_path, "ErrorMsg" } },
+      false,
+      {}
+    )
+    return
+  end
+  -- Get directory and extension of current image
+  local dir = vim.fn.fnamemodify(absolute_image_path, ":h")
+  local ext = vim.fn.fnamemodify(absolute_image_path, ":e")
+  local current_name = vim.fn.fnamemodify(absolute_image_path, ":t:r")
+  -- Prompt for new name
+  vim.ui.input({ prompt = "Enter new name (without extension): ", default = current_name }, function(new_name)
+    if not new_name or new_name == "" then
+      vim.api.nvim_echo({ { "Rename cancelled", "WarningMsg" } }, false, {})
+      return
+    end
+    -- Construct new path
+    local new_absolute_path = dir .. "/" .. new_name .. "." .. ext
+    -- Check if new filename already exists
+    if vim.fn.filereadable(new_absolute_path) == 1 then
+      vim.api.nvim_echo({ { "File already exists: " .. new_absolute_path, "ErrorMsg" } }, false, {})
+      return
+    end
+    -- Rename the file
+    local success, err = os.rename(absolute_image_path, new_absolute_path)
+    if success then
+      -- Get the old and new filenames (without path)
+      local old_filename = vim.fn.fnamemodify(absolute_image_path, ":t")
+      local new_filename = vim.fn.fnamemodify(new_absolute_path, ":t")
+      -- Debug prints
+      print("Old filename:", old_filename)
+      print("New filename:", new_filename)
+      -- Get buffer content
+      local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+      print("Number of lines in buffer:", #lines)
+      -- Replace the text in each line that contains the old filename
+      for i = 0, #lines - 1 do
+        local line = lines[i + 1]
+        local start_idx = line:find(old_filename, 1, true)
+        if start_idx then
+          print("Found match in line", i + 1, "at position", start_idx)
+          print("Line before:", line)
+          -- Use nvim_buf_set_text for precise replacement
+          vim.api.nvim_buf_set_text(
+            0, -- buffer number (0 = current buffer)
+            i, -- start line
+            start_idx - 1, -- start column
+            i, -- end line
+            start_idx + #old_filename - 1, -- end column
+            { new_filename } -- replacement text
+          )
+          -- Debug: verify the change
+          local new_line = vim.api.nvim_buf_get_lines(0, i, i + 1, false)[1]
+          print("Line after:", new_line)
+        end
+      end
+      -- Force buffer write
+      vim.cmd("write!")
+      -- Clear and refresh image display
+      require("image").clear()
+      vim.cmd("edit!")
+      vim.api.nvim_echo({
+        { "Image renamed successfully:\n", "Normal" },
+        { absolute_image_path, "Normal" },
+        { " -> ", "Normal" },
+        { new_absolute_path, "Normal" },
+      }, false, {})
+    else
+      vim.api.nvim_echo({
+        { "Failed to rename image:\n", "ErrorMsg" },
+        { tostring(err), "ErrorMsg" },
+      }, false, {})
+    end
+  end)
+end, { desc = "[P]Rename image under cursor" })
+
 -- HACK: Upload images from Neovim to Imgur
 -- https://youtu.be/Lzl_0SzbUBo
 --

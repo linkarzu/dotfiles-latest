@@ -77,8 +77,8 @@ vim.api.nvim_create_autocmd({ "BufWritePost", "BufEnter" }, {
 
 -- Cached language mappings
 local lang_map = {
-  en = "English",
-  es = "Spanish",
+  en = "EN",
+  es = "ES",
 }
 
 local function get_venv_name()

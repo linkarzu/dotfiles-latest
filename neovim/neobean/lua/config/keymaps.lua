@@ -1529,7 +1529,12 @@ vim.keymap.set("n", "<leader>id", function()
     }, false, {})
     return
   end
+  -- Cannot see the popup as the cursor is on top of the image name, so saving
+  -- its position, will move it to the top and then move it back
+  local current_pos = vim.api.nvim_win_get_cursor(0) -- Save cursor position
+  -- vim.api.nvim_win_set_cursor(0, { 1, 0 }) -- Move to top
   vim.ui.select({ "yes", "no" }, { prompt = "Delete image file? " }, function(choice)
+    vim.api.nvim_win_set_cursor(0, current_pos) -- Move back to image line
     if choice == "yes" then
       local success, _ = pcall(function()
         vim.fn.system({ "trash", vim.fn.fnameescape(absolute_image_path) })
@@ -1541,7 +1546,13 @@ vim.keymap.set("n", "<leader>id", function()
         -- macos trash app, they'll be gone
         -- This is useful in case trying to delete imaes mounted in a network
         -- drive, like for my blogpost lamw25wmal
+        --
+        -- Cannot see the popup as the cursor is on top of the image name, so saving
+        -- its position, will move it to the top and then move it back
+        current_pos = vim.api.nvim_win_get_cursor(0) -- Save cursor position
+        vim.api.nvim_win_set_cursor(0, { 1, 0 }) -- Move to top
         vim.ui.select({ "yes", "no" }, { prompt = "Trash deletion failed. Try with rm command? " }, function(rm_choice)
+          vim.api.nvim_win_set_cursor(0, current_pos) -- Move back to image line
           if rm_choice == "yes" then
             local rm_success, _ = pcall(function()
               vim.fn.system({ "rm", vim.fn.fnameescape(absolute_image_path) })

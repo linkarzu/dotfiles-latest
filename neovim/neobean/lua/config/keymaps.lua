@@ -1531,7 +1531,7 @@ vim.keymap.set("n", "<leader>id", function()
   -- Cannot see the popup as the cursor is on top of the image name, so saving
   -- its position, will move it to the top and then move it back
   local current_pos = vim.api.nvim_win_get_cursor(0) -- Save cursor position
-  -- vim.api.nvim_win_set_cursor(0, { 1, 0 }) -- Move to top
+  vim.api.nvim_win_set_cursor(0, { 1, 0 }) -- Move to top
   vim.ui.select({ "yes", "no" }, { prompt = "Delete image file? " }, function(choice)
     vim.api.nvim_win_set_cursor(0, current_pos) -- Move back to image line
     if choice == "yes" then

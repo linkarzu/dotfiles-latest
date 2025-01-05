@@ -59,6 +59,7 @@
   * [workflow](#workflow)
 - [Language Servers](#language-servers)
 - [Things to remember](#things-to-remember)
+  * [grug-far.nvim replacements](#grug-farnvim-replacements)
   * [Paste issues](#paste-issues)
   * [markdown-preview.nvim image size](#markdown-previewnvim-image-size)
   * [Plugin that enables vio and vao](#plugin-that-enables-vio-and-vao)
@@ -387,6 +388,26 @@ NVIM_APPNAME=linkarzu/dotfiles-latest/neovim/neobean nvim
 - zk
 
 ## Things to remember
+
+### grug-far.nvim replacements
+
+- Remember to use the `--multiline` flag
+- Make sure to include `spaces` in case a blank line has a space, otherwise you
+  won't be able to match
+
+```bash
+<!-- markdownlint-disable -->
+<!-- prettier-ignore-start -->
+
+<!-- tip=green, info=blue, warning=yellow, danger=red -->
+
+> - This helps me to keep creating content and sharing it
+\- \[Share a tip here\]\(https:\/\/ko\-fi\.com\/linkarzu\)\{:target="\\_blank"\}
+\{: .prompt-tip \}
+
+<!-- prettier-ignore-end -->
+<!-- markdownlint-restore -->
+```
 
 ### Paste issues
 

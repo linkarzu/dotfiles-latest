@@ -249,7 +249,7 @@ return {
     table.insert(
       snippets,
       s({
-        trig = "linkclip",
+        trig = "linkc",
         name = "Paste clipboard as .md link",
         desc = "Paste clipboard as .md link",
       }, {
@@ -258,6 +258,22 @@ return {
         t("]("),
         f(clipboard, {}),
         t(")"),
+      })
+    )
+
+    -- Paste clipboard contents in link section, move cursor to ()
+    table.insert(
+      snippets,
+      s({
+        trig = "linkcex",
+        name = "Paste clipboard as EXT .md link",
+        desc = "Paste clipboard as EXT .md link",
+      }, {
+        t("["),
+        i(1),
+        t("]("),
+        f(clipboard, {}),
+        t('){:target="_blank"}'),
       })
     )
 
@@ -306,7 +322,7 @@ return {
         t({
           "",
           "",
-          "```bash",
+          "```txt",
           "Members only discord",
           "https://www.youtube.com/channel/UCrSIvbFncPSlK6AdwE2QboA/join",
           "",
@@ -329,7 +345,7 @@ return {
           "",
           "Video timeline:",
           "",
-          "```bash",
+          "```txt",
           "0:00 -",
           "```",
           "",

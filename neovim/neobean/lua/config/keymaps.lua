@@ -882,12 +882,17 @@ end, { desc = "[P]Paste image from system clipboard" })
 --                       Assets directory
 -------------------------------------------------------------------------------
 
+-- NOTE: Configuration for image storage path
+-- Change this to customize where images are stored relative to the assets directory
+-- If below you use "img/imgs", it will store in "assets/img/imgs"
+local IMAGE_STORAGE_PATH = "img/imgs"
+
 -- This function is used in 2 places in the paste images in assets dir section
 local function find_assets_dir()
   local dir = vim.fn.expand("%:p:h")
   while dir ~= "/" do
     if vim.fn.isdirectory(dir .. "/assets") == 1 then
-      return dir .. "/assets/img/imgs"
+      return dir .. "/assets/" .. IMAGE_STORAGE_PATH
     end
     dir = vim.fn.fnamemodify(dir, ":h")
   end
@@ -932,8 +937,8 @@ local function handle_image_paste(img_dir)
           temp_dir = vim.fn.fnamemodify(temp_dir, ":h")
         end
         -- Build the relative path
-        local relative_path = levels == 0 and "./assets/img/imgs" -- When at same level, add './'
-          or string.rep("../", levels) .. "assets/img/imgs"
+        local relative_path = levels == 0 and "./assets/" .. IMAGE_STORAGE_PATH
+          or string.rep("../", levels) .. "assets/" .. IMAGE_STORAGE_PATH
         vim.api.nvim_put({ "![Image](" .. relative_path .. '){: width="500" }' }, "c", true, true)
         -- Capital "O" to move to the line above
         vim.cmd("normal! O")
@@ -996,7 +1001,7 @@ local function process_image()
       default = "yes",
     }, function(choice)
       if choice == "yes" then
-        img_dir = vim.fn.getcwd() .. "/assets/img/imgs"
+        img_dir = vim.fn.getcwd() .. "/assets/" .. IMAGE_STORAGE_PATH
         vim.fn.mkdir(img_dir, "p")
         -- Start the image paste process after creating directory
         vim.defer_fn(function()

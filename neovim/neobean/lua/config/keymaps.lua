@@ -920,17 +920,40 @@ vim.keymap.set({ "n", "v", "i" }, "<M-1>", function()
     local prompt = image_pasted and "Is this a thumbnail image? " or "No image in clipboard. Select search to continue."
     vim.ui.select(options, { prompt = prompt }, function(is_thumbnail)
       if is_thumbnail == "search" then
-        vim.api.nvim_put({ '![Image](../../../assets/img/imgs){: width="500" }' }, "c", true, true)
+        local assets_dir = find_assets_dir()
+        if not assets_dir then
+          print("No 'assets/img/imgs' directory found.")
+          return
+        end
+        -- Get the parent directory of the current file
+        local current_dir = vim.fn.expand("%:p:h")
+        -- Get the parent directory of assets_dir (removing /img/imgs)
+        local base_assets_dir = vim.fn.fnamemodify(assets_dir, ":h:h:h")
+
+        -- Count how many levels we need to go up
+        local levels = 0
+        local temp_dir = current_dir
+        while temp_dir ~= base_assets_dir and temp_dir ~= "/" do
+          levels = levels + 1
+          temp_dir = vim.fn.fnamemodify(temp_dir, ":h")
+        end
+        -- Build the relative path
+        local relative_path = levels == 0 and "./assets/img/imgs" -- When at same level, add './'
+          or string.rep("../", levels) .. "assets/img/imgs"
+        vim.api.nvim_put({ "![Image](" .. relative_path .. '){: width="500" }' }, "c", true, true)
         -- Capital "O" to move to the line above
         vim.cmd("normal! O")
         -- This "o" is to leave a blank line above
         vim.cmd("normal! o")
         vim.api.nvim_put({ "<!-- prettier-ignore -->" }, "c", true, true)
         vim.cmd("normal! jo")
-        vim.api.nvim_put({ "_image_", "" }, "c", true, true)
-        vim.cmd("normal kkf)")
-        -- This puts me in insert mode where the cursor is
-        vim.api.nvim_feedkeys("i", "n", true)
+        vim.api.nvim_put({ "_textimage_", "" }, "c", true, true)
+        -- find image path and add a / at the end of it
+        vim.cmd("normal! kkf)i/")
+        -- Move one to the right and enter insert mode
+        vim.cmd("normal! la")
+        -- -- This puts me in insert mode where the cursor is
+        -- vim.api.nvim_feedkeys("i", "n", true)
         return
       end
       if not is_thumbnail then
@@ -958,8 +981,8 @@ vim.keymap.set({ "n", "v", "i" }, "<M-1>", function()
               vim.cmd("normal! o")
               vim.api.nvim_put({ "<!-- prettier-ignore -->" }, "c", true, true)
               vim.cmd("normal! jo")
-              vim.api.nvim_put({ "_image_" }, "c", true, true)
-              vim.cmd("normal o")
+              vim.api.nvim_put({ "_textimage_" }, "c", true, true)
+              -- vim.cmd("normal o")
             else
               print("No image pasted. File not updated.")
             end

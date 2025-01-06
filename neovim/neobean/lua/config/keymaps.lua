@@ -878,6 +878,18 @@ vim.keymap.set({ "n", "v", "i" }, "<M-a>", function()
   end, 100)
 end, { desc = "[P]Paste image from system clipboard" })
 
+-- This function is used in 2 places in the paste images in assets dir section
+local function find_assets_dir()
+  local dir = vim.fn.expand("%:p:h")
+  while dir ~= "/" do
+    if vim.fn.isdirectory(dir .. "/assets") == 1 then
+      return dir .. "/assets/img/imgs"
+    end
+    dir = vim.fn.fnamemodify(dir, ":h")
+  end
+  return nil
+end
+
 -- This pastes images for my blogpost, I need to keep them in a different directory so I pass those options to img-clip lamw25wmal
 vim.keymap.set({ "n", "v", "i" }, "<M-1>", function()
   print("PROCESSING IMAGE WITH CUSTOM DIRECTORY STRUCTURE...")
@@ -898,16 +910,6 @@ vim.keymap.set({ "n", "v", "i" }, "<M-1>", function()
     paste_image(vim.fn.fnamemodify(temp_image_path, ":h"), vim.fn.fnamemodify(temp_image_path, ":t:r"))
   vim.api.nvim_buf_delete(temp_buf, { force = true }) -- Delete the buffer
   vim.fn.delete(temp_image_path) -- Delete the temporary file
-  local function find_assets_dir()
-    local dir = vim.fn.expand("%:p:h")
-    while dir ~= "/" do
-      if vim.fn.isdirectory(dir .. "/assets") == 1 then
-        return dir .. "/assets/img/imgs"
-      end
-      dir = vim.fn.fnamemodify(dir, ":h")
-    end
-    return nil
-  end
   local img_dir = find_assets_dir()
   if not img_dir then
     print("No 'assets/img/imgs' directory found. Image not pasted.")

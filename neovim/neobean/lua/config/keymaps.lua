@@ -878,6 +878,10 @@ vim.keymap.set({ "n", "v", "i" }, "<M-a>", function()
   end, 100)
 end, { desc = "[P]Paste image from system clipboard" })
 
+-------------------------------------------------------------------------------
+--                       Assets directory
+-------------------------------------------------------------------------------
+
 -- This function is used in 2 places in the paste images in assets dir section
 local function find_assets_dir()
   local dir = vim.fn.expand("%:p:h")
@@ -890,9 +894,8 @@ local function find_assets_dir()
   return nil
 end
 
--- This pastes images for my blogpost, I need to keep them in a different directory so I pass those options to img-clip lamw25wmal
-vim.keymap.set({ "n", "v", "i" }, "<M-1>", function()
-  print("PROCESSING IMAGE WITH CUSTOM DIRECTORY STRUCTURE...")
+-- Since I need to store these images in a different directory, I pass the options to img-clip
+local function handle_image_paste(img_dir)
   local function paste_image(dir_path, file_name)
     return require("img-clip").paste_image({
       dir_path = dir_path,
@@ -903,6 +906,7 @@ vim.keymap.set({ "n", "v", "i" }, "<M-1>", function()
       process_cmd = "convert - -quality 75 avif:-",
     })
   end
+  print("PROCESSING IMAGE WITH CUSTOM DIRECTORY STRUCTURE...")
   local temp_buf = vim.api.nvim_create_buf(false, true) -- Create an unlisted, scratch buffer
   vim.api.nvim_set_current_buf(temp_buf) -- Switch to the temporary buffer
   local temp_image_path = vim.fn.tempname() .. ".avif"
@@ -910,23 +914,6 @@ vim.keymap.set({ "n", "v", "i" }, "<M-1>", function()
     paste_image(vim.fn.fnamemodify(temp_image_path, ":h"), vim.fn.fnamemodify(temp_image_path, ":t:r"))
   vim.api.nvim_buf_delete(temp_buf, { force = true }) -- Delete the buffer
   vim.fn.delete(temp_image_path) -- Delete the temporary file
-  local img_dir = find_assets_dir()
-  if not img_dir then
-    vim.ui.select({ "yes", "no" }, {
-      prompt = "Assets directory not found. Create it?",
-      default = "yes",
-    }, function(choice)
-      if choice == "yes" then
-        img_dir = vim.fn.getcwd() .. "/assets/img/imgs"
-        vim.fn.mkdir(img_dir, "p")
-        vim.notify("Created directory, paste the image again", vim.log.levels.INFO)
-      else
-        print("Operation cancelled - directory not created")
-        return
-      end
-    end)
-    return
-  end
   vim.defer_fn(function()
     local options = image_pasted and { "no", "yes", "search" } or { "search" }
     local prompt = image_pasted and "Is this a thumbnail image? " or "No image in clipboard. Select search to continue."
@@ -999,7 +986,38 @@ vim.keymap.set({ "n", "v", "i" }, "<M-1>", function()
       prompt_for_name()
     end)
   end, 100)
-end, { desc = "[P]Paste image 'assets' directory" })
+end
+
+local function process_image()
+  local img_dir = find_assets_dir()
+  if not img_dir then
+    vim.ui.select({ "yes", "no" }, {
+      prompt = "Assets directory not found. Create it?",
+      default = "yes",
+    }, function(choice)
+      if choice == "yes" then
+        img_dir = vim.fn.getcwd() .. "/assets/img/imgs"
+        vim.fn.mkdir(img_dir, "p")
+        -- Start the image paste process after creating directory
+        vim.defer_fn(function()
+          handle_image_paste(img_dir)
+        end, 100)
+      else
+        print("Operation cancelled - directory not created")
+        return
+      end
+    end)
+    return
+  end
+  handle_image_paste(img_dir)
+end
+
+-- Keymap to paste images in the 'assets' directory
+-- This pastes images for my blogpost, I need to keep them in a different directory
+-- so I pass those options to img-clip
+vim.keymap.set({ "n", "v", "i" }, "<M-1>", process_image, { desc = "[P]Paste image 'assets' directory" })
+
+-------------------------------------------------------------------------------
 
 -- Rename image under cursor lamw25wmal
 -- If the image is referenced multiple times in the file, it will also rename

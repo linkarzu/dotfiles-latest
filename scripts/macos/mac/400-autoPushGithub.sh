@@ -8,6 +8,27 @@
 # This file above will automatically be created and loaded by my zshrc file, so
 # no need to create it manually
 
+# If I don't add this, the script won't find nvim or jq or any other apps in
+# the /opt/homebrew/bin dir
+# So it won't run: nvim --server /tmp/skitty-neobean-socket --remote-send
+export PATH="/opt/homebrew/bin:$PATH"
+
+# Parse command line arguments
+# This allows me to directly call the script without having to wait the PUSH_INTERVAL:
+# NOTE: Call the script with
+# ./400-autoPushGithub.sh --nowait
+NOWAIT=false
+while [[ "$#" -gt 0 ]]; do
+  case $1 in
+  --nowait) NOWAIT=true ;;
+  *)
+    echo "Unknown parameter: $1"
+    exit 1
+    ;;
+  esac
+  shift
+done
+
 # Configure logging
 LOG_DIR="$HOME/.logs/git_autopush"
 mkdir -p "$LOG_DIR"
@@ -45,6 +66,21 @@ display_notification() {
   local repo="$3"
   log_message "NOTIFY" "$repo" "Notification: $title - $message"
   osascript -e "display notification \"$message\" with title \"$title\""
+}
+
+# Function to update lualine in skitty-notes after a push (neovim)
+refresh_neovim_skitty() {
+  local repo_name="$1"
+  # Only proceed for skitty repository
+  if [[ "$repo_name" == "skitty" ]]; then
+    if [[ -S "/tmp/skitty-neobean-socket" ]]; then
+      log_message "INFO" "$repo_name" "Triggering Neovim refresh"
+      nvim --server /tmp/skitty-neobean-socket --remote-send ':silent w<CR>' ||
+        log_message "WARN" "$repo_name" "Failed to send refresh command to Neovim"
+    else
+      log_message "INFO" "$repo_name" "Skitty Neovim socket not found - skipping refresh"
+    fi
+  fi
 }
 
 # Initialize success messages
@@ -98,12 +134,16 @@ for REPO_PATH in "${REPO_LIST[@]}"; do
   # This will find Files Modified Within the Last X Seconds, and if ther are
   # RECENT_MODIFICATIONS will contain a non-empty list of file paths
   # Ignore the .git dir as commands like git pull may modify stuff and we'll skip updates
-  RECENT_MODIFICATIONS=$(find . -type f -not -path './.git/*' -newermt "-${PUSH_INTERVAL} seconds" 2>/dev/null)
-  # If RECENT_MODIFICATIONS is not empty (-n), it skips pushing changes for this repository
-  if [[ -n "$RECENT_MODIFICATIONS" ]]; then
-    log_message "INFO" "$REPO_NAME" "Skipping push due to recent modifications"
-    log_message "DEBUG" "$REPO_NAME" "Modified files: $RECENT_MODIFICATIONS"
-    continue
+  #
+  # Check for recent modifications only if NOWAIT is false
+  if ! $NOWAIT; then
+    RECENT_MODIFICATIONS=$(find . -type f -not -path './.git/*' -newermt "-${PUSH_INTERVAL} seconds" 2>/dev/null)
+    # If RECENT_MODIFICATIONS is not empty (-n), it skips pushing changes for this repository
+    if [[ -n "$RECENT_MODIFICATIONS" ]]; then
+      log_message "INFO" "$REPO_NAME" "Skipping push due to recent modifications"
+      log_message "DEBUG" "$REPO_NAME" "Modified files: $RECENT_MODIFICATIONS"
+      continue
+    fi
   fi
 
   # Check for changes or commits not pushed
@@ -137,6 +177,8 @@ for REPO_PATH in "${REPO_LIST[@]}"; do
     else
       SUCCESS_MESSAGES+="\n$REPO_NAME $COMPUTER_NAME-$TIMESTAMP"
       log_message "SUCCESS" "$REPO_NAME" "Push completed successfully"
+      # Trigger skitty-notes lualine refresh
+      refresh_neovim_skitty "$(basename "$REPO_PATH")"
     fi
   else
     log_message "INFO" "$REPO_NAME" "No changes to push"

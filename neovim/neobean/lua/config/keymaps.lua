@@ -912,7 +912,19 @@ vim.keymap.set({ "n", "v", "i" }, "<M-1>", function()
   vim.fn.delete(temp_image_path) -- Delete the temporary file
   local img_dir = find_assets_dir()
   if not img_dir then
-    print("No 'assets/img/imgs' directory found. Image not pasted.")
+    vim.ui.select({ "yes", "no" }, {
+      prompt = "Assets directory not found. Create it?",
+      default = "yes",
+    }, function(choice)
+      if choice == "yes" then
+        img_dir = vim.fn.getcwd() .. "/assets/img/imgs"
+        vim.fn.mkdir(img_dir, "p")
+        vim.notify("Created directory, paste the image again", vim.log.levels.INFO)
+      else
+        print("Operation cancelled - directory not created")
+        return
+      end
+    end)
     return
   end
   vim.defer_fn(function()
@@ -921,15 +933,10 @@ vim.keymap.set({ "n", "v", "i" }, "<M-1>", function()
     vim.ui.select(options, { prompt = prompt }, function(is_thumbnail)
       if is_thumbnail == "search" then
         local assets_dir = find_assets_dir()
-        if not assets_dir then
-          print("No 'assets/img/imgs' directory found.")
-          return
-        end
         -- Get the parent directory of the current file
         local current_dir = vim.fn.expand("%:p:h")
         -- Get the parent directory of assets_dir (removing /img/imgs)
         local base_assets_dir = vim.fn.fnamemodify(assets_dir, ":h:h:h")
-
         -- Count how many levels we need to go up
         local levels = 0
         local temp_dir = current_dir

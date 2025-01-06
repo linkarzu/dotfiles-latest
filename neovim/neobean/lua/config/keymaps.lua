@@ -3172,6 +3172,25 @@ vim.keymap.set("n", "<leader>fz", function()
   end
 end, { desc = "[P]source ~/.zshrc" })
 
+-- Execute my 400-autoPushGithub.sh script
+vim.keymap.set("n", "<leader>gP", function()
+  local script_path = "~/github/dotfiles-latest/scripts/macos/mac/400-autoPushGithub.sh --nowait"
+  -- Expand the home directory in the path
+  script_path = vim.fn.expand(script_path)
+  -- Execute the script and capture the output
+  local output = vim.fn.system(script_path)
+  -- Check the exit status
+  local exit_code = vim.v.shell_error
+  if exit_code == 0 then
+    vim.api.nvim_echo({ { "Git push successful", "NormalMsg" } }, false, {})
+  else
+    vim.api.nvim_echo({
+      { "Git push failed:", "ErrorMsg" },
+      { output, "ErrorMsg" },
+    }, false, {})
+  end
+end, { desc = "[P] execute 400-autoPushGithub.sh" })
+
 -- -- From Primeagen's tmux-sessionizer
 -- -- ctrl+f in normal mode will silently run a command to create a new tmux window and execute the tmux-sessionizer.
 -- -- Allowing quick creation and navigation of tmux sessions directly from the editor.

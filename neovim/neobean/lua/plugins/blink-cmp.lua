@@ -51,9 +51,7 @@ return {
           end,
           -- After accepting the completion, delete the trigger_text characters
           -- from the final inserted text
-          transform_items = function(ctx, items)
-            -- WARNING: Explicitly referencing ctx otherwise I was getting an "unused" warning
-            local _ = ctx
+          transform_items = function(_, items)
             local col = vim.api.nvim_win_get_cursor(0)[2]
             local before_cursor = vim.api.nvim_get_current_line():sub(1, col)
             local trigger_pos = before_cursor:find(trigger_text .. "[^" .. trigger_text .. "]*$")

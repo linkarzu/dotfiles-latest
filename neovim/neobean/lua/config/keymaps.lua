@@ -861,11 +861,13 @@ end, { desc = "[P]Paste image from system clipboard" })
 local IMAGE_STORAGE_PATH = "img/imgs"
 
 -- This function is used in 2 places in the paste images in assets dir section
+-- finds the assets/img/imgs directory going one dir at a time and returns the full path
 local function find_assets_dir()
   local dir = vim.fn.expand("%:p:h")
   while dir ~= "/" do
-    if vim.fn.isdirectory(dir .. "/assets") == 1 then
-      return dir .. "/assets/" .. IMAGE_STORAGE_PATH
+    local full_path = dir .. "/assets/" .. IMAGE_STORAGE_PATH
+    if vim.fn.isdirectory(full_path) == 1 then
+      return full_path
     end
     dir = vim.fn.fnamemodify(dir, ":h")
   end
@@ -884,7 +886,6 @@ local function handle_image_paste(img_dir)
       process_cmd = "convert - -quality 75 avif:-",
     })
   end
-  print("PROCESSING IMAGE WITH CUSTOM DIRECTORY STRUCTURE...")
   local temp_buf = vim.api.nvim_create_buf(false, true) -- Create an unlisted, scratch buffer
   vim.api.nvim_set_current_buf(temp_buf) -- Switch to the temporary buffer
   local temp_image_path = vim.fn.tempname() .. ".avif"
@@ -895,6 +896,8 @@ local function handle_image_paste(img_dir)
   vim.defer_fn(function()
     local options = image_pasted and { "no", "yes", "search" } or { "search" }
     local prompt = image_pasted and "Is this a thumbnail image? " or "No image in clipboard. Select search to continue."
+    -- I was getting a character in the textbox, don't want to debug right now
+    vim.cmd("stopinsert")
     vim.ui.select(options, { prompt = prompt }, function(is_thumbnail)
       if is_thumbnail == "search" then
         local assets_dir = find_assets_dir()
@@ -970,7 +973,7 @@ local function process_image()
   local img_dir = find_assets_dir()
   if not img_dir then
     vim.ui.select({ "yes", "no" }, {
-      prompt = "Assets directory not found. Create it?",
+      prompt = IMAGE_STORAGE_PATH .. " directory not found. Create it?",
       default = "yes",
     }, function(choice)
       if choice == "yes" then

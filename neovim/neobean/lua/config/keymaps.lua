@@ -949,6 +949,8 @@ local function handle_image_paste(img_dir)
             prompt_for_name()
           else
             if paste_image(img_dir, full_image_name) then
+              -- I was getting a character at the end, don't want to debug right now
+              vim.cmd("stopinsert")
               vim.api.nvim_put({ '{: width="500" }' }, "c", true, true)
               -- Capital "O" to move to the line above
               vim.cmd("normal! O")
@@ -956,8 +958,12 @@ local function handle_image_paste(img_dir)
               vim.cmd("normal! o")
               vim.api.nvim_put({ "<!-- prettier-ignore -->" }, "c", true, true)
               vim.cmd("normal! jo")
-              vim.api.nvim_put({ "_textimage_" }, "c", true, true)
-              -- vim.cmd("normal o")
+              vim.api.nvim_put({ "__" }, "c", true, true)
+              -- "Update" saves only if the buffer has been modified since the last save
+              vim.cmd("silent! update")
+              -- I reload the file, otherwise I cannot view the image after pasted
+              vim.cmd("edit!")
+              vim.cmd("normal! h")
             else
               print("No image pasted. File not updated.")
             end

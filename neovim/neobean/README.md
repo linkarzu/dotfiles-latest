@@ -181,6 +181,8 @@ brew install pngpaste
     </a>
 </div>
 
+![Image](./../../assets/img/imgs/250107-voyager.avif)
+
 ### Clone my repo
 
 - This repo contains all my dotfiles, keep reading if you want to just download

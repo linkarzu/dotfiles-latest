@@ -729,7 +729,7 @@ end
 -- current file lives
 vim.keymap.set({ "n", "v", "i" }, "<M-t>", function()
   M.tmux_pane_function()
-end, { desc = "[P]Terminal on tmux pane on the right" })
+end, { desc = "[P]Terminal on tmux pane" })
 
 -- -- Open a tmux pane on the right in bash, in the same directory as the current file
 -- -- Opening it in bash because it's faster, I don't have to run my .zshrc file,
@@ -837,7 +837,7 @@ end, { desc = "[P]Reload current buffer" })
 --
 -- Paste images
 -- I tried using <C-v> but duh, that's used for visual block mode
-vim.keymap.set({ "n", "v", "i" }, "<M-a>", function()
+vim.keymap.set({ "n", "i" }, "<M-a>", function()
   local pasted_image = require("img-clip").paste_image()
   if pasted_image then
     -- "Update" saves only if the buffer has been modified since the last save
@@ -1002,7 +1002,7 @@ end
 -- Keymap to paste images in the 'assets' directory
 -- This pastes images for my blogpost, I need to keep them in a different directory
 -- so I pass those options to img-clip
-vim.keymap.set({ "n", "v", "i" }, "<M-1>", process_image, { desc = "[P]Paste image 'assets' directory" })
+vim.keymap.set({ "n", "i" }, "<M-1>", process_image, { desc = "[P]Paste image 'assets' directory" })
 
 -------------------------------------------------------------------------------
 
@@ -1150,7 +1150,7 @@ local refresh_token_var = "IMGUR_REFRESH_TOKEN"
 local client_id_var = "IMGUR_CLIENT_ID"
 local client_secret_var = "IMGUR_CLIENT_SECRET"
 -- Keymap setup
-vim.keymap.set({ "n", "v", "i" }, "<M-i>", function()
+vim.keymap.set({ "n", "i" }, "<M-i>", function()
   vim.notify("UPLOADING IMAGE TO IMGUR...", vim.log.levels.INFO)
   -- Slight delay to show the message
   vim.defer_fn(function()

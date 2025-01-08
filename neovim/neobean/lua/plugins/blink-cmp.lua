@@ -37,8 +37,9 @@ return {
           -- When linking markdown notes, I would get snippets and text in the
           -- suggestions, I want those to show only if there are no LSP
           -- suggestions
-          -- Disabling fallbacks as my snippets woudlnt show up
-          -- fallbacks = { "luasnip", "buffer" },
+          -- Disabling fallbacks as my snippets wouldn't show up
+          -- Enabled fallbacks as this seems to be working now
+          fallbacks = { "snippets", "buffer" },
           score_offset = 90, -- the higher the number, the higher the priority
         },
         path = {

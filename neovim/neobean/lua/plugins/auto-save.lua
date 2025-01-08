@@ -27,6 +27,7 @@ vim.api.nvim_create_autocmd("User", {
 return {
   {
     "okuuva/auto-save.nvim",
+    enabled = true,
     cmd = "ASToggle", -- optional for lazy loading on command
     event = { "InsertLeave", "TextChanged" }, -- optional for lazy loading on trigger events
     opts = {
@@ -54,6 +55,10 @@ return {
         -- Run `:set filetype?` on a dadbod query to make sure of the filetype
         local filetype = vim.bo[buf].filetype
         if filetype == "harpoon" or filetype == "mysql" then
+          return false
+        end
+        -- Skip autosave if you're in an active snippet
+        if require("luasnip").in_snippet() then
           return false
         end
         return true

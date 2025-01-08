@@ -896,8 +896,8 @@ local function handle_image_paste(img_dir)
   vim.defer_fn(function()
     local options = image_pasted and { "no", "yes", "search" } or { "search" }
     local prompt = image_pasted and "Is this a thumbnail image? " or "No image in clipboard. Select search to continue."
-    -- I was getting a character in the textbox, don't want to debug right now
-    vim.cmd("stopinsert")
+    -- -- I was getting a character in the textbox, don't want to debug right now
+    -- vim.cmd("stopinsert")
     vim.ui.select(options, { prompt = prompt }, function(is_thumbnail)
       if is_thumbnail == "search" then
         local assets_dir = find_assets_dir()
@@ -949,8 +949,8 @@ local function handle_image_paste(img_dir)
             prompt_for_name()
           else
             if paste_image(img_dir, full_image_name) then
-              -- I was getting a character at the end, don't want to debug right now
-              vim.cmd("stopinsert")
+              -- -- I was getting a character at the end, don't want to debug right now
+              -- vim.cmd("stopinsert")
               vim.api.nvim_put({ '{: width="500" }' }, "c", true, true)
               -- Capital "O" to move to the line above
               vim.cmd("normal! O")

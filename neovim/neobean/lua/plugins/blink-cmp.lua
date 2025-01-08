@@ -123,7 +123,7 @@ return {
           opts = { insert = true }, -- Insert emoji (default) or complete its name
         },
         -- https://github.com/Kaiser-Yang/blink-cmp-dictionary
-        -- In macOS to get started with something basic:
+        -- In macOS to get started with a dictionary:
         -- cp /usr/share/dict/words ~/github/dotfiles-latest/dictionaries
         dictionary = {
           module = "blink-cmp-dictionary",
@@ -145,9 +145,12 @@ return {
               vim.fn.expand("~/github/dotfiles-latest/dictionaries/words"), -- where you dictionary is
             },
             documentation = {
-              enable = false, -- enable documentation to show the definition of the word
+              enable = true, -- enable documentation to show the definition of the word
               get_command = {
-                "wn", -- make sure this command is available in your system
+                -- For the word definitions feature
+                -- make sure "wn" is available in your system
+                -- brew install wordnet
+                "wn",
                 "${word}", -- this will be replaced by the word to search
                 "-over",
               },
@@ -213,8 +216,8 @@ return {
       ["<C-p>"] = { "select_prev", "fallback" },
       ["<C-n>"] = { "select_next", "fallback" },
 
-      ["<C-b>"] = { "scroll_documentation_up", "fallback" },
-      ["<C-f>"] = { "scroll_documentation_down", "fallback" },
+      ["<S-l>"] = { "scroll_documentation_up", "fallback" },
+      ["<S-h>"] = { "scroll_documentation_down", "fallback" },
 
       ["<C-space>"] = { "show", "show_documentation", "hide_documentation" },
       ["<C-e>"] = { "hide", "fallback" },

@@ -14,13 +14,20 @@ local trigger_text = ";"
 return {
   "saghen/blink.cmp",
   enabled = true,
-  -- I don't have time for this bullshit right now
-  version = "v0.9.3",
+  -- In case there are breaking changes and you want to go back to the last
+  -- working release
+  -- https://github.com/Saghen/blink.cmp/releases
+  -- version = "v0.9.3",
+  dependencies = {
+    "moyiz/blink-emoji.nvim",
+    "Kaiser-Yang/blink-cmp-dictionary",
+  },
   opts = function(_, opts)
+    -- NOTE: The new way to enable LuaSnip
     -- Merge custom sources with the existing ones from lazyvim
     -- NOTE: by default lazyvim already includes the lazydev source, so not adding it here again
     opts.sources = vim.tbl_deep_extend("force", opts.sources or {}, {
-      default = { "lsp", "path", "snippets", "buffer", "copilot", "luasnip", "dadbod" },
+      default = { "lsp", "path", "snippets", "buffer", "copilot", "dadbod", "emoji", "dictionary" },
       providers = {
         lsp = {
           name = "lsp",
@@ -34,15 +41,39 @@ return {
           -- fallbacks = { "luasnip", "buffer" },
           score_offset = 90, -- the higher the number, the higher the priority
         },
-        luasnip = {
-          name = "luasnip",
+        path = {
+          name = "Path",
+          module = "blink.cmp.sources.path",
+          score_offset = 25,
+          -- When typing a path, I would get snippets and text in the
+          -- suggestions, I want those to show only if there are no path
+          -- suggestions
+          fallbacks = { "snippets", "buffer" },
+          opts = {
+            trailing_slash = false,
+            label_trailing_slash = true,
+            get_cwd = function(context)
+              return vim.fn.expand(("#%d:p:h"):format(context.bufnr))
+            end,
+            show_hidden_files_by_default = true,
+          },
+        },
+        buffer = {
+          name = "Buffer",
           enabled = true,
-          module = "blink.cmp.sources.luasnip",
-          min_keyword_length = 2,
-          fallbacks = { "snippets" },
-          score_offset = 85,
+          max_items = 3,
+          module = "blink.cmp.sources.buffer",
+          min_keyword_length = 4,
+          score_offset = 15, -- the higher the number, the higher the priority
+        },
+        snippets = {
+          name = "snippets",
+          enabled = true,
           max_items = 8,
-          -- Only show luasnip items if I type the trigger_text characters, so
+          min_keyword_length = 2,
+          module = "blink.cmp.sources.snippets",
+          score_offset = 85, -- the higher the number, the higher the priority
+          -- Only show snippets if I type the trigger_text characters, so
           -- to expand the "bash" snippet, if the trigger_text is ";" I have to
           -- type ";bash"
           should_show_items = function()
@@ -72,42 +103,10 @@ return {
             -- Otherwise really crazy shit happens and I spent way too much time
             -- figurig this out
             vim.schedule(function()
-              require("blink.cmp").reload("luasnip")
+              require("blink.cmp").reload("snippets")
             end)
             return items
           end,
-        },
-        path = {
-          name = "Path",
-          module = "blink.cmp.sources.path",
-          score_offset = 3,
-          -- When typing a path, I would get snippets and text in the
-          -- suggestions, I want those to show only if there are no path
-          -- suggestions
-          fallbacks = { "luasnip", "buffer" },
-          opts = {
-            trailing_slash = false,
-            label_trailing_slash = true,
-            get_cwd = function(context)
-              return vim.fn.expand(("#%d:p:h"):format(context.bufnr))
-            end,
-            show_hidden_files_by_default = true,
-          },
-        },
-        buffer = {
-          name = "Buffer",
-          enabled = true,
-          max_items = 3,
-          module = "blink.cmp.sources.buffer",
-          min_keyword_length = 4,
-        },
-        snippets = {
-          name = "snippets",
-          enabled = true,
-          max_items = 3,
-          module = "blink.cmp.sources.snippets",
-          min_keyword_length = 4,
-          score_offset = 80, -- the higher the number, the higher the priority
         },
         -- Example on how to configure dadbod found in the main repo
         -- https://github.com/kristijanhusak/vim-dadbod-completion
@@ -115,6 +114,45 @@ return {
           name = "Dadbod",
           module = "vim_dadbod_completion.blink",
           score_offset = 85, -- the higher the number, the higher the priority
+        },
+        -- https://github.com/moyiz/blink-emoji.nvim
+        emoji = {
+          module = "blink-emoji",
+          name = "Emoji",
+          score_offset = 15, -- the higher the number, the higher the priority
+          opts = { insert = true }, -- Insert emoji (default) or complete its name
+        },
+        -- https://github.com/Kaiser-Yang/blink-cmp-dictionary
+        -- In macOS to get started with something basic:
+        -- cp /usr/share/dict/words ~/github/dotfiles-latest/dictionaries
+        dictionary = {
+          module = "blink-cmp-dictionary",
+          name = "Dict",
+          score_offset = 20, -- the higher the number, the higher the priority
+          enabled = true,
+          max_items = 8,
+          min_keyword_length = 3,
+          opts = {
+            get_command = {
+              "rg", -- make sure this command is available in your system
+              "--color=never",
+              "--no-line-number",
+              "--no-messages",
+              "--no-filename",
+              "--ignore-case",
+              "--",
+              "${prefix}", -- this will be replaced by the result of 'get_prefix' function
+              vim.fn.expand("~/github/dotfiles-latest/dictionaries/words"), -- where you dictionary is
+            },
+            documentation = {
+              enable = false, -- enable documentation to show the definition of the word
+              get_command = {
+                "wn", -- make sure this command is available in your system
+                "${word}", -- this will be replaced by the word to search
+                "-over",
+              },
+            },
+          },
         },
         -- Third class citizen mf always talking shit
         copilot = {
@@ -141,10 +179,11 @@ return {
       end,
     })
 
-    -- This comes from the luasnip extra, if you don't add it, won't be able to
-    -- jump forward or backward in luasnip snippets
-    -- https://www.lazyvim.org/extras/coding/luasnip#blinkcmp-optional
     opts.snippets = {
+      preset = "luasnip",
+      -- This comes from the luasnip extra, if you don't add it, won't be able to
+      -- jump forward or backward in luasnip snippets
+      -- https://www.lazyvim.org/extras/coding/luasnip#blinkcmp-optional
       expand = function(snippet)
         require("luasnip").lsp_expand(snippet)
       end,

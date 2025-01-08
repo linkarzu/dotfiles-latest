@@ -14,6 +14,8 @@ local trigger_text = ";"
 return {
   "saghen/blink.cmp",
   enabled = true,
+  -- I don't have time for this bullshit right now
+  version = "v0.9.3",
   opts = function(_, opts)
     -- Merge custom sources with the existing ones from lazyvim
     -- NOTE: by default lazyvim already includes the lazydev source, so not adding it here again

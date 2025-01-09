@@ -76,7 +76,6 @@ return {
           score_offset = 85, -- the higher the number, the higher the priority
           -- Only show snippets if I type the trigger_text characters, so
           -- to expand the "bash" snippet, if the trigger_text is ";" I have to
-          -- type ";bash"
           should_show_items = function()
             local col = vim.api.nvim_win_get_cursor(0)[2]
             local before_cursor = vim.api.nvim_get_current_line():sub(1, col)
@@ -182,6 +181,23 @@ return {
         return {}
       end,
     })
+
+    -- opts.completion = {
+    --   keyword = {
+    --     -- 'prefix' will fuzzy match on the text before the cursor
+    --     -- 'full' will fuzzy match on the text before *and* after the cursor
+    --     -- example: 'foo_|_bar' will match 'foo_' for 'prefix' and 'foo__bar' for 'full'
+    --     range = "full",
+    --   },
+    -- }
+    -- opts.fuzzy = {
+    --   -- Disabling this matches the behavior of fzf
+    --   use_typo_resistance = false,
+    --   -- Frecency tracks the most recently/frequently used items and boosts the score of the item
+    --   use_frecency = true,
+    --   -- Proximity bonus boosts the score of items matching nearby words
+    --   use_proximity = false,
+    -- }
 
     opts.snippets = {
       preset = "luasnip",

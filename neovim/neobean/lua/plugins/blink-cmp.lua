@@ -182,14 +182,28 @@ return {
       end,
     })
 
-    -- opts.completion = {
-    --   keyword = {
-    --     -- 'prefix' will fuzzy match on the text before the cursor
-    --     -- 'full' will fuzzy match on the text before *and* after the cursor
-    --     -- example: 'foo_|_bar' will match 'foo_' for 'prefix' and 'foo__bar' for 'full'
-    --     range = "full",
-    --   },
-    -- }
+    opts.completion = {
+      --   keyword = {
+      --     -- 'prefix' will fuzzy match on the text before the cursor
+      --     -- 'full' will fuzzy match on the text before *and* after the cursor
+      --     -- example: 'foo_|_bar' will match 'foo_' for 'prefix' and 'foo__bar' for 'full'
+      --     range = "full",
+      --   },
+      menu = {
+        border = "single",
+      },
+      documentation = {
+        auto_show = true,
+        window = {
+          border = "single",
+        },
+      },
+      -- Displays a preview of the selected item on the current line
+      ghost_text = {
+        enabled = true,
+      },
+    }
+
     -- opts.fuzzy = {
     --   -- Disabling this matches the behavior of fzf
     --   use_typo_resistance = false,

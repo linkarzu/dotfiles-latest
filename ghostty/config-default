@@ -95,7 +95,7 @@ font-style-bold-italic = default
 # requested style, then the font will be used as-is since the style is
 # not synthetic.
 # 
-# Warning! An easy mistake is to disable `bold` or `italic` but not
+# Warning: An easy mistake is to disable `bold` or `italic` but not
 # `bold-italic`. Disabling only `bold` or `italic` will NOT disable either
 # in the `bold-italic` style. If you want to disable `bold-italic`, you must
 # explicitly disable it. You cannot partially disable `bold-italic`.
@@ -192,28 +192,66 @@ font-thicken = false
 # `-100%`) can cause the terminal to be unusable. Use with caution and reason.
 # 
 # Some values are clamped to minimum or maximum values. This can make it
-# appear that certain values are ignored. For example, the underline position
-# is clamped to the height of a cell. If you set the underline position so
-# high that it extends beyond the bottom of the cell size, it will be clamped
-# to the bottom of the cell.
+# appear that certain values are ignored. For example, many `*-thickness`
+# adjustments cannot go below 1px.
 # 
 # `adjust-cell-height` has some additional behaviors to describe:
 # 
 #   * The font will be centered vertically in the cell.
 # 
-#   * The cursor will remain the same size as the font.
+#   * The cursor will remain the same size as the font, but may be
+#     adjusted separately with `adjust-cursor-height`.
 # 
 #   * Powerline glyphs will be adjusted along with the cell height so
 #     that things like status lines continue to look aligned.
 adjust-cell-width = 
 
 adjust-cell-height = 
+# Distance in pixels or percentage adjustment from the bottom of the cell to the text baseline.
+# Increase to move baseline UP, decrease to move baseline DOWN.
+# See the notes about adjustments in `adjust-cell-width`.
 adjust-font-baseline = 
+
+# Distance in pixels or percentage adjustment from the top of the cell to the top of the underline.
+# Increase to move underline DOWN, decrease to move underline UP.
+# See the notes about adjustments in `adjust-cell-width`.
 adjust-underline-position = 
+
+# Thickness in pixels of the underline.
+# See the notes about adjustments in `adjust-cell-width`.
 adjust-underline-thickness = 
+
+# Distance in pixels or percentage adjustment from the top of the cell to the top of the strikethrough.
+# Increase to move strikethrough DOWN, decrease to move underline UP.
+# See the notes about adjustments in `adjust-cell-width`.
 adjust-strikethrough-position = 
+
+# Thickness in pixels or percentage adjustment of the strikethrough.
+# See the notes about adjustments in `adjust-cell-width`.
 adjust-strikethrough-thickness = 
+
+# Distance in pixels or percentage adjustment from the top of the cell to the top of the overline.
+# Increase to move overline DOWN, decrease to move underline UP.
+# See the notes about adjustments in `adjust-cell-width`.
+adjust-overline-position = 
+
+# Thickness in pixels or percentage adjustment of the overline.
+# See the notes about adjustments in `adjust-cell-width`.
+adjust-overline-thickness = 
+
+# Thickness in pixels or percentage adjustment of the bar cursor and outlined rect cursor.
+# See the notes about adjustments in `adjust-cell-width`.
 adjust-cursor-thickness = 
+
+# Height in pixels or percentage adjustment of the cursor. Currently applies to all cursor types:
+# bar, rect, and outlined rect.
+# See the notes about adjustments in `adjust-cell-width`.
+adjust-cursor-height = 
+
+# Thickness in pixels or percentage adjustment of box drawing characters.
+# See the notes about adjustments in `adjust-cell-width`.
+adjust-box-thickness = 
+
 # The method to use for calculating the cell width of a grapheme cluster.
 # The default value is `unicode` which uses the Unicode standard to determine
 # grapheme width. This results in correct grapheme width but may result in
@@ -222,16 +260,16 @@ adjust-cursor-thickness =
 # 
 # Valid values are:
 # 
-#   * `legacy` - Use a legacy method to determine grapheme width, such as
-#     wcswidth This maximizes compatibility with legacy programs but may result
-#     in incorrect grapheme width for certain graphemes such as skin-tone
-#     emoji, non-English characters, etc.
+# * `legacy` - Use a legacy method to determine grapheme width, such as
+#   wcswidth This maximizes compatibility with legacy programs but may result
+#   in incorrect grapheme width for certain graphemes such as skin-tone
+#   emoji, non-English characters, etc.
 # 
-#     This is called "legacy" and not something more specific because the
-#     behavior is undefined and we want to retain the ability to modify it.
-#     For example, we may or may not use libc `wcswidth` now or in the future.
+#   This is called "legacy" and not something more specific because the
+#   behavior is undefined and we want to retain the ability to modify it.
+#   For example, we may or may not use libc `wcswidth` now or in the future.
 # 
-#   * `unicode` - Use the Unicode standard to determine grapheme width.
+# * `unicode` - Use the Unicode standard to determine grapheme width.
 # 
 # If a running program explicitly enables terminal mode 2027, then `unicode`
 # width will be forced regardless of this configuration. When mode 2027 is
@@ -264,9 +302,14 @@ grapheme-width-method = unicode
 # Example: `hinting`, `no-hinting`, `force-autohint`, `no-force-autohint`
 freetype-load-flags = hinting,force-autohint,monochrome,autohint
 
-# A theme to use. If the theme is an absolute pathname, Ghostty will attempt
-# to load that file as a theme. If that file does not exist or is inaccessible,
-# an error will be logged and no other directories will be searched.
+# A theme to use. This can be a built-in theme name, a custom theme
+# name, or an absolute path to a custom theme file. Ghostty also supports
+# specifying a different theme to use for light and dark mode. Each
+# option is documented below.
+# 
+# If the theme is an absolute pathname, Ghostty will attempt to load that
+# file as a theme. If that file does not exist or is inaccessible, an error
+# will be logged and no other directories will be searched.
 # 
 # If the theme is not an absolute pathname, two different directories will be
 # searched for a file name that matches the theme. This is case sensitive on
@@ -279,15 +322,40 @@ freetype-load-flags = hinting,force-autohint,monochrome,autohint
 # 
 # The second directory is the `themes` subdirectory of the Ghostty resources
 # directory. Ghostty ships with a multitude of themes that will be installed
-# into this directory. On macOS, this list is in the `Ghostty.app/Contents/
-# Resources/ghostty/themes` directory. On Linux, this list is in the `share/
-# ghostty/themes` directory (wherever you installed the Ghostty "share"
-# directory.
+# into this directory. On macOS, this list is in the
+# `Ghostty.app/Contents/Resources/ghostty/themes` directory. On Linux, this
+# list is in the `share/ghostty/themes` directory (wherever you installed the
+# Ghostty "share" directory.
 # 
 # To see a list of available themes, run `ghostty +list-themes`.
 # 
+# A theme file is simply another Ghostty configuration file. They share
+# the same syntax and same configuration options. A theme can set any valid
+# configuration option so please do not use a theme file from an untrusted
+# source. The built-in themes are audited to only set safe configuration
+# options.
+# 
+# Some options cannot be set within theme files. The reason these are not
+# supported should be self-evident. A theme file cannot set `theme` or
+# `config-file`. At the time of writing this, Ghostty will not show any
+# warnings or errors if you set these options in a theme file but they will
+# be silently ignored.
+# 
 # Any additional colors specified via background, foreground, palette, etc.
 # will override the colors specified in the theme.
+# 
+# To specify a different theme for light and dark mode, use the following
+# syntax: `light:theme-name,dark:theme-name`. For example:
+# `light:rose-pine-dawn,dark:rose-pine`. Whitespace around all values are
+# trimmed and order of light and dark does not matter. Both light and dark
+# must be specified in this form. In this form, the theme used will be
+# based on the current desktop environment theme.
+# 
+# There are some known bugs with light/dark mode theming. These will
+# be fixed in a future update:
+# 
+#   - macOS: titlebar tabs style is not updated when switching themes.
+# 
 theme = 
 
 # Background color for the window.
@@ -633,7 +701,7 @@ cursor-style = block
 # 
 # Valid values are:
 # 
-#   * `` (blank)
+#   * ` ` (blank)
 #   * `true`
 #   * `false`
 # 
@@ -704,6 +772,10 @@ mouse-scroll-multiplier = 1
 # The opacity level (opposite of transparency) of the background. A value of
 # 1 is fully opaque and a value of 0 is fully transparent. A value less than 0
 # or greater than 1 will be clamped to the nearest valid value.
+# 
+# On macOS, background opacity is disabled when the terminal enters native
+# fullscreen. This is because the background becomes gray and it can cause
+# widgets to show through which isn't generally desirable.
 background-opacity = 1
 
 # A positive value enables blurring of the background when background-opacity
@@ -775,6 +847,16 @@ command =
 #     process will exit when the command exits. Additionally, the
 #     `quit-after-last-window-closed-delay` is unset.
 # 
+#   * `shell-integration=detect` (if not `none`) - This prevents forcibly
+#     injecting any configured shell integration into the command's
+#     environment. With `-e` its highly unlikely that you're executing a
+#     shell and forced shell integration is likely to cause problems
+#     (i.e. by wrapping your command in a shell, setting env vars, etc.).
+#     This is a safety measure to prevent unexpected behavior. If you want
+#     shell integration with a `-e`-executed command, you must either
+#     name your binary appropriately or source the shell integration script
+#     manually.
+# 
 initial-command = 
 
 # If true, keep the terminal open after the command exits. Normally, the
@@ -840,9 +922,6 @@ link-url = true
 # does not apply to tabs, splits, etc. However, this setting will apply to all
 # new windows, not just the first one.
 # 
-# On macOS, this always creates the window in native fullscreen. Non-native
-# fullscreen is not currently supported with this setting.
-# 
 # On macOS, this setting does not work if window-decoration is set to
 # "false", because native fullscreen on macOS requires window decorations
 # to be set.
@@ -851,6 +930,17 @@ fullscreen = false
 # The title Ghostty will use for the window. This will force the title of the
 # window to be this title at all times and Ghostty will ignore any set title
 # escape sequences programs (such as Neovim) may send.
+# 
+# If you want a blank title, set this to one or more spaces by quoting
+# the value. For example, `title = " "`. This effectively hides the title.
+# This is necessary because setting a blank value resets the title to the
+# default value of the running program.
+# 
+# This configuration can be reloaded at runtime. If it is set, the title
+# will update for all windows. If it is unset, the next title change escape
+# sequence will be honored but previous changes will not retroactively
+# be set. This latter case may require you restart programs such as neovim
+# to get the new title.
 title = 
 
 # The setting that will change the application class value.
@@ -904,7 +994,25 @@ working-directory =
 # the documentation or using the `ghostty +list-actions` command.
 # 
 # Trigger: `+`-separated list of keys and modifiers. Example: `ctrl+a`,
-# `ctrl+shift+b`, `up`. Some notes:
+# `ctrl+shift+b`, `up`.
+# 
+# Valid keys are currently only listed in the
+# [Ghostty source code](https://github.com/ghostty-org/ghostty/blob/d6e76858164d52cff460fedc61ddf2e560912d71/src/input/key.zig#L255).
+# This is a documentation limitation and we will improve this in the future.
+# A common gotcha is that numeric keys are written as words: i.e. `one`,
+# `two`, `three`, etc. and not `1`, `2`, `3`. This will also be improved in
+# the future.
+# 
+# Valid modifiers are `shift`, `ctrl` (alias: `control`), `alt` (alias: `opt`,
+# `option`), and `super` (alias: `cmd`, `command`). You may use the modifier
+# or the alias. When debugging keybinds, the non-aliased modifier will always
+# be used in output.
+# 
+# Note: The fn or "globe" key on keyboards are not supported as a
+# modifier. This is a limitation of the operating systems and GUI toolkits
+# that Ghostty uses.
+# 
+# Some additional notes for triggers:
 # 
 #   * modifiers cannot repeat, `ctrl+ctrl+a` is invalid.
 # 
@@ -918,15 +1026,6 @@ working-directory =
 #     mapping responds to the hardware keycode and not the keycode
 #     translated by any system keyboard layouts. Example: "ctrl+physical:a"
 # 
-# Valid modifiers are `shift`, `ctrl` (alias: `control`), `alt` (alias: `opt`,
-# `option`), and `super` (alias: `cmd`, `command`). You may use the modifier
-# or the alias. When debugging keybinds, the non-aliased modifier will always
-# be used in output.
-# 
-# Note that the fn or "globe" key on keyboards are not supported as a
-# modifier. This is a limitation of the operating systems and GUI toolkits
-# that Ghostty uses.
-# 
 # You may also specify multiple triggers separated by `>` to require a
 # sequence of triggers to activate the action. For example,
 # `ctrl+a>n=new_window` will only trigger the `new_window` action if the
@@ -934,7 +1033,7 @@ working-directory =
 # is sometimes called a leader key, a key chord, a key table, etc. There
 # is no hardcoded limit on the number of parts in a sequence.
 # 
-# Warning: if you define a sequence as a CLI argument to `ghostty`,
+# Warning: If you define a sequence as a CLI argument to `ghostty`,
 # you probably have to quote the keybind since `>` is a special character
 # in most shells. Example: ghostty --keybind='ctrl+a>n=new_window'
 # 
@@ -1023,7 +1122,7 @@ working-directory =
 #     Since they are not associated with a specific terminal surface,
 #     they're never encoded.
 # 
-# Keybind trigger are not unique per prefix combination. For example,
+# Keybind triggers are not unique per prefix combination. For example,
 # `ctrl+a` and `global:ctrl+a` are not two separate keybinds. The keybind
 # set later will overwrite the keybind set earlier. In this case, the
 # `global:` keybind will be used.
@@ -1032,22 +1131,25 @@ working-directory =
 # `global:unconsumed:ctrl+a=reload_config` will make the keybind global
 # and not consume the input to reload the config.
 # 
-# A note on `global:`: this feature is only supported on macOS. On macOS,
+# Note: `global:` is only supported on macOS. On macOS,
 # this feature requires accessibility permissions to be granted to Ghostty.
 # When a `global:` keybind is specified and Ghostty is launched or reloaded,
 # Ghostty will attempt to request these permissions. If the permissions are
 # not granted, the keybind will not work. On macOS, you can find these
 # permissions in System Preferences -> Privacy & Security -> Accessibility.
 keybind = super+page_up=scroll_page_up
+keybind = super+ctrl+equal=equalize_splits
 keybind = super+physical:four=goto_tab:4
 keybind = super+shift+down=jump_to_prompt:1
 keybind = super+shift+w=close_window
 keybind = super+shift+left_bracket=previous_tab
+keybind = super+backspace=esc:
 keybind = super+alt+i=inspector:toggle
 keybind = super+w=close_surface
 keybind = super+physical:eight=goto_tab:8
 keybind = super+alt+right=goto_split:right
 keybind = shift+up=adjust_selection:up
+keybind = super+down=jump_to_prompt:1
 keybind = super+enter=toggle_fullscreen
 keybind = super+t=new_tab
 keybind = super+c=copy_to_clipboard
@@ -1057,7 +1159,7 @@ keybind = shift+left=adjust_selection:left
 keybind = super+equal=increase_font_size:1
 keybind = shift+page_up=adjust_selection:page_up
 keybind = super+physical:three=goto_tab:3
-keybind = super+physical:zero=last_tab
+keybind = super+right=text:\x05
 keybind = super+d=new_split:right
 keybind = super+ctrl+down=resize_split:down,10
 keybind = shift+end=adjust_selection:end
@@ -1065,7 +1167,9 @@ keybind = super+plus=increase_font_size:1
 keybind = super+q=quit
 keybind = super+home=scroll_to_top
 keybind = super+ctrl+left=resize_split:left,10
+keybind = alt+left=esc:b
 keybind = super+ctrl+up=resize_split:up,10
+keybind = super+left=text:\x01
 keybind = super+shift+up=jump_to_prompt:-1
 keybind = shift+right=adjust_selection:right
 keybind = super+comma=open_config
@@ -1074,7 +1178,7 @@ keybind = super+minus=decrease_font_size:1
 keybind = shift+page_down=adjust_selection:page_down
 keybind = ctrl+tab=next_tab
 keybind = super+a=select_all
-keybind = alt+shift+equal=equalize_splits
+keybind = alt+right=esc:f
 keybind = super+shift+enter=toggle_split_zoom
 keybind = super+alt+down=goto_split:bottom
 keybind = super+ctrl+f=toggle_fullscreen
@@ -1088,7 +1192,7 @@ keybind = super+page_down=scroll_page_down
 keybind = super+alt+shift+w=close_all_windows
 keybind = super+alt+up=goto_split:top
 keybind = super+left_bracket=goto_split:previous
-keybind = super+physical:nine=goto_tab:9
+keybind = super+physical:nine=last_tab
 keybind = super+right_bracket=goto_split:next
 keybind = super+end=scroll_to_bottom
 keybind = super+shift+j=write_scrollback_file:paste
@@ -1097,6 +1201,7 @@ keybind = super+zero=reset_font_size
 keybind = super+physical:five=goto_tab:5
 keybind = shift+home=adjust_selection:home
 keybind = super+physical:seven=goto_tab:7
+keybind = super+up=jump_to_prompt:-1
 keybind = super+k=clear_screen
 keybind = super+physical:two=goto_tab:2
 keybind = super+physical:six=goto_tab:6
@@ -1208,7 +1313,7 @@ window-inherit-font-size = true
 #   * `false` - windows won't have native decorations, i.e. titlebar and
 #      borders. On macOS this also disables tabs and tab overview.
 # 
-# The "toggle_window_decoration" keybind action can be used to create
+# The "toggle_window_decorations" keybind action can be used to create
 # a keybinding to toggle this setting at runtime.
 # 
 # Changing this configuration in your configuration and reloading will
@@ -1226,7 +1331,9 @@ window-title-font-family =
 # The theme to use for the windows. Valid values:
 # 
 #   * `auto` - Determine the theme based on the configured terminal
-#      background color.
+#      background color. This has no effect if the "theme" configuration
+#      has separate light and dark themes. In that case, the behavior
+#      of "auto" is equivalent to "system".
 #   * `system` - Use the system theme.
 #   * `light` - Use the light theme regardless of system theme.
 #   * `dark` - Use the dark theme regardless of system theme.
@@ -1274,7 +1381,7 @@ window-colorspace = srgb
 # BUG: On Linux with GTK, the calculated window size will not properly take
 # into account window decorations. As a result, the grid dimensions will not
 # exactly match this configuration. If window decorations are disabled (see
-# window-decorations), then this will work as expected.
+# `window-decoration`), then this will work as expected.
 # 
 # Windows smaller than 10 wide by 4 high are not allowed.
 window-height = 0
@@ -1324,6 +1431,16 @@ window-step-resize = false
 # 
 #   * `end` - Insert the new tab at the end of the tab list.
 window-new-tab-position = current
+
+# Background color for the window titlebar. This only takes effect if
+# window-theme is set to ghostty. Currently only supported in the GTK app
+# runtime.
+window-titlebar-background = 
+
+# Foreground color for the window titlebar. This only takes effect if
+# window-theme is set to ghostty. Currently only supported in the GTK app
+# runtime.
+window-titlebar-foreground = 
 
 # This controls when resize overlays are shown. Resize overlays are a
 # transient popup that shows the size of the terminal while the surfaces are
@@ -1384,7 +1501,14 @@ resize-overlay-position = center
 # value larger than this will be clamped to the maximum value.
 resize-overlay-duration = 750ms
 
+# If true, when there are multiple split panes, the mouse selects the pane
+# that is focused. This only applies to the currently focused window; i.e.
+# mousing over a split in an unfocused window will not focus that split
+# and bring the window to front.
+# 
+# Default is false.
 focus-follows-mouse = false
+
 # Whether to allow programs running in the terminal to read/write to the
 # system clipboard (OSC 52, for googling). The default is to allow clipboard
 # reading after prompting the user and allow writing unconditionally.
@@ -1413,8 +1537,17 @@ clipboard-paste-protection = true
 # program, not the terminal emulator).
 clipboard-paste-bracketed-safe = true
 
+# Enables or disabled title reporting (CSI 21 t). This escape sequence
+# allows the running program to query the terminal title. This is a common
+# security issue and is disabled by default.
+# 
+# Warning: This can expose sensitive information at best and enable
+# arbitrary code execution at worst (with a maliciously crafted title
+# and a minor amount of user interaction).
+title-report = false
+
 # The total amount of bytes that can be used for image data (i.e. the Kitty
-# image protocol) per terminal scren. The maximum value is 4,294,967,295
+# image protocol) per terminal screen. The maximum value is 4,294,967,295
 # (4GiB). The default is 320MB. If this is set to zero, then all image
 # protocols will be disabled.
 # 
@@ -1458,6 +1591,21 @@ click-repeat-interval = 0
 # 
 # Cycles are not allowed. If a cycle is detected, an error will be logged and
 # the configuration file will be ignored.
+# 
+# Configuration files are loaded after the configuration they're defined
+# within in the order they're defined. **THIS IS A VERY SUBTLE BUT IMPORTANT
+# POINT.** To put it another way: configuration files do not take effect
+# until after the entire configuration is loaded. For example, in the
+# configuration below:
+# 
+# ```
+# config-file = "foo"
+# a = 1
+# ```
+# 
+# If "foo" contains `a = 2`, the final value of `a` will be 2, because
+# `foo` is loaded after the configuration file that configures the
+# nested `config-file` value.
 config-file = 
 
 # When this is true, the default configuration file paths will be loaded.
@@ -1473,8 +1621,12 @@ config-file =
 # This configuration can only be set via CLI arguments.
 config-default-files = true
 
-# Confirms that a surface should be closed before closing it. This defaults to
-# true. If set to false, surfaces will close without any confirmation.
+# Confirms that a surface should be closed before closing it.
+# 
+# This defaults to `true`. If set to `false`, surfaces will close without
+# any confirmation. This can also be set to `always`, which will always
+# confirm closing a surface, even if shell integration says a process isn't
+# running.
 confirm-close-surface = true
 
 # Whether or not to quit after the last surface is closed.
@@ -1546,8 +1698,12 @@ initial-window = true
 #   * `bottom` - Terminal appears at the bottom of the screen.
 #   * `left` - Terminal appears at the left of the screen.
 #   * `right` - Terminal appears at the right of the screen.
+#   * `center` - Terminal appears at the center of the screen.
 # 
 # Changing this configuration requires restarting Ghostty completely.
+# 
+# Note: There is no default keybind for toggling the quick terminal.
+# To enable this feature, bind the `toggle_quick_terminal` action to a key.
 quick-terminal-position = top
 
 # The screen where the quick terminal should show up.
@@ -1574,6 +1730,10 @@ quick-terminal-screen = main
 # Set it to 0 to disable animation completely. This can be changed at
 # runtime.
 quick-terminal-animation-duration = 0.2
+
+# Automatically hide the quick terminal when focus shifts to another window.
+# Set it to false for the quick terminal to remain open even when it loses focus.
+quick-terminal-autohide = true
 
 # Whether to enable shell integration auto-injection or not. Shell integration
 # greatly enhances the terminal experience by enabling a number of features:
@@ -1648,7 +1808,7 @@ vt-kam-allowed = false
 # Custom shaders to run after the default shaders. This is a file path
 # to a GLSL-syntax shader for all platforms.
 # 
-# WARNING: Invalid shaders can cause Ghostty to become unusable such as by
+# Warning: Invalid shaders can cause Ghostty to become unusable such as by
 # causing the window to be completely black. If this happens, you can
 # unset this configuration to disable the shader.
 # 
@@ -1728,6 +1888,13 @@ macos-non-native-fullscreen = false
 # This makes a more seamless window appearance but looks a little less
 # typical for a macOS application and may not work well with all themes.
 # 
+# The "transparent" style will also update in real-time to dynamic
+# changes to the window background color, i.e. via OSC 11. To make this
+# more aesthetically pleasing, this only happens if the terminal is
+# a window, tab, or split that borders the top of the window. This
+# avoids a disjointed appearance where the titlebar color changes
+# but all the topmost terminals don't match.
+# 
 # The "tabs" style is a completely custom titlebar that integrates the
 # tab bar into the titlebar. This titlebar always matches the background
 # color of the terminal. There are some limitations to this style:
@@ -1756,6 +1923,11 @@ macos-titlebar-style = transparent
 # 
 # The proxy icon is only visible with the native macOS titlebar style.
 # 
+# Valid values are:
+# 
+#   * `visible` - Show the proxy icon.
+#   * `hidden` - Hide the proxy icon.
+# 
 # The default value is `visible`.
 # 
 # This setting can be changed at runtime and will affect all currently
@@ -1765,20 +1937,41 @@ macos-titlebar-style = transparent
 # editor, etc.
 macos-titlebar-proxy-icon = visible
 
-# If `true`, the *Option* key will be treated as *Alt*. This makes terminal
-# sequences expecting *Alt* to work properly, but will break Unicode input
-# sequences on macOS if you use them via the *Alt* key. You may set this to
-# `false` to restore the macOS *Alt* key unicode sequences but this will break
-# terminal sequences expecting *Alt* to work.
+# macOS doesn't have a distinct "alt" key and instead has the "option"
+# key which behaves slightly differently. On macOS by default, the
+# option key plus a character will sometimes produces a Unicode character.
+# For example, on US standard layouts option-b produces "∫". This may be
+# undesirable if you want to use "option" as an "alt" key for keybindings
+# in terminal programs or shells.
 # 
-# The values `left` or `right` enable this for the left or right *Option*
-# key, respectively.
+# This configuration lets you change the behavior so that option is treated
+# as alt.
+# 
+# The default behavior (unset) will depend on your active keyboard
+# layout. If your keyboard layout is one of the keyboard layouts listed
+# below, then the default value is "true". Otherwise, the default
+# value is "false". Keyboard layouts with a default value of "true" are:
+# 
+#   - U.S. Standard
+#   - U.S. International
 # 
 # Note that if an *Option*-sequence doesn't produce a printable character, it
 # will be treated as *Alt* regardless of this setting. (i.e. `alt+ctrl+a`).
 # 
+# Explicit values that can be set:
+# 
+# If `true`, the *Option* key will be treated as *Alt*. This makes terminal
+# sequences expecting *Alt* to work properly, but will break Unicode input
+# sequences on macOS if you use them via the *Alt* key.
+# 
+# You may set this to `false` to restore the macOS *Alt* key unicode
+# sequences but this will break terminal sequences expecting *Alt* to work.
+# 
+# The values `left` or `right` enable this for the left or right *Option*
+# key, respectively.
+# 
 # This does not work with GLFW builds.
-macos-option-as-alt = false
+macos-option-as-alt = 
 
 # Whether to enable the macOS window shadow. The default value is true.
 # With some window managers and window transparency settings, you may
@@ -1812,6 +2005,73 @@ macos-auto-secure-input = true
 # always have secure input enabled, the indication can be distracting and
 # you may want to disable it.
 macos-secure-input-indication = true
+
+# Customize the macOS app icon.
+# 
+# This only affects the icon that appears in the dock, application
+# switcher, etc. This does not affect the icon in Finder because
+# that is controlled by a hardcoded value in the signed application
+# bundle and can't be changed at runtime. For more details on what
+# exactly is affected, see the `NSApplication.icon` Apple documentation;
+# that is the API that is being used to set the icon.
+# 
+# Valid values:
+# 
+#  * `official` - Use the official Ghostty icon.
+#  * `custom-style` - Use the official Ghostty icon but with custom
+#    styles applied to various layers. The custom styles must be
+#    specified using the additional `macos-icon`-prefixed configurations.
+#    The `macos-icon-ghost-color` and `macos-icon-screen-color`
+#    configurations are required for this style.
+# 
+# WARNING: The `custom-style` option is _experimental_. We may change
+# the format of the custom styles in the future. We're still finalizing
+# the exact layers and customization options that will be available.
+# 
+# Other caveats:
+# 
+#   * The icon in the update dialog will always be the official icon.
+#     This is because the update dialog is managed through a
+#     separate framework and cannot be customized without significant
+#     effort.
+# 
+macos-icon = official
+
+# The material to use for the frame of the macOS app icon.
+# 
+# Valid values:
+# 
+#  * `aluminum` - A brushed aluminum frame. This is the default.
+#  * `beige` - A classic 90's computer beige frame.
+#  * `plastic` - A glossy, dark plastic frame.
+#  * `chrome` - A shiny chrome frame.
+# 
+# This only has an effect when `macos-icon` is set to `custom-style`.
+macos-icon-frame = aluminum
+
+# The color of the ghost in the macOS app icon.
+# 
+# The format of the color is the same as the `background` configuration;
+# see that for more information.
+# 
+# Note: This configuration is required when `macos-icon` is set to
+# `custom-style`.
+# 
+# This only has an effect when `macos-icon` is set to `custom-style`.
+macos-icon-ghost-color = 
+
+# The color of the screen in the macOS app icon.
+# 
+# The screen is a gradient so you can specify multiple colors that
+# make up the gradient. Colors should be separated by commas. The
+# format of the color is the same as the `background` configuration;
+# see that for more information.
+# 
+# Note: This configuration is required when `macos-icon` is set to
+# `custom-style`.
+# 
+# This only has an effect when `macos-icon` is set to `custom-style`.
+macos-icon-screen-color = 
 
 # Put every surface (tab, split, window) into a dedicated Linux cgroup.
 # 
@@ -1866,7 +2126,7 @@ linux-cgroup-processes-limit =
 # If this is true, then any cgroup initialization failure will cause
 # Ghostty to exit or new surfaces to not be created.
 # 
-# Note: this currently only affects cgroup initialization. Subprocesses
+# Note: This currently only affects cgroup initialization. Subprocesses
 # must always be able to move themselves into an isolated cgroup.
 linux-cgroup-hard-fail = false
 
@@ -1876,7 +2136,7 @@ linux-cgroup-hard-fail = false
 # 
 # If `false`, each new ghostty process will launch a separate application.
 # 
-# The default value is `detect` which will default to `true` if Ghostty
+# The default value is `desktop` which will default to `true` if Ghostty
 # detects that it was launched from the `.desktop` file such as an app
 # launcher (like Gnome Shell)  or by D-Bus activation. If Ghostty is launched
 # from the command line, it will default to `false`.
@@ -1897,10 +2157,17 @@ gtk-single-instance = desktop
 gtk-titlebar = true
 
 # Determines the side of the screen that the GTK tab bar will stick to.
-# Top, bottom, left, and right are supported. The default is top.
+# Top, bottom, left, right, and hidden are supported. The default is top.
 # 
 # If this option has value `left` or `right` when using Adwaita, it falls
-# back to `top`.
+# back to `top`. `hidden`, meaning that tabs don't exist, is not supported
+# without using Adwaita, falling back to `top`.
+# 
+# When `hidden` is set and Adwaita is enabled, a tab button displaying the
+# number of tabs will appear in the title bar. It has the ability to open a
+# tab overview for displaying tabs. Alternatively, you can use the
+# `toggle_tab_overview` action in a keybind if your window doesn't have a
+# title bar, or you can switch tabs with keybinds.
 gtk-tabs-location = top
 
 # Determines the appearance of the top and bottom bars when using the
@@ -1979,4 +2246,26 @@ enquiry-response =
 # 
 # Changing this value at runtime works after a small delay.
 auto-update = check
+
+# The release channel to use for auto-updates.
+# 
+# The default value of this matches the release channel of the currently
+# running Ghostty version. If you download a pre-release version of Ghostty
+# then this will be set to `tip` and you will receive pre-release updates.
+# If you download a stable version of Ghostty then this will be set to
+# `stable` and you will receive stable updates.
+# 
+# Valid values are:
+# 
+#  * `stable` - Stable, tagged releases such as "1.0.0".
+#  * `tip` - Pre-release versions generated from each commit to the
+#    main branch. This is the version that was in use during private
+#    beta testing by thousands of people. It is generally stable but
+#    will likely have more bugs than the stable channel.
+# 
+# Changing this configuration requires a full restart of
+# Ghostty to take effect.
+# 
+# This only works on macOS since only macOS has an auto-update feature.
+auto-update-channel = 
 

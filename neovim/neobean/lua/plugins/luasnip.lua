@@ -309,6 +309,23 @@ return {
       })
     )
 
+    table.insert(
+      snippets,
+      s({
+        trig = "discord",
+        name = "discord support",
+        desc = "discord support",
+      }, {
+        t({
+          "```txt",
+          "I have a members only discord, it's goal is to troubleshoot stuff related to my videos, and try to help users out",
+          "If you want to join, the link can be found below",
+          "https://www.youtube.com/channel/UCrSIvbFncPSlK6AdwE2QboA/join",
+          "```",
+        }),
+      })
+    )
+
     -- Add a snippet for inserting a video markdown template
     table.insert(
       snippets,

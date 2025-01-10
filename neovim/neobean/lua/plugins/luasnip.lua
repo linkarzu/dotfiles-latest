@@ -19,6 +19,10 @@ return {
     local i = ls.insert_node
     local f = ls.function_node
 
+    local function clipboard()
+      return vim.fn.getreg("+")
+    end
+
     -- Function to create snippets for youtube videos
     local function load_snippets_from_file(file_path)
       local snippets = {}
@@ -81,9 +85,47 @@ return {
       return snippets
     end
 
-    local function clipboard()
-      return vim.fn.getreg("+")
+    -- Function to create snippets for youtube videos as markdown links with external marker
+    local function ytmdexlinks_from_file(file_path)
+      local snippets = {}
+      local file = io.open(file_path, "r")
+      if not file then
+        vim.notify("Could not open snippets file: " .. file_path, vim.log.levels.ERROR)
+        return snippets
+      end
+      local lines = {}
+      for line in file:lines() do
+        if line == "" then
+          -- Create a markdown link snippet if two lines are grouped
+          if #lines == 2 then
+            local title, url = lines[1], lines[2]
+            local markdown_link = string.format('[%s](%s){:target="_blank"}', title, url)
+            table.insert(snippets, s({ trig = "ytmdex - " .. title }, { t(markdown_link) }))
+          end
+          lines = {}
+        else
+          table.insert(lines, line)
+        end
+      end
+      -- Handle the last snippet if the file doesn't end with a blank line
+      if #lines == 2 then
+        local title, url = lines[1], lines[2]
+        local markdown_link = string.format('[%s](%s){:target="_blank"}', title, url)
+        table.insert(snippets, s({ trig = "ytmdex - " .. title }, { t(markdown_link) }))
+      end
+      file:close()
+      return snippets
     end
+
+    -- Path to the text file containing video snippets
+    local snippets_file = vim.fn.expand("~/github/obsidian_main/300-youtube/youtube-video-list.txt")
+    local video_snippets = load_snippets_from_file(snippets_file)
+    local video_md_snippets = ytmdlinks_from_file(snippets_file)
+    local video_md_snippets_ext = ytmdexlinks_from_file(snippets_file)
+    -- Add both types of snippets to the "all" filetype
+    ls.add_snippets("all", video_snippets)
+    ls.add_snippets("all", video_md_snippets)
+    ls.add_snippets("all", video_md_snippets_ext)
 
     -- Custom snippets
     -- the "all" after ls.add_snippets("all" is the filetype, you can know a
@@ -404,14 +446,6 @@ return {
     )
 
     ls.add_snippets("markdown", snippets)
-
-    -- Path to the text file containing video snippets
-    local snippets_file = vim.fn.expand("~/github/obsidian_main/300-youtube/youtube-video-list.txt")
-    local video_snippets = load_snippets_from_file(snippets_file)
-    local video_md_snippets = ytmdlinks_from_file(snippets_file)
-    -- Add both types of snippets to the "all" filetype
-    ls.add_snippets("all", video_snippets)
-    ls.add_snippets("all", video_md_snippets)
 
     -- #####################################################################
     --                         all the filetypes

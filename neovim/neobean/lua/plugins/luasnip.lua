@@ -74,6 +74,13 @@ return {
         local markdown_link = string.format('[%s](%s){:target="_blank"}', safe_title, url)
         return s({ trig = "ytex - " .. title }, { t(markdown_link) })
       end,
+
+      -- Extract video ID from URL (everything after the last /)
+      embed = function(title, url)
+        local video_id = url:match(".*/(.*)")
+        local embed_code = string.format("{%% include embed/youtube.html id='%s' %%}", video_id)
+        return s({ trig = "ytem - " .. title }, { t(embed_code) })
+      end,
     }
 
     -- Path to the text file containing video snippets
@@ -83,11 +90,13 @@ return {
     local video_snippets = process_youtube_snippets(snippets_file, format_functions.plain)
     local video_md_snippets = process_youtube_snippets(snippets_file, format_functions.markdown)
     local video_md_snippets_ext = process_youtube_snippets(snippets_file, format_functions.markdown_external)
+    local video_snippets_embed = process_youtube_snippets(snippets_file, format_functions.embed)
 
     -- Add all types of snippets to the "all" filetype
     ls.add_snippets("all", video_snippets)
     ls.add_snippets("all", video_md_snippets)
     ls.add_snippets("all", video_md_snippets_ext)
+    ls.add_snippets("all", video_snippets_embed)
 
     -- Custom snippets
     -- the "all" after ls.add_snippets("all" is the filetype, you can know a

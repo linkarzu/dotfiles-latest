@@ -127,37 +127,38 @@ return {
         },
         -- https://github.com/Kaiser-Yang/blink-cmp-dictionary
         -- In macOS to get started with a dictionary:
-        -- cp /usr/share/dict/words ~/github/dotfiles-latest/dictionaries
+        -- cp /usr/share/dict/words ~/github/dotfiles-latest/dictionaries/words.txt
+        --
+        -- NOTE: For the word definitions make sure "wn" is installed
+        -- brew install wordnet
         dictionary = {
           module = "blink-cmp-dictionary",
           name = "Dict",
           score_offset = 20, -- the higher the number, the higher the priority
-          enabled = false,
+          -- https://github.com/Kaiser-Yang/blink-cmp-dictionary/issues/2
+          enabled = true,
           max_items = 8,
           min_keyword_length = 3,
           opts = {
-            get_command = {
-              "rg", -- make sure this command is available in your system
-              "--color=never",
-              "--no-line-number",
-              "--no-messages",
-              "--no-filename",
-              "--ignore-case",
-              "--",
-              "${prefix}", -- this will be replaced by the result of 'get_prefix' function
-              vim.fn.expand("~/github/dotfiles-latest/dictionaries/words"), -- where you dictionary is
-            },
-            documentation = {
-              enable = true, -- enable documentation to show the definition of the word
-              get_command = {
-                -- For the word definitions feature
-                -- make sure "wn" is available in your system
-                -- brew install wordnet
-                "wn",
-                "${word}", -- this will be replaced by the word to search
-                "-over",
-              },
-            },
+            -- -- The dictionary by default now uses fzf, make sure to have it
+            -- -- installed
+            -- -- https://github.com/Kaiser-Yang/blink-cmp-dictionary/issues/2
+            --
+            -- Do not specify a file, just the path, and in the path you need to
+            -- have your .txt files
+            dictionary_directories = { vim.fn.expand("~/github/dotfiles-latest/dictionaries") },
+            -- --  NOTE: To disable the definitions uncomment this section below
+            -- separate_output = function(output)
+            --   local items = {}
+            --   for line in output:gmatch("[^\r\n]+") do
+            --     table.insert(items, {
+            --       label = line,
+            --       insert_text = line,
+            --       documentation = nil,
+            --     })
+            --   end
+            --   return items
+            -- end,
           },
         },
         -- Third class citizen mf always talking shit

@@ -677,6 +677,9 @@ const rules: KarabinerRules[] = [
       o: open("raycast://extensions/raycast/github/search-repositories"),
       p: open("raycast://extensions/nhojb/brew/search"),
       h: open("raycast://extensions/mattisssa/spotify-player/search"),
+      e: open(
+        "raycast://extensions/raycast/emoji-symbols/search-emoji-symbols"
+      ),
     },
 
     // s = "System" or "Service"

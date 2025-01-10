@@ -1,6 +1,9 @@
 -- Filename: ~/github/dotfiles-latest/neovim/neobean/lua/plugins/blink-cmp.lua
 -- ~/github/dotfiles-latest/neovim/neobean/lua/plugins/blink-cmp.lua
 
+-- HACK: blink.cmp updates | Remove LuaSnip | Emoji and Dictionary Sources | Fix Jump Autosave Issue
+-- https://youtu.be/JrgfpWap_Pg
+
 -- completion plugin with support for LSPs and external sources that updates
 -- on every keystroke with minimal overhead
 
@@ -129,7 +132,7 @@ return {
           module = "blink-cmp-dictionary",
           name = "Dict",
           score_offset = 20, -- the higher the number, the higher the priority
-          enabled = true,
+          enabled = false,
           max_items = 8,
           min_keyword_length = 3,
           opts = {

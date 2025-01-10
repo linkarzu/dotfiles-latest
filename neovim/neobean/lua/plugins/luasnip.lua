@@ -349,6 +349,13 @@ return {
           "0:00 -",
           "```",
           "",
+          "```txt",
+          "Members only discord -> https://www.youtube.com/channel/UCrSIvbFncPSlK6AdwE2QboA/join",
+          "☕ Support me -> https://ko-fi.com/linkarzu",
+          "☑ My Twitter -> https://x.com/link_arzu",
+          "❤‍🔥 My tiktok -> https://www.tiktok.com/@linkarzu",
+          "```",
+          "",
         }),
       })
     )

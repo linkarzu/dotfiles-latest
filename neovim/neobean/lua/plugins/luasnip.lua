@@ -64,13 +64,15 @@ return {
       end,
 
       markdown = function(title, url)
-        local markdown_link = string.format("[%s](%s)", title, url)
+        local safe_title = string.gsub(title, "|", "-")
+        local markdown_link = string.format("[%s](%s)", safe_title, url)
         return s({ trig = "ytmd - " .. title }, { t(markdown_link) })
       end,
 
       markdown_external = function(title, url)
-        local markdown_link = string.format('[%s](%s){:target="_blank"}', title, url)
-        return s({ trig = "ytmdex - " .. title }, { t(markdown_link) })
+        local safe_title = string.gsub(title, "|", "-")
+        local markdown_link = string.format('[%s](%s){:target="_blank"}', safe_title, url)
+        return s({ trig = "ytex - " .. title }, { t(markdown_link) })
       end,
     }
 

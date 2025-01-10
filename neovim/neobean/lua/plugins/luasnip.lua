@@ -23,106 +23,66 @@ return {
       return vim.fn.getreg("+")
     end
 
-    -- Function to create snippets for youtube videos
-    local function load_snippets_from_file(file_path)
+    -- Base function to process YouTube snippets with custom formatting
+    local function process_youtube_snippets(file_path, format_func)
       local snippets = {}
       local file = io.open(file_path, "r")
       if not file then
         vim.notify("Could not open snippets file: " .. file_path, vim.log.levels.ERROR)
         return snippets
       end
+
       local lines = {}
       for line in file:lines() do
         if line == "" then
-          -- Create a snippet if two lines (title and URL) are grouped
           if #lines == 2 then
             local title, url = lines[1], lines[2]
-            table.insert(snippets, s({ trig = "yt - " .. title }, { t(title), t({ "", url }) }))
+            local formatted_content = format_func(title, url)
+            table.insert(snippets, formatted_content)
           end
           lines = {}
         else
           table.insert(lines, line)
         end
       end
-      -- Handle the last snippet if the file doesn't end with a blank line
+
+      -- Handle the last snippet if file doesn't end with blank line
       if #lines == 2 then
         local title, url = lines[1], lines[2]
-        table.insert(snippets, s({ trig = "yt - " .. title }, { t(title), t({ "", url }) }))
+        local formatted_content = format_func(title, url)
+        table.insert(snippets, formatted_content)
       end
+
       file:close()
       return snippets
     end
 
-    -- Function to create snippets for youtube videos as markdown links
-    local function ytmdlinks_from_file(file_path)
-      local snippets = {}
-      local file = io.open(file_path, "r")
-      if not file then
-        vim.notify("Could not open snippets file: " .. file_path, vim.log.levels.ERROR)
-        return snippets
-      end
-      local lines = {}
-      for line in file:lines() do
-        if line == "" then
-          -- Create a markdown link snippet if two lines are grouped
-          if #lines == 2 then
-            local title, url = lines[1], lines[2]
-            local markdown_link = string.format("[%s](%s)", title, url)
-            table.insert(snippets, s({ trig = "ytmd - " .. title }, { t(markdown_link) }))
-          end
-          lines = {}
-        else
-          table.insert(lines, line)
-        end
-      end
-      -- Handle the last snippet if the file doesn't end with a blank line
-      if #lines == 2 then
-        local title, url = lines[1], lines[2]
+    -- Format functions for different types of YouTube snippets
+    local format_functions = {
+      plain = function(title, url)
+        return s({ trig = "yt - " .. title }, { t(title), t({ "", url }) })
+      end,
+
+      markdown = function(title, url)
         local markdown_link = string.format("[%s](%s)", title, url)
-        table.insert(snippets, s({ trig = "ytmd - " .. title }, { t(markdown_link) }))
-      end
-      file:close()
-      return snippets
-    end
+        return s({ trig = "ytmd - " .. title }, { t(markdown_link) })
+      end,
 
-    -- Function to create snippets for youtube videos as markdown links with external marker
-    local function ytmdexlinks_from_file(file_path)
-      local snippets = {}
-      local file = io.open(file_path, "r")
-      if not file then
-        vim.notify("Could not open snippets file: " .. file_path, vim.log.levels.ERROR)
-        return snippets
-      end
-      local lines = {}
-      for line in file:lines() do
-        if line == "" then
-          -- Create a markdown link snippet if two lines are grouped
-          if #lines == 2 then
-            local title, url = lines[1], lines[2]
-            local markdown_link = string.format('[%s](%s){:target="_blank"}', title, url)
-            table.insert(snippets, s({ trig = "ytmdex - " .. title }, { t(markdown_link) }))
-          end
-          lines = {}
-        else
-          table.insert(lines, line)
-        end
-      end
-      -- Handle the last snippet if the file doesn't end with a blank line
-      if #lines == 2 then
-        local title, url = lines[1], lines[2]
+      markdown_external = function(title, url)
         local markdown_link = string.format('[%s](%s){:target="_blank"}', title, url)
-        table.insert(snippets, s({ trig = "ytmdex - " .. title }, { t(markdown_link) }))
-      end
-      file:close()
-      return snippets
-    end
+        return s({ trig = "ytmdex - " .. title }, { t(markdown_link) })
+      end,
+    }
 
     -- Path to the text file containing video snippets
     local snippets_file = vim.fn.expand("~/github/obsidian_main/300-youtube/youtube-video-list.txt")
-    local video_snippets = load_snippets_from_file(snippets_file)
-    local video_md_snippets = ytmdlinks_from_file(snippets_file)
-    local video_md_snippets_ext = ytmdexlinks_from_file(snippets_file)
-    -- Add both types of snippets to the "all" filetype
+
+    -- Generate all types of snippets using the base function
+    local video_snippets = process_youtube_snippets(snippets_file, format_functions.plain)
+    local video_md_snippets = process_youtube_snippets(snippets_file, format_functions.markdown)
+    local video_md_snippets_ext = process_youtube_snippets(snippets_file, format_functions.markdown_external)
+
+    -- Add all types of snippets to the "all" filetype
     ls.add_snippets("all", video_snippets)
     ls.add_snippets("all", video_md_snippets)
     ls.add_snippets("all", video_md_snippets_ext)

@@ -34,10 +34,11 @@ return {
       enabled = true, -- start auto-save when the plugin is loaded (i.e. when your package manager loads it)
       trigger_events = { -- See :h events
         -- -- vim events that trigger an immediate save
-        -- immediate_save = { "BufLeave", "FocusLost" },
         -- -- I'm disabling this, as it's autosaving when I leave the buffer and
         -- -- that's autoformatting stuff if on insert mode and following a tutorial
-        immediate_save = { nil },
+        -- -- Re-enabling this to only save if NOT in insert mode in the condition below
+        -- immediate_save = { nil },
+        immediate_save = { "BufLeave", "FocusLost", "QuitPre", "VimSuspend" }, -- vim events that trigger an immediate save
         defer_save = { "InsertLeave", "TextChanged" }, -- vim events that trigger a deferred save (saves after `debounce_delay`)
         cancel_deferred_save = { "InsertEnter" }, -- vim events that cancel a pending deferred save
       },
@@ -46,6 +47,11 @@ return {
       -- return false: if it's not ok to be saved
       -- if set to `nil` then no specific condition is applied
       condition = function(buf)
+        -- Check if we're in insert mode
+        local mode = vim.fn.mode()
+        if mode == "i" or mode == "v" or mode == "V" or mode == "" then
+          return false
+        end
         -- Disable auto-save for the harpoon plugin, otherwise it just opens and closes
         -- https://github.com/ThePrimeagen/harpoon/issues/434
         --
@@ -72,7 +78,7 @@ return {
       noautocmd = false,
       lockmarks = false, -- lock marks when saving, see `:h lockmarks` for more details
       -- delay after which a pending save is executed (default 1000)
-      debounce_delay = 750,
+      debounce_delay = 5000,
       -- log debug messages to 'auto-save.log' file in neovim cache directory, set to `true` to enable
       debug = false,
     },

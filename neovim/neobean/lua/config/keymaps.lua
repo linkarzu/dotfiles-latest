@@ -2269,46 +2269,50 @@ vim.keymap.set({ "n", "i" }, "<M-l>", function()
   vim.api.nvim_put({ "- [ ] " }, "c", true, true)
 end, { desc = "[P]Toggle checkbox" })
 
--- In visual mode, surround the selected text with markdown link syntax
-vim.keymap.set("v", "<leader>mll", function()
-  -- Copy what's currently in my clipboard to the register "a lamw25wmal
-  vim.cmd("let @a = getreg('+')")
-  -- delete selected text
-  vim.cmd("normal d")
-  -- Insert the following in insert mode
-  vim.cmd("startinsert")
-  vim.api.nvim_put({ "[]() " }, "c", true, true)
-  -- Move to the left, paste, and then move to the right
-  vim.cmd("normal F[pf(")
-  -- Copy what's on the "a register back to the clipboard
-  vim.cmd("call setreg('+', @a)")
-  -- Paste what's on the clipboard
-  vim.cmd("normal p")
-  -- Leave me in normal mode or command mode
-  vim.cmd("stopinsert")
-  -- Leave me in insert mode to start typing
-  -- vim.cmd("startinsert")
-end, { desc = "[P]Convert to link" })
-
--- In visual mode, surround the selected text with markdown link syntax
-vim.keymap.set("v", "<leader>mlt", function()
-  -- Copy what's currently in my clipboard to the register "a lamw25wmal
-  vim.cmd("let @a = getreg('+')")
-  -- delete selected text
-  vim.cmd("normal d")
-  -- Insert the following in insert mode
-  vim.cmd("startinsert")
-  vim.api.nvim_put({ '[](){:target="_blank"} ' }, "c", true, true)
-  vim.cmd("normal F[pf(")
-  -- Copy what's on the "a register back to the clipboard
-  vim.cmd("call setreg('+', @a)")
-  -- Paste what's on the clipboard
-  vim.cmd("normal p")
-  -- Leave me in normal mode or command mode
-  vim.cmd("stopinsert")
-  -- Leave me in insert mode to start typing
-  -- vim.cmd("startinsert")
-end, { desc = "[P]Convert to link (new tab)" })
+-- -- This was not as reliable, and is now retired
+-- -- replaced with a luasnip snippet `;linkc`
+-- -- In visual mode, surround the selected text with markdown link syntax
+-- vim.keymap.set("v", "<leader>mll", function()
+--   -- Copy what's currently in my clipboard to the register "a lamw25wmal
+--   vim.cmd("let @a = getreg('+')")
+--   -- delete selected text
+--   vim.cmd("normal d")
+--   -- Insert the following in insert mode
+--   vim.cmd("startinsert")
+--   vim.api.nvim_put({ "[]() " }, "c", true, true)
+--   -- Move to the left, paste, and then move to the right
+--   vim.cmd("normal F[pf(")
+--   -- Copy what's on the "a register back to the clipboard
+--   vim.cmd("call setreg('+', @a)")
+--   -- Paste what's on the clipboard
+--   vim.cmd("normal p")
+--   -- Leave me in normal mode or command mode
+--   vim.cmd("stopinsert")
+--   -- Leave me in insert mode to start typing
+--   -- vim.cmd("startinsert")
+-- end, { desc = "[P]Convert to link" })
+--
+-- -- This was not as reliable, and is now retired
+-- -- replaced with a luasnip snippet `;linkcex`
+-- -- In visual mode, surround the selected text with markdown link syntax
+-- vim.keymap.set("v", "<leader>mlt", function()
+--   -- Copy what's currently in my clipboard to the register "a lamw25wmal
+--   vim.cmd("let @a = getreg('+')")
+--   -- delete selected text
+--   vim.cmd("normal d")
+--   -- Insert the following in insert mode
+--   vim.cmd("startinsert")
+--   vim.api.nvim_put({ '[](){:target="_blank"} ' }, "c", true, true)
+--   vim.cmd("normal F[pf(")
+--   -- Copy what's on the "a register back to the clipboard
+--   vim.cmd("call setreg('+', @a)")
+--   -- Paste what's on the clipboard
+--   vim.cmd("normal p")
+--   -- Leave me in normal mode or command mode
+--   vim.cmd("stopinsert")
+--   -- Leave me in insert mode to start typing
+--   -- vim.cmd("startinsert")
+-- end, { desc = "[P]Convert to link (new tab)" })
 
 -- Paste a github link and add it in this format
 -- [folke/noice.nvim](https://github.com/folke/noice.nvim){:target="\_blank"}

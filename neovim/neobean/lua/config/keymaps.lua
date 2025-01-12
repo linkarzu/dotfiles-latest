@@ -2370,6 +2370,7 @@ vim.keymap.set("n", "<CR>", function()
     vim.notify("No fold found", vim.log.levels.INFO)
   else
     vim.cmd("normal! za")
+    vim.cmd("normal! zz") -- center the cursor line on screen
   end
 end, { desc = "[P]Toggle fold" })
 
@@ -2434,6 +2435,7 @@ vim.keymap.set("n", "zu", function()
   -- Reloads the file to reflect the changes
   vim.cmd("edit!")
   vim.cmd("normal! zR") -- Unfold all headings
+  vim.cmd("normal! zz") -- center the cursor line on screen
 end, { desc = "[P]Unfold all headings level 2 or above" })
 
 -- HACK: Fold markdown headings in Neovim with a keymap
@@ -2448,6 +2450,7 @@ vim.keymap.set("n", "zi", function()
   vim.cmd("normal gk")
   -- This is to fold the line under the cursor
   vim.cmd("normal! za")
+  vim.cmd("normal! zz") -- center the cursor line on screen
 end, { desc = "[P]Fold the heading cursor currently on" })
 
 -- HACK: Fold markdown headings in Neovim with a keymap
@@ -2461,6 +2464,7 @@ vim.keymap.set("n", "zj", function()
   -- Unfold everything first or I had issues
   vim.cmd("normal! zR")
   fold_markdown_headings({ 6, 5, 4, 3, 2, 1 })
+  vim.cmd("normal! zz") -- center the cursor line on screen
 end, { desc = "[P]Fold all headings level 1 or above" })
 
 -- HACK: Fold markdown headings in Neovim with a keymap
@@ -2475,6 +2479,7 @@ vim.keymap.set("n", "zk", function()
   -- Unfold everything first or I had issues
   vim.cmd("normal! zR")
   fold_markdown_headings({ 6, 5, 4, 3, 2 })
+  vim.cmd("normal! zz") -- center the cursor line on screen
 end, { desc = "[P]Fold all headings level 2 or above" })
 
 -- HACK: Fold markdown headings in Neovim with a keymap
@@ -2488,6 +2493,7 @@ vim.keymap.set("n", "zl", function()
   -- Unfold everything first or I had issues
   vim.cmd("normal! zR")
   fold_markdown_headings({ 6, 5, 4, 3 })
+  vim.cmd("normal! zz") -- center the cursor line on screen
 end, { desc = "[P]Fold all headings level 3 or above" })
 
 -- HACK: Fold markdown headings in Neovim with a keymap
@@ -2501,6 +2507,7 @@ vim.keymap.set("n", "z;", function()
   -- Unfold everything first or I had issues
   vim.cmd("normal! zR")
   fold_markdown_headings({ 6, 5, 4 })
+  vim.cmd("normal! zz") -- center the cursor line on screen
 end, { desc = "[P]Fold all headings level 4 or above" })
 
 -------------------------------------------------------------------------------

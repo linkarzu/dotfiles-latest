@@ -815,7 +815,7 @@ vim.keymap.set({ "n", "v", "i" }, "<M-c>", copy_filepath_to_clipboard, { desc = 
 -- I save a lot, and normally do it with `:w<CR>`, but I guess this will be
 -- easier on my fingers
 -- Original lazyvim.org keymap for this was "Other Window", but I never used it
-vim.keymap.set("n", "<leader>ww", function()
+vim.keymap.set("n", "<M-w>", function()
   vim.cmd("write")
 end, { desc = "[P]Write current file" })
 

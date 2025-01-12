@@ -35,6 +35,20 @@ return {
         end,
         desc = "Find Files (Root Dir) [Space]",
       },
+      -- I want to grep with telescope
+      { "<leader>sg", LazyVim.pick("live_grep", { root = false, theme = "ivy" }), desc = "Grep (Root Dir)" },
+      {
+        "<leader>sg",
+        function()
+          local cwd = vim.fn.getcwd()
+          require("telescope.builtin").live_grep(require("telescope.themes").get_ivy({
+            -- gets current working directory
+            cwd = cwd,
+            prompt_title = "GREP " .. cwd,
+          }))
+        end,
+        desc = "[P]Grep (Root Dir)",
+      },
     },
   },
 }

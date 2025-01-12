@@ -1,6 +1,7 @@
 -- Filename: ~/github/dotfiles-latest/neovim/neobean/lua/plugins/blink-cmp.lua
 -- ~/github/dotfiles-latest/neovim/neobean/lua/plugins/blink-cmp.lua
 
+
 -- HACK: blink.cmp updates | Remove LuaSnip | Emoji and Dictionary Sources | Fix Jump Autosave Issue
 -- https://youtu.be/JrgfpWap_Pg
 
@@ -26,6 +27,20 @@ return {
     "Kaiser-Yang/blink-cmp-dictionary",
   },
   opts = function(_, opts)
+    -- I noticed that telescope was extremeley slow and taking too long to open,
+    -- assumed related to blink, so disabled blink and in fact it was related
+    -- :lua print(vim.bo[0].filetype)
+    -- So I'm disabling blink.cmp for Telescope
+    opts.enabled = function()
+      -- Get the current buffer's filetype
+      local filetype = vim.bo[0].filetype
+      -- Disable for Telescope buffers
+      if filetype == "TelescopePrompt" or filetype == "minifiles" then
+        return false
+      end
+      return true
+    end
+
     -- NOTE: The new way to enable LuaSnip
     -- Merge custom sources with the existing ones from lazyvim
     -- NOTE: by default lazyvim already includes the lazydev source, so not adding it here again

@@ -2118,6 +2118,22 @@ vim.keymap.set("n", "gss", function()
   -- vim.cmd("normal! gsa\\`")
 end, { desc = "[P] Surround selection with backticks (inline code)" })
 
+-- In visual mode, check if the selected text is already striked through and show a message if it is
+-- If not, surround it
+vim.keymap.set("v", "<leader>mx", function()
+  -- Get the selected text range
+  local start_row, start_col = unpack(vim.fn.getpos("'<"), 2, 3)
+  local end_row, end_col = unpack(vim.fn.getpos("'>"), 2, 3)
+  -- Get the selected lines
+  local lines = vim.api.nvim_buf_get_lines(0, start_row - 1, end_row, false)
+  local selected_text = table.concat(lines, "\n"):sub(start_col, #lines == 1 and end_col or -1)
+  if selected_text:match("^%~%~.*%~%~$") then
+    vim.notify("Text already has strikethrough", vim.log.levels.INFO)
+  else
+    vim.cmd("normal 2gsa~")
+  end
+end, { desc = "[P]Strike through current selection" })
+
 -- In visual mode, check if the selected text is already bold and show a message if it is
 -- If not, surround it with double asterisks for bold
 vim.keymap.set("v", "<leader>mb", function()

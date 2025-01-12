@@ -41,10 +41,11 @@ set -sg terminal-overrides ",*:RGB"
 # these changes to take effect
 set -g default-terminal "${TERM}"
 
-# undercurl support
-set -as terminal-overrides ',*:Smulx=\E[4::%p1%dm'
-# underscore colours - needs tmux-3.0
-set -as terminal-overrides ',*:Setulc=\E[58::2::%p1%{65536}%/%d::%p1%{256}%/%{255}%&%d::%p1%{255}%&%d%;m'
+# # undercurl support
+# # I recently switched to Ghostty and I think this is not needed anymore
+# set -as terminal-overrides ',*:Smulx=\E[4::%p1%dm'
+# # underscore colours - needs tmux-3.0
+# set -as terminal-overrides ',*:Setulc=\E[58::2::%p1%{65536}%/%d::%p1%{256}%/%{255}%&%d::%p1%{255}%&%d%;m'
 
 # https://github.com/3rd/image.nvim/?tab=readme-ov-file#tmux
 # This is needed by the image.nvim plugin

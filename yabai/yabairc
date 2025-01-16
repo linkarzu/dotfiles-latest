@@ -15,6 +15,11 @@ source "$HOME/github/dotfiles-latest/yabai/yabai_env.sh"
 yabai -m signal --add event=dock_did_restart action="sudo yabai --load-sa"
 sudo yabai --load-sa
 
+# In order to prevent simple-bar freezing upon yabai restart, you'll need to add
+# this line at the start of your .yabairc file
+# https://www.jeantinland.com/toolbox/simple-bar/documentation/installation/#update-your-yabai-config
+osascript -e 'tell application id "tracesOf.Uebersicht" to refresh'
+
 ###############################################################################
 #                              Excluded apps
 ###############################################################################

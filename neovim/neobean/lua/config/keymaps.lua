@@ -124,7 +124,8 @@ vim.keymap.set("n", "<leader>tt", function()
   require("telescope.builtin").grep_string(require("telescope.themes").get_ivy({
     prompt_title = "Incomplete Tasks",
     -- search = "- \\[ \\]", -- Fixed search term for tasks
-    search = "^- \\[ \\]", -- Ensure "- [ ]" is at the beginning of the line
+    -- search = "^- \\[ \\]", -- Ensure "- [ ]" is at the beginning of the line
+    search = "^\\s*- \\[ \\]", -- also match blank spaces at the beginning
     search_dirs = { vim.fn.getcwd() }, -- Restrict search to the current working directory
     use_regex = true, -- Enable regex for the search term
     initial_mode = "normal", -- Start in normal mode
@@ -145,7 +146,8 @@ vim.keymap.set("n", "<leader>tc", function()
   require("telescope.builtin").grep_string(require("telescope.themes").get_ivy({
     prompt_title = "Completed Tasks",
     -- search = [[- \[x\] `done:]], -- Regex to match the text "`- [x] `done:"
-    search = "^- \\[x\\] `done:", -- Matches lines starting with "- [x] `done:"
+    -- search = "^- \\[x\\] `done:", -- Matches lines starting with "- [x] `done:"
+    search = "^\\s*- \\[x\\] `done:", -- also match blank spaces at the beginning
     search_dirs = { vim.fn.getcwd() }, -- Restrict search to the current working directory
     use_regex = true, -- Enable regex for the search term
     initial_mode = "normal", -- Start in normal mode

@@ -1,7 +1,6 @@
 -- Filename: ~/github/dotfiles-latest/neovim/neobean/lua/plugins/blink-cmp.lua
 -- ~/github/dotfiles-latest/neovim/neobean/lua/plugins/blink-cmp.lua
 
-
 -- HACK: blink.cmp updates | Remove LuaSnip | Emoji and Dictionary Sources | Fix Jump Autosave Issue
 -- https://youtu.be/JrgfpWap_Pg
 
@@ -164,6 +163,11 @@ return {
             -- Do not specify a file, just the path, and in the path you need to
             -- have your .txt files
             dictionary_directories = { vim.fn.expand("~/github/dotfiles-latest/dictionaries") },
+            -- Notice I'm also adding the words I add to the spell dictionary
+            dictionary_files = {
+              vim.fn.expand("~/github/dotfiles-latest/neovim/neobean/spell/en.utf-8.add"),
+              vim.fn.expand("~/github/dotfiles-latest/neovim/neobean/spell/es.utf-8.add"),
+            },
             -- --  NOTE: To disable the definitions uncomment this section below
             -- separate_output = function(output)
             --   local items = {}

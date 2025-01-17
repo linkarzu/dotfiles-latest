@@ -9,10 +9,10 @@
     "inlineSpacesOptions": true,
     "disableNotifications": false,
     "enableMissives": false,
-    "compactMode": false,
-    "widgetMaxWidth": "160px",
-    "spacesBackgroundColorAsForeground": true,
-    "widgetsBackgroundColorAsForeground": false,
+    "compactMode": true,
+    "widgetMaxWidth": "100px",
+    "spacesBackgroundColorAsForeground": false,
+    "widgetsBackgroundColorAsForeground": true,
     "font": "JetBrains Mono, Monaco, Menlo, monospace",
     "fontSize": "11px",
     "yabaiPath": "/opt/homebrew/bin/yabai",
@@ -78,7 +78,7 @@
     "youtubeMusicWidget": false,
     "musicWidget": true,
     "mpdWidget": false,
-    "browserTrackWidget": true
+    "browserTrackWidget": false
   },
   "weatherWidgetOptions": {
     "refreshFrequency": 1800000,
@@ -206,9 +206,23 @@
     "showSpecter": true
   },
   "userWidgets": {
-    "userWidgetsList": {}
+    "userWidgetsList": {
+      "1": {
+        "title": "brew",
+        "icon": "Anki",
+        "backgroundColor": "--cyan",
+        "output": "export PATH=\"/opt/homebrew/bin:$PATH\" && brew outdated | wc -l | tr -d ' '",
+        "onClickAction": "",
+        "onRightClickAction": "",
+        "onMiddleClickAction": "",
+        "refreshFrequency": "1800000",
+        "showOnDisplay": "",
+        "active": true,
+        "noIcon": ""
+      }
+    }
   },
   "customStyles": {
-    "styles": "/* your custom css styles here */"
+    "styles": ":root {\n  --main: #0d1116;\n  --main-alt: #314154;\n  --minor: #141b22;\n  --accent: var(--yellow);\n  --red: #f16c75;\n  --green: #37f499;\n  --yellow: #37f499;\n  --orange: #19dfcf;\n  --blue: #1682ef;\n  --magenta: #987afb;\n  --cyan: #04d1f9;\n  --black: #0d1116;\n  --white: #ebfafa;\n}"
   }
 }

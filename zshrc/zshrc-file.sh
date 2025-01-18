@@ -37,6 +37,7 @@ mkdir -p ~/.config/neovide
 mkdir -p ~/.config/rio
 mkdir -p ~/.config/yazi
 mkdir -p ~/.config/btop
+mkdir -p ~/.config/fastfetch
 
 # Create the symlinks I normally use
 # ~/.config dir holds nvim, neofetch, alacritty configs
@@ -133,6 +134,7 @@ create_symlink ~/github/dotfiles-latest/ghostty/ ~/.config/ghostty
 create_symlink ~/github/dotfiles-latest/rio/ ~/.config/rio
 create_symlink ~/github/dotfiles-latest/yazi/ ~/.config/yazi
 create_symlink ~/github/dotfiles-latest/btop/ ~/.config/btop
+create_symlink ~/github/dotfiles-latest/fastfetch/ ~/.config/fastfetch
 
 # create_symlink ~/github/dotfiles-latest/neovim/neobean-sticky/ ~/.config/neobean-sticky
 # create_symlink ~/github/dotfiles-latest/neovim/neobean/spell/ ~/github/dotfiles-latest/neovim/neobean-sticky/spell

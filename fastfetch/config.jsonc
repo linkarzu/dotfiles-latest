@@ -1,0 +1,158 @@
+// I literally was like most of you guys, a dotfiles scavenger, and got this
+// config from https://github.com/waytoabv/Dotfiles/blob/main/.config/fastfetch/config.jsonc
+// So the credit belongs to "waytoabv"
+//
+// kitten icat ~/github/dotfiles-latest/fastfetch/images/link-green.webp
+
+{
+  "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
+  "logo": {
+    // If working with tmux, you need to use kitty-icat instead of kitty-direct
+    // https://discord.com/channels/1005603569187160125/1324828708128821271/1327261766014599218
+    // "type": "kitty-direct",
+    "type": "kitty-icat",
+    "source": "~/.config/fastfetch/images/link-green.webp",
+    "height": 20,
+    "width": 35,
+    "position": "left",
+    "padding": {
+      "top": 4,
+      "right": 3,
+    },
+  },
+  "display": {
+    "separator": " ",
+  },
+  "modules": [
+    "break",
+    {
+      "type": "custom",
+      "format": "┌─────────────Hardware─────────────┐",
+      "outputColor": "cyan",
+    },
+    {
+      "type": "host",
+      "key": " PC ",
+      "keyColor": "red",
+    },
+    {
+      "type": "cpu",
+      "key": "│ ├ ",
+      "keyColor": "red",
+    },
+    {
+      "type": "gpu",
+      "key": "│ ├󰒆 ",
+      "keyColor": "red",
+    },
+    {
+      "type": "disk",
+      "key": "│ ├ ",
+      "folders": "/",
+      "format": "{size-used} / {size-total} ({size-percentage})",
+      "keyColor": "red",
+    },
+    {
+      "type": "swap",
+      "key": "│ ├SW",
+      "keyColor": "red",
+    },
+    {
+      "type": "memory",
+      "key": "└ └󰍛 ",
+      "keyColor": "red",
+    },
+    {
+      "type": "custom",
+      "format": "└──────────────────────────────────┘",
+      "outputColor": "cyan",
+    },
+    {
+      "type": "custom",
+      "format": "┌─────────────Software─────────────┐",
+      "outputColor": "cyan",
+    },
+    {
+      "type": "os",
+      "key": "􀣺 OS ",
+      "keyColor": "green",
+    },
+    {
+      "type": "kernel",
+      "key": "│ ├ ",
+      "keyColor": "green",
+    },
+    {
+      "type": "packages",
+      "key": "│ ├󰏖 ",
+      "keyColor": "green",
+    },
+    {
+      "type": "localip",
+      "key": "│ ├IP",
+      "keyColor": "green",
+    },
+    {
+      "type": "shell",
+      "key": "└ └ ",
+      "keyColor": "green",
+    },
+    {
+      "type": "de",
+      "key": " DE ",
+      "keyColor": "blue",
+    },
+    {
+      "type": "lm",
+      "key": "│ ├ ",
+      "keyColor": "blue",
+    },
+    {
+      "type": "wm",
+      "key": "│ ├ ",
+      "keyColor": "blue",
+    },
+    {
+      "key": "│ ├ ",
+      "keyColor": "blue",
+      "type": "command",
+      "text": "pgrep yabai &> /dev/null && echo yabai || echo Quartz Compositor",
+    },
+    {
+      "type": "terminal",
+      "key": "│ ├ ",
+      "keyColor": "blue",
+    },
+    {
+      "type": "terminalfont",
+      "key": "└ └ ",
+      "keyColor": "blue",
+    },
+    {
+      "type": "custom",
+      "format": "└──────────────────────────────────┘",
+      "outputColor": "cyan",
+    },
+    {
+      "type": "custom",
+      "format": "┌───────────Uptime / Age───────────┐",
+      "outputColor": "cyan",
+    },
+    {
+      "type": "command",
+      "key": "  OS Age",
+      "keyColor": "magenta",
+      "text": "birth_install=$(stat -c %W /); current=$(date +%s); time_progression=$((current - birth_install)); days_difference=$((time_progression / 86400)); echo $days_difference days",
+    },
+    {
+      "type": "uptime",
+      "key": "  Uptime",
+      "keyColor": "magenta",
+    },
+    {
+      "type": "custom",
+      "format": "└──────────────────────────────────┘",
+      "outputColor": "cyan",
+    },
+  ],
+}

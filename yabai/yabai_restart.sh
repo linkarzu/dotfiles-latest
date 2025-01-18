@@ -30,9 +30,9 @@ for app in "${apps[@]}"; do
   # Trim leading/trailing whitespace
   app=$(echo "$app" | xargs)
   pkill "$app"
-  sleep 0.3
+  sleep 0.7
   open -a "$app"
-  sleep 0.3
+  sleep 0.7
 done
 
 # After yabai is restarted, I want kitty to be moved to a specific position on

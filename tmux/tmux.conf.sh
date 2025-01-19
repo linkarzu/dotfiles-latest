@@ -77,12 +77,12 @@ set -g mode-keys vi
 # heavy  -> heavy lines using UTF-8 characters
 # simple -> simple ASCII characters
 # number -> the pane number
-set -g pane-border-lines single
+set -g pane-border-lines double
 
 # Indicate active pane by colouring only half of the border in windows with 
 # exactly two panes, by displaying arrow markers, by drawing both or neither.
 # [off | colour | arrows | both]
-set -g pane-border-indicators colour
+set -g pane-border-indicators both
 
 # Enables tracking of focus events, allows tmux to respond when the terminal
 # window gains or looses focus

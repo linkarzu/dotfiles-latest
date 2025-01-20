@@ -88,7 +88,7 @@ export BG0O80=0xcc${linkarzu_color10#\#}
 # export BG0O85=0xD9212337
 # This sets the color of the bar
 # Eldritch dark
-export BG0O85=0xcf${linkarzu_color10#\#}
+export BG0O85=0xdb${linkarzu_color10#\#}
 # Eldritch light
 # export BG0O85=0xCF212337
 export BG1=0x60${linkarzu_color13#\#}

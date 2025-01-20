@@ -71,12 +71,13 @@ return {
       -- return false: if it's not ok to be saved
       -- if set to `nil` then no specific condition is applied
       condition = function(buf)
-        -- Do not save when I'm in insert mode or visual mode
+        -- Do not save when I'm in insert mode
+        -- Do NOT ADD VISUAL MODE HERE or the cancel_deferred_save wont' work
         -- If I STAY in insert mode and switch to another app, like YouTube to
-        -- take notes, the BugLeave or FocusLost immediate_save will be ignored
+        -- take notes, the BufLeave or FocusLost immediate_save will be ignored
         -- and the save will not be triggered
         local mode = vim.fn.mode()
-        if mode == "i" or mode == "v" or mode == "V" then
+        if mode == "i" then
           return false
         end
 
@@ -108,7 +109,7 @@ return {
       noautocmd = false,
       lockmarks = false, -- lock marks when saving, see `:h lockmarks` for more details
       -- delay after which a pending save is executed (default 1000)
-      debounce_delay = 3000,
+      debounce_delay = 2000,
       -- log debug messages to 'auto-save.log' file in neovim cache directory, set to `true` to enable
       debug = false,
     },

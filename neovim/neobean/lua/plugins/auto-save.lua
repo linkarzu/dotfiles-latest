@@ -11,6 +11,10 @@
 -- Save neovim files automatically with auto-save.nvim
 -- https://youtu.be/W5fjlU4tSpw
 
+-- I had undo/redo issues when using the no longer maintained plugin from pocco81
+-- So make sure you're using the right plugin, which is okuuva/auto-save.nvim
+-- https://github.com/pocco81/auto-save.nvim/issues/70
+
 -- Autocommand for printing the autosaved message
 local group = vim.api.nvim_create_augroup("autosave", {})
 vim.api.nvim_create_autocmd("User", {
@@ -102,10 +106,8 @@ return {
       end,
       write_all_buffers = false, -- write all buffers when the current one meets `condition`
       -- Do not execute autocmds when saving
-      -- This is what fixed the issues with undo/redo that I had
+      -- If you set noautocmd = true, autosave won't trigger an auto format
       -- https://github.com/okuuva/auto-save.nvim/issues/55
-      -- Issue in original plugin
-      -- https://github.com/pocco81/auto-save.nvim/issues/70
       noautocmd = false,
       lockmarks = false, -- lock marks when saving, see `:h lockmarks` for more details
       -- delay after which a pending save is executed (default 1000)

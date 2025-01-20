@@ -24,6 +24,27 @@ vim.api.nvim_create_autocmd("User", {
   end,
 })
 
+-- I got this from https://github.com/okuuva/auto-save.nvim/issues/67#issuecomment-2597631756
+local visual_event_group = vim.api.nvim_create_augroup("visual_event", { clear = true })
+
+vim.api.nvim_create_autocmd("ModeChanged", {
+  group = visual_event_group,
+  pattern = { "*:[vV\x16]*" },
+  callback = function()
+    vim.api.nvim_exec_autocmds("User", { pattern = "VisualEnter" })
+    -- print("VisualEnter")
+  end,
+})
+
+vim.api.nvim_create_autocmd("ModeChanged", {
+  group = visual_event_group,
+  pattern = { "[vV\x16]*:*" },
+  callback = function()
+    vim.api.nvim_exec_autocmds("User", { pattern = "VisualLeave" })
+    -- print("VisualLeave")
+  end,
+})
+
 return {
   {
     "okuuva/auto-save.nvim",
@@ -39,8 +60,11 @@ return {
         -- -- Re-enabling this to only save if NOT in insert mode in the condition below
         -- immediate_save = { nil },
         immediate_save = { "BufLeave", "FocusLost", "QuitPre", "VimSuspend" }, -- vim events that trigger an immediate save
-        defer_save = { "InsertLeave", "TextChanged" }, -- vim events that trigger a deferred save (saves after `debounce_delay`)
-        cancel_deferred_save = { "InsertEnter" }, -- vim events that cancel a pending deferred save
+        defer_save = { "InsertLeave", "TextChanged", { "User", pattern = "VisualLeave" } }, -- vim events that trigger a deferred save (saves after `debounce_delay`)
+        cancel_deferred_save = {
+          "InsertEnter",
+          { "User", pattern = "VisualEnter" },
+        },
       },
       -- function that takes the buffer handle and determines whether to save the current buffer or not
       -- return true: if buffer is ok to be saved

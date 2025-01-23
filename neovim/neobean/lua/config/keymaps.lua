@@ -26,15 +26,15 @@ local M = {}
 
 -- By default lazygit opens with <leader>gg, but I use it way too much, so need
 -- something faster
--- if vim.fn.executable("lazygit") == 1 then
---   vim.keymap.set("n", "<M-g>", function()
---     -- Snacks.lazygit({ cwd = LazyVim.root.git() })
---   end, { desc = "Lazygit (Root Dir)" })
--- end
+if vim.fn.executable("lazygit") == 1 then
+  vim.keymap.set("n", "<M-g>", function()
+    Snacks.lazygit({ cwd = LazyVim.root.git() })
+  end, { desc = "Lazygit (Root Dir)" })
+end
 
 -- This is using the kdheepak/lazygit.nvim file, the only reason I use it, is
 -- because the window looks bigger
-vim.keymap.set("n", "<M-g>", ":LazyGit<CR>", { desc = "Lazygit (Root Dir)" })
+-- vim.keymap.set("n", "<M-g>", ":LazyGit<CR>", { desc = "Lazygit (Root Dir)" })
 
 -- Select the hunk under the cursor, excluding trailing blank line
 vim.keymap.set("n", "<M-2>", function()

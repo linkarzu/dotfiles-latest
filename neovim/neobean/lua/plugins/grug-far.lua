@@ -29,6 +29,8 @@
 -- To add `{:target="\_blank"}` to links that don't have it
 -- \[(.*?)\]\((http[s]?:\/\/.*?)\)(?:[^{]|$)
 -- [$1]($2){:target="_blank"}
+--
+-- \- \[Here's the link\]\(https:\/\/x.com\/link_arzu\)\{:target="\\_blank"\}
 
 -- See ~/github/dotfiles-latest/neovim/neobean/README.md for more multiline
 -- examples

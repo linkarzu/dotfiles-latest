@@ -397,7 +397,7 @@ NVIM_APPNAME=linkarzu/dotfiles-latest/neovim/neobean nvim
 - Make sure to include `spaces` in case a blank line has a space, otherwise you
   won't be able to match
 
-```bash
+```regex
 <!-- markdownlint-disable -->
 <!-- prettier-ignore-start -->
 
@@ -409,6 +409,21 @@ NVIM_APPNAME=linkarzu/dotfiles-latest/neovim/neobean nvim
 
 <!-- prettier-ignore-end -->
 <!-- markdownlint-restore -->
+```
+
+- For this to work, just make sure to add a newline after `from` after pasting
+  in the search bar for grug-far
+
+```regex
+## How do you manage your passwords\?
+
+- I've tried many different password managers in the past, I've switched from
+  `LastPass` to `Dashlane` and finally ended up in `1password`
+- You want to find out why\? More info in my article:
+  - \[How I use 1password to keep all my accounts safe\]\(https:\/\/chirpy.home.linkarzu.com\/posts\/1password\/1password\/\)\{:target="\\_blank"\}
+
+\[!\[Image\]\(..\/..\/assets\/img\/imgs\/250124-1password-banner.avif\)\{: width="300" \}\]\(https:\/\/www.dpbolvw.net\/click-101327218-15917064\)\{:target="\\_blank"\}
+
 ```
 
 ### Paste issues

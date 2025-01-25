@@ -7,12 +7,12 @@
 -- Useful if on skitty-notes or a regular buffer and I am on a
 -- I found this autocmd example in the readme
 -- https://github.com/stevearc/conform.nvim/blob/master/README.md#setup
-vim.api.nvim_create_autocmd({ "BufLeave", "FocusLost", "QuitPre", "VimSuspend" }, {
-  pattern = "*",
-  callback = function(args)
-    require("conform").format({ bufnr = args.buf })
-  end,
-})
+-- vim.api.nvim_create_autocmd({ "BufLeave", "FocusLost", "QuitPre", "VimSuspend" }, {
+--   pattern = "*",
+--   callback = function(args)
+--     require("conform").format({ bufnr = args.buf })
+--   end,
+-- })
 
 return {
   "stevearc/conform.nvim",

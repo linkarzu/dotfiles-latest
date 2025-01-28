@@ -1667,6 +1667,41 @@ end, { desc = "[P]Clear images" })
 --                         Begin of markdown section
 -- ############################################################################
 
+-- Keymap to auto-format and save all Markdown files in the CURRENT REPOSITORY,
+-- lamw26wmal if the TOC is not updated, this will take care of it
+vim.keymap.set("n", "<leader>mfA", function()
+  -- Get the root directory of the git repository
+  local git_root = vim.fn.systemlist("git rev-parse --show-toplevel")[1]
+  if not git_root or git_root == "" then
+    print("Could not determine the root directory for the Git repository.")
+    return
+  end
+  -- Find all Markdown files in the repository
+  local find_command = string.format("find %s -type f -name '*.md'", vim.fn.shellescape(git_root))
+  local handle = io.popen(find_command)
+  if not handle then
+    print("Failed to execute the find command.")
+    return
+  end
+  local result = handle:read("*a")
+  handle:close()
+  if result == "" then
+    print("No Markdown files found in the repository.")
+    return
+  end
+  -- Format and save each Markdown file
+  for file in result:gmatch("[^\r\n]+") do
+    local bufnr = vim.fn.bufadd(file)
+    vim.fn.bufload(bufnr)
+    require("conform").format({ bufnr = bufnr })
+    -- Save the buffer to write changes to disk
+    vim.api.nvim_buf_call(bufnr, function()
+      vim.cmd("write")
+    end)
+    print("Formatted and saved: " .. file)
+  end
+end, { desc = "[P]Format and save all Markdown files in the repo" })
+
 -- HACK: My complete Neovim markdown setup and workflow in 2024
 -- https://youtu.be/c0cuvzK1SDo
 

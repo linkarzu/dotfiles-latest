@@ -5,11 +5,9 @@
 
 -- I needed to replace colors["linkarzu_color10"] with "linkarzu_color10"
 -- and not only for color10, but from color01 to color20 in multiple files,
--- hundreds of times
---
--- I achieved this with
--- Search: colors\["(linkarzu_color\d+)"\]
--- Replace: "$1"
+-- hundreds of times. To achieve this use:
+-- colors\["(linkarzu_color\d+)"\]
+-- "$1"
 --
 -- I wanted to exclude 2 files from the replace, so added each file in a
 -- separate line under

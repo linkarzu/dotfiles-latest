@@ -951,21 +951,21 @@ local function handle_image_paste(img_dir)
             prompt_for_name()
           else
             if paste_image(img_dir, full_image_name) then
-              -- -- I was getting a character at the end, don't want to debug right now
-              -- vim.cmd("stopinsert")
               vim.api.nvim_put({ '{: width="500" }' }, "c", true, true)
-              -- Capital "O" to move to the line above
+              -- Create new line above and force normal mode
               vim.cmd("normal! O")
-              -- This "o" is to leave a blank line above
+              vim.cmd("stopinsert") -- Explicitly exit insert mode
+              -- Create blank line above and force normal mode
               vim.cmd("normal! o")
+              vim.cmd("stopinsert")
               vim.api.nvim_put({ "<!-- prettier-ignore -->" }, "c", true, true)
-              vim.cmd("normal! jo")
+              -- Move down and create new line (without staying in insert mode)
+              vim.cmd("normal! j$o")
+              vim.cmd("stopinsert")
               vim.api.nvim_put({ "__" }, "c", true, true)
-              -- "Update" saves only if the buffer has been modified since the last save
+              vim.cmd("normal! h") -- Position cursor between underscores
               vim.cmd("silent! update")
-              -- I reload the file, otherwise I cannot view the image after pasted
               vim.cmd("edit!")
-              vim.cmd("normal! h")
             else
               print("No image pasted. File not updated.")
             end

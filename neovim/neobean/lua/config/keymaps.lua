@@ -860,6 +860,7 @@ end, { desc = "[P]Paste image from system clipboard" })
 -- NOTE: Configuration for image storage path
 -- Change this to customize where images are stored relative to the assets directory
 -- If below you use "img/imgs", it will store in "assets/img/imgs"
+-- Added option to choose image format and resolution lamw26wmal
 local IMAGE_STORAGE_PATH = "img/imgs"
 
 -- This function is used in 2 places in the paste images in assets dir section
@@ -896,7 +897,7 @@ local function handle_image_paste(img_dir)
   vim.api.nvim_buf_delete(temp_buf, { force = true }) -- Delete the buffer
   vim.fn.delete(temp_image_path) -- Delete the temporary file
   vim.defer_fn(function()
-    local options = image_pasted and { "no", "yes", "extension", "search" } or { "search" }
+    local options = image_pasted and { "no", "yes", "format", "search" } or { "search" }
     local prompt = image_pasted and "Is this a thumbnail image? " or "No image in clipboard. Select search to continue."
     -- -- I was getting a character in the textbox, don't want to debug right now
     -- vim.cmd("stopinsert")
@@ -937,7 +938,7 @@ local function handle_image_paste(img_dir)
         print("Image pasting canceled.")
         return
       end
-      if is_thumbnail == "extension" then
+      if is_thumbnail == "format" then
         local extension_options = { "avif", "webp", "png", "jpg" }
         vim.ui.select(extension_options, {
           prompt = "Select image format:",
@@ -946,39 +947,61 @@ local function handle_image_paste(img_dir)
           if not selected_ext then
             return
           end
-          local process_cmd = "convert - -quality 75 " .. selected_ext .. ":-"
-          local prefix = vim.fn.strftime("%y%m%d-")
-          local function prompt_for_name()
-            vim.ui.input({ prompt = "Enter image name (no spaces). Added prefix: " .. prefix }, function(input_name)
-              if not input_name or input_name:match("%s") then
-                print("Invalid image name or canceled. Image not pasted.")
-                return
-              end
-              local full_image_name = prefix .. input_name
-              local file_path = img_dir .. "/" .. full_image_name .. "." .. selected_ext
-              if vim.fn.filereadable(file_path) == 1 then
-                print("Image name already exists. Please enter a new name.")
-                prompt_for_name()
-              else
-                if paste_image(img_dir, full_image_name, selected_ext, process_cmd) then
-                  vim.api.nvim_put({ '{: width="500" }' }, "c", true, true)
-                  vim.cmd("normal! O")
-                  vim.cmd("stopinsert")
-                  vim.cmd("normal! o")
-                  vim.api.nvim_put({ "<!-- prettier-ignore -->" }, "c", true, true)
-                  vim.cmd("normal! j$o")
-                  vim.cmd("stopinsert")
-                  vim.api.nvim_put({ "__" }, "c", true, true)
-                  vim.cmd("normal! h")
-                  vim.cmd("silent! update")
-                  vim.cmd("edit!")
-                else
-                  print("No image pasted. File not updated.")
+          -- Define proceed_with_paste with proper parameter names
+          local function proceed_with_paste(process_command)
+            local prefix = vim.fn.strftime("%y%m%d-")
+            local function prompt_for_name()
+              vim.ui.input({ prompt = "Enter image name (no spaces). Added prefix: " .. prefix }, function(input_name)
+                if not input_name or input_name:match("%s") then
+                  print("Invalid image name or canceled. Image not pasted.")
+                  return
                 end
-              end
-            end)
+                local full_image_name = prefix .. input_name
+                local file_path = img_dir .. "/" .. full_image_name .. "." .. selected_ext
+                if vim.fn.filereadable(file_path) == 1 then
+                  print("Image name already exists. Please enter a new name.")
+                  prompt_for_name()
+                else
+                  if paste_image(img_dir, full_image_name, selected_ext, process_command) then
+                    vim.api.nvim_put({ '{: width="500" }' }, "c", true, true)
+                    vim.cmd("normal! O")
+                    vim.cmd("stopinsert")
+                    vim.cmd("normal! o")
+                    vim.api.nvim_put({ "<!-- prettier-ignore -->" }, "c", true, true)
+                    vim.cmd("normal! j$o")
+                    vim.cmd("stopinsert")
+                    vim.api.nvim_put({ "__" }, "c", true, true)
+                    vim.cmd("normal! h")
+                    vim.cmd("silent! update")
+                    vim.cmd("edit!")
+                  else
+                    print("No image pasted. File not updated.")
+                  end
+                end
+              end)
+            end
+            prompt_for_name()
           end
-          prompt_for_name()
+          -- Resolution prompt handling
+          vim.ui.select({ "Yes", "No" }, {
+            prompt = "Change image resolution?",
+            default = "No",
+          }, function(resize_choice)
+            local process_cmd
+            if resize_choice == "Yes" then
+              vim.ui.input({
+                prompt = "Enter max height (default 1080): ",
+                default = "1080",
+              }, function(height_input)
+                local height = tonumber(height_input) or 1080
+                process_cmd = string.format("convert - -resize x%d -quality 75 %s:-", height, selected_ext)
+                proceed_with_paste(process_cmd)
+              end)
+            else
+              process_cmd = "convert - -quality 75 " .. selected_ext .. ":-"
+              proceed_with_paste(process_cmd)
+            end
+          end)
         end)
         return
       end

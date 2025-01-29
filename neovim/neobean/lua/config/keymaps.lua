@@ -878,14 +878,14 @@ end
 
 -- Since I need to store these images in a different directory, I pass the options to img-clip
 local function handle_image_paste(img_dir)
-  local function paste_image(dir_path, file_name)
+  local function paste_image(dir_path, file_name, ext, cmd)
     return require("img-clip").paste_image({
       dir_path = dir_path,
       use_absolute_path = false,
       relative_to_current_file = false,
       file_name = file_name,
-      extension = "avif",
-      process_cmd = "convert - -quality 75 avif:-",
+      extension = ext or "avif",
+      process_cmd = cmd or "convert - -quality 75 avif:-",
     })
   end
   local temp_buf = vim.api.nvim_create_buf(false, true) -- Create an unlisted, scratch buffer
@@ -896,7 +896,7 @@ local function handle_image_paste(img_dir)
   vim.api.nvim_buf_delete(temp_buf, { force = true }) -- Delete the buffer
   vim.fn.delete(temp_image_path) -- Delete the temporary file
   vim.defer_fn(function()
-    local options = image_pasted and { "no", "yes", "search" } or { "search" }
+    local options = image_pasted and { "no", "yes", "extension", "search" } or { "search" }
     local prompt = image_pasted and "Is this a thumbnail image? " or "No image in clipboard. Select search to continue."
     -- -- I was getting a character in the textbox, don't want to debug right now
     -- vim.cmd("stopinsert")
@@ -935,6 +935,51 @@ local function handle_image_paste(img_dir)
       end
       if not is_thumbnail then
         print("Image pasting canceled.")
+        return
+      end
+      if is_thumbnail == "extension" then
+        local extension_options = { "avif", "webp", "png", "jpg" }
+        vim.ui.select(extension_options, {
+          prompt = "Select image format:",
+          default = "avif",
+        }, function(selected_ext)
+          if not selected_ext then
+            return
+          end
+          local process_cmd = "convert - -quality 75 " .. selected_ext .. ":-"
+          local prefix = vim.fn.strftime("%y%m%d-")
+          local function prompt_for_name()
+            vim.ui.input({ prompt = "Enter image name (no spaces). Added prefix: " .. prefix }, function(input_name)
+              if not input_name or input_name:match("%s") then
+                print("Invalid image name or canceled. Image not pasted.")
+                return
+              end
+              local full_image_name = prefix .. input_name
+              local file_path = img_dir .. "/" .. full_image_name .. "." .. selected_ext
+              if vim.fn.filereadable(file_path) == 1 then
+                print("Image name already exists. Please enter a new name.")
+                prompt_for_name()
+              else
+                if paste_image(img_dir, full_image_name, selected_ext, process_cmd) then
+                  vim.api.nvim_put({ '{: width="500" }' }, "c", true, true)
+                  vim.cmd("normal! O")
+                  vim.cmd("stopinsert")
+                  vim.cmd("normal! o")
+                  vim.api.nvim_put({ "<!-- prettier-ignore -->" }, "c", true, true)
+                  vim.cmd("normal! j$o")
+                  vim.cmd("stopinsert")
+                  vim.api.nvim_put({ "__" }, "c", true, true)
+                  vim.cmd("normal! h")
+                  vim.cmd("silent! update")
+                  vim.cmd("edit!")
+                else
+                  print("No image pasted. File not updated.")
+                end
+              end
+            end)
+          end
+          prompt_for_name()
+        end)
         return
       end
       local prefix = vim.fn.strftime("%y%m%d-") .. (is_thumbnail == "yes" and "thux-" or "")

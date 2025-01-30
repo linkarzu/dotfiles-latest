@@ -994,7 +994,7 @@ local function handle_image_paste(img_dir)
                 default = "1080",
               }, function(height_input)
                 local height = tonumber(height_input) or 1080
-                process_cmd = string.format("convert - -resize x%d -quality 75 %s:-", height, selected_ext)
+                process_cmd = string.format("convert - -resize x%d -quality 100 %s:-", height, selected_ext)
                 proceed_with_paste(process_cmd)
               end)
             else

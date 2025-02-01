@@ -543,6 +543,7 @@ vim.keymap.set(
 --
 -- Switch to the alternate buffer lamw25wmal
 vim.keymap.set({ "n", "i", "v" }, "<M-BS>", "<cmd>e #<cr>", { desc = "[P]Alternate buffer" })
+vim.keymap.set({ "n" }, "<leader><BS>", "<cmd>e #<cr>", { desc = "[P]Alternate buffer" })
 
 -- Toggle executable permission on current file, previously I had 2 keymaps, to
 -- add or remove exec permissions, now it's a toggle using the same keymap

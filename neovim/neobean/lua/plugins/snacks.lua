@@ -6,6 +6,12 @@
 -- Here's the lazygit snak docs
 -- https://github.com/folke/snacks.nvim/blob/main/docs/lazygit.md
 
+-- NOTE: If you experience an issue in which you cannot select a file with the
+-- snacks picker when you're in insert mode, only in normal mode, and you use
+-- the bullets.vim plugin, that's the cause, go to that file to see how to
+-- resolve it
+-- https://github.com/folke/snacks.nvim/issues/812
+
 return {
   {
     "folke/snacks.nvim",
@@ -70,7 +76,6 @@ return {
               -- to close the picker on ESC instead of going to normal mode,
               -- add the following keymap to your config
               ["<Esc>"] = { "close", mode = { "n", "i" } },
-              ["<CR>"] = { "confirm", mode = { "n", "i" } },
             },
           },
         },

@@ -9,7 +9,7 @@ return {
     -- I'm enablig fzf-lua even though my main tool is still telescope, if
     -- disabled can't do gd to go to definition, will test and see what issues
     -- arise by having both telescope and fzf-lua enabled
-    enabled = true,
+    enabled = false,
     opts = function(_, opts)
       opts.winopts = vim.tbl_extend("force", opts.winopts or {}, {
         width = 1, -- Set to full screen width

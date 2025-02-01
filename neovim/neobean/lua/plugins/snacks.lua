@@ -56,7 +56,7 @@ return {
           end
           -- Demote the "lazyvim" keymaps file:
           if item.file:match("lazyvim/lua/config/keymaps%.lua") then
-            item.score_add = (item.score_add or 0) - 100
+            item.score_add = (item.score_add or 0) - 30
           end
           -- Boost the "neobean" keymaps file:
           -- if item.file:match("neobean/lua/config/keymaps%.lua") then

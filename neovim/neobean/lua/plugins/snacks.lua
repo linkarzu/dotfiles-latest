@@ -24,7 +24,8 @@ return {
             format = "file",
             show_empty = true,
             supports_live = true,
-            layout = "ivy",
+            -- In case you want to override the layout for this keymap
+            -- layout = "ivy",
           })
         end,
         desc = "Find Files",
@@ -36,7 +37,8 @@ return {
             on_show = function()
               vim.cmd.stopinsert()
             end,
-            layout = "ivy",
+            -- In case you want to override the layout for this keymap
+            -- layout = "ivy",
           })
         end,
         desc = "[P]Snacks picker buffers",
@@ -68,9 +70,16 @@ return {
           scores = true, -- show scores in the list
         },
         -- I like the "ivy" layout, so I set it as the default globaly, you can
+        -- still override it in different keymaps
+        layout = {
+          preset = "ivy",
+        },
         layouts = {
           -- I wanted to modify the ivy layout height and preview pane width,
-          -- this is the only way I was able to do it, got example from here
+          -- this is the only way I was able to do it
+          --
+          -- Then call this layout in the keymaps above
+          -- got example from here
           -- https://github.com/folke/snacks.nvim/discussions/468
           ivy = {
             layout = {

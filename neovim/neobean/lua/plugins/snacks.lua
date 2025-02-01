@@ -9,7 +9,72 @@
 return {
   {
     "folke/snacks.nvim",
+    keys = {
+      {
+        "<leader><space>",
+        function()
+          Snacks.picker.files({
+            finder = "files",
+            format = "file",
+            show_empty = true,
+            supports_live = true,
+            layout = "ivy",
+          })
+        end,
+        desc = "Find Files",
+      },
+      {
+        "<S-h>",
+        function()
+          Snacks.picker.buffers({
+            on_show = function()
+              vim.cmd.stopinsert()
+            end,
+            layout = "ivy",
+          })
+        end,
+        desc = "[P]Snacks picker buffers",
+      },
+    },
     opts = {
+      picker = {
+        layouts = {
+          -- I wanted to modify the ivy layout height and preview pane width,
+          -- this is the only way I was able to do it, got example from here
+          -- https://github.com/folke/snacks.nvim/discussions/468
+          ivy = {
+            layout = {
+              box = "vertical",
+              backdrop = false,
+              row = -1,
+              width = 0,
+              height = 0.5,
+              border = "top",
+              title = " {title} {live} {flags}",
+              title_pos = "left",
+              { win = "input", height = 1, border = "bottom" },
+              {
+                box = "horizontal",
+                { win = "list", border = "none" },
+                { win = "preview", title = "{preview}", width = 0.5, border = "left" },
+              },
+            },
+          },
+        },
+        matcher = {
+          frecency = true,
+        },
+        win = {
+          input = {
+            keys = {
+              -- to close the picker on ESC instead of going to normal mode,
+              -- add the following keymap to your config
+              ["<Esc>"] = { "close", mode = { "n", "i" } },
+              ["<CR>"] = { "confirm", mode = { "n", "i" } },
+            },
+          },
+        },
+      },
       lazygit = {
         theme = {
           selectedLineBgColor = { bg = "CursorLine" },

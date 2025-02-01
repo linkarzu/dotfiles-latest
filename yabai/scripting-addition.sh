@@ -25,13 +25,13 @@ sudo visudo -c -f $temp_file
 # If validation succeeds, move the tmp file to the sudoers dir
 # If the sudoers file already exists, it will be replaced
 if [ $? -eq 0 ]; then
-	sudo mv $temp_file /private/etc/sudoers.d/yabai
-	echo
-	echo "File created successfully"
+  sudo mv $temp_file /private/etc/sudoers.d/yabai
+  echo
+  echo "File created successfully"
 else
-	# If validation fails, remove the temporary file and print an error message
-	rm $temp_file
-	echo "Failed to validate the sudoers file."
+  # If validation fails, remove the temporary file and print an error message
+  rm $temp_file
+  echo "Failed to validate the sudoers file."
 fi
 
 echo

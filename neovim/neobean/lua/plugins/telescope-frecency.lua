@@ -22,6 +22,7 @@ the file itself, only from DB.
 
 return {
   "nvim-telescope/telescope-frecency.nvim",
+  enabled = false,
   config = function()
     require("telescope").setup({
       extensions = {

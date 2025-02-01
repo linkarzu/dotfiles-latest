@@ -44,6 +44,30 @@ return {
     },
     opts = {
       picker = {
+        -- My ~/github/dotfiles-latest/neovim/lazyvim/lua/config/keymaps.lua
+        -- file was always showing at the top, I needed a way to decrease its
+        -- score, in frecency you could use :FrecencyDelete to delete a file
+        -- from the database, here you can decrease it's score
+        transform = function(item)
+          if not item.file then
+            return item
+          end
+          -- Demote the "lazyvim" keymaps file:
+          if item.file:match("lazyvim/lua/config/keymaps%.lua") then
+            item.score_add = (item.score_add or 0) - 100
+          end
+          -- Boost the "neobean" keymaps file:
+          -- if item.file:match("neobean/lua/config/keymaps%.lua") then
+          --   item.score_add = (item.score_add or 0) + 100
+          -- end
+          return item
+        end,
+        -- In case you want to make sure that the score manipulation above works
+        -- or if you want to check the score of each file
+        debug = {
+          scores = true, -- show scores in the list
+        },
+        -- I like the "ivy" layout, so I set it as the default globaly, you can
         layouts = {
           -- I wanted to modify the ivy layout height and preview pane width,
           -- this is the only way I was able to do it, got example from here

@@ -196,7 +196,7 @@ vim.api.nvim_create_autocmd("FileType", {
 --
 -- if vim.g.neovim_mode == "skitty" then
 vim.api.nvim_create_autocmd("BufRead", {
-  pattern = "markdown",
+  pattern = "*.md",
   callback = function()
     -- Avoid running zk multiple times for the same buffer
     if vim.b.zk_executed then

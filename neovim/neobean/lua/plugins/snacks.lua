@@ -14,6 +14,20 @@ return {
   {
     "folke/snacks.nvim",
     keys = {
+      -- Open git log in vertical view
+      {
+        "<leader>gl",
+        function()
+          Snacks.picker.git_log({
+            finder = "git_log",
+            format = "git_log",
+            preview = "git_show",
+            confirm = "git_checkout",
+            layout = "vertical",
+          })
+        end,
+        desc = "Git Log",
+      },
       -- -- Iterate through incomplete tasks in Snacks_picker
       {
         -- -- You can confirm in your teminal lamw26wmal with:

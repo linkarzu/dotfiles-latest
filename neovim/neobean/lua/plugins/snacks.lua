@@ -86,10 +86,13 @@ return {
       },
       -- Used in LazyVim to view the different keymaps, this by default is
       -- configured as <leader>sk but I run it too often
+      -- Sometimes I need to see if a keymap is already taken or not
       {
         "<M-k>",
         function()
-          Snacks.picker.keymaps()
+          Snacks.picker.keymaps({
+            layout = "vertical",
+          })
         end,
         desc = "Keymaps",
       },
@@ -176,6 +179,8 @@ return {
         layouts = {
           -- I wanted to modify the ivy layout height and preview pane width,
           -- this is the only way I was able to do it
+          -- NOTE: I don't think this is the right way as I'm declaring all the
+          -- other values below, if you know a better way, let me know
           --
           -- Then call this layout in the keymaps above
           -- got example from here
@@ -196,6 +201,24 @@ return {
                 { win = "list", border = "none" },
                 { win = "preview", title = "{preview}", width = 0.5, border = "left" },
               },
+            },
+          },
+          -- I wanted to modify the layout width
+          --
+          vertical = {
+            layout = {
+              backdrop = false,
+              width = 0.8,
+              min_width = 80,
+              height = 0.8,
+              min_height = 30,
+              box = "vertical",
+              border = "rounded",
+              title = "{title} {live} {flags}",
+              title_pos = "center",
+              { win = "input", height = 1, border = "bottom" },
+              { win = "list", border = "none" },
+              { win = "preview", title = "{preview}", height = 0.4, border = "top" },
             },
           },
         },

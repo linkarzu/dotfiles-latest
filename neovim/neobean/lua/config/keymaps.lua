@@ -84,25 +84,25 @@ end, { noremap = true, silent = true })
 -- Quit or exit neovim, easier than to do <leader>qq
 vim.keymap.set({ "n", "v", "i" }, "<M-q>", "<cmd>wqa<cr>", { desc = "[P]Quit All" })
 
--- This, by default configured as <leader>sk but I run it too often lamw25wmal
-vim.keymap.set({ "n", "v", "i" }, "<M-k>", "<cmd>Telescope keymaps<cr>", { desc = "[P]Key Maps" })
+-- -- This, by default configured as <leader>sk but I run it too often lamw25wmal
+-- vim.keymap.set({ "n", "v", "i" }, "<M-k>", "<cmd>Telescope keymaps<cr>", { desc = "[P]Key Maps" })
 
--- List git branches with telescope to quickly switch to a new branch
-vim.keymap.set("n", "<M-b>", function()
-  require("telescope.builtin").git_branches(require("telescope.themes").get_ivy({
-    initial_mode = "insert",
-    layout_config = {
-      -- Adjust the preview width for better visibility
-      preview_width = 0.5,
-    },
-    attach_mappings = function(_, map)
-      -- Remap <Space> to checkout the currently selected branch
-      -- map("i", "<Space>", require("telescope.actions").select_default)
-      map("n", "<Space>", require("telescope.actions").select_default)
-      return true
-    end,
-  }))
-end, { desc = "[P]Checkout Git branch in telescope" })
+-- -- List git branches with telescope to quickly switch to a new branch
+-- vim.keymap.set("n", "<M-b>", function()
+--   require("telescope.builtin").git_branches(require("telescope.themes").get_ivy({
+--     initial_mode = "insert",
+--     layout_config = {
+--       -- Adjust the preview width for better visibility
+--       preview_width = 0.5,
+--     },
+--     attach_mappings = function(_, map)
+--       -- Remap <Space> to checkout the currently selected branch
+--       -- map("i", "<Space>", require("telescope.actions").select_default)
+--       map("n", "<Space>", require("telescope.actions").select_default)
+--       return true
+--     end,
+--   }))
+-- end, { desc = "[P]Checkout Git branch in telescope" })
 
 vim.keymap.set({ "n", "v", "i" }, "<M-h>", function()
   -- require("noice").cmd("history")
@@ -117,48 +117,48 @@ end, { desc = "Dismiss All" })
 -- HACK: Manage Markdown tasks in Neovim similar to Obsidian | Telescope to List Completed and Pending Tasks
 -- https://youtu.be/59hvZl077hM
 --
--- Iterate through incomplete tasks in telescope
--- You can confirm in your teminal lamw25wmal with:
--- rg "^\s*-\s\[ \]" test-markdown.md
-vim.keymap.set("n", "<leader>tt", function()
-  require("telescope.builtin").grep_string(require("telescope.themes").get_ivy({
-    prompt_title = "Incomplete Tasks",
-    -- search = "- \\[ \\]", -- Fixed search term for tasks
-    -- search = "^- \\[ \\]", -- Ensure "- [ ]" is at the beginning of the line
-    search = "^\\s*- \\[ \\]", -- also match blank spaces at the beginning
-    search_dirs = { vim.fn.getcwd() }, -- Restrict search to the current working directory
-    use_regex = true, -- Enable regex for the search term
-    initial_mode = "normal", -- Start in normal mode
-    layout_config = {
-      preview_width = 0.5, -- Adjust preview width
-    },
-    additional_args = function()
-      return { "--no-ignore" } -- Include files ignored by .gitignore
-    end,
-  }))
-end, { desc = "[P]Search for incomplete tasks" })
+-- -- Iterate through incomplete tasks in telescope
+-- -- You can confirm in your teminal lamw25wmal with:
+-- -- rg "^\s*-\s\[ \]" test-markdown.md
+-- vim.keymap.set("n", "<leader>tt", function()
+--   require("telescope.builtin").grep_string(require("telescope.themes").get_ivy({
+--     prompt_title = "Incomplete Tasks",
+--     -- search = "- \\[ \\]", -- Fixed search term for tasks
+--     -- search = "^- \\[ \\]", -- Ensure "- [ ]" is at the beginning of the line
+--     search = "^\\s*- \\[ \\]", -- also match blank spaces at the beginning
+--     search_dirs = { vim.fn.getcwd() }, -- Restrict search to the current working directory
+--     use_regex = true, -- Enable regex for the search term
+--     initial_mode = "normal", -- Start in normal mode
+--     layout_config = {
+--       preview_width = 0.5, -- Adjust preview width
+--     },
+--     additional_args = function()
+--       return { "--no-ignore" } -- Include files ignored by .gitignore
+--     end,
+--   }))
+-- end, { desc = "[P]Search for incomplete tasks" })
 
 -- HACK: Manage Markdown tasks in Neovim similar to Obsidian | Telescope to List Completed and Pending Tasks
 -- https://youtu.be/59hvZl077hM
 --
--- Iterate throuth completed tasks in telescope lamw25wmal
-vim.keymap.set("n", "<leader>tc", function()
-  require("telescope.builtin").grep_string(require("telescope.themes").get_ivy({
-    prompt_title = "Completed Tasks",
-    -- search = [[- \[x\] `done:]], -- Regex to match the text "`- [x] `done:"
-    -- search = "^- \\[x\\] `done:", -- Matches lines starting with "- [x] `done:"
-    search = "^\\s*- \\[x\\] `done:", -- also match blank spaces at the beginning
-    search_dirs = { vim.fn.getcwd() }, -- Restrict search to the current working directory
-    use_regex = true, -- Enable regex for the search term
-    initial_mode = "normal", -- Start in normal mode
-    layout_config = {
-      preview_width = 0.5, -- Adjust preview width
-    },
-    additional_args = function()
-      return { "--no-ignore" } -- Include files ignored by .gitignore
-    end,
-  }))
-end, { desc = "[P]Search for completed tasks" })
+-- -- Iterate throuth completed tasks in telescope lamw25wmal
+-- vim.keymap.set("n", "<leader>tc", function()
+--   require("telescope.builtin").grep_string(require("telescope.themes").get_ivy({
+--     prompt_title = "Completed Tasks",
+--     -- search = [[- \[x\] `done:]], -- Regex to match the text "`- [x] `done:"
+--     -- search = "^- \\[x\\] `done:", -- Matches lines starting with "- [x] `done:"
+--     search = "^\\s*- \\[x\\] `done:", -- also match blank spaces at the beginning
+--     search_dirs = { vim.fn.getcwd() }, -- Restrict search to the current working directory
+--     use_regex = true, -- Enable regex for the search term
+--     initial_mode = "normal", -- Start in normal mode
+--     layout_config = {
+--       preview_width = 0.5, -- Adjust preview width
+--     },
+--     additional_args = function()
+--       return { "--no-ignore" } -- Include files ignored by .gitignore
+--     end,
+--   }))
+-- end, { desc = "[P]Search for completed tasks" })
 
 -- Commented these 2 as I couldn't clear search results with escape
 -- I want to close split panes with escape, the default is "q"

@@ -1,10 +1,8 @@
 -- Filename: ~/github/dotfiles-latest/neovim/neobean/lua/plugins/snacks.lua
 -- ~/github/dotfiles-latest/neovim/neobean/lua/plugins/snacks.lua
 
--- Folke pointed me to the snacks docs
--- https://github.com/LazyVim/LazyVim/discussions/4251#discussioncomment-11198069
--- Here's the lazygit snak docs
 -- https://github.com/folke/snacks.nvim/blob/main/docs/lazygit.md
+-- https://github.com/folke/snacks.nvim/blob/main/docs/picker.md
 
 -- NOTE: If you experience an issue in which you cannot select a file with the
 -- snacks picker when you're in insert mode, only in normal mode, and you use
@@ -141,6 +139,8 @@ return {
       },
     },
     opts = {
+      -- Documentation for the picker
+      -- https://github.com/folke/snacks.nvim/blob/main/docs/picker.md
       picker = {
         -- My ~/github/dotfiles-latest/neovim/lazyvim/lua/config/keymaps.lua
         -- file was always showing at the top, I needed a way to decrease its
@@ -209,6 +209,10 @@ return {
           },
         },
       },
+      -- Folke pointed me to the snacks docs
+      -- https://github.com/LazyVim/LazyVim/discussions/4251#discussioncomment-11198069
+      -- Here's the lazygit snak docs
+      -- https://github.com/folke/snacks.nvim/blob/main/docs/lazygit.md
       lazygit = {
         theme = {
           selectedLineBgColor = { bg = "CursorLine" },

@@ -169,6 +169,9 @@ return {
         -- still override it in different keymaps
         layout = {
           preset = "ivy",
+          -- When reaching the bottom of the results in the picker, I don't want
+          -- it to cycle and go back to the top
+          cycle = false,
         },
         layouts = {
           -- I wanted to modify the ivy layout height and preview pane width,

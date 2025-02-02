@@ -16,6 +16,86 @@ return {
   {
     "folke/snacks.nvim",
     keys = {
+      -- -- Iterate through incomplete tasks in Snacks_picker
+      {
+        -- -- You can confirm in your teminal lamw26wmal with:
+        -- -- rg "^\s*-\s\[ \]" test-markdown.md
+        "<leader>tt",
+        function()
+          Snacks.picker.grep({
+            prompt = " ",
+            -- pass your desired search as a static pattern
+            search = "^\\s*- \\[ \\]",
+            -- we enable regex so the pattern is interpreted as a regex
+            regex = true,
+            -- no “live grep” needed here since we have a fixed pattern
+            live = false,
+            -- restrict search to the current working directory
+            dirs = { vim.fn.getcwd() },
+            -- include files ignored by .gitignore
+            args = { "--no-ignore" },
+            -- Start in normal mode
+            on_show = function()
+              vim.cmd.stopinsert()
+            end,
+            finder = "grep",
+            format = "file",
+            show_empty = true,
+            supports_live = false,
+            layout = "ivy",
+          })
+        end,
+        desc = "[P]Search for incomplete tasks",
+      },
+      -- -- Iterate throuth completed tasks in Snacks_picker lamw26wmal
+      {
+        "<leader>tc",
+        function()
+          Snacks.picker.grep({
+            prompt = " ",
+            -- pass your desired search as a static pattern
+            search = "^\\s*- \\[x\\] `done:",
+            -- we enable regex so the pattern is interpreted as a regex
+            regex = true,
+            -- no “live grep” needed here since we have a fixed pattern
+            live = false,
+            -- restrict search to the current working directory
+            dirs = { vim.fn.getcwd() },
+            -- include files ignored by .gitignore
+            args = { "--no-ignore" },
+            -- Start in normal mode
+            on_show = function()
+              vim.cmd.stopinsert()
+            end,
+            finder = "grep",
+            format = "file",
+            show_empty = true,
+            supports_live = false,
+            layout = "ivy",
+          })
+        end,
+        desc = "[P]Search for incomplete tasks",
+      },
+      -- -- List git branches with Snacks_picker to quickly switch to a new branch
+      {
+        "<M-b>",
+        function()
+          Snacks.picker.git_branches({
+            layout = "select",
+          })
+        end,
+        desc = "Keymaps",
+      },
+      -- Used in LazyVim to view the different keymaps, this by default is
+      -- configured as <leader>sk but I run it too often
+      {
+        "<M-k>",
+        function()
+          Snacks.picker.keymaps()
+        end,
+        desc = "Keymaps",
+      },
+      -- File picker
       {
         "<leader><space>",
         function()
@@ -25,18 +105,34 @@ return {
             show_empty = true,
             supports_live = true,
             -- In case you want to override the layout for this keymap
-            -- layout = "ivy",
+            -- layout = "vscode",
           })
         end,
         desc = "Find Files",
       },
+      -- Navigate my buffers
       {
         "<S-h>",
         function()
           Snacks.picker.buffers({
+            -- I always want my buffers picker to start in normal mode
             on_show = function()
               vim.cmd.stopinsert()
             end,
+            finder = "buffers",
+            format = "buffer",
+            hidden = false,
+            unloaded = true,
+            current = true,
+            sort_lastused = true,
+            win = {
+              input = {
+                keys = {
+                  ["d"] = "bufdelete",
+                },
+              },
+              list = { keys = { ["d"] = "bufdelete" } },
+            },
             -- In case you want to override the layout for this keymap
             -- layout = "ivy",
           })

@@ -2547,6 +2547,8 @@ end
 -- Changed all the markdown folding and unfolding keymaps from <leader>mfj to
 -- zj, zk, zl, z; and zu respectively lamw25wmal
 vim.keymap.set("n", "zu", function()
+  -- "Update" saves only if the buffer has been modified since the last save
+  vim.cmd("silent update")
   -- vim.keymap.set("n", "<leader>mfu", function()
   -- Reloads the file to reflect the changes
   vim.cmd("edit!")
@@ -2560,6 +2562,8 @@ end, { desc = "[P]Unfold all headings level 2 or above" })
 -- gk jummps to the markdown heading above and then folds it
 -- zi by default toggles folding, but I don't need it lamw25wmal
 vim.keymap.set("n", "zi", function()
+  -- "Update" saves only if the buffer has been modified since the last save
+  vim.cmd("silent update")
   -- Difference between normal and normal!
   -- - `normal` executes the command and respects any mappings that might be defined.
   -- - `normal!` executes the command in a "raw" mode, ignoring any mappings.
@@ -2574,8 +2578,10 @@ end, { desc = "[P]Fold the heading cursor currently on" })
 --
 -- Keymap for folding markdown headings of level 1 or above
 vim.keymap.set("n", "zj", function()
+  -- "Update" saves only if the buffer has been modified since the last save
+  vim.cmd("silent update")
   -- vim.keymap.set("n", "<leader>mfj", function()
-  -- Reloads the file to refresh folds, otherwise you have to re-open neovim
+  -- Reloads the file to refresh folds, otheriise you have to re-open neovim
   vim.cmd("edit!")
   -- Unfold everything first or I had issues
   vim.cmd("normal! zR")
@@ -2589,6 +2595,8 @@ end, { desc = "[P]Fold all headings level 1 or above" })
 -- Keymap for folding markdown headings of level 2 or above
 -- I know, it reads like "madafaka" but "k" for me means "2"
 vim.keymap.set("n", "zk", function()
+  -- "Update" saves only if the buffer has been modified since the last save
+  vim.cmd("silent update")
   -- vim.keymap.set("n", "<leader>mfk", function()
   -- Reloads the file to refresh folds, otherwise you have to re-open neovim
   vim.cmd("edit!")
@@ -2603,6 +2611,8 @@ end, { desc = "[P]Fold all headings level 2 or above" })
 --
 -- Keymap for folding markdown headings of level 3 or above
 vim.keymap.set("n", "zl", function()
+  -- "Update" saves only if the buffer has been modified since the last save
+  vim.cmd("silent update")
   -- vim.keymap.set("n", "<leader>mfl", function()
   -- Reloads the file to refresh folds, otherwise you have to re-open neovim
   vim.cmd("edit!")
@@ -2617,6 +2627,8 @@ end, { desc = "[P]Fold all headings level 3 or above" })
 --
 -- Keymap for folding markdown headings of level 4 or above
 vim.keymap.set("n", "z;", function()
+  -- "Update" saves only if the buffer has been modified since the last save
+  vim.cmd("silent update")
   -- vim.keymap.set("n", "<leader>mf;", function()
   -- Reloads the file to refresh folds, otherwise you have to re-open neovim
   vim.cmd("edit!")

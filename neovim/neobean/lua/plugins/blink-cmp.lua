@@ -141,7 +141,7 @@ return {
         emoji = {
           module = "blink-emoji",
           name = "Emoji",
-          score_offset = 15, -- the higher the number, the higher the priority
+          score_offset = 93, -- the higher the number, the higher the priority
           min_keyword_length = 2,
           opts = { insert = true }, -- Insert emoji (default) or complete its name
         },

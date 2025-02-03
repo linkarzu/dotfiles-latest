@@ -54,10 +54,10 @@ if command -v sketchybar &>/dev/null; then
     yabai -m config right_padding 230
     # Resolution for my shorts
   elif [[ "$display_resolution" == *"1536 x 2048"* ]]; then
-    yabai -m config top_padding 43
-    yabai -m config bottom_padding 192
-    yabai -m config left_padding 5
-    yabai -m config right_padding 5
+    yabai -m config top_padding 38
+    yabai -m config bottom_padding 220
+    yabai -m config left_padding 0
+    yabai -m config right_padding 0
   else
     # # This matches my asus 27 inch monitor
     # # yabai -m config top_padding 39

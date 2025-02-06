@@ -193,19 +193,19 @@ bind p select-window -t 4
 # configure the alacritty 'option_as_alt' option, but that messed up my hyper key,
 # so if I enable that option in alacritty, I cant do hyper+b which is what I use for
 # tmux commands instead of ctrl+b. So instead, I'll just remap these
-# unbind J
-# unbind K
+unbind J
+unbind K
 # unbind L
-# unbind C-j
-# unbind C-k
-# unbind C-l
-# bind J select-layout even-horizontal
-# bind K select-layout even-vertical
-# # bind L select-layout tiled
+unbind C-j
+unbind C-k
+unbind C-l
+bind J select-layout even-horizontal
+bind K select-layout even-vertical
+# bind L select-layout tiled
 # bind L run-shell ~/github/dotfiles-latest/tmux/layouts/7030/apply_layout.sh
-# bind C-j select-layout main-horizontal
-# bind C-k select-layout main-vertical
-# bind C-l run-shell ~/github/dotfiles-latest/tmux/layouts/2x3/apply_layout.sh
+bind C-j select-layout main-horizontal
+bind C-k select-layout main-vertical
+bind C-l run-shell ~/github/dotfiles-latest/tmux/layouts/2x3/apply_layout.sh
 
 # Update: In karabiner elements I remapped hyper+f to ctrl+b which allows me to
 # now use the meta key, just make sure to configure option as alt in your

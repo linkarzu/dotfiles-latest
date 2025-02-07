@@ -115,6 +115,7 @@ yabai -m signal --add event=window_focused app="^${apps_transparent}$" action="y
 # I want the apps here to always be shown, probably they'll be on the right
 # padding section. This is my "sticky notes"
 yabai -m rule --add app="^${apps_transp_ignore}$" opacity=$opacity_value
+yabai -m rule --add app="^${apps_stream}$" opacity=1
 
 # When any other app gains focus, reset both active and background window opacity to fully visible
 yabai -m signal --add event=window_focused app!="^${apps_transparent}$" action="yabai -m config active_window_opacity 1.0"

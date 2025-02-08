@@ -1098,3 +1098,6 @@ if [ "$OS" = 'Linux' ]; then
     source <(kubectl completion zsh)
   fi
 fi
+
+# Added by LM Studio CLI (lms)
+export PATH="$PATH:/Users/linkarzu/.lmstudio/bin"

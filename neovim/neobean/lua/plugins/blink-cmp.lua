@@ -173,6 +173,7 @@ return {
               vim.fn.expand("~/github/dotfiles-latest/neovim/neobean/spell/es.utf-8.add"),
             },
             -- --  NOTE: To disable the definitions uncomment this section below
+            --
             -- separate_output = function(output)
             --   local items = {}
             --   for line in output:gmatch("[^\r\n]+") do

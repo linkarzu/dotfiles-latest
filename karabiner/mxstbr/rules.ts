@@ -516,6 +516,7 @@ const rules: KarabinerRules[] = [
       w: app("Microsoft Word"),
       e: app("Microsoft Excel"),
       r: app("Recut"),
+      t: app("Microsoft Teams"),
       6: app("Windows App"),
       // r: app("Windows App"),
       // t: app("Claude"),

@@ -11,7 +11,7 @@ apps_transparent="(Spotify|Neovide|Code|WezTerm|Ghostty)"
 
 # Apps that I want to always show, even when I have a transparent app focused
 apps_transp_ignore="(kitty)"
-apps_stream="(Brave Browser|Google Chrome)"
+apps_stream="(Microsoft Edge|Google Chrome)"
 # apps_transp_ignore="(kitty|CleanShot X)"
 
 # Apps excluded from window management, so you can resize them and move them around

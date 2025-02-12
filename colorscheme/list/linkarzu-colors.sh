@@ -25,6 +25,9 @@ linkarzu_color21="#585c89"
 linkarzu_color22="#0f857c"
 # Markdown heading 6 - color08
 linkarzu_color23="#396592"
+# Markdown heading foreground
+# usually set to color10 which is the terminal background
+linkarzu_color26=#0D1116
 
 linkarzu_color04="#987afb"
 linkarzu_color02="#37f499"

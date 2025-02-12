@@ -14,6 +14,8 @@ export PATH="/opt/homebrew/bin:$PATH"
 
 # To find the position and size of an app
 # yabai -m query --windows | jq '.[] | select(.app == "kitty") | {frame: .frame, id: .id}'
+# yabai -m query --windows is producing malformed JSON with a trailing comma before ]
+# yabai -m query --windows | sed 's/,]/]/g' | jq '.[] | select(.app == "kitty") | {frame: .frame, id: .id}'
 display_resolution=$(system_profiler SPDisplaysDataType | grep Resolution)
 # First condition is to match my macbook pro, the * are used as wildcards
 if [[ "$display_resolution" == *"3456 x 2234"* ]]; then
@@ -25,8 +27,8 @@ elif [[ "$display_resolution" == *"1536 x 2048"* ]]; then
   yabai -m window --focus "$(yabai -m query --windows | jq '.[] | select(.app == "kitty") | .id')" --resize abs:290:215
   # Else below will match my 27 inch monitor
 else
-  yabai -m window --focus "$(yabai -m query --windows | jq '.[] | select(.app == "kitty") | .id')" --move abs:1369:39
-  yabai -m window --focus "$(yabai -m query --windows | jq '.[] | select(.app == "kitty") | .id')" --resize abs:231:400
-  yabai -m window --focus "$(yabai -m query --windows | jq '.[] | select(.app == "Google Chrome") | .id')" --move abs:1369:545
-  yabai -m window --focus "$(yabai -m query --windows | jq '.[] | select(.app == "Google Chrome") | .id')" --resize abs:231:355
+  yabai -m window --focus "$(yabai -m query --windows | sed 's/,]/]/g' | jq '.[] | select(.app == "kitty") | .id')" --move abs:1369:39
+  yabai -m window --focus "$(yabai -m query --windows | sed 's/,]/]/g' | jq '.[] | select(.app == "kitty") | .id')" --resize abs:231:400
+  yabai -m window --focus "$(yabai -m query --windows | sed 's/,]/]/g' | jq '.[] | select(.app == "Google Chrome") | .id')" --move abs:1369:545
+  yabai -m window --focus "$(yabai -m query --windows | sed 's/,]/]/g' | jq '.[] | select(.app == "Google Chrome") | .id')" --resize abs:231:355
 fi

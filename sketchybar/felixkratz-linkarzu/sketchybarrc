@@ -145,6 +145,8 @@ source "$ITEM_DIR/volume.sh"
 # CPU usage indicator
 source "$ITEM_DIR/cpu.sh"
 
+source "$ITEM_DIR/timer.sh"
+
 ###############################################################################
 #                            Community plugins
 ###############################################################################

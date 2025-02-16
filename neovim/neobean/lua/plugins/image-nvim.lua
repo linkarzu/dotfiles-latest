@@ -32,6 +32,7 @@ return {
     -- Neovim users.
     -- https://github.com/vhyrro/luarocks.nvim
     "vhyrro/luarocks.nvim",
+    enabled = false,
     -- this plugin needs to run before anything else
     priority = 1001,
     opts = {
@@ -40,7 +41,7 @@ return {
   },
   {
     "3rd/image.nvim",
-    enabled = true,
+    enabled = false,
     dependencies = { "luarocks.nvim" },
     config = function()
       require("image").setup({

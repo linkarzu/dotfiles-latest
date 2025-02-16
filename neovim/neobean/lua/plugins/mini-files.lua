@@ -15,7 +15,7 @@
 local mini_files_km = require("config.modules.mini-files-km")
 
 -- -- git config is slowing mini.files too much, so disabling it
--- local mini_files_git = require("config.modules.mini-files-git")
+local mini_files_git = require("config.modules.mini-files-git")
 
 return {
   "echasnovski/mini.files",
@@ -116,8 +116,8 @@ return {
     -- Load custom keymaps
     mini_files_km.setup(opts)
 
-    -- -- Load Git integration
-    -- -- git config is slowing mini.files too much, so disabling it
-    -- mini_files_git.setup()
+    -- Load Git integration
+    -- git config is slowing mini.files too much, so disabling it
+    mini_files_git.setup()
   end,
 }

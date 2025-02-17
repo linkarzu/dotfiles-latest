@@ -4,7 +4,7 @@ sketchybar --add event reset_timer
 
 timer=(
   script="${PLUGIN_DIR}/reset_timer.sh"
-  icon=""
+  icon=""
   click_script="sketchybar --set timer popup.drawing=toggle ; sketchybar --trigger reset_timer"
 )
 

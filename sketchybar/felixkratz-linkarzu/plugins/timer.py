@@ -41,9 +41,9 @@ def stopwatch(start_time):
         delta = current_time - start_time
 
         os.system(
-            "sketchybar --set timer label="
+            'sketchybar --set timer label="Playing Skyrim for: '
             + format_seconds(delta)
-            + " label.color="
+            + '" label.color='
             + WHITE
         )
 
@@ -64,9 +64,9 @@ def count_down(start_time, end_time):
             color = WHITE
 
         os.system(
-            "sketchybar --set timer label="
+            'sketchybar --set timer label="Playing Skyrim for: '
             + format_seconds(delta)
-            + " label.color="
+            + '" label.color='
             + color
         )
 

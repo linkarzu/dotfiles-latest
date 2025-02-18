@@ -86,7 +86,7 @@ return {
             layout = "ivy",
           })
         end,
-        desc = "[P]Search for incomplete tasks",
+        desc = "[P]Search for complete tasks",
       },
       -- -- List git branches with Snacks_picker to quickly switch to a new branch
       {
@@ -96,7 +96,7 @@ return {
             layout = "select",
           })
         end,
-        desc = "Keymaps",
+        desc = "Branches",
       },
       -- Used in LazyVim to view the different keymaps, this by default is
       -- configured as <leader>sk but I run it too often

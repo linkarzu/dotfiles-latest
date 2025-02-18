@@ -281,6 +281,15 @@ return {
         enabled = true,
         top_down = false, -- place notifications from top to bottom
       },
+      -- This keeps the image on the top right corner, basically leaving your
+      -- text area free, suggestion found in reddit by user `Redox_ahmii`
+      -- https://www.reddit.com/r/neovim/comments/1irk9mg/comment/mdfvk8b/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button
+      styles = {
+        snacks_image = {
+          relative = "editor",
+          col = -1,
+        },
+      },
       image = {
         enabled = true,
         doc = {

@@ -933,10 +933,12 @@ local function handle_image_paste(img_dir)
         vim.cmd("normal! la")
         -- -- This puts me in insert mode where the cursor is
         -- vim.api.nvim_feedkeys("i", "n", true)
+        require("auto-save").on()
         return
       end
       if not is_thumbnail then
         print("Image pasting canceled.")
+        require("auto-save").on()
         return
       end
       if is_thumbnail == "format" then
@@ -955,6 +957,7 @@ local function handle_image_paste(img_dir)
               vim.ui.input({ prompt = "Enter image name (no spaces). Added prefix: " .. prefix }, function(input_name)
                 if not input_name or input_name:match("%s") then
                   print("Invalid image name or canceled. Image not pasted.")
+                  require("auto-save").on()
                   return
                 end
                 local full_image_name = prefix .. input_name
@@ -977,6 +980,7 @@ local function handle_image_paste(img_dir)
                     vim.cmd("edit!")
                   else
                     print("No image pasted. File not updated.")
+                    require("auto-save").on()
                   end
                 end
               end)
@@ -1011,6 +1015,7 @@ local function handle_image_paste(img_dir)
         vim.ui.input({ prompt = "Enter image name (no spaces). Added prefix: " .. prefix }, function(input_name)
           if not input_name or input_name:match("%s") then
             print("Invalid image name or canceled. Image not pasted.")
+            require("auto-save").on()
             return
           end
           local full_image_name = prefix .. input_name
@@ -1037,6 +1042,7 @@ local function handle_image_paste(img_dir)
               vim.cmd("edit!")
             else
               print("No image pasted. File not updated.")
+              require("auto-save").on()
             end
           end
         end)
@@ -1047,6 +1053,9 @@ local function handle_image_paste(img_dir)
 end
 
 local function process_image()
+  -- Any of these 2 work to toggle auto-save
+  -- vim.cmd("ASToggle")
+  require("auto-save").off()
   local img_dir = find_assets_dir()
   if not img_dir then
     vim.ui.select({ "yes", "no" }, {
@@ -1062,6 +1071,7 @@ local function process_image()
         end, 100)
       else
         print("Operation cancelled - directory not created")
+        require("auto-save").on()
         return
       end
     end)

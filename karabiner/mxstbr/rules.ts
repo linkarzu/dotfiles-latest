@@ -850,6 +850,20 @@ const rules: KarabinerRules[] = [
       g: open(
         "btt://execute_assigned_actions_for_trigger/?uuid=DAB53833-E0D1-4FF6-A411-3B02E3C55153"
       ),
+      // w: {
+      //   to: [
+      //     {
+      //       shell_command: `export PATH="/opt/homebrew/bin:$PATH" && yabai -m window --toggle study`,
+      //     },
+      //   ],
+      // },
+      // s: {
+      //   to: [
+      //     {
+      //       shell_command: `export PATH="/opt/homebrew/bin:$PATH" && yabai -m window --toggle spotify`,
+      //     },
+      //   ],
+      // },
     },
 
     // c = "colorscheme selector"

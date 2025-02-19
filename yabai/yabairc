@@ -183,6 +183,20 @@ yabai -m signal --add event=window_focused action="sketchybar --trigger window_f
 # yabai -m signal --add event=window_focused app="Google Chrome" action="cliclick m:0,0"
 
 ###############################################################################
+#                             scratchpad
+###############################################################################
+
+# This comes from the asciidoc file:
+# --grid <rows>:<cols>:<start-x>:<start-y>:<width>:<height>
+# Set the frame of the selected window based on a self-defined grid.
+
+# yabai -m rule --add app="^Spotify$" scratchpad=music grid=12:12:4:1:4:10
+# yabai -m rule --add app="^Spotify$" scratchpad=music grid=12:12:1:1:7:9
+
+# yabai -m rule --add app="^Spotify$" scratchpad=spotify
+# yabai -m rule --add app="^(Udemy|WezTerm)$" scratchpad=study
+
+###############################################################################
 #                                Defaults
 ###############################################################################
 

@@ -7,11 +7,12 @@
 # yabai -m query --windows | jq -r '.[].app'
 
 # apps_transparent="(Spotify|kitty|Neovide|Google Chrome|Code|WezTerm|Ghostty)"
-apps_transparent="(Spotify|Neovide|Code|WezTerm|Ghostty)"
+apps_transparent="(Neovide|Code|Ghostty)"
 
 # Apps that I want to always show, even when I have a transparent app focused
 apps_transp_ignore="(kitty)"
 apps_stream="(Microsoft Edge|Google Chrome)"
+apps_scratchpad="(Udemy|WezTerm)"
 # apps_transp_ignore="(kitty|CleanShot X)"
 
 # Apps excluded from window management, so you can resize them and move them around

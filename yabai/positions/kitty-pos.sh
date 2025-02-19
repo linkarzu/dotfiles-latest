@@ -27,8 +27,18 @@ elif [[ "$display_resolution" == *"1536 x 2048"* ]]; then
   yabai -m window --focus "$(yabai -m query --windows | jq '.[] | select(.app == "kitty") | .id')" --resize abs:290:215
   # Else below will match my 27 inch monitor
 else
-  yabai -m window --focus "$(yabai -m query --windows | sed 's/,]/]/g' | jq '.[] | select(.app == "kitty") | .id')" --move abs:1369:39
-  yabai -m window --focus "$(yabai -m query --windows | sed 's/,]/]/g' | jq '.[] | select(.app == "kitty") | .id')" --resize abs:231:400
-  yabai -m window --focus "$(yabai -m query --windows | sed 's/,]/]/g' | jq '.[] | select(.app == "Google Chrome") | .id')" --move abs:1369:545
-  yabai -m window --focus "$(yabai -m query --windows | sed 's/,]/]/g' | jq '.[] | select(.app == "Google Chrome") | .id')" --resize abs:231:355
+  # yabai -m window --focus "$(yabai -m query --windows | sed 's/,]/]/g' | jq '.[] | select(.app == "kitty") | .id')" --move abs:1369:39
+  # yabai -m window --focus "$(yabai -m query --windows | sed 's/,]/]/g' | jq '.[] | select(.app == "kitty") | .id')" --resize abs:231:400
+  # yabai -m window --focus "$(yabai -m query --windows | sed 's/,]/]/g' | jq '.[] | select(.app == "Google Chrome") | .id')" --move abs:1369:545
+  # yabai -m window --focus "$(yabai -m query --windows | sed 's/,]/]/g' | jq '.[] | select(.app == "Google Chrome") | .id')" --resize abs:231:355
+  yabai -m window --focus "$(yabai -m query --windows | jq '.[] | select(.app == "kitty") | .id')" --move abs:1369:39
+  yabai -m window --focus "$(yabai -m query --windows | jq '.[] | select(.app == "kitty") | .id')" --resize abs:231:400
+  yabai -m window --focus "$(yabai -m query --windows | jq '.[] | select(.app == "Google Chrome") | .id')" --move abs:1369:545
+  yabai -m window --focus "$(yabai -m query --windows | jq '.[] | select(.app == "Google Chrome") | .id')" --resize abs:231:355
+  yabai -m window --focus "$(yabai -m query --windows | jq '.[] | select(.app == "Spotify") | .id')" --move abs:173:120
+  yabai -m window --focus "$(yabai -m query --windows | jq '.[] | select(.app == "Spotify") | .id')" --resize abs:1027:708
+  # yabai -m window --focus "$(yabai -m query --windows | jq '.[] | select(.app == "Udemy") | .id')" --move abs:0:38
+  # yabai -m window --focus "$(yabai -m query --windows | jq '.[] | select(.app == "Udemy") | .id')" --resize abs:912:862
+  # yabai -m window --focus "$(yabai -m query --windows | jq '.[] | select(.app == "WezTerm") | .id')" --move abs:912:39
+  # yabai -m window --focus "$(yabai -m query --windows | jq '.[] | select(.app == "WezTerm") | .id')" --resize abs:688:862
 fi

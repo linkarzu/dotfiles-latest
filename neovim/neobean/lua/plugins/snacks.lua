@@ -3,6 +3,7 @@
 
 -- https://github.com/folke/snacks.nvim/blob/main/docs/lazygit.md
 -- https://github.com/folke/snacks.nvim/blob/main/docs/picker.md
+-- https://github.com/folke/snacks.nvim/blob/main/docs/image.md
 
 -- NOTE: If you experience an issue in which you cannot select a file with the
 -- snacks picker when you're in insert mode, only in normal mode, and you use

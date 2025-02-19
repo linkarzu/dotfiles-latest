@@ -35,6 +35,18 @@ for app in "${apps[@]}"; do
   sleep 0.7
 done
 
+# IFS='|' read -ra apps <<<"$(echo "$apps_scratchpad" | tr -d '()')"
+#
+# # Iterate through the array
+# for app in "${apps[@]}"; do
+#   # Trim leading/trailing whitespace
+#   app=$(echo "$app" | xargs)
+#   pkill "$app"
+#   sleep 0.7
+#   open -a "$app"
+#   sleep 0.7
+# done
+
 # After yabai is restarted, I want kitty to be moved to a specific position on
 # the screen as it will be my "sticky notes", I also set its size
 ~/github/dotfiles-latest/yabai/positions/kitty-pos.sh

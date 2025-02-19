@@ -61,7 +61,7 @@ linkarzu_color16="#e9b3fd"
 # https://www.colorhexa.com/0d1116
 linkarzu_color17="#141b22"
 # Cursor color
-linkarzu_color24="#F712FF"
+linkarzu_color24="#f94dff"
 # Background of inactive, 3 to the right of background
 # https://www.colorhexa.come tmux pane
 linkarzu_color25=#232e3b

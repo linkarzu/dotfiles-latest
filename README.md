@@ -43,7 +43,7 @@
          <img
            src="https://res.cloudinary.com/daqwsgmx6/image/upload/v1706358848/youtube/2024-macos-workflow/04-dotfiles-playback"
            alt="04 - What are dotfiles and how to clone them"
-           width="600"
+           width="400"
          />
      </a>
  </div>
@@ -86,7 +86,7 @@ alias neobean='NVIM_APPNAME=linkarzu/dotfiles-latest/neovim/neobean nvim'
         <img
           src="./assets/img/imgs/250220-thux-multiple-neovim-distros.avif"
           alt=" Download and test multiple Neovim distros and configurations - Without affecting your current config "
-          width="600"
+          width="400"
         />
     </a>
 </div>
@@ -100,7 +100,7 @@ alias neobean='NVIM_APPNAME=linkarzu/dotfiles-latest/neovim/neobean nvim'
         <img
           src="./assets/img/imgs/250120-macos-ricing-link.avif"
           alt=" The Power User's 2025 Guide to macOS ricing | Yabai, Simple-bar, SketchyBar, Fastfetch, Btop & More "
-          width="600"
+          width="400"
         />
     </a>
 </div>
@@ -112,7 +112,7 @@ alias neobean='NVIM_APPNAME=linkarzu/dotfiles-latest/neovim/neobean nvim'
         <img
           src="./assets/img/imgs/250220-thux-neovim-like-obsidian.avif"
           alt=" How I Recreated (and Improved) My Obsidian Note-Taking Workflow in Neovim "
-          width="600"
+          width="400"
         />
     </a>
 </div>
@@ -124,7 +124,7 @@ alias neobean='NVIM_APPNAME=linkarzu/dotfiles-latest/neovim/neobean nvim'
         <img
           src="./assets/img/imgs/250218-thux-snacks-image.avif"
           alt=" Images in Neovim | Setting up Snacks Image and Comparing it to Image.nvim "
-          width="600"
+          width="400"
         />
     </a>
 </div>
@@ -136,7 +136,7 @@ alias neobean='NVIM_APPNAME=linkarzu/dotfiles-latest/neovim/neobean nvim'
         <img
           src="./assets/img/imgs/250210-thux-snacks-picker.avif"
           alt=" Why I'm Moving from Telescope to Snacks Picker | Why I'm not Using fzf-lua | Frecency feature "
-          width="600"
+          width="400"
         />
     </a>
 </div>
@@ -148,7 +148,7 @@ alias neobean='NVIM_APPNAME=linkarzu/dotfiles-latest/neovim/neobean nvim'
         <img
           src="./assets/img/imgs/minifiles-yazi.png"
           alt=" Advanced MINI.FILES Keymaps for Neovim – System Clipboard Integration and More "
-          width="600"
+          width="400"
         />
     </a>
 </div>
@@ -160,7 +160,7 @@ alias neobean='NVIM_APPNAME=linkarzu/dotfiles-latest/neovim/neobean nvim'
         <img
           src="./assets/img/imgs/250220-neovim-workflow-2025.avif"
           alt=" My complete Neovim markdown setup and workflow in 2025 "
-          width="600"
+          width="400"
         />
     </a>
 </div>
@@ -172,7 +172,7 @@ alias neobean='NVIM_APPNAME=linkarzu/dotfiles-latest/neovim/neobean nvim'
         <img
           src="./assets/img/imgs/250220-thux-ghostty-shaders.avif"
           alt=" Ghostty Shaders | Ghostty config file syntax highlighting | glsl treesitter | glsl_analyzer "
-          width="600"
+          width="400"
         />
     </a>
 </div>
@@ -184,7 +184,7 @@ alias neobean='NVIM_APPNAME=linkarzu/dotfiles-latest/neovim/neobean nvim'
         <img
           src="https://res.cloudinary.com/daqwsgmx6/image/upload/q_75/v1717456413/youtube/neovim/neovim-vs-neovide.avif"
           alt="Neovim or Neovide, what is the difference?"
-          width="600"
+          width="400"
         />
     </a>
 </div>
@@ -196,7 +196,7 @@ alias neobean='NVIM_APPNAME=linkarzu/dotfiles-latest/neovim/neobean nvim'
         <img
           src="https://res.cloudinary.com/daqwsgmx6/image/upload/q_75/v1719362711/youtube/macos/alacritty-to-kitty.avif"
           alt="Why I switched from Alacritty to kitty, and how to configure kitty"
-          width="600"
+          width="400"
         />
     </a>
 </div>

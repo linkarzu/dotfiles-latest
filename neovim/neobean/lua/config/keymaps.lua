@@ -907,6 +907,11 @@ local function handle_image_paste(img_dir)
         local assets_dir = find_assets_dir()
         -- Get the parent directory of the current file
         local current_dir = vim.fn.expand("%:p:h")
+        -- remove warning: Cannot assign `string|nil` to parameter `string`
+        if not assets_dir then
+          print("Assets directory not found, cannot proceed with search.")
+          return
+        end
         -- Get the parent directory of assets_dir (removing /img/imgs)
         local base_assets_dir = vim.fn.fnamemodify(assets_dir, ":h:h:h")
         -- Count how many levels we need to go up

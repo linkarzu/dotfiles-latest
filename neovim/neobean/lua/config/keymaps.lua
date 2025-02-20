@@ -1684,7 +1684,7 @@ vim.keymap.set("n", "<leader>id", function()
                 { "Image file deleted from disk using rm:\n", "Normal" },
                 { absolute_image_path, "Normal" },
               }, false, {})
-              require("image").clear()
+              -- require("image").clear()
               vim.cmd("edit!")
               vim.cmd("normal! dd")
             else
@@ -1700,7 +1700,7 @@ vim.keymap.set("n", "<leader>id", function()
           { "Image file deleted from disk:\n", "Normal" },
           { absolute_image_path, "Normal" },
         }, false, {})
-        require("image").clear()
+        -- require("image").clear()
         vim.cmd("edit!")
         vim.cmd("normal! dd")
       else
@@ -1717,35 +1717,35 @@ end, { desc = "[P](macOS) Delete image file under cursor" })
 
 -- ############################################################################
 
--- HACK: Upload images from Neovim to Imgur
--- https://youtu.be/Lzl_0SzbUBo
---
--- Refresh the images in the current buffer
--- Useful if you delete an actual image file and want to see the changes
--- without having to re-open neovim
-vim.keymap.set("n", "<leader>ir", function()
-  -- First I clear the images
-  require("image").clear()
-  -- I'm using [[ ]] to escape the special characters in a command
-  -- vim.cmd([[lua require("image").clear()]])
-  -- Reloads the file to reflect the changes
-  vim.cmd("edit!")
-  print("Images refreshed")
-end, { desc = "[P]Refresh images" })
+-- -- HACK: Upload images from Neovim to Imgur
+-- -- https://youtu.be/Lzl_0SzbUBo
+-- --
+-- -- Refresh the images in the current buffer
+-- -- Useful if you delete an actual image file and want to see the changes
+-- -- without having to re-open neovim
+-- vim.keymap.set("n", "<leader>ir", function()
+--   -- First I clear the images
+--   -- require("image").clear()
+--   -- I'm using [[ ]] to escape the special characters in a command
+--   -- vim.cmd([[lua require("image").clear()]])
+--   -- Reloads the file to reflect the changes
+--   vim.cmd("edit!")
+--   print("Images refreshed")
+-- end, { desc = "[P]Refresh images" })
 
 -- ############################################################################
 
--- HACK: Upload images from Neovim to Imgur
--- https://youtu.be/Lzl_0SzbUBo
---
--- Set up a keymap to clear all images in the current buffer
-vim.keymap.set("n", "<leader>ic", function()
-  -- This is the command that clears the images
-  require("image").clear()
-  -- I'm using [[ ]] to escape the special characters in a command
-  -- vim.cmd([[lua require("image").clear()]])
-  print("Images cleared")
-end, { desc = "[P]Clear images" })
+-- -- HACK: Upload images from Neovim to Imgur
+-- -- https://youtu.be/Lzl_0SzbUBo
+-- --
+-- -- Set up a keymap to clear all images in the current buffer
+-- vim.keymap.set("n", "<leader>ic", function()
+--   -- This is the command that clears the images
+--   -- require("image").clear()
+--   -- I'm using [[ ]] to escape the special characters in a command
+--   -- vim.cmd([[lua require("image").clear()]])
+--   print("Images cleared")
+-- end, { desc = "[P]Clear images" })
 
 -- ############################################################################
 --                         Begin of markdown section

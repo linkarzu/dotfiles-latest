@@ -102,7 +102,7 @@ alias neobean='NVIM_APPNAME=linkarzu/dotfiles-latest/neovim/neobean nvim'
 - join the [discord server in this link](https://discord.gg/NgqMgwwtMH)
 
 <div align="left">
-    <a href=" https://discord.gg/NgqMgwwtMH ">
+    <a href="https://discord.gg/NgqMgwwtMH">
         <img
           src="./assets/img/imgs/250210-discord-free.avif"
           alt=" Join the discord server"
@@ -129,7 +129,7 @@ alias neobean='NVIM_APPNAME=linkarzu/dotfiles-latest/neovim/neobean nvim'
   [donate here](https://ko-fi.com/linkarzu/goal?g=6)
 
 <div align="left">
-    <a href=" https://ko-fi.com/linkarzu/goal?g=6 ">
+    <a href="https://ko-fi.com/linkarzu/goal?g=6">
         <img
           src="./assets/img/imgs/250103-ko-fi-donate.avif"
           alt=" Support me in Ko-Fi "
@@ -150,7 +150,7 @@ alias neobean='NVIM_APPNAME=linkarzu/dotfiles-latest/neovim/neobean nvim'
 - **`CLICK ON THE IMAGE BELOW TO START YOUR 14 DAY FREE TRIAL`**
 
 <div align="left">
-    <a href=" https://www.dpbolvw.net/click-101327218-15917064 ">
+    <a href="https://www.dpbolvw.net/click-101327218-15917064">
         <img
           src="./assets/img/imgs/250124-1password-banner.avif"
           alt=" Start your 14 day free 1password trial "

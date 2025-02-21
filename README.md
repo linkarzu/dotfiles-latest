@@ -3,7 +3,7 @@
 <!-- toc -->
 
 - [Repo overview](#repo-overview)
-- [How do I apply all your dotfiles?](#how-do-i-apply-all-your-dotfiles)
+- [How can you apply my dotfiles?](#how-can-you-apply-my-dotfiles)
 - [In case you want to test out my Neobean config](#in-case-you-want-to-test-out-my-neobean-config)
 - [Join the Discord server](#join-the-discord-server)
 - [Follow me on social media](#follow-me-on-social-media)
@@ -19,11 +19,11 @@
 - This repo is where I keep the dotfiles I'm currently using
 - There is an old repo:
   [linkarzu/dotfiles-public](https://github.com/linkarzu/dotfiles-public)
-  - This is referenced in my youtube
+  - That is referenced in my youtube
     [2024 macos workflow video series](https://youtube.com/playlist?list=PLZWMav2s1MZTanWwNKYvS8qgwl0HBH9J-&si=q6ByPmN8I7SOBKmX)
   - **That old repo is no longer maintained, so use this new repo instead**
 
-## How do I apply all your dotfiles?
+## How can you apply my dotfiles?
 
 - The idea is that you to scavenge around, find the things that are useful to
   you, and apply them to your own config

@@ -17,11 +17,35 @@
 ## Repo overview
 
 - This repo is where I keep the dotfiles I'm currently using
-- There is an old repo:
-  [linkarzu/dotfiles-public](https://github.com/linkarzu/dotfiles-public)
-  - That is referenced in my youtube
-    [2024 macos workflow video series](https://youtube.com/playlist?list=PLZWMav2s1MZTanWwNKYvS8qgwl0HBH9J-&si=q6ByPmN8I7SOBKmX)
-  - **That old repo is no longer maintained, so use this new repo instead**
+- My daily driver OS is macOS and my editor of choice is Neovim.
+- My OS is highly customized and adapted to my workflow, I use several open
+  source and non open source tools, including Ghostty, tmux, Karabiner-Elements,
+  CleanShot X, etc, etc
+- If you don't understand something found in my dotfiles, I probably have
+  detailed YouTube video explaining everything, just search in my
+  [YouTube channel](https://www.youtube.com/@linkarzu)
+- Sneak peek of my setup below
+
+<div align="left">
+  <img
+    src="./assets/img/imgs/250221-macos-looks-feb25.avif"
+    alt="How my macOS looks as of Feb 2025 "
+    width="600"
+  />
+</div>
+
+<!-- markdownlint-disable -->
+<!-- prettier-ignore-start -->
+ 
+<!-- tip=green, info=blue, warning=yellow, danger=red -->
+ 
+> [!NOTE]
+> - There is an old repo: [linkarzu/dotfiles-public](https://github.com/linkarzu/dotfiles-public)
+>   - That is referenced in my youtube [2024 macos workflow video series](https://youtube.com/playlist?list=PLZWMav2s1MZTanWwNKYvS8qgwl0HBH9J-&si=q6ByPmN8I7SOBKmX)
+>   - **That old repo is no longer maintained, so use this new repo instead**
+
+<!-- prettier-ignore-end -->
+<!-- markdownlint-restore -->
 
 ## How can you apply my dotfiles?
 

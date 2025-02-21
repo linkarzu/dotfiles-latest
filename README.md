@@ -40,9 +40,8 @@
 <!-- tip=green, info=blue, warning=yellow, danger=red -->
  
 <br>
-<br>
 
-> [!NOTE]
+> [!WARNING]
 > - There is an old repo: [linkarzu/dotfiles-public](https://github.com/linkarzu/dotfiles-public)
 >   - That is referenced in my youtube [2024 macos workflow video series](https://youtube.com/playlist?list=PLZWMav2s1MZTanWwNKYvS8qgwl0HBH9J-&si=q6ByPmN8I7SOBKmX)
 >   - **That old repo is still valid for that playlist, but is no longer

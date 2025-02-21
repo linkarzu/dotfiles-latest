@@ -9,16 +9,7 @@
 - [Follow me on social media](#follow-me-on-social-media)
 - [You like my content and want to support me?](#you-like-my-content-and-want-to-support-me)
 - [How do you manage your passwords?](#how-do-you-manage-your-passwords)
-- [Some of my YouTube videos (click on the images)](#some-of-my-youtube-videos-click-on-the-images)
-  * [The Power User's 2025 Guide to macOS ricing | Yabai, Simple-bar, SketchyBar, Fastfetch, Btop & More](#the-power-users-2025-guide-to-macos-ricing--yabai-simple-bar-sketchybar-fastfetch-btop--more)
-  * [How I Recreated (and Improved) My Obsidian Note-Taking Workflow in Neovim](#how-i-recreated-and-improved-my-obsidian-note-taking-workflow-in-neovim)
-  * [Images in Neovim | Setting up Snacks Image and Comparing it to Image.nvim](#images-in-neovim--setting-up-snacks-image-and-comparing-it-to-imagenvim)
-  * [Why I'm Moving from Telescope to Snacks Picker | Why I'm not Using fzf-lua | Frecency feature](#why-im-moving-from-telescope-to-snacks-picker--why-im-not-using-fzf-lua--frecency-feature)
-  * [Advanced MINI.FILES Keymaps for Neovim | System Clipboard Integration and More](#advanced-minifiles-keymaps-for-neovim--system-clipboard-integration-and-more)
-  * [My complete Neovim markdown setup and workflow in 2025](#my-complete-neovim-markdown-setup-and-workflow-in-2025)
-  * [Ghostty Shaders | Ghostty config file syntax highlighting | glsl treesitter | glsl_analyzer](#ghostty-shaders--ghostty-config-file-syntax-highlighting--glsl-treesitter--glsl_analyzer)
-  * [Neovim or Neovide, what is the difference?](#neovim-or-neovide-what-is-the-difference)
-  * [Why I switched from Alacritty to kitty, and how to configure kitty](#why-i-switched-from-alacritty-to-kitty-and-how-to-configure-kitty)
+- [Some of my YouTube videos](#some-of-my-youtube-videos)
 - [Point my `~/.zshrc` file to the desired repo](#point-my-zshrc-file-to-the-desired-repo)
 
 <!-- tocstop -->
@@ -159,9 +150,9 @@ alias neobean='NVIM_APPNAME=linkarzu/dotfiles-latest/neovim/neobean nvim'
     </a>
 </div>
 
-## Some of my YouTube videos (click on the images)
+## Some of my YouTube videos
 
-### The Power User's 2025 Guide to macOS ricing | Yabai, Simple-bar, SketchyBar, Fastfetch, Btop & More
+[The Power User's 2025 Guide to macOS ricing - Yabai, Simple-bar, SketchyBar, Fastfetch, Btop & More](https://youtu.be/8pqFtkQip4I)
 
 <div align="left">
     <a href=" https://youtu.be/8pqFtkQip4I ">
@@ -173,7 +164,9 @@ alias neobean='NVIM_APPNAME=linkarzu/dotfiles-latest/neovim/neobean nvim'
     </a>
 </div>
 
-### How I Recreated (and Improved) My Obsidian Note-Taking Workflow in Neovim
+---
+
+[How I Recreated (and Improved) My Obsidian Note-Taking Workflow in Neovim](https://youtu.be/k_g8q5JeisY)
 
 <div align="left">
     <a href=" https://youtu.be/k_g8q5JeisY ">
@@ -185,7 +178,9 @@ alias neobean='NVIM_APPNAME=linkarzu/dotfiles-latest/neovim/neobean nvim'
     </a>
 </div>
 
-### Images in Neovim | Setting up Snacks Image and Comparing it to Image.nvim
+---
+
+[Images in Neovim - Setting up Snacks Image and Comparing it to Image.nvim](https://youtu.be/G27MHyT-u2I)
 
 <div align="left">
     <a href=" https://youtu.be/G27MHyT-u2I ">
@@ -197,7 +192,9 @@ alias neobean='NVIM_APPNAME=linkarzu/dotfiles-latest/neovim/neobean nvim'
     </a>
 </div>
 
-### Why I'm Moving from Telescope to Snacks Picker | Why I'm not Using fzf-lua | Frecency feature
+---
+
+[Why I'm Moving from Telescope to Snacks Picker - Why I'm not Using fzf-lua - Frecency feature](https://youtu.be/7hEWG3GP6m0)
 
 <div align="left">
     <a href=" https://youtu.be/7hEWG3GP6m0 ">
@@ -209,7 +206,9 @@ alias neobean='NVIM_APPNAME=linkarzu/dotfiles-latest/neovim/neobean nvim'
     </a>
 </div>
 
-### Advanced MINI.FILES Keymaps for Neovim | System Clipboard Integration and More
+---
+
+[Advanced MINI.FILES Keymaps for Neovim – System Clipboard Integration and More](https://youtu.be/BzblG2eV8dU)
 
 <div align="left">
     <a href=" https://youtu.be/BzblG2eV8dU ">
@@ -221,7 +220,9 @@ alias neobean='NVIM_APPNAME=linkarzu/dotfiles-latest/neovim/neobean nvim'
     </a>
 </div>
 
-### My complete Neovim markdown setup and workflow in 2025
+---
+
+[My complete Neovim markdown setup and workflow in 2025](https://youtu.be/1YEbKDlxfss)
 
 <div align="left">
     <a href=" https://youtu.be/1YEbKDlxfss ">
@@ -233,7 +234,9 @@ alias neobean='NVIM_APPNAME=linkarzu/dotfiles-latest/neovim/neobean nvim'
     </a>
 </div>
 
-### Ghostty Shaders | Ghostty config file syntax highlighting | glsl treesitter | glsl_analyzer
+---
+
+[Ghostty Shaders - Ghostty config file syntax highlighting - glsl treesitter - glsl_analyzer](https://youtu.be/yJDn__NhOqI)
 
 <div align="left">
     <a href=" https://youtu.be/yJDn__NhOqI ">
@@ -245,7 +248,9 @@ alias neobean='NVIM_APPNAME=linkarzu/dotfiles-latest/neovim/neobean nvim'
     </a>
 </div>
 
-### Neovim or Neovide, what is the difference?
+---
+
+[Neovim or Neovide, what is the difference?](https://youtu.be/cY1KSeIkQCs)
 
 <div align="left">
     <a href="https://youtu.be/cY1KSeIkQCs">
@@ -257,7 +262,9 @@ alias neobean='NVIM_APPNAME=linkarzu/dotfiles-latest/neovim/neobean nvim'
     </a>
 </div>
 
-### Why I switched from Alacritty to kitty, and how to configure kitty
+---
+
+[Why I switched from Alacritty to kitty, and how to configure kitty](https://youtu.be/MZNvjclifD8)
 
 <div align="left">
     <a href="https://youtu.be/MZNvjclifD8">

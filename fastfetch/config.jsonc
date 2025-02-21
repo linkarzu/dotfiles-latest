@@ -11,8 +11,8 @@
     // https://discord.com/channels/1005603569187160125/1324828708128821271/1327261766014599218
     // "type": "kitty-direct",
     "type": "kitty-icat",
-    "source": "~/.config/fastfetch/images/star-saber-ship-linkarzu.png",
-    // "source": "~/.config/fastfetch/images/link-green.webp",
+    // "source": "~/.config/fastfetch/images/star-saber-ship-linkarzu.png",
+    "source": "~/.config/fastfetch/images/link-green.webp",
     "height": 20,
     "width": 30,
     "position": "left",

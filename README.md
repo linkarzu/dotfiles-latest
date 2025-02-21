@@ -30,7 +30,7 @@
   <img
     src="./assets/img/imgs/250221-macos-looks-feb25.avif"
     alt="How my macOS looks as of Feb 2025 "
-    width="600"
+    width="800"
   />
 </div>
 
@@ -39,10 +39,14 @@
  
 <!-- tip=green, info=blue, warning=yellow, danger=red -->
  
+<br>
+<br>
+
 > [!NOTE]
 > - There is an old repo: [linkarzu/dotfiles-public](https://github.com/linkarzu/dotfiles-public)
 >   - That is referenced in my youtube [2024 macos workflow video series](https://youtube.com/playlist?list=PLZWMav2s1MZTanWwNKYvS8qgwl0HBH9J-&si=q6ByPmN8I7SOBKmX)
->   - **That old repo is no longer maintained, so use this new repo instead**
+>   - **That old repo is still valid for that playlist, but is no longer
+>     maintained, so for the latest updates, use this current repo instead**
 
 <!-- prettier-ignore-end -->
 <!-- markdownlint-restore -->

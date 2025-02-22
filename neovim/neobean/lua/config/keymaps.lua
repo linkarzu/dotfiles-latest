@@ -983,6 +983,7 @@ local function handle_image_paste(img_dir)
                     vim.cmd("normal! h")
                     vim.cmd("silent! update")
                     vim.cmd("edit!")
+                    require("auto-save").on()
                   else
                     print("No image pasted. File not updated.")
                     require("auto-save").on()
@@ -1045,6 +1046,7 @@ local function handle_image_paste(img_dir)
               vim.cmd("normal! h") -- Position cursor between underscores
               vim.cmd("silent! update")
               vim.cmd("edit!")
+              require("auto-save").on()
             else
               print("No image pasted. File not updated.")
               require("auto-save").on()

@@ -222,3 +222,38 @@ keybind = super+r=reload_config
 
 # This doesn't work when in tmux, if outside tmux the regular ctrl+l works
 # keybind = super+k=clear_screen
+
+# Customize the macOS app icon.
+# 
+# This only affects the icon that appears in the dock, application
+# switcher, etc. This does not affect the icon in Finder because
+# that is controlled by a hardcoded value in the signed application
+# bundle and can't be changed at runtime. For more details on what
+# exactly is affected, see the `NSApplication.icon` Apple documentation;
+# that is the API that is being used to set the icon.
+# 
+# WARNING: The `custom-style` option is _experimental_. We may change
+# the format of the custom styles in the future. We're still finalizing
+# the exact layers and customization options that will be available.
+# 
+# Other caveats:
+# 
+#   * The icon in the update dialog will always be the official icon.
+#     This is because the update dialog is managed through a
+#     separate framework and cannot be customized without significant
+#     effort.
+# 
+# Valid values:
+# 
+#  * `official` - Use the official Ghostty icon.
+#  * `blueprint`, `chalkboard`, `microchip`, `glass`, `holographic`,
+#    `paper`, `retro`, `xray` - Official variants of the Ghostty icon
+#    hand-created by artists (no AI).
+#  * `custom-style` - Use the official Ghostty icon but with custom
+#    styles applied to various layers. The custom styles must be
+#    specified using the additional `macos-icon`-prefixed configurations.
+#    The `macos-icon-ghost-color` and `macos-icon-screen-color`
+#    configurations are required for this style.
+# 
+macos-icon = xray
+

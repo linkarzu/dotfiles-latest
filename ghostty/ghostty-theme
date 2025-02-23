@@ -1,14 +1,14 @@
 background = #0D1116
 foreground = #ebfafa
 
-cursor-color = #09ac5e
+cursor-color = #06743f
 
 # black
 palette = 0=#0D1116
 palette = 8=#4ffced
 # red
-palette = 1=#03b1d2
-palette = 9=#03b1d2
+palette = 1=#026072
+palette = 9=#026072
 # green
 palette = 2=#04d1f9
 palette = 10=#04d1f9

@@ -54,13 +54,13 @@ linkarzu_color15=#013e4a
 
 # Comments
 linkarzu_color09=#a5afc2
-# Underline spellbad
-linkarzu_color11=#03b1d2
-# Underline spellcap
-linkarzu_color12=#03d2d2
+# Underline spellbad, color02 7 tones to the left in colorhexa
+linkarzu_color11=#026072
+# Underline spellcap, color04 7 tones to the left in colorhexa
+linkarzu_color12=#089954
 # Cursor and tmux windows text
 linkarzu_color14=#ebfafa
 # Selected text
 linkarzu_color16=#ccfce5
-# Cursor color
-linkarzu_color24=#09ac5e
+# Cursor color, color04 9 tones to the left in colorhexa
+linkarzu_color24=#06743f

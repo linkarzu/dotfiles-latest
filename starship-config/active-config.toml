@@ -12,7 +12,7 @@ $character
 
 [character]
 success_symbol = '[❯❯❯❯](#04d1f9 bold)'
-error_symbol = '[XXXX](#03b1d2 bold)'
+error_symbol = '[XXXX](#026072 bold)'
 vicmd_symbol = '[❮❮❮❮](#37f499 bold)'
 
 [battery]

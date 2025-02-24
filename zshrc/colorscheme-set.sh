@@ -343,6 +343,17 @@ if [ "$UPDATED" = true ]; then
   # This reloads kitty config without closing and re-opening
   kill -SIGUSR1 "$(pgrep -x kitty)"
 
+  # Set the wallpaper
+  if [ -z "$wallpaper" ]; then
+    wallpaper="$HOME/Library/Mobile Documents/com~apple~CloudDocs/Images/wallpapers/official/skyrim-dragon-4.webp"
+  fi
+  osascript -e '
+  tell application "System Events"
+      repeat with d in desktops
+          set picture of d to "'"$wallpaper"'"
+      end repeat
+  end tell'
+
   # Also restart yabai for my skitty-notes colors
   ~/github/dotfiles-latest/yabai/yabai_restart.sh
 fi

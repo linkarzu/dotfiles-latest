@@ -278,7 +278,7 @@ return {
     table.insert(
       snippets,
       s({
-        trig = "linkcex",
+        trig = "linkex",
         name = "Paste clipboard as EXT .md link",
         desc = "Paste clipboard as EXT .md link",
       }, {

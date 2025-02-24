@@ -70,7 +70,7 @@ return {
           -- suggestions, I want those to show only if there are no path
           -- suggestions
           fallbacks = { "snippets", "buffer" },
-          min_keyword_length = 2,
+          -- min_keyword_length = 2,
           opts = {
             trailing_slash = false,
             label_trailing_slash = true,

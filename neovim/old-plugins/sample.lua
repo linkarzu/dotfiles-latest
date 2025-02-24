@@ -1,0 +1,5 @@
+Helper1 = require("my/plugin/helper")
+Helper2 = require("my/plugin/helper")
+Helper3 = require("my/plugin/helper")
+Helper3 = require("my/plugin/helper")
+Helper4 = require("my/plugin/helper")

@@ -14,7 +14,7 @@ local function load_colors()
   end
 
   for line in file:lines() do
-    if not line:match("^%s*#") and not line:match("^%s*$") then
+    if not line:match("^%s*#") and not line:match("^%s*$") and not line:match("^wallpaper=") then
       local name, value = line:match("^(%S+)=%s*(.+)")
       if name and value then
         colors[name] = value:gsub('"', "")

@@ -7,7 +7,7 @@
 --
 -- NOTE: To see all the files modified for skitty-notes just search for "neovim_mode"
 vim.g.neovim_mode = vim.env.NEOVIM_MODE or "default"
-vim.g.bullets_enable_in_empty_buffers = 0
+-- vim.g.bullets_enable_in_empty_buffers = 0
 
 -- bootstrap lazy.nvim, LazyVim and your plugins
 require("config.lazy")

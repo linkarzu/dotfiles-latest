@@ -543,7 +543,26 @@ vim.keymap.set(
 --
 -- Switch to the alternate buffer lamw25wmal
 vim.keymap.set({ "n", "i", "v" }, "<M-BS>", "<cmd>e #<cr>", { desc = "[P]Alternate buffer" })
-vim.keymap.set({ "n" }, "<leader><BS>", "<cmd>e #<cr>", { desc = "[P]Alternate buffer" })
+-- vim.keymap.set({ "n" }, "<leader><BS>", "<cmd>e #<cr>", { desc = "[P]Alternate buffer" })
+vim.keymap.set({ "n" }, "<leader><BS>", function()
+  -- Early return if NEOVIM_MODE is not "skitty"
+  if vim.env.NEOVIM_MODE ~= "skitty" then
+    vim.cmd("e #") -- Just switch to the alternate buffer normally
+    return
+  end
+
+  local other_buffer = vim.fn.expand("$HOME/github/skitty/skitty-notes.md")
+
+  -- If the buffer is already loaded, just switch to the alternate buffer
+  if vim.fn.bufexists(other_buffer) == 1 then
+    vim.cmd("e #")
+    return
+  end
+
+  -- Otherwise, load the other buffer first and switch to it
+  vim.cmd("silent badd " .. other_buffer)
+  vim.cmd("buffer " .. other_buffer)
+end, { desc = "[P] Alternate buffer with Skitty logic" })
 
 -- Toggle executable permission on current file, previously I had 2 keymaps, to
 -- add or remove exec permissions, now it's a toggle using the same keymap

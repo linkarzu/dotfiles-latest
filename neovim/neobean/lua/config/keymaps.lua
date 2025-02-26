@@ -352,7 +352,9 @@ vim.keymap.set("v", "y", function()
   file:write(text)
   file:close()
   -- Run Prettier on the temporary file to format it
-  local cmd = 'prettier --prose-wrap never --write "' .. temp_file .. '"'
+  -- Adding > /dev/null 2>&1' because if the command produces output, I see that
+  -- in the neovim buffer
+  local cmd = 'prettier --prose-wrap never --write "' .. temp_file .. '" > /dev/null 2>&1'
   local result = os.execute(cmd)
   if result ~= 0 then
     vim.notify("Error: Prettier formatting failed.", vim.log.levels.ERROR)

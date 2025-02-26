@@ -2404,22 +2404,45 @@ end, { desc = "[P]BOLD toggle bold markers" })
 -- HACK: Manage Markdown tasks in Neovim similar to Obsidian | Telescope to List Completed and Pending Tasks
 -- https://youtu.be/59hvZl077hM
 --
--- Crate task or checkbox lamw25wmal
+-- Crate task or checkbox lamw26wmal
 -- These are marked with <leader>x using bullets.vim
 -- I used <C-l> before, but that is used for pane navigation
 vim.keymap.set({ "n", "i" }, "<M-l>", function()
-  -- Get the current line and cursor position
+  -- Get the current line/row/column
+  local cursor_pos = vim.api.nvim_win_get_cursor(0)
+  local row, _ = cursor_pos[1], cursor_pos[2]
   local line = vim.api.nvim_get_current_line()
-  local cursor = vim.api.nvim_win_get_cursor(0)
-  -- Check if the line starts with a bullet or "- ", and remove it
-  local updated_line = line:gsub("^%s*[-*]%s*", "", 1)
-  -- Update the line
-  vim.api.nvim_set_current_line(updated_line)
-  -- Move the cursor back to its original position
-  vim.api.nvim_win_set_cursor(0, { cursor[1], #updated_line })
-  -- Insert the checkbox
-  vim.api.nvim_put({ "- [ ] " }, "c", true, true)
-end, { desc = "[P]Toggle checkbox" })
+  -- 1) If line is empty => replace it with "- [ ] " and set cursor after the brackets
+  if line:match("^%s*$") then
+    local final_line = "- [ ] "
+    vim.api.nvim_set_current_line(final_line)
+    -- "- [ ] " is 6 characters, so cursor col = 6 places you *after* that space
+    vim.api.nvim_win_set_cursor(0, { row, 6 })
+    return
+  end
+  -- 2) Check if line already has a bullet with possible indentation: e.g. "  - Something"
+  --    We'll capture "  -" (including trailing spaces) as `bullet` plus the rest as `text`.
+  local bullet, text = line:match("^([%s]*[-*]%s+)(.*)$")
+  if bullet then
+    -- Convert bullet => bullet .. "[ ] " .. text
+    local final_line = bullet .. "[ ] " .. text
+    vim.api.nvim_set_current_line(final_line)
+    -- Place the cursor right after "[ ] "
+    -- bullet length + "[ ] " is bullet_len + 4 characters,
+    -- but bullet has trailing spaces, so #bullet includes those.
+    local bullet_len = #bullet
+    -- We want to land after the brackets (four characters: `[ ] `),
+    -- so col = bullet_len + 4 (0-based).
+    vim.api.nvim_win_set_cursor(0, { row, bullet_len + 4 })
+    return
+  end
+  -- 3) If there's text, but no bullet => prepend "- [ ] "
+  --    and place cursor after the brackets
+  local final_line = "- [ ] " .. line
+  vim.api.nvim_set_current_line(final_line)
+  -- "- [ ] " is 6 characters
+  vim.api.nvim_win_set_cursor(0, { row, 6 })
+end, { desc = "Convert bullet to a task or insert new task bullet" })
 
 -- -- This was not as reliable, and is now retired
 -- -- replaced with a luasnip snippet `;linkc`

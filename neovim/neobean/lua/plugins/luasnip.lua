@@ -310,10 +310,14 @@ return {
         desc = "Inserts links (Ko-fi, Twitter, TikTok)",
       }, {
         t({
-          "Members only discord -> https://www.youtube.com/channel/UCrSIvbFncPSlK6AdwE2QboA/join",
+          "Join discord for free -> https://discord.gg/NgqMgwwtMH",
+          "If you want to support me by becoming a YouTube member",
+          "https://www.youtube.com/channel/UCrSIvbFncPSlK6AdwE2QboA/join",
           "☕ Support me -> https://ko-fi.com/linkarzu",
           "☑ My Twitter -> https://x.com/link_arzu",
           "❤‍🔥 My tiktok -> https://www.tiktok.com/@linkarzu",
+          "My dotfiles (remember to star them) -> https://github.com/linkarzu/dotfiles-latest",
+          "A link to my resume -> https://resume.linkarzu.com/",
         }),
       })
     )
@@ -480,10 +484,14 @@ return {
           "```",
           "",
           "```txt",
-          "Members only discord -> https://www.youtube.com/channel/UCrSIvbFncPSlK6AdwE2QboA/join",
+          "Join discord for free -> https://discord.gg/NgqMgwwtMH",
+          "If you want to support me by becoming a YouTube member",
+          "https://www.youtube.com/channel/UCrSIvbFncPSlK6AdwE2QboA/join",
           "☕ Support me -> https://ko-fi.com/linkarzu",
           "☑ My Twitter -> https://x.com/link_arzu",
           "❤‍🔥 My tiktok -> https://www.tiktok.com/@linkarzu",
+          "My dotfiles (remember to star them) -> https://github.com/linkarzu/dotfiles-latest",
+          "A link to my resume -> https://resume.linkarzu.com/",
           "```",
           "",
         }),

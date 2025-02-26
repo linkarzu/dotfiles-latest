@@ -1,115 +1,177 @@
-# https://github.com/croian/mouseless-issues
-# https://rgbcolorpicker.com/0-1
-#
-# NOTE: Config does not support symlinks, created issue below:
-# https://github.com/croian/mouseless-issues/issues/110
-
-app_version: 0.2.2
+app_version: 0.3.1
 behavior_configs:
-  - hide_cursor_on_click: false
-    hide_location: bottom_left
-    move_duration_ms: 100
-    move_real_cursor_with_virtual: false
-    multi_action_timeout_ms: 400
-    name: main_behavior
-    tap_threshold_ms: 200
+- base_wheel_speed: 16
+  hide_cursor_on_click: false
+  hide_location: bottom_left
+  initial_overlay_monitor: last_used
+  move_duration_ms: 100
+  move_real_cursor_with_virtual: false
+  multi_action_timeout_ms: 400
+  name: main_behavior
+  tap_threshold_ms: 300
+  wheel_mode_auto_off_s: 10
+  wheel_speed_multiplier: 4
+  wheel_step_size: 100
+  wheel_step_size_large: 500
 classname: AppConfig
+custom_monitor_assignments: []
 grid_configs:
-  - always_show_subgrid: false
-    grid_defn:
-      - border_width: 0.0
-        callback: build_cell_strings
-        num_cells_x: 26
-        num_cells_y: 1
-      - border_width: 0.8
-        callback: build_cell_strings
-        num_cells_x: 1
-        num_cells_y: 26
-      - border_width: 0.0
-        callback: apply_strings_and_subgrid_to_cells
-        num_cells_x: 2
-        num_cells_y: 1
-    mouse_action_keys: ABCDEFGHIJKLMNOPQRSTUVWXYZ
-    name: full_alpha
-    strategy: subgrid
-    subgrid_dims:
-      - 8
-      - 3
-    subgrid_mouse_action_keys: QWERUIOPASDFJKL;ZXCVM,./
-  - always_show_subgrid: false
-    grid_defn:
-      - border_width: 0.0
-        callback: build_cell_strings
-        num_cells_x: 1
-        num_cells_y: 26
-      - border_width: 1.0
-        callback: build_cell_strings
-        num_cells_x: 26
-        num_cells_y: 1
-      - border_width: 0.0
-        callback: apply_strings_and_subgrid_to_cells
-        num_cells_x: 2
-        num_cells_y: 1
-    mouse_action_keys: ABCDEFGHIJKLMNOPQRSTUVWXYZ
-    name: vertical_alpha
-    strategy: subgrid
-    subgrid_dims:
-      - 4
-      - 6
-    subgrid_mouse_action_keys: QWERASDFZXCVUIOPJKL;M,./
+- always_show_subgrid: false
+  grid_defn:
+  - border_width: 0.0
+    callback: build_cell_strings
+    num_cells_x: 10
+    num_cells_y: 1
+  - border_width: 1.0
+    callback: build_cell_strings
+    num_cells_x: 1
+    num_cells_y: 26
+  - border_width: 0.0
+    callback: apply_strings_and_subgrid_to_cells
+    num_cells_x: 2
+    num_cells_y: 1
+  mouse_action_keys: QWERT YUIOP ASDFG HJKL; ZXCVB NM,./
+  name: position_based_columns
+  strategy: subgrid
+  subgrid_dims:
+  - 10
+  - 3
+  subgrid_mouse_action_keys: QWERT YUIOP ASDFG HJKL; ZXCVB NM,./
 keymaps:
-  - entries:
-      close dialog: Escape
-      cycle click count: null
-      cycle mouse action type: null
-      cycle mouse button: null
-      edit config: Tab
-      execute mouse action: Space
-      hide overlay: Escape
-      hold for drag: CommandLeft
-      hold for move: OptionLeft
-      hold for right button: ControlLeft
-      release hold/drag: null
-      repeat last mouse action: null
-      show overlay: OptionRight tap
-      switch monitor left: null
-      switch monitor right: null
-      toggle overlay: null
-    name: mac
-monitor_assignments: auto
-name: ""
+- entries:
+    back mouse button (w/o overlay): null
+    close UI element: Escape
+    cycle click count: null
+    cycle mouse action type: null
+    cycle mouse button: null
+    decrease overlay opacity: ArrowDown
+    edit config: Tab
+    enter wheel mode: null
+    execute mouse action: Space
+    execute mouse move: ControlRight tap
+    exit wheel mode: Escape
+    forward mouse button (w/o overlay): null
+    hide overlay: Escape
+    hold for back button: null
+    hold for drag: CommandLeft
+    hold for forward button: null
+    hold for middle button: null
+    hold for move: OptionLeft
+    hold for right button: ControlLeft
+    hold for speed decrease: null
+    hold for speed increase: ShiftLeft
+    increase overlay opacity: ArrowUp
+    jump to bottom: null
+    jump to left edge: null
+    jump to right edge: null
+    jump to top: null
+    left mouse button (w/o overlay): null
+    middle mouse button (w/o overlay): null
+    release hold/drag: null
+    repeat last mouse action: null
+    right mouse button (w/o overlay): null
+    show overlay: OptionRight tap
+    switch monitor left: null
+    switch monitor right: null
+    toggle overlay: null
+    toggle wheel mode: ControlRight tap
+    undo last key: Backspace
+    wheel down: J
+    wheel down fast: null
+    wheel left: H
+    wheel left fast: null
+    wheel right: L
+    wheel right fast: null
+    wheel step down: null
+    wheel step down large: null
+    wheel step left: null
+    wheel step left large: null
+    wheel step right: null
+    wheel step right large: null
+    wheel step up: null
+    wheel step up large: null
+    wheel up: K
+    wheel up fast: null
+  name: mac
+monitor_assignment_mode: auto
+name: ''
 style_configs:
-  - always_on_subgrid_rgba:
-      - 1.0
-      - 1.0
-      - 1.0
-      - 0.3
-    background_rgba:
-      - 0.0
-      - 0.0
-      - 0.0
-      - 0.35
-    font_size_multiplier: 0.5
-    grid_rgba:
-      - 0.969
-      - 0.071
-      - 1
-      - 1
-    name: dark_bg
-    subgrid_font_size_multiplier: 0.75
-    subgrid_rgba:
-      - 0.969
-      - 0.071
-      - 1
-      - 1
-    subgrid_text_rgba:
-      - 0.969
-      - 0.071
-      - 1
-      - 1
-    text_rgba:
-      - 0.969
-      - 0.071
-      - 1
-      - 1
-    window_opacity: 0.9
+- always_on_subgrid_rgba:
+  - 0.58
+  - 1
+  - 0.42
+  - 0.2
+  background_rgba:
+  - 0.05
+  - 0.2
+  - 0
+  - 0.35
+  char_spacing_cell_width_ratio: 0.5
+  char_spacing_font_size_ratio: 0.5
+  char_spacing_strategy: cell_width_relative
+  cursor_drag_rgba:
+  - 0
+  - 0.5
+  - 1
+  - 0.7
+  cursor_move_rgba:
+  - 0.75
+  - 0.41
+  - 0.92
+  - 0.7
+  cursor_other_rgba:
+  - 1
+  - 1
+  - 1
+  - 0.7
+  cursor_rgba:
+  - 0.34
+  - 1
+  - 0
+  - 0.8
+  cursor_right_button_rgba:
+  - 0.92
+  - 0.32
+  - 0.32
+  - 0.7
+  cursor_size: 7
+  font_size_multiplier: 0.5
+  grid_line_style: dots
+  grid_rgba:
+  - 0.58
+  - 1
+  - 0.42
+  - 1
+  highlight_rgba:
+  - 0
+  - 1
+  - 0.05
+  - 0.2
+  name: dark_bg
+  show_initial_highlight: false
+  subgrid_font_size_multiplier: 0.75
+  subgrid_rgba:
+  - 0.58
+  - 1
+  - 0.42
+  - 1
+  subgrid_text_rgba:
+  - 0.996078431372549
+  - 0.996078431372549
+  - 0.996078431372549
+  - 1
+  text_rgba:
+  - 1
+  - 1
+  - 1
+  - 1
+  text_shadow_blur_radius: 4.0
+  text_shadow_offset:
+  - 0.0
+  - 0.0
+  text_shadow_rgba:
+  - 0.28
+  - 1
+  - 0
+  - 1
+  window_opacity: 0.9

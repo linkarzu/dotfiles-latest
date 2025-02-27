@@ -546,18 +546,25 @@ vim.keymap.set(
 -- Switch to the alternate buffer lamw25wmal
 vim.keymap.set({ "n", "i", "v" }, "<M-BS>", "<cmd>e #<cr>", { desc = "[P]Alternate buffer" })
 -- vim.keymap.set({ "n" }, "<leader><BS>", "<cmd>e #<cr>", { desc = "[P]Alternate buffer" })
+
 vim.keymap.set({ "n" }, "<leader><BS>", function()
   -- Early return if NEOVIM_MODE is not "skitty"
   if vim.env.NEOVIM_MODE ~= "skitty" then
-    vim.cmd("e #") -- Just switch to the alternate buffer normally
+    if vim.fn.bufnr("#") == -1 then
+      vim.notify("No alternate buffer", vim.log.levels.WARN)
+    else
+      vim.cmd("e #") -- Just switch to the alternate buffer normally
+    end
     return
   end
-
   local other_buffer = vim.fn.expand("$HOME/github/skitty/skitty-notes.md")
-
   -- If the buffer is already loaded, just switch to the alternate buffer
   if vim.fn.bufexists(other_buffer) == 1 then
-    vim.cmd("e #")
+    if vim.fn.bufnr("#") == -1 then
+      vim.notify("No alternate buffer", vim.log.levels.WARN)
+    else
+      vim.cmd("e #")
+    end
     return
   end
 

@@ -163,9 +163,23 @@ else
     -- I don't need the hostname as I have it in lualine
     -- .. vim.fn.systemlist("hostname")[1]
   end
-  -- Autocmd to update the winbar on BufEnter and WinEnter events
-  vim.api.nvim_create_autocmd({ "BufEnter", "WinEnter" }, {
-    callback = update_winbar,
+  -- Winbar was not being updated after I left lazygit
+  vim.api.nvim_create_autocmd({ "BufEnter", "ModeChanged" }, {
+    callback = function(args)
+      local old_mode = args.event == "ModeChanged" and vim.v.event.old_mode or ""
+      local new_mode = args.event == "ModeChanged" and vim.v.event.new_mode or ""
+      -- Only update if ModeChanged is relevant (e.g., leaving LazyGit)
+      if args.event == "ModeChanged" then
+        -- Get buffer filetype
+        local buf_ft = vim.bo.filetype
+        -- Only update when leaving `snacks_terminal` (LazyGit)
+        if buf_ft == "snacks_terminal" or old_mode:match("^t") or new_mode:match("^n") then
+          update_winbar()
+        end
+      else
+        update_winbar()
+      end
+    end,
   })
 end
 

@@ -33,6 +33,7 @@ brew "wordnet"
 cask "kitty"
 cask "wezterm"
 cask "ghostty"
+cask "coconutbattery"
 
 brew "jq"
 brew "sketchybar"

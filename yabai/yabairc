@@ -58,14 +58,20 @@ if command -v sketchybar &>/dev/null; then
     yabai -m config bottom_padding 220
     yabai -m config left_padding 0
     yabai -m config right_padding 0
-  else
+  elif [[ "$display_resolution" == *"3200 x 1800"* ]]; then
     # # This matches my asus 27 inch monitor
     # # yabai -m config top_padding 39
     yabai -m config top_padding 38
     yabai -m config bottom_padding 0
     yabai -m config left_padding 0
     yabai -m config right_padding 230
-
+  elif [[ "$display_resolution" == *"3024 x 1964"* ]]; then
+    # # This matches my macbook 14 inch
+    # # yabai -m config top_padding 39
+    yabai -m config top_padding 10
+    yabai -m config bottom_padding 0
+    yabai -m config left_padding 0
+    yabai -m config right_padding 230
     # # For videos thumbnails
     # yabai -m config top_padding 400
     # yabai -m config bottom_padding 20

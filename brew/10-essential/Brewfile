@@ -7,7 +7,7 @@
 tap "homebrew/bundle"
 tap "homebrew/services"
 tap "jesseduffield/lazygit"
-tap "homebrew/cask-fonts"
+
 
 # I'll install the following fonts from neovim script
 cask "font-meslo-lg-nerd-font"

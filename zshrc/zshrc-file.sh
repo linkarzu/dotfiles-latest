@@ -104,7 +104,9 @@ create_symlink ~/github/dotfiles-latest/wezterm/wezterm.lua ~/.config/wezterm/we
 create_symlink ~/github/dotfiles-latest/yabai/yabairc ~/.yabairc
 create_symlink ~/github/dotfiles-latest/.prettierrc.yaml ~/.prettierrc.yaml
 create_symlink ~/github/dotfiles-latest/ubersicht/.simplebarrc ~/.simplebarrc
-create_symlink ~/github/dotfiles-latest/vscode/settings.json "$HOME/Library/Application Support/Code/User/settings.json"
+if command -v code &>/dev/null; then
+  create_symlink ~/github/dotfiles-latest/vscode/settings.json "$HOME/Library/Application Support/Code/User/settings.json"
+fi
 create_symlink ~/github/dotfiles-latest/lazygit/config.yml "$HOME/Library/Application Support/lazygit/config.yml"
 # create_symlink ~/github/dotfiles-latest/mouseless/config.yaml "$HOME/Library/Containers/net.sonuscape.mouseless/Data/.mouseless/configs/config.yaml"
 

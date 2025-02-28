@@ -5,7 +5,6 @@
 tap "homebrew/bundle"
 tap "homebrew/services"
 tap "jesseduffield/lazygit"
-tap "homebrew/cask-fonts"
 brew "FelixKratz/formulae"
 
 brew "wget"

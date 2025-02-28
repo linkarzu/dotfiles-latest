@@ -8,7 +8,6 @@ tap "homebrew/bundle"
 tap "homebrew/services"
 tap "jesseduffield/lazygit"
 
-
 # I'll install the following fonts from neovim script
 cask "font-meslo-lg-nerd-font"
 cask "sf-symbols"
@@ -48,6 +47,6 @@ cask "hammerspoon"
 cask "hot"
 cask "iterm2"
 brew "htop"
-brew "neofetch"
+brew "fastfetch"
 
 

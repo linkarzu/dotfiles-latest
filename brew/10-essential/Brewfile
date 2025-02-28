@@ -42,6 +42,9 @@ brew "gh"
 
 # Not essentials, but added them here, as I install them all the time ;)
 cask "google-chrome"
+cask "brave-browser"
+cask "zen-browser"
+cask "microsoft-edge"
 cask "obsidian"
 cask "spotify"
 cask "hammerspoon"

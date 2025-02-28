@@ -38,9 +38,14 @@ cask "raindropio"
 cask "cursorcerer"
 cask "steermouse"
 brew "switchaudio-osx"
+# Github CLI
 brew "gh"
 brew "go"
+# Diff view in lazygit
 brew "git-delta"
+brew "imagemagick"
+# ImageMagick dependency
+brew "pkgconf"
 
 # Not essentials, but added them here, as I install them all the time ;)
 cask "google-chrome"

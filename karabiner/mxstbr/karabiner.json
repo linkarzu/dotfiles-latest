@@ -544,10 +544,10 @@
               {
                 "to": [
                   {
-                    "shell_command": "open -a 'Zen Browser.app'"
+                    "shell_command": "open -a 'Zen.app'"
                   }
                 ],
-                "description": "Open -a 'Zen Browser.app'",
+                "description": "Open -a 'Zen.app'",
                 "type": "basic",
                 "from": {
                   "key_code": "k",

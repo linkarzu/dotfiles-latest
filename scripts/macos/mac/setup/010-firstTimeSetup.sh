@@ -452,10 +452,10 @@ echo "########################################################################"
 # HACK: How to view stuff that changes after you change them manually in system
 # settings
 # Before making the change
-# defaults read > macos-before-change.txt
+# defaults read > ~/macos-before-change.txt
 # Then go and make the change in system settings
-# defaults read > macos-after-change.txt
-# diff macos-before-change.txt macos-after-change.txt
+# defaults read > ~/macos-after-change.txt
+# diff ~/macos-before-change.txt ~/macos-after-change.txt
 # NOTE: There are some settings, like the trackpad ones that only work on the
 # laptop with a trackpad
 
@@ -481,8 +481,7 @@ defaults write -g InitialKeyRepeat -int 20
 # It doesn't work, so trying to set it to OneTwoButton first to see if it works
 # To get CURRENT VALUE
 # defaults read com.apple.driver.AppleBluetoothMultitouch.mouse MouseButtonMode
-defaults write com.apple.driver.AppleBluetoothMultitouch.mouse MouseButtonMode OneTwoButton
-defaults write com.apple.driver.AppleBluetoothMultitouch.mouse MouseButtonMode TwoButton
+defaults write com.apple.driver.AppleBluetoothMultitouch.mouse MouseButtonMode -string "TwoButton"
 
 # Dragging with three finger drag on trackpad
 # READ current value
@@ -606,6 +605,16 @@ defaults write com.apple.finder "_FXSortFoldersFirstOnDesktop" -bool "true"
 # Show path bar
 # defaults read com.apple.finder "ShowPathbar"
 defaults write com.apple.finder "ShowPathbar" -bool "true"
+
+# Disable UI sound effects
+# To get CURRENT VALUE
+# defaults read -g com.apple.sound.uiaudio.enabled
+defaults write -g com.apple.sound.uiaudio.enabled -int 0
+
+# Disable the startup chime
+# To get CURRENT VALUE
+# nvram -p | grep StartupMute
+sudo nvram StartupMute=%01
 
 killall Finder
 

@@ -40,10 +40,8 @@ M.setup = function(opts)
         local curr_entry = mini_files.get_fs_entry()
         if curr_entry then
           local path = curr_entry.path
-          -- Escape the path for shell command
-          local escaped_path = vim.fn.fnameescape(path)
           -- Build the osascript command to copy the file or directory to the clipboard
-          local cmd = string.format([[osascript -e 'set the clipboard to POSIX file "%s"' ]], escaped_path)
+          local cmd = string.format([[osascript -e 'set the clipboard to POSIX file "%s"' ]], path)
           local result = vim.fn.system(cmd)
           if vim.v.shell_error ~= 0 then
             vim.notify("Copy failed: " .. result, vim.log.levels.ERROR)

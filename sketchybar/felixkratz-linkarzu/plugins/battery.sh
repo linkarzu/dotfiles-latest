@@ -21,8 +21,9 @@ fi
 
 COLOR=$WHITE
 case "${PERCENTAGE}" in
-9[0-9] | 100)
+[8-9][0-9] | 100)
   ICON=""
+  COLOR=$GREEN
   ;;
 [3-7][0-9])
   ICON=""

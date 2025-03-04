@@ -6,6 +6,9 @@
 # UNIQUE_ID=do_not_delete_this_line
 # #############################################################################
 
+# To get the names of all the running applications
+# yabai -m query --windows | jq -r '.[].app'
+
 # Load all the variables I need from the yabai_env.sh file
 source "$HOME/github/dotfiles-latest/yabai/yabai_env.sh"
 

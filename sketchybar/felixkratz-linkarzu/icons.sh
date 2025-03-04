@@ -10,6 +10,7 @@ ACTIVITY=􀒓
 LOCK=􀒳
 BELL=􀋚
 BELL_DOT=􀝗
+BLUETOOTH=
 
 # Git Icons
 GIT_ISSUE=􀍷

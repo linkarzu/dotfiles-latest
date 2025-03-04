@@ -24,7 +24,7 @@ apps_scratchpad="(Udemy|WezTerm)"
 
 # This keeps apps always below, seems to be working fine when I switch to other
 # apps
-apps_mgoff_below="(Calculator|iStat Menus|Hammerspoon|BetterDisplay|GIMP|Notes|Activity Monitor|App StoreSoftware Update|CleanShot X|TestRig|Gemini|Raycast|OBS Studio|Brave Browser|Microsoft Edge|Google Chrome|Cisco Packet Tracer|Stickies|kitty|ProLevel|Photo Booth|Hand Mirror|SteerMouse|remote-viewer|wine64-preloader)"
+apps_mgoff_below="(Calculator|iStat Menus|Hammerspoon|BetterDisplay|GIMP|Notes|Activity Monitor|App StoreSoftware Update|CleanShot X|TestRig|Gemini|Raycast|OBS Studio|Brave Browser|Microsoft Edge|Google Chrome|Cisco Packet Tracer|Stickies|kitty|ProLevel|Photo Booth|Hand Mirror|SteerMouse|remote-viewer)"
 
 # This keeps apps always on the top
 apps_mgoff_above="()"

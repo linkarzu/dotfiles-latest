@@ -15,6 +15,9 @@ return {
   {
     "folke/snacks.nvim",
     keys = {
+      -- I use this keymap with mini.files, but snacks explorer was taking over
+      -- https://github.com/folke/snacks.nvim/discussions/949
+      { "<leader>e", false },
       -- Open git log in vertical view
       {
         "<leader>gl",

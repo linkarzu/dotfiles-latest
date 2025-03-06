@@ -255,5 +255,5 @@ keybind = super+r=reload_config
 #    The `macos-icon-ghost-color` and `macos-icon-screen-color`
 #    configurations are required for this style.
 # 
-macos-icon = xray
+macos-icon = official
 

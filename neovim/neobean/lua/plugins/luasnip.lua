@@ -23,81 +23,85 @@ return {
       return vim.fn.getreg("+")
     end
 
-    -- Base function to process YouTube snippets with custom formatting
-    local function process_youtube_snippets(file_path, format_func)
-      local snippets = {}
-      local file = io.open(file_path, "r")
-      if not file then
-        vim.notify("Could not open snippets file: " .. file_path, vim.log.levels.ERROR)
-        return snippets
-      end
-
-      local lines = {}
-      for line in file:lines() do
-        if line == "" then
-          if #lines == 2 then
-            local title, url = lines[1], lines[2]
-            local formatted_content = format_func(title, url)
-            table.insert(snippets, formatted_content)
-          end
-          lines = {}
-        else
-          table.insert(lines, line)
-        end
-      end
-
-      -- Handle the last snippet if file doesn't end with blank line
-      if #lines == 2 then
-        local title, url = lines[1], lines[2]
-        local formatted_content = format_func(title, url)
-        table.insert(snippets, formatted_content)
-      end
-
-      file:close()
-      return snippets
-    end
-
-    -- Format functions for different types of YouTube snippets
-    local format_functions = {
-      plain = function(title, url)
-        return s({ trig = "yt - " .. title }, { t(title), t({ "", url }) })
-      end,
-
-      markdown = function(title, url)
-        local safe_title = string.gsub(title, "|", "-")
-        local markdown_link = string.format("[%s](%s)", safe_title, url)
-        return s({ trig = "ytmd - " .. title }, { t(markdown_link) })
-      end,
-
-      markdown_external = function(title, url)
-        local safe_title = string.gsub(title, "|", "-")
-        local markdown_link = string.format('[%s](%s){:target="_blank"}', safe_title, url)
-        return s({ trig = "ytex - " .. title }, { t(markdown_link) })
-      end,
-
-      -- Extract video ID from URL (everything after the last /)
-      embed = function(title, url)
-        local video_id = url:match(".*/(.*)")
-        local embed_code = string.format("{%% include embed/youtube.html id='%s' %%}", video_id)
-        return s({ trig = "ytem - " .. title }, { t(embed_code) })
-      end,
-    }
-
     -- Path to the text file containing video snippets
     local snippets_file = vim.fn.expand("~/github/obsidian_main/300-youtube/youtube-video-list.txt")
 
-    -- Generate all types of snippets using the base function
-    local video_snippets = process_youtube_snippets(snippets_file, format_functions.plain)
-    local video_md_snippets = process_youtube_snippets(snippets_file, format_functions.markdown)
-    local video_md_snippets_ext = process_youtube_snippets(snippets_file, format_functions.markdown_external)
-    local video_snippets_embed = process_youtube_snippets(snippets_file, format_functions.embed)
+    -- Check if the file exists before proceeding
+    if vim.fn.filereadable(snippets_file) == 1 then
+      -- Base function to process YouTube snippets with custom formatting
+      local function process_youtube_snippets(file_path, format_func)
+        local snippets = {}
+        local file = io.open(file_path, "r")
+        if not file then
+          vim.notify("Could not open snippets file: " .. file_path, vim.log.levels.ERROR)
+          return snippets
+        end
 
-    -- Add all types of snippets to the "all" filetype
-    ls.add_snippets("all", video_snippets)
-    ls.add_snippets("all", video_md_snippets)
-    ls.add_snippets("all", video_md_snippets_ext)
-    ls.add_snippets("all", video_snippets_embed)
+        local lines = {}
+        for line in file:lines() do
+          if line == "" then
+            if #lines == 2 then
+              local title, url = lines[1], lines[2]
+              local formatted_content = format_func(title, url)
+              table.insert(snippets, formatted_content)
+            end
+            lines = {}
+          else
+            table.insert(lines, line)
+          end
+        end
 
+        -- Handle the last snippet if file doesn't end with blank line
+        if #lines == 2 then
+          local title, url = lines[1], lines[2]
+          local formatted_content = format_func(title, url)
+          table.insert(snippets, formatted_content)
+        end
+
+        file:close()
+        return snippets
+      end
+
+      -- Format functions for different types of YouTube snippets
+      local format_functions = {
+        plain = function(title, url)
+          return s({ trig = "yt - " .. title }, { t(title), t({ "", url }) })
+        end,
+
+        markdown = function(title, url)
+          local safe_title = string.gsub(title, "|", "-")
+          local markdown_link = string.format("[%s](%s)", safe_title, url)
+          return s({ trig = "ytmd - " .. title }, { t(markdown_link) })
+        end,
+
+        markdown_external = function(title, url)
+          local safe_title = string.gsub(title, "|", "-")
+          local markdown_link = string.format('[%s](%s){:target="_blank"}', safe_title, url)
+          return s({ trig = "ytex - " .. title }, { t(markdown_link) })
+        end,
+
+        -- Extract video ID from URL (everything after the last /)
+        embed = function(title, url)
+          local video_id = url:match(".*/(.*)")
+          local embed_code = string.format("{%% include embed/youtube.html id='%s' %%}", video_id)
+          return s({ trig = "ytem - " .. title }, { t(embed_code) })
+        end,
+      }
+
+      -- Generate all types of snippets using the base function
+      local video_snippets = process_youtube_snippets(snippets_file, format_functions.plain)
+      local video_md_snippets = process_youtube_snippets(snippets_file, format_functions.markdown)
+      local video_md_snippets_ext = process_youtube_snippets(snippets_file, format_functions.markdown_external)
+      local video_snippets_embed = process_youtube_snippets(snippets_file, format_functions.embed)
+
+      -- Add all types of snippets to the "all" filetype
+      ls.add_snippets("all", video_snippets)
+      ls.add_snippets("all", video_md_snippets)
+      ls.add_snippets("all", video_md_snippets_ext)
+      ls.add_snippets("all", video_snippets_embed)
+    else
+      vim.notify("YouTube snippets file not found, skipping loading.", vim.log.levels.INFO)
+    end
     -- Custom snippets
     -- the "all" after ls.add_snippets("all" is the filetype, you can know a
     -- file filetype with :set ft

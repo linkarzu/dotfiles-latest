@@ -11,6 +11,7 @@ LOCK=􀒳
 BELL=􀋚
 BELL_DOT=􀝗
 BLUETOOTH=
+RESTART=
 
 # Git Icons
 GIT_ISSUE=􀍷

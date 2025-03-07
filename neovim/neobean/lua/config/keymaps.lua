@@ -2499,8 +2499,18 @@ end, { desc = "Convert bullet to a task or insert new task bullet" })
 -- end, { desc = "[P]Convert to link (new tab)" })
 
 -- Paste a github link and add it in this format
--- [folke/noice.nvim](https://github.com/folke/noice.nvim){:target="\_blank"}
+-- [folke/noice.nvim](https://github.com/folke/noice.nvim)
 vim.keymap.set({ "n", "v", "i" }, "<M-;>", function()
+  -- Insert the text in the desired format
+  vim.cmd("normal! a[]() ")
+  vim.cmd("normal! F(pv2F/lyF[p")
+  -- Leave me in normal mode or command mode
+  vim.cmd("stopinsert")
+end, { desc = "[P]Paste Github link" })
+
+-- Paste a github link and add it in this format
+-- [folke/noice.nvim](https://github.com/folke/noice.nvim){:target="\_blank"}
+vim.keymap.set({ "n", "v", "i" }, "<M-:>", function()
   -- Insert the text in the desired format
   vim.cmd('normal! a[](){:target="_blank"} ')
   vim.cmd("normal! F(pv2F/lyF[p")

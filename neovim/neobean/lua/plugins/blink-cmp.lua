@@ -105,27 +105,28 @@ return {
           end,
           -- After accepting the completion, delete the trigger_text characters
           -- from the final inserted text
+          -- Modified transform_items function based on suggestion by `synic` so
+          -- that the luasnip source is not reloaded after each transformation
+          -- https://github.com/linkarzu/dotfiles-latest/discussions/7#discussion-7849902
           transform_items = function(_, items)
             local col = vim.api.nvim_win_get_cursor(0)[2]
             local before_cursor = vim.api.nvim_get_current_line():sub(1, col)
             local trigger_pos = before_cursor:find(trigger_text .. "[^" .. trigger_text .. "]*$")
             if trigger_pos then
               for _, item in ipairs(items) do
-                item.textEdit = {
-                  newText = item.insertText or item.label,
-                  range = {
-                    start = { line = vim.fn.line(".") - 1, character = trigger_pos - 1 },
-                    ["end"] = { line = vim.fn.line(".") - 1, character = col },
-                  },
-                }
+                if not item.trigger_text_modified then
+                  ---@diagnostic disable-next-line: inject-field
+                  item.trigger_text_modified = true
+                  item.textEdit = {
+                    newText = item.insertText or item.label,
+                    range = {
+                      start = { line = vim.fn.line(".") - 1, character = trigger_pos - 1 },
+                      ["end"] = { line = vim.fn.line(".") - 1, character = col },
+                    },
+                  }
+                end
               end
             end
-            -- NOTE: After the transformation, I have to reload the luasnip source
-            -- Otherwise really crazy shit happens and I spent way too much time
-            -- figurig this out
-            vim.schedule(function()
-              require("blink.cmp").reload("snippets")
-            end)
             return items
           end,
         },

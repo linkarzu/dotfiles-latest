@@ -257,6 +257,12 @@ return {
             },
           },
         },
+        formatters = {
+          file = {
+            filename_first = true, -- display filename before the file path
+            truncate = 80,
+          },
+        },
       },
       -- Folke pointed me to the snacks docs
       -- https://github.com/LazyVim/LazyVim/discussions/4251#discussioncomment-11198069

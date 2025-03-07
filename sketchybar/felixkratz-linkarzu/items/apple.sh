@@ -38,6 +38,12 @@ apple_bluetooth=(
   click_script="open btt://execute_assigned_actions_for_trigger/?uuid=A85489BC-14EE-4332-9985-EF0C39F97389; $POPUP_OFF"
 )
 
+apple_restart=(
+  icon=$RESTART
+  label="Restart"
+  click_script="~/github/dotfiles-latest/scripts/macos/mac/220-restartConfirm.sh; $POPUP_OFF"
+)
+
 sketchybar --add item apple.logo left \
   --set apple.logo "${apple_logo[@]}" \
   \
@@ -51,4 +57,7 @@ sketchybar --add item apple.logo left \
   --set apple.lock "${apple_lock[@]}" \
   \
   --add item apple.bluetooth popup.apple.logo \
-  --set apple.bluetooth "${apple_bluetooth[@]}"
+  --set apple.bluetooth "${apple_bluetooth[@]}" \
+  \
+  --add item apple.restart popup.apple.logo \
+  --set apple.restart "${apple_restart[@]}"

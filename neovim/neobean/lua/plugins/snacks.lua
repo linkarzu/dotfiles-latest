@@ -184,7 +184,7 @@ return {
         -- In case you want to make sure that the score manipulation above works
         -- or if you want to check the score of each file
         debug = {
-          scores = true, -- show scores in the list
+          scores = false, -- show scores in the list
         },
         -- I like the "ivy" layout, so I set it as the default globaly, you can
         -- still override it in different keymaps

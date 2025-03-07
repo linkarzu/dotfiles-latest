@@ -247,23 +247,14 @@ return {
     -- }
 
     opts.snippets = {
-      preset = "luasnip",
-      -- This comes from the luasnip extra, if you don't add it, won't be able to
-      -- jump forward or backward in luasnip snippets
-      -- https://www.lazyvim.org/extras/coding/luasnip#blinkcmp-optional
-      expand = function(snippet)
-        require("luasnip").lsp_expand(snippet)
-      end,
-      active = function(filter)
-        if filter and filter.direction then
-          return require("luasnip").jumpable(filter.direction)
-        end
-        return require("luasnip").in_snippet()
-      end,
-      jump = function(direction)
-        require("luasnip").jump(direction)
-      end,
+      preset = "luasnip", -- Choose LuaSnip as the snippet engine
     }
+
+    -- -- To specify the options for snippets
+    -- opts.sources.providers.snippets.opts = {
+    --   use_show_condition = true, -- Enable filtering of snippets dynamically
+    --   show_autosnippets = true, -- Display autosnippets in the completion menu
+    -- }
 
     -- The default preset used by lazyvim accepts completions with enter
     -- I don't like using enter because if on markdown and typing

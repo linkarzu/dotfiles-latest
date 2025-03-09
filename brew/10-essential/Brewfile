@@ -51,6 +51,7 @@ cask "homerow"
 cask "chatgpt"
 cask "neovide"
 brew "btop"
+cask "winbox"
 
 # Not essentials, but added them here, as I install them all the time ;)
 cask "google-chrome"

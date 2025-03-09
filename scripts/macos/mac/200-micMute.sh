@@ -19,12 +19,25 @@ MIC_NAME=$(cat "$MIC_NAME_FILE" 2>/dev/null)
 # Get the current microphone volume
 MIC_VOLUME=$(osascript -e 'input volume of (get volume settings)')
 
+# Get current mic as swill switch to it after muting all mics
+CURRENT_MIC=$(SwitchAudioSource -t input -c)
+
 # Check if MIC_VOLUME is a number
 if [[ "$MIC_VOLUME" =~ ^[0-9]+$ ]]; then
   # If volume is less than 60 (including 0), set it to 60
   if [ "$MIC_VOLUME" -gt 0 ]; then
     sketchybar -m --set mic label="$MIC_NAME-0 " icon= icon.color=$RED label.color=$RED
-    osascript -e 'set volume input volume 0'
+    # Mute all microphones, not onlyt he active one
+    while IFS= read -r device; do
+      # Skip the iPhone microphone
+      if [[ "$device" == *iPhone* ]]; then
+        continue
+      fi
+      SwitchAudioSource -t input -s "$device"
+      osascript -e "set volume input volume 0"
+    done < <(SwitchAudioSource -t input -a | awk -v ORS="\n" '1')
+    # Restore the original microphone
+    SwitchAudioSource -t input -s "$CURRENT_MIC"
     # osascript -e 'display notification "Mic Muted 🔇" with title "Muted 🔴"'
     ~/github/dotfiles-latest/sketchybar/felixkratz-linkarzu/plugins/mic.sh
     # Otherwise set it to 0
@@ -34,7 +47,17 @@ if [[ "$MIC_VOLUME" =~ ^[0-9]+$ ]]; then
     else
       sketchybar -m --set mic label="$MIC_NAME-60 " icon= icon.color=$ORANGE label.color=$ORANGE
     fi
-    osascript -e 'set volume input volume 60'
+    # Unmute all microphones, not onlyt he active one
+    while IFS= read -r device; do
+      # Skip the iPhone microphone
+      if [[ "$device" == *iPhone* ]]; then
+        continue
+      fi
+      SwitchAudioSource -t input -s "$device"
+      osascript -e "set volume input volume 60"
+    done < <(SwitchAudioSource -t input -a | awk -v ORS="\n" '1')
+    # Restore the original microphone
+    SwitchAudioSource -t input -s "$CURRENT_MIC"
     # osascript -e 'display notification "Mic Unmuted 🔈" with title "Unmuted 🟢"'
     ~/github/dotfiles-latest/sketchybar/felixkratz-linkarzu/plugins/mic.sh
   fi

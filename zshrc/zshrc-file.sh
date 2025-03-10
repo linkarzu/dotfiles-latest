@@ -334,44 +334,53 @@ EOF
   fi
 
   # Automate tmux session cleanup every 1 hour using a LaunchAgent
-  # This will create com.linkarzu.tmuxKillSessions.plist to run the script every hour
-  # and log output/errors to /tmp/tmux-kill-sessions.out and /tmp/tmux-kill-sessions.err
+  # This will create plist file to run the script every hour
+  # and log output/errors to /tmp/$PLIST_LABEL.out and /tmp/$PLIST_LABEL.err
   # NOTE: If you modify the StartInterval below, make sure to also change it in
   # the ~/github/dotfiles-latest/tmux/tools/linkarzu/tmux-kill-sessions.sh script
-  TMUX_KILL_PLIST="$HOME/Library/LaunchAgents/com.linkarzu.tmuxKillSessions.plist"
-  TMUX_KILL_SCRIPT="$HOME/github/dotfiles-latest/tmux/tools/linkarzu/tmux-kill-sessions.sh"
+  INTERVAL_SEC=120
+  PLIST_ID="tmuxKillSessions"
+  PLIST_NAME="com.linkarzu.$PLIST_ID.plist"
+  PLIST_LABEL="${PLIST_NAME%.plist}"
+  PLIST_PATH="$HOME/Library/LaunchAgents/$PLIST_NAME"
+  SCRIPT_PATH="$HOME/github/dotfiles-latest/tmux/tools/linkarzu/$PLIST_ID.sh"
 
-  # If the PLIST file does not exist, create it
-  if [ ! -f "$TMUX_KILL_PLIST" ]; then
-    echo "Creating $TMUX_KILL_PLIST..."
-    cat <<EOF >"$TMUX_KILL_PLIST"
+  # Ensure the script file exists
+  if [ ! -f "$SCRIPT_PATH" ]; then
+    echo "Error: $SCRIPT_PATH does not exist."
+  else
+    # If the PLIST file does not exist, create it
+    if [ ! -f "$PLIST_PATH" ]; then
+      echo "Creating $PLIST_PATH..."
+      cat <<EOF >"$PLIST_PATH"
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
     <key>Label</key>
-    <string>com.linkarzu.tmuxKillSessions</string>
+    <string>$PLIST_LABEL</string>
     <key>ProgramArguments</key>
     <array>
-        <string>$TMUX_KILL_SCRIPT</string>
+        <string>$SCRIPT_PATH</string>
     </array>
     <key>StartInterval</key>
-    <integer>120</integer>
+    <integer>$INTERVAL_SEC</integer>
     <key>StandardOutPath</key>
-    <string>/tmp/tmux-kill-sessions.out</string>
+    <string>/tmp/$PLIST_ID.out</string>
     <key>StandardErrorPath</key>
-    <string>/tmp/tmux-kill-sessions.err</string>
+    <string>/tmp/$PLIST_ID.err</string>
 </dict>
 </plist>
 EOF
-    echo "Created $TMUX_KILL_PLIST."
+      echo "Created $PLIST_PATH."
+    fi
   fi
 
   # Check if the plist is loaded, and load it if not
-  if ! launchctl list | grep -q "com.linkarzu.tmuxKillSessions"; then
-    echo "Loading $TMUX_KILL_PLIST..."
-    launchctl load "$TMUX_KILL_PLIST"
-    echo "$TMUX_KILL_PLIST loaded."
+  if ! launchctl list | grep -q "$PLIST_LABEL"; then
+    echo "Loading $PLIST_PATH..."
+    launchctl load "$PLIST_PATH"
+    echo "$PLIST_PATH loaded."
   fi
 
   # To unload

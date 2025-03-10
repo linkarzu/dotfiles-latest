@@ -451,6 +451,21 @@ echo "########################################################################"
 # https://apple.stackexchange.com/questions/310495/can-login-items-be-added-via-the-command-line-in-high-sierra
 osascript -e 'tell application "System Events" to make login item at end with properties {path:"/Applications/kitty.app", hidden:false}'
 osascript -e 'tell application "System Events" to make login item at end with properties {path:"/Applications/Ghostty.app", hidden:false}'
+
+# MacOS stores the current session info in a file while your logged on and
+# stores info on what Apps are currently open, window size and position.
+# By disabling system access to this file we can permanently stop MacOS from
+# re-opening apps after rebooting
+# https://www.tonymacx86.com/threads/guide-permanently-disable-macos-from-re-opening-apps-on-restart-boot.296200/
+#
+# flag the file as owned by root (otherwise MacOS will replace it)
+sudo chown root ~/Library/Preferences/ByHost/com.apple.loginwindow.*
+# remove all permissions (so that it can not be read or written to)
+sudo chmod 000 ~/Library/Preferences/ByHost/com.apple.loginwindow.*
+#
+# If you need to re-enable the feature you can simply delete the existing file
+# sudo rm -f ~/Library/Preferences/ByHost/com.apple.loginwindow.*
+
 # https://macos-defaults.com
 #
 # HACK: How to view stuff that changes after you change them manually in system

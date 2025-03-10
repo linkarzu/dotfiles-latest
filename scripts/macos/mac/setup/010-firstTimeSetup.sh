@@ -447,6 +447,10 @@ echo "########################################################################"
 echo "Configure macos system settings"
 echo "########################################################################"
 
+# Configure apps that start after booting up (login items)
+# https://apple.stackexchange.com/questions/310495/can-login-items-be-added-via-the-command-line-in-high-sierra
+osascript -e 'tell application "System Events" to make login item at end with properties {path:"/Applications/kitty.app", hidden:false}'
+osascript -e 'tell application "System Events" to make login item at end with properties {path:"/Applications/Ghostty.app", hidden:false}'
 # https://macos-defaults.com
 #
 # HACK: How to view stuff that changes after you change them manually in system

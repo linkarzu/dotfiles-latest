@@ -333,6 +333,50 @@ EOF
     echo "$PLIST_PATH loaded."
   fi
 
+  # Automate tmux session cleanup every 1 hour using a LaunchAgent
+  # This will create com.linkarzu.tmuxKillSessions.plist to run the script every hour
+  # and log output/errors to /tmp/tmux-kill-sessions.out and /tmp/tmux-kill-sessions.err
+  # NOTE: If you modify the StartInterval below, make sure to also change it in
+  # the ~/github/dotfiles-latest/tmux/tools/linkarzu/tmux-kill-sessions.sh script
+  TMUX_KILL_PLIST="$HOME/Library/LaunchAgents/com.linkarzu.tmuxKillSessions.plist"
+  TMUX_KILL_SCRIPT="$HOME/github/dotfiles-latest/tmux/tools/linkarzu/tmux-kill-sessions.sh"
+
+  # If the PLIST file does not exist, create it
+  if [ ! -f "$TMUX_KILL_PLIST" ]; then
+    echo "Creating $TMUX_KILL_PLIST..."
+    cat <<EOF >"$TMUX_KILL_PLIST"
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.linkarzu.tmuxKillSessions</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>$TMUX_KILL_SCRIPT</string>
+    </array>
+    <key>StartInterval</key>
+    <integer>120</integer>
+    <key>StandardOutPath</key>
+    <string>/tmp/tmux-kill-sessions.out</string>
+    <key>StandardErrorPath</key>
+    <string>/tmp/tmux-kill-sessions.err</string>
+</dict>
+</plist>
+EOF
+    echo "Created $TMUX_KILL_PLIST."
+  fi
+
+  # Check if the plist is loaded, and load it if not
+  if ! launchctl list | grep -q "com.linkarzu.tmuxKillSessions"; then
+    echo "Loading $TMUX_KILL_PLIST..."
+    launchctl load "$TMUX_KILL_PLIST"
+    echo "$TMUX_KILL_PLIST loaded."
+  fi
+
+  # To unload
+  # launchctl bootout gui/$(id -u) ~/Library/LaunchAgents/com.linkarzu.tmuxKillSessions
+
   install_xterm_kitty_terminfo() {
     # Attempt to get terminfo for xterm-kitty
     if ! infocmp xterm-kitty &>/dev/null; then

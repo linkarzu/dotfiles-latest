@@ -333,12 +333,14 @@ EOF
     echo "$PLIST_PATH loaded."
   fi
 
-  # Automate tmux session cleanup every 1 hour using a LaunchAgent
-  # This will create plist file to run the script every hour
+  # Automate tmux session cleanup every X hours using a LaunchAgent
+  # This will create plist file to run the script every X hours
   # and log output/errors to /tmp/$PLIST_LABEL.out and /tmp/$PLIST_LABEL.err
-  # NOTE: If you modify the StartInterval below, make sure to also change it in
-  # the ~/github/dotfiles-latest/tmux/tools/linkarzu/tmux-kill-sessions.sh script
-  INTERVAL_SEC=120
+  # NOTE: If you modify the INTERVAL_SEC below, make sure to also change it in
+  # the ~/github/dotfiles-latest/tmux/tools/linkarzu/tmuxKillSessions.sh script
+  #
+  # 1 hour = 3600 s
+  INTERVAL_SEC=7200
   PLIST_ID="tmuxKillSessions"
   PLIST_NAME="com.linkarzu.$PLIST_ID.plist"
   PLIST_LABEL="${PLIST_NAME%.plist}"
@@ -372,7 +374,6 @@ EOF
 </dict>
 </plist>
 EOF
-      echo "Created $PLIST_PATH."
     fi
   fi
 
@@ -385,6 +386,8 @@ EOF
 
   # To unload
   # launchctl bootout gui/$(id -u) ~/Library/LaunchAgents/com.linkarzu.tmuxKillSessions
+  # Not sure why its not unloading it so I just remove the plist file
+  # rm $PLIST_PATH
 
   install_xterm_kitty_terminfo() {
     # Attempt to get terminfo for xterm-kitty

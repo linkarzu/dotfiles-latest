@@ -2209,6 +2209,8 @@ end, { desc = "[P]Spelling suggestions" })
 -- Add word under the cursor as a good word
 vim.keymap.set("n", "<leader>msg", function()
   vim.cmd("normal! zg")
+  -- I do a write so that harper is updated
+  vim.cmd("silent write")
 end, { desc = "[P]Spelling add word to spellfile" })
 
 -- HACK: neovim spell multiple languages

@@ -206,9 +206,9 @@ vim.api.nvim_create_autocmd("BufRead", {
     -- Use `vim.defer_fn` to add a slight delay before executing `zk`
     vim.defer_fn(function()
       vim.cmd("normal zk")
-      vim.cmd("silent write")
+      -- This write was disabling my inlay hints
+      -- vim.cmd("silent write")
       vim.notify("Folded keymaps", vim.log.levels.INFO)
     end, 100) -- Delay in milliseconds (100ms should be enough)
   end,
 })
--- end

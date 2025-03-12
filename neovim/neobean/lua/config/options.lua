@@ -82,8 +82,11 @@ if vim.g.neovim_mode == "skitty" then
   vim.cmd(string.format([[highlight WinBar1 guifg=%s]], colors["linkarzu_color03"]))
   -- -- Set the winbar to display "skitty-notes" with the specified color
   -- vim.opt.winbar = "%#WinBar1#   skitty-notes%*"
-  -- Set the winbar to display the current file name on the left and "linkarzu" aligned to the right
-  vim.opt.winbar = "%#WinBar1# %t%*%=%#WinBar1# linkarzu %*"
+  -- -- Set the winbar to display the current file name on the left and "linkarzu.com" aligned to the right
+  -- vim.opt.winbar = "%#WinBar1# %t%*%=%#WinBar1# linkarzu.com %*"
+  -- Set the winbar to display the current file name on the left (without the extension) and "linkarzu.com" aligned to the right
+  vim.opt.winbar =
+    '%#WinBar1# %{luaeval(\'vim.fn.fnamemodify(vim.fn.expand("%:t"), ":r")\')}%*%=%#WinBar1# linkarzu.com %*'
 else
   -- I never used relative line numbers, so fuck that
   -- Edit a few days after, I'll give them a try again, so re-enabled them

@@ -150,7 +150,11 @@ return {
     if vim.g.neovim_mode == "skitty" then
       -- For skitty mode, only keep section_x and disable all others
       opts.sections = {
-        lualine_a = {},
+        lualine_a = {
+          function()
+            return "skitty-notes"
+          end, -- Ensures it's displayed properly
+        },
         lualine_b = {},
         lualine_c = {},
         lualine_x = {

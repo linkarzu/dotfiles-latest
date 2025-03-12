@@ -2068,10 +2068,10 @@
               {
                 "to": [
                   {
-                    "shell_command": "open raycast://extensions/raycast/navigation/switch-windows"
+                    "shell_command": "open raycast://extensions/raycast/file-search/search-files"
                   }
                 ],
-                "description": "Open raycast://extensions/raycast/navigation/switch-windows",
+                "description": "Open raycast://extensions/raycast/file-search/search-files",
                 "type": "basic",
                 "from": {
                   "key_code": "l",

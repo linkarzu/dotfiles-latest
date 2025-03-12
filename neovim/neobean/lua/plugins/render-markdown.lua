@@ -7,7 +7,7 @@
 -- edit the default highlights
 -- I tried adding this as an autocommand, in the options.lua
 -- file, also in the markdownl.lua file, but the highlights kept being overriden
--- so the inly way is the only way I was able to make it work was loading it
+-- so the only way I was able to make it work was loading it
 -- after the config.lazy in the init.lua file lamw25wmal
 
 -- Require the colors.lua module and access the colors directly without
@@ -29,6 +29,7 @@ return {
     local color4_bg = colors["linkarzu_color21"]
     local color5_bg = colors["linkarzu_color22"]
     local color6_bg = colors["linkarzu_color23"]
+    local colorInline_bg = colors["linkarzu_color02"]
     local color_fg = colors["linkarzu_color26"]
     -- local color_sign = "#ebfafa"
 
@@ -39,6 +40,9 @@ return {
     vim.cmd(string.format([[highlight Headline4Bg guifg=%s guibg=%s]], color_fg, color4_bg))
     vim.cmd(string.format([[highlight Headline5Bg guifg=%s guibg=%s]], color_fg, color5_bg))
     vim.cmd(string.format([[highlight Headline6Bg guifg=%s guibg=%s]], color_fg, color6_bg))
+    -- Define inline code highlight for markdown
+    vim.cmd(string.format([[highlight RenderMarkdownCodeInline guifg=%s guibg=%s]], colorInline_bg, color_fg))
+    -- vim.cmd(string.format([[highlight RenderMarkdownCodeInline guifg=%s]], colorInline_bg))
 
     -- Highlight for the heading and sign icons (symbol on the left)
     -- I have the sign disabled for now, so this makes no effect

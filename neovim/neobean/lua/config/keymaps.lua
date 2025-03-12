@@ -557,7 +557,7 @@ vim.keymap.set({ "n" }, "<leader><BS>", function()
     end
     return
   end
-  local other_buffer = vim.fn.expand("$HOME/github/skitty/skitty-notes.md")
+  local other_buffer = vim.fn.expand("$HOME/github/skitty/todo.md")
   -- If the buffer is already loaded, just switch to the alternate buffer
   if vim.fn.bufexists(other_buffer) == 1 then
     if vim.fn.bufnr("#") == -1 then

@@ -302,6 +302,7 @@ clone_and_update_repo "dotfiles"
 clone_and_update_repo "containerdata"
 clone_and_update_repo "scripts"
 clone_and_update_repo "skitty"
+clone_and_update_repo "scripts-public"
 
 # -----------------------------------------------------------------------------
 # -----------------------------------------------------------------------------

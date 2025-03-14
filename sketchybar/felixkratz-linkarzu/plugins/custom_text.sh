@@ -5,6 +5,7 @@
 
 source "$CONFIG_DIR/colors.sh"
 
+# File created by ~/github/scripts-public/macos/mac/305-bannerOn.sh
 youtube_banner="$HOME/github/dotfiles-latest/youtube-banner.txt"
 
 if [ -f "$youtube_banner" ]; then

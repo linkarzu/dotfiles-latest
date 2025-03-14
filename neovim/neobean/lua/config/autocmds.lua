@@ -193,6 +193,8 @@ vim.api.nvim_create_autocmd("FileType", {
 -- Show LSP diagnostics (inlay hints) in a hover window / popup
 -- https://github.com/neovim/nvim-lspconfig/wiki/UI-Customization#show-line-diagnostics-automatically-in-hover-window
 -- https://www.reddit.com/r/neovim/comments/1168p97/how_can_i_make_lspconfig_wrap_around_these_hints/
+-- If you want to increase the hover time, modify vim.o.updatetime = 200 in your
+-- options.lua file
 --
 -- -- In case you want to use custom borders
 -- local border = {

@@ -342,7 +342,7 @@ if vim.g.neovide then
   -- NOTE: vsync is configured in the neovide/config.toml file, I disabled it and set
   -- this to 120 even though my monitor is 75Hz, had a similar case in wezterm,
   -- see: https://github.com/wez/wezterm/issues/6334
-  vim.g.neovide_refresh_rate = 120
+  vim.g.neovide_refresh_rate = 75
   -- This is how fast the cursor animation "moves", default 0.06
   vim.g.neovide_cursor_animation_length = 0.04
   -- Default 0.7

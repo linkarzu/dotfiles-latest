@@ -189,7 +189,8 @@ done
 
 # Display all success messages in a single notification
 if [[ -n "$SUCCESS_MESSAGES" ]]; then
-  display_notification "Repositories updated:$SUCCESS_MESSAGES" "Git Push Success" "ALL"
+  # display_notification "Repositories updated:$SUCCESS_MESSAGES" "Git Push Success" "ALL"
+  ~/github/scripts-public/macos/mac/325-customNotifOn.sh
 else
   log_message "INFO" "ALL" "No repositories updated during this run"
 fi

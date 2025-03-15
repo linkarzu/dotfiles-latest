@@ -506,6 +506,31 @@ return {
       })
     )
 
+    table.insert(
+      snippets,
+      s({
+        trig = "video-skitty",
+        name = "New video in skitty-notes",
+        desc = "New video in skitty-notes",
+      }, {
+        t("## "),
+        i(1, "video name"),
+        t({
+          "",
+          "",
+          "- [ ] ",
+        }),
+        i(2, ""), -- This is now the second jump point
+        t({
+          "",
+          "- [ ] **Thank supporters**",
+          "- [ ] Push GitHub changes",
+          "- [ ] Share discord server",
+          "",
+        }),
+      })
+    )
+
     -- Basic bash script template
     table.insert(
       snippets,

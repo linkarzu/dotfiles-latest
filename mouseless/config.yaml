@@ -22,7 +22,7 @@ grid_configs:
   grid_defn:
   - border_width: 0.0
     callback: build_cell_strings
-    keys: 'ASDFG HJKL:'
+    keys: ASDFG HJKL;
     num_cells_x: 10
     num_cells_y: 1
   - border_width: 1.0

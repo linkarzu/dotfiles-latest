@@ -311,8 +311,12 @@ vim.keymap.set("v", "gl", "$h", { desc = "[P]Go to the end of the line" })
 -- -- The `"+` register represents the system clipboard.
 vim.keymap.set({ "n", "v" }, "<leader>y", [["+y]], { desc = "[P]Yank to system clipboard" })
 
--- Markdown inline calculator (text inside backticks) lamw26wmal
--- For both manual and auto modes
+-- Markdown inline calculator (works not only in markdown) lamw26wmal
+-- Works in normal and insert mode if you run the keymap insie an expression
+-- between backticks `20+20` `20+20=40`
+--
+-- Automatic mode works if you include a ; so for example
+-- It turns `;20+20` when you type the final ` into `20+20=40`
 local function md_inline_calculator(auto_trigger)
   local line = vim.api.nvim_get_current_line()
   local cursor_col = vim.api.nvim_win_get_cursor(0)[2] + 1 -- 1-based column

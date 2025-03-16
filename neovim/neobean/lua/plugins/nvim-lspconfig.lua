@@ -16,7 +16,7 @@ return {
 
     servers = {
       -- https://www.reddit.com/r/neovim/comments/1j7ookn/comment/mgysste/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button
-      -- The hover window configuration for the diagnostics is done in
+      -- The hover window configuration for the diagnostics is done in lamw26wmal
       -- ~/github/dotfiles-latest/neovim/neobean/lua/config/autocmds.lua
       harper_ls = {
         enabled = true,

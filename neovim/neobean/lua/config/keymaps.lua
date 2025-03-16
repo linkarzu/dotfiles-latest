@@ -311,60 +311,119 @@ vim.keymap.set("v", "gl", "$h", { desc = "[P]Go to the end of the line" })
 -- -- The `"+` register represents the system clipboard.
 vim.keymap.set({ "n", "v" }, "<leader>y", [["+y]], { desc = "[P]Yank to system clipboard" })
 
--- Calculator for text inside backticks, `2+2` is turned into `2+2=4`
-vim.keymap.set({ "n", "i" }, "<M-3>", function()
+-- Markdown inline calculator (text inside backticks) lamw26wmal
+-- For both manual and auto modes
+local function md_inline_calculator(auto_trigger)
   local line = vim.api.nvim_get_current_line()
-  local cursor_col = vim.api.nvim_win_get_cursor(0)[2] + 1
-  local expressions = {}
+  local cursor_col = vim.api.nvim_win_get_cursor(0)[2] + 1 -- 1-based column
   local mode = vim.api.nvim_get_mode().mode
-  -- Find all backtick-enclosed expressions with their positions
+  local expressions = {}
+  -- Find all backtick-enclosed expressions
   local start_idx = 1
   while true do
     local expr_start, expr_end = line:find("`([^`]+)`", start_idx)
     if not expr_start then
       break
     end
-    -- Store expression details
     table.insert(expressions, {
-      start = expr_start + 1, -- Start of content
-      finish = expr_end - 1, -- End of content
-      closing_backtick = expr_end, -- Position of closing backtick
+      start = expr_start + 1,
+      finish = expr_end - 1,
+      closing = expr_end,
       content = line:sub(expr_start + 1, expr_end - 1),
     })
     start_idx = expr_end + 1
   end
-  -- Find which expression contains the cursor
-  local target_expr
-  for _, expr in ipairs(expressions) do
-    -- Check if cursor is in content OR on closing backtick (insert mode only)
-    if
-      (cursor_col >= expr.start and cursor_col <= expr.finish)
-      or (mode == "i" and cursor_col == expr.closing_backtick)
-    then
-      target_expr = expr
-      break
+  -- Automatic mode: Check last-closed backtick pair
+  if mode == "i" then
+    local last_char = line:sub(cursor_col - 1, cursor_col - 1)
+    if last_char == "`" then
+      for _, expr in ipairs(expressions) do
+        if expr.closing == cursor_col - 1 then
+          if not expr.content:find("=") and expr.content:match("^[%d%+%-%*%/%%%s%.%(%)]+$") then
+            local success, result = pcall(function()
+              return load("return " .. expr.content:gsub("x", "*"):gsub("÷", "/"))()
+            end)
+            if success then
+              local replacement = string.format("%s=%s", expr.content, result)
+              local new_line = line:sub(1, expr.start - 1) .. replacement .. line:sub(expr.finish + 1)
+              vim.api.nvim_set_current_line(new_line)
+              vim.api.nvim_win_set_cursor(0, { vim.fn.line("."), expr.start + #replacement })
+            end
+          end
+          return
+        end
+      end
     end
   end
-  if not target_expr then
+  -- Manual mode: Check cursor position
+  local handled = false
+  for _, expr in ipairs(expressions) do
+    if (cursor_col >= expr.start and cursor_col <= expr.finish) or (mode == "i" and cursor_col == expr.closing) then
+      if expr.content:find("=") then
+        vim.notify("Expression already calculated", vim.log.levels.INFO)
+        return
+      end
+      local expression = expr.content:gsub("x", "*"):gsub("÷", "/")
+      local success, result = pcall(function()
+        return load("return " .. expression)()
+      end)
+      if success then
+        local replacement = string.format("%s=%s", expression, result)
+        local new_line = line:sub(1, expr.start - 1) .. replacement .. line:sub(expr.finish + 1)
+        vim.api.nvim_set_current_line(new_line)
+      else
+        vim.notify("Invalid expression: " .. expression, vim.log.levels.ERROR)
+      end
+      handled = true
+      return
+    end
+  end
+  -- Handle incomplete backtick pairs in insert mode
+  if not handled and mode == "i" then
+    -- Find last opening backtick before cursor
+    local open_pos = line:sub(1, cursor_col):find("`[^`]*$")
+    if open_pos then
+      local content = line:sub(open_pos + 1, cursor_col - 1)
+      if not content:find("=") and content:match("^[%d%+%-%*%/%%%s%.%(%)]+$") then
+        local success, result = pcall(function()
+          return load("return " .. content:gsub("x", "*"):gsub("÷", "/"))()
+        end)
+        if success then
+          local replacement = string.format("`%s=%s`", content, result)
+          local new_line = line:sub(1, open_pos - 1) .. replacement .. line:sub(cursor_col)
+          vim.api.nvim_set_current_line(new_line)
+          -- Move cursor to end of replacement
+          vim.api.nvim_win_set_cursor(0, { vim.fn.line("."), open_pos + #replacement - 1 })
+        else
+          vim.notify("Invalid expression: " .. content, vim.log.levels.ERROR)
+        end
+        return
+      end
+    end
+  end
+  if not auto_trigger then
     vim.notify("No expression under cursor", vim.log.levels.WARN)
-    return
   end
-  if target_expr.content:find("=") then
-    vim.notify("Expression already calculated", vim.log.levels.INFO)
-    return
-  end
-  local expression = target_expr.content:gsub("x", "*"):gsub("÷", "/")
-  local success, result = pcall(function()
-    return load("return " .. expression)()
-  end)
-  if not success then
-    vim.notify("Invalid expression: " .. expression, vim.log.levels.ERROR)
-    return
-  end
-  local replacement = string.format("%s=%s", expression, tostring(result))
-  local new_line = line:sub(1, target_expr.start - 1) .. replacement .. line:sub(target_expr.finish + 1)
-  vim.api.nvim_set_current_line(new_line)
-end, { desc = "[P]Backtick calculator" })
+end
+
+-- Run Markdown inline calculator manually
+vim.keymap.set({ "n", "i" }, "<M-3>", function()
+  md_inline_calculator(false) -- Explicit manual trigger
+end, { desc = "[P]Inline calculator" })
+
+-- Perform calculation when closing a backtick pair (`...`)
+-- 10ms delay ensures buffer stability
+vim.api.nvim_create_autocmd("TextChangedI", {
+  pattern = "*",
+  callback = function()
+    local col = vim.api.nvim_win_get_cursor(0)[2] -- Get 0-based column
+    if vim.api.nvim_get_current_line():sub(col, col) == "`" then
+      vim.defer_fn(function()
+        md_inline_calculator(true)
+      end, 10)
+    end
+  end,
+})
 
 -- HACK: Paste unformatted text from Neovim to Slack, Discord, Word or any other app
 -- https://youtu.be/S3drTCO7Ct4

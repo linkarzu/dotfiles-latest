@@ -339,12 +339,14 @@ local function md_inline_calculator(auto_trigger)
     if last_char == "`" then
       for _, expr in ipairs(expressions) do
         if expr.closing == cursor_col - 1 then
-          if not expr.content:find("=") and expr.content:match("^[%d%+%-%*%/%%%s%.%(%)]+$") then
+          -- Check if content starts with ; and matches allowed characters
+          if not expr.content:find("=") and expr.content:match("^;%s*[%d%+%-%*%/%%%s%.%(%)x÷]+$") then
             local success, result = pcall(function()
-              return load("return " .. expr.content:gsub("x", "*"):gsub("÷", "/"))()
+              return load("return " .. expr.content:gsub("x", "*"):gsub("÷", "/"):sub(2))()
             end)
             if success then
-              local replacement = string.format("%s=%s", expr.content, result)
+              local cleaned = expr.content:sub(2):gsub("^%s*", "")
+              local replacement = string.format("%s=%s", cleaned, result)
               local new_line = line:sub(1, expr.start - 1) .. replacement .. line:sub(expr.finish + 1)
               vim.api.nvim_set_current_line(new_line)
               vim.api.nvim_win_set_cursor(0, { vim.fn.line("."), expr.start + #replacement })
@@ -384,12 +386,14 @@ local function md_inline_calculator(auto_trigger)
     local open_pos = line:sub(1, cursor_col):find("`[^`]*$")
     if open_pos then
       local content = line:sub(open_pos + 1, cursor_col - 1)
-      if not content:find("=") and content:match("^[%d%+%-%*%/%%%s%.%(%)]+$") then
+      -- Check if content starts with ; and matches allowed characters
+      if not content:find("=") and content:match("^;%s*[%d%+%-%*%/%%%s%.%(%)x÷]+$") then
         local success, result = pcall(function()
-          return load("return " .. content:gsub("x", "*"):gsub("÷", "/"))()
+          return load("return " .. content:gsub("x", "*"):gsub("÷", "/"):sub(2))()
         end)
         if success then
-          local replacement = string.format("`%s=%s`", content, result)
+          local cleaned = content:sub(2):gsub("^%s*", "")
+          local replacement = string.format("`%s=%s`", cleaned, result)
           local new_line = line:sub(1, open_pos - 1) .. replacement .. line:sub(cursor_col)
           vim.api.nvim_set_current_line(new_line)
           -- Move cursor to end of replacement

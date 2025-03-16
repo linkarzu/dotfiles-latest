@@ -414,7 +414,10 @@ local function md_inline_calculator(auto_trigger)
 end
 
 -- Markdown inline calculator (works not only in markdown) lamw26wmal
--- In INSERT mode if you type `20+20 and run the keymap, you get `20+20=40`
+--
+-- In INSERT mode if you type `20+20 (NOTICE THAT YOU DON'T NEED TO TYPE THE
+-- LAST BACKTICK) and then run the keymap, you get `20+20=40`
+--
 -- In NORMAL mode if you have `20+20` and run the keymap inside the backticks
 -- you get `20+20=40`
 --

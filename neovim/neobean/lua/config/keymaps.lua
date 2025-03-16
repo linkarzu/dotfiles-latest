@@ -311,12 +311,7 @@ vim.keymap.set("v", "gl", "$h", { desc = "[P]Go to the end of the line" })
 -- -- The `"+` register represents the system clipboard.
 vim.keymap.set({ "n", "v" }, "<leader>y", [["+y]], { desc = "[P]Yank to system clipboard" })
 
--- Markdown inline calculator (works not only in markdown) lamw26wmal
--- Works in normal and insert mode if you run the keymap insie an expression
--- between backticks `20+20` `20+20=40`
---
--- Automatic mode works if you include a ; so for example
--- It turns `;20+20` when you type the final ` into `20+20=40`
+-- See the comment in the keymap
 local function md_inline_calculator(auto_trigger)
   local line = vim.api.nvim_get_current_line()
   local cursor_col = vim.api.nvim_win_get_cursor(0)[2] + 1 -- 1-based column
@@ -385,18 +380,22 @@ local function md_inline_calculator(auto_trigger)
     end
   end
   -- Handle incomplete backtick pairs in insert mode
-  if not handled and mode == "i" then
+  if not handled and (mode == "i" or not auto_trigger) then
     -- Find last opening backtick before cursor
     local open_pos = line:sub(1, cursor_col):find("`[^`]*$")
     if open_pos then
       local content = line:sub(open_pos + 1, cursor_col - 1)
-      -- Check if content starts with ; and matches allowed characters
-      if not content:find("=") and content:match("^;%s*[%d%+%-%*%/%%%s%.%(%)x÷]+$") then
+      local pattern = auto_trigger and "^;%s*[%d%+%-%*%/%%%s%.%(%)x÷]+$" or "^[%d%+%-%*%/%%%s%.%(%)x÷]+$"
+      if not content:find("=") and content:match(pattern) then
+        local expr_to_eval = content:gsub("x", "*"):gsub("÷", "/")
+        if auto_trigger then
+          expr_to_eval = expr_to_eval:sub(2) -- Remove leading ';' for auto
+        end
         local success, result = pcall(function()
-          return load("return " .. content:gsub("x", "*"):gsub("÷", "/"):sub(2))()
+          return load("return " .. expr_to_eval)()
         end)
         if success then
-          local cleaned = content:sub(2):gsub("^%s*", "")
+          local cleaned = expr_to_eval:gsub("^%s*", "")
           local replacement = string.format("`%s=%s`", cleaned, result)
           local new_line = line:sub(1, open_pos - 1) .. replacement .. line:sub(cursor_col)
           vim.api.nvim_set_current_line(new_line)
@@ -414,24 +413,36 @@ local function md_inline_calculator(auto_trigger)
   end
 end
 
--- Run Markdown inline calculator manually
+-- Markdown inline calculator (works not only in markdown) lamw26wmal
+-- In INSERT mode if you type `20+20 and run the keymap, you get `20+20=40`
+-- In NORMAL mode if you have `20+20` and run the keymap inside the backticks
+-- you get `20+20=40`
+--
+-- Automatic mode (disabled by default) works if you include a ; so for example
+-- If you type `;20+20` when you type the final ` turns into `20+20=40`
 vim.keymap.set({ "n", "i" }, "<M-3>", function()
   md_inline_calculator(false) -- Explicit manual trigger
 end, { desc = "[P]Inline calculator" })
 
--- Perform calculation when closing a backtick pair (`...`)
--- 10ms delay ensures buffer stability
-vim.api.nvim_create_autocmd("TextChangedI", {
-  pattern = "*",
-  callback = function()
-    local col = vim.api.nvim_win_get_cursor(0)[2] -- Get 0-based column
-    if vim.api.nvim_get_current_line():sub(col, col) == "`" then
-      vim.defer_fn(function()
-        md_inline_calculator(true)
-      end, 10)
-    end
-  end,
-})
+-- -- This autocmd allows you to use the ; to automatically calculate
+-- -- For example `;3*3` is turned into `3*3=9` when you type the last backtic
+-- -- WARNING: This autocmd uses TextChangedI which triggers on EVERY insert-mode
+-- -- keystroke, which could probably cause performance issues, so use at your
+-- -- own risk
+--
+-- -- Perform calculation when closing a backtick pair (`...`)
+-- -- 10ms delay ensures buffer stability
+-- vim.api.nvim_create_autocmd("TextChangedI", {
+--   pattern = "*",
+--   callback = function()
+--     local col = vim.api.nvim_win_get_cursor(0)[2] -- Get 0-based column
+--     if vim.api.nvim_get_current_line():sub(col, col) == "`" then
+--       vim.defer_fn(function()
+--         md_inline_calculator(true)
+--       end, 10)
+--     end
+--   end,
+-- })
 
 -- HACK: Paste unformatted text from Neovim to Slack, Discord, Word or any other app
 -- https://youtu.be/S3drTCO7Ct4

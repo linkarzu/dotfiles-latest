@@ -311,6 +311,61 @@ vim.keymap.set("v", "gl", "$h", { desc = "[P]Go to the end of the line" })
 -- -- The `"+` register represents the system clipboard.
 vim.keymap.set({ "n", "v" }, "<leader>y", [["+y]], { desc = "[P]Yank to system clipboard" })
 
+-- Calculator for text inside backticks, `2+2` is turned into `2+2=4`
+vim.keymap.set({ "n", "i" }, "<M-3>", function()
+  local line = vim.api.nvim_get_current_line()
+  local cursor_col = vim.api.nvim_win_get_cursor(0)[2] + 1
+  local expressions = {}
+  local mode = vim.api.nvim_get_mode().mode
+  -- Find all backtick-enclosed expressions with their positions
+  local start_idx = 1
+  while true do
+    local expr_start, expr_end = line:find("`([^`]+)`", start_idx)
+    if not expr_start then
+      break
+    end
+    -- Store expression details
+    table.insert(expressions, {
+      start = expr_start + 1, -- Start of content
+      finish = expr_end - 1, -- End of content
+      closing_backtick = expr_end, -- Position of closing backtick
+      content = line:sub(expr_start + 1, expr_end - 1),
+    })
+    start_idx = expr_end + 1
+  end
+  -- Find which expression contains the cursor
+  local target_expr
+  for _, expr in ipairs(expressions) do
+    -- Check if cursor is in content OR on closing backtick (insert mode only)
+    if
+      (cursor_col >= expr.start and cursor_col <= expr.finish)
+      or (mode == "i" and cursor_col == expr.closing_backtick)
+    then
+      target_expr = expr
+      break
+    end
+  end
+  if not target_expr then
+    vim.notify("No expression under cursor", vim.log.levels.WARN)
+    return
+  end
+  if target_expr.content:find("=") then
+    vim.notify("Expression already calculated", vim.log.levels.INFO)
+    return
+  end
+  local expression = target_expr.content:gsub("x", "*"):gsub("÷", "/")
+  local success, result = pcall(function()
+    return load("return " .. expression)()
+  end)
+  if not success then
+    vim.notify("Invalid expression: " .. expression, vim.log.levels.ERROR)
+    return
+  end
+  local replacement = string.format("%s=%s", expression, tostring(result))
+  local new_line = line:sub(1, target_expr.start - 1) .. replacement .. line:sub(target_expr.finish + 1)
+  vim.api.nvim_set_current_line(new_line)
+end, { desc = "[P]Backtick calculator" })
+
 -- HACK: Paste unformatted text from Neovim to Slack, Discord, Word or any other app
 -- https://youtu.be/S3drTCO7Ct4
 --

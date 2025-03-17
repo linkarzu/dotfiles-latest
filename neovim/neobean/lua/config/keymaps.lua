@@ -433,6 +433,10 @@ end, { desc = "[P]Inline calculator" })
 -- -- keystroke, which could probably cause performance issues, so use at your
 -- -- own risk
 --
+-- -- INFO: If you want the autocmdn to work, and you use mini.pairs, you'll
+-- -- probably want to disable it for the back tick
+-- -- ~/github/dotfiles-latest/neovim/neobean/lua/plugins/mini-pairs.lua
+--
 -- -- Perform calculation when closing a backtick pair (`...`)
 -- -- 10ms delay ensures buffer stability
 -- vim.api.nvim_create_autocmd("TextChangedI", {

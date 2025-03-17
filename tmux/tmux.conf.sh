@@ -552,11 +552,11 @@ set -g @catppuccin_status_default "on"
 # 'vim-tmux-navigator' plugin inside neovim
 set -g @plugin 'christoomey/vim-tmux-navigator'
 
-# persist tmux sessions after computer restart
-# https://github.com/tmux-plugins/tmux-resurrect
-set -g @plugin 'tmux-plugins/tmux-resurrect'
-# allow tmux-ressurect to capture pane contents
-set -g @resurrect-capture-pane-contents 'on'
+# # persist tmux sessions after computer restart
+# # https://github.com/tmux-plugins/tmux-resurrect
+# set -g @plugin 'tmux-plugins/tmux-resurrect'
+# # allow tmux-ressurect to capture pane contents
+# set -g @resurrect-capture-pane-contents 'on'
 
 # automatically saves sessions for you every 15 minutes (this must be the last plugin)
 # https://github.com/tmux-plugins/tmux-continuum

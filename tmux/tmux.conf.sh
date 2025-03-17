@@ -421,9 +421,21 @@ set -g status-position top
 
 ##############################################################################
 ##############################################################################
-#
+
 # Plugins section
-#
+# Plugin installation and uninstallation is done through TPM
+# To install:
+  # First add plugin below
+  # Then press prefix shift+i (uppercase, as in Install)
+# To uninstall:
+  # First comment plugin below
+  # Then press prefix alt+u (lowercase, as in uninstall)
+  # Then run an update to see the list of installed plugins
+  # gx the `~/.tmux/plugins/tmux` path and plugin should not be there
+# To update:
+  # prefix shift+u (uppercase)
+  # type `all` hen hit enter
+
 ##############################################################################
 ##############################################################################
 

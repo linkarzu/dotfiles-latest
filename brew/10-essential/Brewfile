@@ -64,8 +64,6 @@ cask "obsidian"
 cask "spotify"
 cask "hammerspoon"
 cask "hot"
-cask "iterm2"
-brew "htop"
 brew "fastfetch"
 
 

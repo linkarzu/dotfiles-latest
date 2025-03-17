@@ -1072,6 +1072,10 @@ fs.writeFileSync(
           },
           fn_function_keys: [
             {
+              from: { key_code: "f5" },
+              to: [{ key_code: "f5" }],
+            },
+            {
               from: { key_code: "f6" },
               to: [{ consumer_key_code: "rewind" }],
             },

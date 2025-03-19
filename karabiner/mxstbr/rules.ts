@@ -1071,6 +1071,11 @@ fs.writeFileSync(
             rules,
           },
           fn_function_keys: [
+            // I use ctrl+z with Trickster
+            {
+              from: { key_code: "f4" },
+              to: [{ key_code: "z", modifiers: ["left_control"] }],
+            },
             {
               from: { key_code: "f5" },
               to: [{ key_code: "f5" }],

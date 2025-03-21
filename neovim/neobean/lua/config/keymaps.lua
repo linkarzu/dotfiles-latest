@@ -3568,6 +3568,15 @@ vim.keymap.set("n", "<leader>fG", function()
   end
 end, { desc = "[P]Open current file's GitHub repo link" })
 
+-- Keymap to copy current file's GitHub URL to clipboard
+vim.keymap.set({ "n", "v", "i" }, "<M-C>", function()
+  local github_url = get_github_url_of_current_file()
+  if github_url then
+    vim.fn.setreg("+", github_url)
+    vim.notify(github_url, vim.log.levels.INFO)
+    vim.notify("GitHub URL copied to clipboard", vim.log.levels.INFO)
+  end
+end, { desc = "[P]Copy GitHub URL of file to clipboard" })
 
 -- Keymap to create a GitHub repository
 -- It uses the github CLI, which in macOS is installed with:

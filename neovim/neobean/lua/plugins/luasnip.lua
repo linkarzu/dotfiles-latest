@@ -14,7 +14,27 @@ return {
   opts = function(_, opts)
     local ls = require("luasnip")
 
-    local s = ls.snippet
+    -- Add prefix ";" to each one of my snippets using the extend_decorator
+    -- I use this in combination with blink.cmp
+    -- https://github.com/L3MON4D3/LuaSnip/discussions/895
+    local extend_decorator = require("luasnip.util.extend_decorator")
+    -- Create trigger transformation function
+    local function auto_semicolon(context)
+      if type(context) == "string" then
+        return { trig = ";" .. context }
+      end
+      return vim.tbl_extend("keep", { trig = ";" .. context.trig }, context)
+    end
+    -- Register and apply decorator properly
+    extend_decorator.register(ls.s, {
+      arg_indx = 1,
+      extend = function(original)
+        return auto_semicolon(original)
+      end,
+    })
+
+    -- local s = ls.snippet
+    local s = extend_decorator.apply(ls.s, {})
     local t = ls.text_node
     local i = ls.insert_node
     local f = ls.function_node

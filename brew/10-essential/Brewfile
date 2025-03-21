@@ -54,6 +54,7 @@ brew "btop"
 cask "winbox"
 cask "keycastr"
 cask "upscayl"
+brew "ast-grep"
 
 # Not essentials, but added them here, as I install them all the time ;)
 cask "google-chrome"

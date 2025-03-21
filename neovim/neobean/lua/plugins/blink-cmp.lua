@@ -20,7 +20,7 @@ return {
   -- In case there are breaking changes and you want to go back to the last
   -- working release
   -- https://github.com/Saghen/blink.cmp/releases
-  -- version = "v0.9.3",
+  -- version = "v0.13.1",
   dependencies = {
     "moyiz/blink-emoji.nvim",
     "Kaiser-Yang/blink-cmp-dictionary",
@@ -103,32 +103,6 @@ return {
             -- NOTE: remember that `trigger_text` is modified at the top of the file
             return before_cursor:match(trigger_text .. "%w*$") ~= nil
           end,
-          -- After accepting the completion, delete the trigger_text characters
-          -- from the final inserted text
-          -- Modified transform_items function based on suggestion by `synic` so
-          -- that the luasnip source is not reloaded after each transformation
-          -- https://github.com/linkarzu/dotfiles-latest/discussions/7#discussion-7849902
-          transform_items = function(_, items)
-            local col = vim.api.nvim_win_get_cursor(0)[2]
-            local before_cursor = vim.api.nvim_get_current_line():sub(1, col)
-            local trigger_pos = before_cursor:find(trigger_text .. "[^" .. trigger_text .. "]*$")
-            if trigger_pos then
-              for _, item in ipairs(items) do
-                if not item.trigger_text_modified then
-                  ---@diagnostic disable-next-line: inject-field
-                  item.trigger_text_modified = true
-                  item.textEdit = {
-                    newText = item.insertText or item.label,
-                    range = {
-                      start = { line = vim.fn.line(".") - 1, character = trigger_pos - 1 },
-                      ["end"] = { line = vim.fn.line(".") - 1, character = col },
-                    },
-                  }
-                end
-              end
-            end
-            return items
-          end,
         },
         -- Example on how to configure dadbod found in the main repo
         -- https://github.com/kristijanhusak/vim-dadbod-completion
@@ -206,6 +180,15 @@ return {
     }
 
     opts.completion = {
+      -- accept = {
+      --   auto_brackets = {
+      --     enabled = true,
+      --     default_brackets = { ";", "" },
+      --     override_brackets_for_filetypes = {
+      --       markdown = { ";", "" },
+      --     },
+      --   },
+      -- },
       --   keyword = {
       --     -- 'prefix' will fuzzy match on the text before the cursor
       --     -- 'full' will fuzzy match on the text before *and* after the cursor

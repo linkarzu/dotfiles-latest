@@ -15,8 +15,13 @@ return {
     local ls = require("luasnip")
 
     -- Add prefix ";" to each one of my snippets using the extend_decorator
-    -- I use this in combination with blink.cmp
+    -- I use this in combination with blink.cmp. This way I don't have to use
+    -- the transform_items function in blink.cmp that removes the ";" at the
+    -- beginning of each snippet
     -- https://github.com/L3MON4D3/LuaSnip/discussions/895
+    -- NOTE: THis extend_decorator works great, but I also tried to add the ";"
+    -- prefix to all of the snippets loaded from friendly-snippets, but I was
+    -- unable to do so, so I still have to use the transform_items in blink.cmp
     local extend_decorator = require("luasnip.util.extend_decorator")
     -- Create trigger transformation function
     local function auto_semicolon(context)
@@ -62,6 +67,8 @@ return {
           if line == "" then
             if #lines == 2 then
               local raw_title, url = lines[1], lines[2]
+              -- Removed spaces and any other special characters as I was having
+              -- issues triggering the snippets
               local trig_title = raw_title:gsub("[^%w]", "")
               local formatted_content = format_func(trig_title, raw_title, url)
               table.insert(snippets, formatted_content)
@@ -75,6 +82,8 @@ return {
         -- Handle the last snippet if file doesn't end with blank line
         if #lines == 2 then
           local raw_title, url = lines[1], lines[2]
+          -- Removed spaces and any other special characters as I was having
+          -- issues triggering the snippets
           local trig_title = raw_title:gsub("[^%w]", "")
           local formatted_content = format_func(trig_title, raw_title, url)
           table.insert(snippets, formatted_content)

@@ -3527,40 +3527,47 @@ vim.keymap.set("n", "<leader>fV", function()
   end
 end, { desc = "[C]Open current file's PWD in VSCode" })
 
+-- Function to get the GitHub URL of the current file
+local function get_github_url_of_current_file()
+  local file_path = vim.fn.expand("%:p")
+  if file_path == "" then
+    vim.notify("No file is currently open", vim.log.levels.WARN)
+    return nil
+  end
+
+  local git_root = vim.fn.systemlist("git rev-parse --show-toplevel")[1]
+  if not git_root or git_root == "" then
+    vim.notify("Could not determine the root directory for the GitHub repository", vim.log.levels.WARN)
+    return nil
+  end
+
+  local origin_url = vim.fn.systemlist("git config --get remote.origin.url")[1]
+  if not origin_url or origin_url == "" then
+    vim.notify("Could not determine the origin URL for the GitHub repository", vim.log.levels.WARN)
+    return nil
+  end
+
+  local branch_name = vim.fn.systemlist("git rev-parse --abbrev-ref HEAD")[1]
+  if not branch_name or branch_name == "" then
+    vim.notify("Could not determine the current branch name", vim.log.levels.WARN)
+    return nil
+  end
+
+  local repo_url = origin_url:gsub("git@github.com[^:]*:", "https://github.com/"):gsub("%.git$", "")
+  local relative_path = file_path:sub(#git_root + 2)
+  return repo_url .. "/blob/" .. branch_name .. "/" .. relative_path
+end
+
 -- Open current file's GitHub repo link lamw25wmal
 vim.keymap.set("n", "<leader>fG", function()
-  local file_path = vim.fn.expand("%:p")
-  if file_path ~= "" then
-    -- Get the root directory of the git repository
-    local git_root = vim.fn.systemlist("git rev-parse --show-toplevel")[1]
-    if git_root and git_root ~= "" then
-      -- Get the origin URL of the git repository
-      local origin_url = vim.fn.systemlist("git config --get remote.origin.url")[1]
-      if origin_url and origin_url ~= "" then
-        -- Get the current branch name
-        local branch_name = vim.fn.systemlist("git rev-parse --abbrev-ref HEAD")[1]
-        if branch_name and branch_name ~= "" then
-          -- Convert the origin URL to a GitHub URL
-          local repo_url = origin_url:gsub("git@github.com[^:]*:", "https://github.com/"):gsub("%.git$", "")
-          -- Extract the relative path from the file path
-          local relative_path = file_path:sub(#git_root + 2)
-          local github_url = repo_url .. "/blob/" .. branch_name .. "/" .. relative_path
-          local command = "open " .. vim.fn.shellescape(github_url)
-          vim.fn.system(command)
-          print("Opened GitHub link: " .. github_url)
-        else
-          print("Could not determine the current branch name")
-        end
-      else
-        print("Could not determine the origin URL for the GitHub repository")
-      end
-    else
-      print("Could not determine the root directory for the GitHub repository")
-    end
-  else
-    print("No file is currently open")
+  local github_url = get_github_url_of_current_file()
+  if github_url then
+    local command = "open " .. vim.fn.shellescape(github_url)
+    vim.fn.system(command)
+    print("Opened GitHub link: " .. github_url)
   end
-end, { desc = "[G]Open current file's GitHub repo link" })
+end, { desc = "[P]Open current file's GitHub repo link" })
+
 
 -- Keymap to create a GitHub repository
 -- It uses the github CLI, which in macOS is installed with:

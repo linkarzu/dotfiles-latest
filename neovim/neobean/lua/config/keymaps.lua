@@ -981,18 +981,6 @@ end, { desc = "[P]Insert filename with path and go project name at cursor" })
 --   vim.api.nvim_buf_set_lines(0, row, row, false, { "" })
 -- end, { desc = "[P]Insert filename with path at cursor" })
 
--- Function to copy file path to clipboard
-local function copy_filepath_to_clipboard()
-  local filePath = vim.fn.expand("%:~") -- Gets the file path relative to the home directory
-  vim.fn.setreg("+", filePath) -- Copy the file path to the clipboard register
-  vim.notify(filePath, vim.log.levels.INFO)
-  vim.notify("Path copied to clipboard: ", vim.log.levels.INFO)
-end
--- Keymaps for copying file path to clipboard
--- vim.keymap.set("n", "<leader>fp", copy_filepath_to_clipboard, { desc = "[P]Copy file path to clipboard" })
--- I couldn't use <M-p> because its used for previous reference
-vim.keymap.set({ "n", "v", "i" }, "<M-c>", copy_filepath_to_clipboard, { desc = "[P]Copy file path to clipboard" })
-
 -- -- Paste file path with the wordname Filename: first
 -- vim.keymap.set("n", "<leader>fz", function()
 --   local filePath = vim.fn.expand("%:~") -- Gets the file path relative to the home directory
@@ -3577,6 +3565,18 @@ vim.keymap.set({ "n", "v", "i" }, "<M-C>", function()
     vim.notify("GitHub URL copied to clipboard", vim.log.levels.INFO)
   end
 end, { desc = "[P]Copy GitHub URL of file to clipboard" })
+
+-- Function to copy file path to clipboard
+local function copy_filepath_to_clipboard()
+  local filePath = vim.fn.expand("%:~") -- Gets the file path relative to the home directory
+  vim.fn.setreg("+", filePath) -- Copy the file path to the clipboard register
+  vim.notify(filePath, vim.log.levels.INFO)
+  vim.notify("Path copied to clipboard: ", vim.log.levels.INFO)
+end
+-- Keymaps for copying file path to clipboard
+-- vim.keymap.set("n", "<leader>fp", copy_filepath_to_clipboard, { desc = "[P]Copy file path to clipboard" })
+-- I couldn't use <M-p> because its used for previous reference
+vim.keymap.set({ "n", "v", "i" }, "<M-c>", copy_filepath_to_clipboard, { desc = "[P]Copy file path to clipboard" })
 
 -- Keymap to create a GitHub repository
 -- It uses the github CLI, which in macOS is installed with:

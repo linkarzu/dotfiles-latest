@@ -41,8 +41,9 @@ return {
         for line in file:lines() do
           if line == "" then
             if #lines == 2 then
-              local title, url = lines[1], lines[2]
-              local formatted_content = format_func(title, url)
+              local raw_title, url = lines[1], lines[2]
+              local trig_title = raw_title:gsub("[^%w]", "")
+              local formatted_content = format_func(trig_title, raw_title, url)
               table.insert(snippets, formatted_content)
             end
             lines = {}
@@ -53,8 +54,9 @@ return {
 
         -- Handle the last snippet if file doesn't end with blank line
         if #lines == 2 then
-          local title, url = lines[1], lines[2]
-          local formatted_content = format_func(title, url)
+          local raw_title, url = lines[1], lines[2]
+          local trig_title = raw_title:gsub("[^%w]", "")
+          local formatted_content = format_func(trig_title, raw_title, url)
           table.insert(snippets, formatted_content)
         end
 
@@ -64,27 +66,27 @@ return {
 
       -- Format functions for different types of YouTube snippets
       local format_functions = {
-        plain = function(title, url)
-          return s({ trig = "yt - " .. title }, { t(title), t({ "", url }) })
+        plain = function(trig_title, title, url)
+          return s({ trig = ";yt" .. trig_title }, { t(title), t({ "", url }) })
         end,
 
-        markdown = function(title, url)
+        markdown = function(trig_title, title, url)
           local safe_title = string.gsub(title, "|", "-")
           local markdown_link = string.format("[%s](%s)", safe_title, url)
-          return s({ trig = "ytmd - " .. title }, { t(markdown_link) })
+          return s({ trig = ";ytmd" .. trig_title }, { t(markdown_link) })
         end,
 
-        markdown_external = function(title, url)
+        markdown_external = function(trig_title, title, url)
           local safe_title = string.gsub(title, "|", "-")
           local markdown_link = string.format('[%s](%s){:target="_blank"}', safe_title, url)
-          return s({ trig = "ytex - " .. title }, { t(markdown_link) })
+          return s({ trig = ";ytex" .. trig_title }, { t(markdown_link) })
         end,
 
         -- Extract video ID from URL (everything after the last /)
-        embed = function(title, url)
+        embed = function(trig_title, _, url)
           local video_id = url:match(".*/(.*)")
           local embed_code = string.format("{%% include embed/youtube.html id='%s' %%}", video_id)
-          return s({ trig = "ytem - " .. title }, { t(embed_code) })
+          return s({ trig = ";ytem" .. trig_title }, { t(embed_code) })
         end,
       }
 
@@ -114,7 +116,7 @@ return {
     -- Helper function to create code block snippets
     local function create_code_block_snippet(lang)
       return s({
-        trig = lang,
+        trig = ";" .. lang,
         name = "Codeblock",
         desc = lang .. " codeblock",
       }, {
@@ -159,7 +161,7 @@ return {
     table.insert(
       snippets,
       s({
-        trig = "chirpy",
+        trig = ";chirpy",
         name = "Disable markdownlint and prettier for chirpy",
         desc = "Disable markdownlint and prettier for chirpy",
       }, {
@@ -193,7 +195,7 @@ return {
     table.insert(
       snippets,
       s({
-        trig = "markdownlint",
+        trig = ";markdownlint",
         name = "Add markdownlint disable and restore headings",
         desc = "Add markdownlint disable and restore headings",
       }, {
@@ -215,7 +217,7 @@ return {
     table.insert(
       snippets,
       s({
-        trig = "prettierignore",
+        trig = ";prettierignore",
         name = "Add prettier ignore start and end headings",
         desc = "Add prettier ignore start and end headings",
       }, {
@@ -237,7 +239,7 @@ return {
     table.insert(
       snippets,
       s({
-        trig = "linkt",
+        trig = ";linkt",
         name = 'Add this -> [](){:target="_blank"}',
         desc = 'Add this -> [](){:target="_blank"}',
       }, {
@@ -252,7 +254,7 @@ return {
     table.insert(
       snippets,
       s({
-        trig = "todo",
+        trig = ";todo",
         name = "Add TODO: item",
         desc = "Add TODO: item",
       }, {
@@ -266,7 +268,7 @@ return {
     table.insert(
       snippets,
       s({
-        trig = "linkc",
+        trig = ";linkc",
         name = "Paste clipboard as .md link",
         desc = "Paste clipboard as .md link",
       }, {
@@ -282,7 +284,7 @@ return {
     table.insert(
       snippets,
       s({
-        trig = "linkex",
+        trig = ";linkex",
         name = "Paste clipboard as EXT .md link",
         desc = "Paste clipboard as EXT .md link",
       }, {
@@ -298,7 +300,7 @@ return {
     table.insert(
       snippets,
       s({
-        trig = "dotfiles latest",
+        trig = ";dotfileslatest",
         name = "Adds -> [my dotfiles](https://github.com/linkarzu/dotfiles-latest)",
         desc = "Add link to https://github.com/linkarzu/dotfiles-latest",
       }, {
@@ -309,7 +311,7 @@ return {
     table.insert(
       snippets,
       s({
-        trig = "support me",
+        trig = ";supportme",
         name = "Inserts links (Ko-fi, Twitter, TikTok)",
         desc = "Inserts links (Ko-fi, Twitter, TikTok)",
       }, {
@@ -329,7 +331,7 @@ return {
     table.insert(
       snippets,
       s({
-        trig = "discord",
+        trig = ";discord",
         name = "discord support",
         desc = "discord support",
       }, {
@@ -347,7 +349,7 @@ return {
     table.insert(
       snippets,
       s({
-        trig = "blogpost template",
+        trig = ";blogposttemplate",
         name = "Insert blog post template",
         desc = "Insert blog post template with frontmatter and sections",
       }, {
@@ -447,7 +449,7 @@ return {
     table.insert(
       snippets,
       s({
-        trig = "video template",
+        trig = ";videotemplate",
         name = "Insert video markdown template",
         desc = "Insert video markdown template",
       }, {
@@ -509,7 +511,7 @@ return {
     table.insert(
       snippets,
       s({
-        trig = "video-skitty",
+        trig = ";video-skitty",
         name = "New video in skitty-notes",
         desc = "New video in skitty-notes",
       }, {
@@ -535,7 +537,7 @@ return {
     table.insert(
       snippets,
       s({
-        trig = "bashex",
+        trig = ";bashex",
         name = "Basic bash script example",
         desc = "Simple bash script template",
       }, {
@@ -555,7 +557,7 @@ return {
     table.insert(
       snippets,
       s({
-        trig = "pythonex",
+        trig = ";pythonex",
         name = "Basic Python script example",
         desc = "Simple Python script template",
       }, {
@@ -581,7 +583,7 @@ return {
     -- #####################################################################
     ls.add_snippets("all", {
       s({
-        trig = "workflow",
+        trig = ";workflow",
         name = "Add this -> lamw26wmal",
         desc = "Add this -> lamw26wmal",
       }, {
@@ -589,7 +591,7 @@ return {
       }),
 
       s({
-        trig = "lam",
+        trig = ";lam",
         name = "Add this -> lamw26wmal",
         desc = "Add this -> lamw26wmal",
       }, {
@@ -597,7 +599,7 @@ return {
       }),
 
       s({
-        trig = "mw25",
+        trig = ";mw25",
         name = "Add this -> lamw26wmal",
         desc = "Add this -> lamw26wmal",
       }, {

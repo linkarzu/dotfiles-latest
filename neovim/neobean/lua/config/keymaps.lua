@@ -3454,6 +3454,51 @@ end, { desc = "Decrease headings in visual selection" })
 --   vim.cmd("nohlsearch")
 -- end, { desc = "[P]Decrease headings with confirmation" })
 
+-- To open markdown links, the cursor usually has to be in this position for gx to
+-- work [link text](https://test<cursor>site.com)
+-- I want to open links if I run gx in the `link text` section too lamw26wmal
+vim.keymap.set("n", "gx", function()
+  -- So far, I want this keymap only for markdown files
+  if vim.bo.filetype ~= "markdown" then
+    -- If not markdown, fallback to default gx and return early
+    vim.cmd("normal! gx")
+    return
+  end
+  local line = vim.fn.getline(".")
+  local cursor_col = vim.fn.col(".")
+  local pos = 1
+  -- link logic detection
+  while pos <= #line do
+    local open_bracket = line:find("%[", pos)
+    if not open_bracket then
+      break
+    end
+    local close_bracket = line:find("%]", open_bracket + 1)
+    if not close_bracket then
+      break
+    end
+    local open_paren = line:find("%(", close_bracket + 1)
+    if not open_paren then
+      break
+    end
+    local close_paren = line:find("%)", open_paren + 1)
+    if not close_paren then
+      break
+    end
+    if
+      (cursor_col >= open_bracket and cursor_col <= close_bracket)
+      or (cursor_col >= open_paren and cursor_col <= close_paren)
+    then
+      local url = line:sub(open_paren + 1, close_paren - 1)
+      vim.ui.open(url)
+      return
+    end
+    pos = close_paren + 1
+  end
+  -- Fallback to default gx if no link found
+  vim.cmd("normal! gx")
+end, { desc = "[P]Better URL opener for markdown" })
+
 -- ############################################################################
 --                       End of markdown section
 -- ############################################################################

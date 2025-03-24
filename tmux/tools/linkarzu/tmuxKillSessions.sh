@@ -4,6 +4,10 @@
 # version of https://gist.github.com/dhulihan/4c65e868851660fb0d8bfa2d059e7967
 # by github user dhulihan
 
+# NOTE: My YouTube video related to this script:
+# Tmux Cleanup Session Script | Automatically Kill Unused Tmux Sessions
+# https://youtu.be/3axjsVR7QfA
+
 # If I do not add this, the script will not find tmux or any other apps in
 # the /opt/homebrew/bin dir. So it will not run the tmux ls command
 export PATH="/opt/homebrew/bin:$PATH"

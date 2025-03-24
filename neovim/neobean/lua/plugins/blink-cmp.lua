@@ -85,7 +85,7 @@ return {
           enabled = true,
           max_items = 3,
           module = "blink.cmp.sources.buffer",
-          min_keyword_length = 4,
+          min_keyword_length = 2,
           score_offset = 15, -- the higher the number, the higher the priority
         },
         snippets = {
@@ -234,10 +234,6 @@ return {
         window = {
           border = "single",
         },
-      },
-      -- Displays a preview of the selected item on the current line
-      ghost_text = {
-        enabled = true,
       },
     }
 

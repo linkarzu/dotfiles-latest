@@ -1967,6 +1967,100 @@ vim.keymap.set("n", "<leader>mfA", function()
   end
 end, { desc = "[P]Format and save all Markdown files in the repo" })
 
+-- Move youtube embeds in my blogpost to their own section for the current
+-- buffer
+-- http://youtube.com/post/Ugkx5K4nL8AtcH2Fjg6pyzQPamyqEugK-HNh?si=-pONtWziiB58yqmT
+vim.keymap.set("n", "<leader>mfy", function()
+  local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+  local embeds = {}
+  local seen = {}
+  local target_line = nil
+  local current_section = nil
+  local lines_to_remove = {}
+  local protected_sections = {
+    ["YouTube video"] = true,
+    ["Other videos mentioned"] = true,
+  }
+  -- Collect embeds and find target section
+  for i, line in ipairs(lines) do
+    -- Update current section
+    if line:match("^##%s+") then
+      current_section = line:match("^##%s+(.-)%s*$")
+    end
+    -- Check for target section
+    if line:match("^## If you like my content, and want to support me") then
+      target_line = i
+    end
+    -- Collect embeds not in protected sections
+    if line:match("^{%% include embed/youtube.html id=") then
+      if not protected_sections[current_section] then
+        if not seen[line] then
+          table.insert(embeds, line)
+          seen[line] = true
+        end
+        table.insert(lines_to_remove, i)
+      end
+    end
+  end
+  if not target_line then
+    print("Target section 'If you like my content...' not found")
+    return
+  end
+  -- Find existing section
+  local existing_section_start, existing_section_end = nil, nil
+  for i = 1, #lines do
+    if lines[i]:match("^## Other videos mentioned") then
+      existing_section_start = i
+      for j = i + 1, #lines do
+        if lines[j]:match("^## ") then
+          existing_section_end = j - 1
+          break
+        end
+        existing_section_end = j
+      end
+      break
+    end
+  end
+  -- Build new lines without removed embeds and old section
+  local new_lines = {}
+  for i, line in ipairs(lines) do
+    local in_removed = vim.tbl_contains(lines_to_remove, i)
+    local in_existing_section = existing_section_start and i >= existing_section_start and i <= existing_section_end
+    if not in_removed and not in_existing_section then
+      table.insert(new_lines, line)
+    end
+  end
+  -- Find new target position
+  local new_target_pos = nil
+  for i, line in ipairs(new_lines) do
+    if line:match("^## If you like my content") then
+      new_target_pos = i
+      break
+    end
+  end
+  if not new_target_pos then
+    print("Couldn't find target position after processing")
+    return
+  end
+  -- Only proceed if there are embeds to move
+  if #embeds > 0 then
+    -- Create section content
+    local section_content = { "## Other videos mentioned", "" }
+    for _, embed in ipairs(embeds) do
+      table.insert(section_content, embed)
+      table.insert(section_content, "")
+    end
+    -- Insert new section
+    table.insert(section_content, "") -- Add final newline
+    for i = #section_content, 1, -1 do
+      table.insert(new_lines, new_target_pos, section_content[i])
+    end
+  end
+  -- Update buffer
+  vim.api.nvim_buf_set_lines(0, 0, -1, false, new_lines)
+  print(#embeds > 0 and ("Moved " .. #embeds .. " embeds to 'Other videos mentioned' section") or "No embeds to move")
+end, { desc = "[P]Move YouTube embeds to dedicated section" })
+
 -- HACK: My complete Neovim markdown setup and workflow in 2024
 -- https://youtu.be/c0cuvzK1SDo
 

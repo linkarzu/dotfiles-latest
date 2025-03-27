@@ -112,7 +112,7 @@ return {
         -- template = vim.g.neovim_mode == "skitty" and "![i]($FILE_PATH)" or "![Image]($FILE_PATH)",
         --
         -- I want to use blink.cmp to easily find images with the LSP, so adding ./ lamw25wmal
-        template = vim.g.neovim_mode == "skitty" and "![i](./$FILE_PATH)" or "![Image](./$FILE_PATH)",
+        template = vim.g.neovim_mode == "skitty" and "![ ](./$FILE_PATH)" or "![Image](./$FILE_PATH)",
         --
         -- -- This will dynamically configure the alternative text to show the
         -- -- same that you configured as the "file_name" above

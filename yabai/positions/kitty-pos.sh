@@ -17,6 +17,12 @@ export PATH="/opt/homebrew/bin:$PATH"
 # yabai -m query --windows is producing malformed JSON with a trailing comma before ]
 # yabai -m query --windows | sed 's/,]/]/g' | jq '.[] | select(.app == "kitty") | {frame: .frame, id: .id}'
 display_resolution=$(system_profiler SPDisplaysDataType | grep Resolution)
+# Check if more than one display is connected by counting Resolution lines
+if [[ $(echo "$display_resolution" | grep -c "Resolution") -ge 2 ]]; then
+  yabai -m window --focus "$(yabai -m query --windows | jq '.[] | select(.app == "kitty") | .id')" --move abs:1369:39
+  yabai -m window --focus "$(yabai -m query --windows | jq '.[] | select(.app == "kitty") | .id')" --resize abs:231:400
+  exit 0
+fi
 # First condition is to match my macbook pro, the * are used as wildcards
 if [[ "$display_resolution" == *"3456 x 2234"* ]]; then
   yabai -m window --focus "$(yabai -m query --windows | jq '.[] | select(.app == "kitty") | .id')" --move abs:1,139:41

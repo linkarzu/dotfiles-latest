@@ -622,6 +622,36 @@ const rules: KarabinerRules[] = [
       ),
     },
 
+    o: {
+      m: {
+        to: [
+          {
+            shell_command: `python3 ~/obs-script/scene-switcher/switch_scene.py video-and-stream`,
+          },
+        ],
+      },
+      s: {
+        to: [
+          {
+            shell_command: `python3 ~/obs-script/scene-switcher/switch_scene.py starting-soon`,
+          },
+        ],
+      },
+      g: {
+        to: [
+          {
+            shell_command: `python3 ~/obs-script/scene-switcher/switch_scene.py guest-screen`,
+          },
+        ],
+      },
+      //   k: {
+      //     to: [
+      //       {
+      //         shell_command: `~/opt/lgtv/bin/python3 ~/opt/lgtv/bin/lgtv MyTV volumeUp ssl`,
+      //       },
+      //     ],
+      //   },
+    },
     // e = "etmux" - This is to SSH to devices
     // video that explains how this works below
     // https://youtu.be/MCbEPylDEWU

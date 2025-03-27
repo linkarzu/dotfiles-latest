@@ -90,6 +90,13 @@ return {
         conceal = false,
       },
     },
+    -- Add custom icons lamw26wmal
+    link = {
+      image = vim.g.neovim_mode == "skitty" and "" or "󰥶 ",
+      custom = {
+        youtu = { pattern = "youtu%.be", icon = "󰗃 " },
+      },
+    },
     heading = {
       sign = false,
       icons = { "󰎤 ", "󰎧 ", "󰎪 ", "󰎭 ", "󰎱 ", "󰎳 " },

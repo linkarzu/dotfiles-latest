@@ -52,7 +52,7 @@ M.setup = function(opts)
         else
           vim.notify("No file or directory selected", vim.log.levels.WARN)
         end
-      end, { buffer = buf_id, noremap = true, silent = true, desc = "Copy file/directory to clipboard" })
+      end, { buffer = buf_id, noremap = true, silent = true, desc = "[P]Copy file/directory to clipboard" })
 
       -- ZIP current file or directory and copy to the system clipboard
       vim.keymap.set("n", keymaps.zip_and_copy, function()
@@ -88,7 +88,7 @@ M.setup = function(opts)
         else
           vim.notify("No file or directory selected", vim.log.levels.WARN)
         end
-      end, { buffer = buf_id, noremap = true, silent = true, desc = "Zip and copy to clipboard" })
+      end, { buffer = buf_id, noremap = true, silent = true, desc = "[P]Zip and copy to clipboard" })
 
       -- Paste the current file or directory from the system clipboard into the current directory in mini.files
       -- NOTE: This works only on macOS
@@ -138,7 +138,7 @@ M.setup = function(opts)
         -- vim.notify("Pasted " .. source_path .. " to " .. dest_path, vim.log.levels.INFO)
         mini_files.synchronize() -- Refresh mini.files to show updated directory content
         vim.notify("Pasted successfully.", vim.log.levels.INFO)
-      end, { buffer = buf_id, noremap = true, silent = true, desc = "Paste from clipboard" })
+      end, { buffer = buf_id, noremap = true, silent = true, desc = "[P]Paste from clipboard" })
 
       -- Copy the current file or directory path (relative to home) to clipboard
       vim.keymap.set("n", keymaps.copy_path, function()
@@ -154,7 +154,7 @@ M.setup = function(opts)
         else
           vim.notify("No file or directory selected", vim.log.levels.WARN)
         end
-      end, { buffer = buf_id, noremap = true, silent = true, desc = "Copy relative path to clipboard" })
+      end, { buffer = buf_id, noremap = true, silent = true, desc = "[P]Copy relative path to clipboard" })
 
       -- Preview the selected image in macOS Quick Look
       --
@@ -179,7 +179,7 @@ M.setup = function(opts)
         else
           vim.notify("No file selected", vim.log.levels.WARN)
         end
-      end, { buffer = buf_id, noremap = true, silent = true, desc = "Preview with macOS Quick Look" })
+      end, { buffer = buf_id, noremap = true, silent = true, desc = "[P]Preview with macOS Quick Look" })
 
       -- -- Preview the selected image in a neovim popup window
       -- vim.keymap.set("n", keymaps.preview_image_popup, function()
@@ -315,7 +315,7 @@ M.setup = function(opts)
       --   else
       --     vim.notify("No file selected or not a file.", vim.log.levels.WARN)
       --   end
-      -- end, { buffer = buf_id, noremap = true, silent = true, desc = "Preview image in popup" })
+      -- end, { buffer = buf_id, noremap = true, silent = true, desc = "[P]Preview image in popup" })
 
       -- End of keymaps
     end,

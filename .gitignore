@@ -53,6 +53,17 @@ luac.out
 *.x86_64
 *.hex
 
+# Python
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
 plugin/packer_compiled.lua
 karabiner/yarn.lock
 karabiner/package-lock.json

@@ -1735,7 +1735,76 @@
               {
                 "to": [
                   {
-                    "shell_command": "python3 ~/obs-script/scene-switcher/switch_scene.py video-and-stream"
+                    "shell_command": "export PATH=\"/opt/homebrew/bin:$PATH\" && python3 ~/github/dotfiles-latest/scripts/macos/mac/obs/schene-switcher/py/switch_scene.py guest1"
+                  }
+                ],
+                "type": "basic",
+                "from": {
+                  "key_code": "1",
+                  "modifiers": {
+                    "mandatory": [
+                      "any"
+                    ]
+                  }
+                },
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "hyper_sublayer_o",
+                    "value": 1
+                  }
+                ]
+              },
+              {
+                "to": [
+                  {
+                    "shell_command": "export PATH=\"/opt/homebrew/bin:$PATH\" && python3 ~/github/dotfiles-latest/scripts/macos/mac/obs/schene-switcher/py/switch_scene.py guest2"
+                  }
+                ],
+                "type": "basic",
+                "from": {
+                  "key_code": "2",
+                  "modifiers": {
+                    "mandatory": [
+                      "any"
+                    ]
+                  }
+                },
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "hyper_sublayer_o",
+                    "value": 1
+                  }
+                ]
+              },
+              {
+                "to": [
+                  {
+                    "shell_command": "export PATH=\"/opt/homebrew/bin:$PATH\" && python3 ~/github/dotfiles-latest/scripts/macos/mac/obs/schene-switcher/py/switch_scene.py guest3"
+                  }
+                ],
+                "type": "basic",
+                "from": {
+                  "key_code": "3",
+                  "modifiers": {
+                    "mandatory": [
+                      "any"
+                    ]
+                  }
+                },
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "hyper_sublayer_o",
+                    "value": 1
+                  }
+                ]
+              },
+              {
+                "to": [
+                  {
+                    "shell_command": "export PATH=\"/opt/homebrew/bin:$PATH\" && python3 ~/github/dotfiles-latest/scripts/macos/mac/obs/schene-switcher/py/switch_scene.py video-and-stream"
                   }
                 ],
                 "type": "basic",
@@ -1758,7 +1827,7 @@
               {
                 "to": [
                   {
-                    "shell_command": "python3 ~/obs-script/scene-switcher/switch_scene.py starting-soon"
+                    "shell_command": "export PATH=\"/opt/homebrew/bin:$PATH\" && python3 ~/github/dotfiles-latest/scripts/macos/mac/obs/schene-switcher/py/switch_scene.py starting-soon"
                   }
                 ],
                 "type": "basic",
@@ -1781,12 +1850,35 @@
               {
                 "to": [
                   {
-                    "shell_command": "python3 ~/obs-script/scene-switcher/switch_scene.py guest-screen"
+                    "shell_command": "export PATH=\"/opt/homebrew/bin:$PATH\" && python3 ~/github/dotfiles-latest/scripts/macos/mac/obs/schene-switcher/py/switch_scene.py be-right-back"
                   }
                 ],
                 "type": "basic",
                 "from": {
-                  "key_code": "g",
+                  "key_code": "b",
+                  "modifiers": {
+                    "mandatory": [
+                      "any"
+                    ]
+                  }
+                },
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "hyper_sublayer_o",
+                    "value": 1
+                  }
+                ]
+              },
+              {
+                "to": [
+                  {
+                    "shell_command": "export PATH=\"/opt/homebrew/bin:$PATH\" && python3 ~/github/dotfiles-latest/scripts/macos/mac/obs/schene-switcher/py/switch_scene.py tech-difficulties"
+                  }
+                ],
+                "type": "basic",
+                "from": {
+                  "key_code": "t",
                   "modifiers": {
                     "mandatory": [
                       "any"

@@ -348,6 +348,8 @@ return {
             -- { icon = "󰒲 ", key = "L", desc = "Lazy", action = ":Lazy", enabled = package.loaded.lazy ~= nil },
             { icon = " ", key = "<esc>", desc = "Quit", action = ":qa" },
           },
+          -- Font Name: ANSI Shadow
+          -- https://patorjk.com/software/taag
           header = [[
 ███╗   ██╗███████╗ ██████╗ ██████╗ ███████╗ █████╗ ███╗   ██╗
 ████╗  ██║██╔════╝██╔═══██╗██╔══██╗██╔════╝██╔══██╗████╗  ██║

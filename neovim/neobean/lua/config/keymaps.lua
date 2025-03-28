@@ -1967,11 +1967,8 @@ vim.keymap.set("n", "<leader>mfA", function()
   end
 end, { desc = "[P]Format and save all Markdown files in the repo" })
 
--- Move youtube embeds in my blogpost to their own section for the current
--- buffer
--- http://youtube.com/post/Ugkx5K4nL8AtcH2Fjg6pyzQPamyqEugK-HNh?si=-pONtWziiB58yqmT
-vim.keymap.set("n", "<leader>mfy", function()
-  local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+local function process_embeds_in_buffer(bufnr)
+  local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
   local embeds = {}
   local seen = {}
   local target_line = nil
@@ -1983,15 +1980,12 @@ vim.keymap.set("n", "<leader>mfy", function()
   }
   -- Collect embeds and find target section
   for i, line in ipairs(lines) do
-    -- Update current section
     if line:match("^##%s+") then
       current_section = line:match("^##%s+(.-)%s*$")
     end
-    -- Check for target section
     if line:match("^## If you like my content, and want to support me") then
       target_line = i
     end
-    -- Collect embeds not in protected sections
     if line:match("^{%% include embed/youtube.html id=") then
       if not protected_sections[current_section] then
         if not seen[line] then
@@ -2003,10 +1997,9 @@ vim.keymap.set("n", "<leader>mfy", function()
     end
   end
   if not target_line then
-    print("Target section 'If you like my content...' not found")
-    return
+    return { error = "Target section 'If you like my content...' not found" }
   end
-  -- Find existing section
+  -- Existing section handling
   local existing_section_start, existing_section_end = nil, nil
   for i = 1, #lines do
     if lines[i]:match("^## Other videos mentioned") then
@@ -2021,7 +2014,7 @@ vim.keymap.set("n", "<leader>mfy", function()
       break
     end
   end
-  -- Build new lines without removed embeds and old section
+  -- Build new lines
   local new_lines = {}
   for i, line in ipairs(lines) do
     local in_removed = vim.tbl_contains(lines_to_remove, i)
@@ -2039,27 +2032,75 @@ vim.keymap.set("n", "<leader>mfy", function()
     end
   end
   if not new_target_pos then
-    print("Couldn't find target position after processing")
-    return
+    return { error = "Couldn't find target position after processing" }
   end
-  -- Only proceed if there are embeds to move
+  -- Insert new section if embeds found
   if #embeds > 0 then
-    -- Create section content
     local section_content = { "## Other videos mentioned", "" }
     for _, embed in ipairs(embeds) do
       table.insert(section_content, embed)
       table.insert(section_content, "")
     end
-    -- Insert new section
-    table.insert(section_content, "") -- Add final newline
+    table.insert(section_content, "")
     for i = #section_content, 1, -1 do
       table.insert(new_lines, new_target_pos, section_content[i])
     end
   end
-  -- Update buffer
-  vim.api.nvim_buf_set_lines(0, 0, -1, false, new_lines)
-  print(#embeds > 0 and ("Moved " .. #embeds .. " embeds to 'Other videos mentioned' section") or "No embeds to move")
+  vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, new_lines)
+  return {
+    moved = #embeds,
+    message = #embeds > 0 and ("Moved " .. #embeds .. " embeds to 'Other videos mentioned' section")
+      or "No embeds to move",
+  }
+end
+
+-- Move youtube embeds in my blogpost to their own section for the current
+-- buffer lamw26wmal
+-- http://youtube.com/post/Ugkx5K4nL8AtcH2Fjg6pyzQPamyqEugK-HNh?si=-pONtWziiB58yqmT
+vim.keymap.set("n", "<leader>mfy", function()
+  local result = process_embeds_in_buffer(0)
+  if result.error then
+    print(result.error)
+  else
+    print(result.message)
+  end
 end, { desc = "[P]Move YouTube embeds to dedicated section" })
+
+-- Keymap youtube embeds for ALL the markdown files in the current repository
+-- This will auto-format them, so don't worry about running and auto format for
+-- all markdown files afterwards
+vim.keymap.set("n", "<leader>mfY", function()
+  local git_root = vim.fn.systemlist("git rev-parse --show-toplevel")[1]
+  if not git_root or git_root == "" then
+    print("Could not determine Git repository root.")
+    return
+  end
+  local find_command = string.format("find %s -type f -name '*.md'", vim.fn.shellescape(git_root))
+  local handle = io.popen(find_command)
+  if not handle then
+    print("Failed to find Markdown files.")
+    return
+  end
+  local files = {}
+  for file in handle:lines() do
+    table.insert(files, file)
+  end
+  handle:close()
+  if #files == 0 then
+    print("No Markdown files found in repository.")
+    return
+  end
+  for _, file in ipairs(files) do
+    local bufnr = vim.fn.bufadd(file)
+    vim.fn.bufload(bufnr)
+    local result = process_embeds_in_buffer(bufnr)
+    vim.api.nvim_buf_call(bufnr, function()
+      vim.cmd("write")
+    end)
+    local status = result.error and ("Error: " .. result.error) or result.message
+    print(string.format("%s: %s", file, status))
+  end
+end, { desc = "[P]Move YouTube embeds in all repo Markdown files" })
 
 -- HACK: My complete Neovim markdown setup and workflow in 2024
 -- https://youtu.be/c0cuvzK1SDo

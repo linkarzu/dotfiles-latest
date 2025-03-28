@@ -1,0 +1,6 @@
+/* Change title bar (header) background color */
+#browser:not(.tabs-top) #header {
+  background-color: #2c2c2c !important;
+  border-bottom: none !important;
+  box-shadow: none !important;
+}

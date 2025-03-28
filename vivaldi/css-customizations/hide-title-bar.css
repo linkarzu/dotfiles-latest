@@ -1,5 +1,5 @@
 /* Hide header if tabs not on top */
 
 /* #browser:not(.tabs-top) #header { */
-/*   min-height: 9px !important; */
+/*   min-height: 0px !important; */
 /* } */

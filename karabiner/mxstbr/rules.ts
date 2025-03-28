@@ -626,49 +626,49 @@ const rules: KarabinerRules[] = [
       m: {
         to: [
           {
-            shell_command: `export PATH="/opt/homebrew/bin:$PATH" && python3 ~/github/dotfiles-latest/scripts/macos/mac/obs/schene-switcher/py/switch_scene.py video-and-stream`,
+            shell_command: `export PATH="/opt/homebrew/bin:$PATH" && python3 ~/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py video-and-stream`,
           },
         ],
       },
       s: {
         to: [
           {
-            shell_command: `export PATH="/opt/homebrew/bin:$PATH" && python3 ~/github/dotfiles-latest/scripts/macos/mac/obs/schene-switcher/py/switch_scene.py starting-soon`,
+            shell_command: `export PATH="/opt/homebrew/bin:$PATH" && python3 ~/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py starting-soon`,
           },
         ],
       },
       1: {
         to: [
           {
-            shell_command: `export PATH="/opt/homebrew/bin:$PATH" && python3 ~/github/dotfiles-latest/scripts/macos/mac/obs/schene-switcher/py/switch_scene.py guest1`,
+            shell_command: `export PATH="/opt/homebrew/bin:$PATH" && python3 ~/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py guest1`,
           },
         ],
       },
       2: {
         to: [
           {
-            shell_command: `export PATH="/opt/homebrew/bin:$PATH" && python3 ~/github/dotfiles-latest/scripts/macos/mac/obs/schene-switcher/py/switch_scene.py guest2`,
+            shell_command: `export PATH="/opt/homebrew/bin:$PATH" && python3 ~/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py guest2`,
           },
         ],
       },
       3: {
         to: [
           {
-            shell_command: `export PATH="/opt/homebrew/bin:$PATH" && python3 ~/github/dotfiles-latest/scripts/macos/mac/obs/schene-switcher/py/switch_scene.py guest3`,
+            shell_command: `export PATH="/opt/homebrew/bin:$PATH" && python3 ~/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py guest3`,
           },
         ],
       },
       b: {
         to: [
           {
-            shell_command: `export PATH="/opt/homebrew/bin:$PATH" && python3 ~/github/dotfiles-latest/scripts/macos/mac/obs/schene-switcher/py/switch_scene.py be-right-back`,
+            shell_command: `export PATH="/opt/homebrew/bin:$PATH" && python3 ~/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py be-right-back`,
           },
         ],
       },
       t: {
         to: [
           {
-            shell_command: `export PATH="/opt/homebrew/bin:$PATH" && python3 ~/github/dotfiles-latest/scripts/macos/mac/obs/schene-switcher/py/switch_scene.py tech-difficulties`,
+            shell_command: `export PATH="/opt/homebrew/bin:$PATH" && python3 ~/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py tech-difficulties`,
           },
         ],
       },

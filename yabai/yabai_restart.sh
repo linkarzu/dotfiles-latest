@@ -30,9 +30,9 @@ for app in "${apps[@]}"; do
   # Trim leading/trailing whitespace
   app=$(echo "$app" | xargs)
   pkill "$app"
-  sleep 0.7
+  sleep 1
   open -a "$app"
-  sleep 0.7
+  sleep 1
 done
 
 # IFS='|' read -ra apps <<<"$(echo "$apps_scratchpad" | tr -d '()')"

@@ -55,6 +55,7 @@ cask "winbox"
 cask "keycastr"
 cask "upscayl"
 brew "ast-grep"
+brew "1password-cli"
 
 # Not essentials, but added them here, as I install them all the time ;)
 cask "google-chrome"

@@ -1,0 +1,10 @@
+/* Increase vertical spacing between tabs in the Workspaces tab sidebar */
+.tab,
+.tab-position,
+.tab-strip .tab:not(.pinned) {
+  padding-top: 3px !important;
+  padding-bottom: 0px !important;
+  padding-left: 3px !important;
+  padding-right: 3px !important;
+  min-height: 35px !important;
+}

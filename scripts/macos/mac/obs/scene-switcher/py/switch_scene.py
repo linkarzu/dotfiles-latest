@@ -84,6 +84,18 @@ def switch_scene(scene_name):
         print(f"Error: {str(e)}")
 
 
+# This is just to load my SketchyBar colors file
+def get_color_from_shell(var_name, colors_file):
+    command = f'source "{colors_file}" && echo "${{{var_name}}}"'
+    result = subprocess.run(
+        ["zsh", "-c", command],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+    )
+    return result.stdout.strip() if result.returncode == 0 else None
+
+
 if __name__ == "__main__":
     if len(sys.argv) < 2:
         print("Usage: python switch_scene.py 'Scene Name'")
@@ -91,3 +103,34 @@ if __name__ == "__main__":
 
     scene_name = sys.argv[1]
     switch_scene(scene_name)
+
+    # If the banner file exists:
+    # - Save the scene name to the file
+    # - Update the SketchyBar label with the scene name
+    # This ensures no sketchybar commands are triggered for users without that
+    # don't use SketchyBar
+    banner_file = os.path.expanduser("~/github/dotfiles-latest/youtube-banner.txt")
+    if os.path.exists(banner_file):
+        with open(banner_file, "w") as f:
+            f.write(scene_name)
+
+        # Load BLUE from your sketchybar colors file
+        colors_file = os.path.expanduser(
+            "~/github/dotfiles-latest/sketchybar/felixkratz-linkarzu/colors.sh"
+        )
+        blue = get_color_from_shell("BLUE", colors_file)
+
+        # Update SketchyBar item immediately
+        subprocess.run(
+            [
+                "sketchybar",
+                "-m",
+                "--set",
+                "custom_text",
+                f"label={scene_name}",
+                "icon=",
+                f"icon.color={blue}",
+                f"label.color={blue}",
+                "icon.drawing=on",
+            ]
+        )

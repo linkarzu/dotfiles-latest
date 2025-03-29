@@ -29,7 +29,7 @@ if [[ "$display_resolution" == *"3456 x 2234"* ]]; then
   yabai -m window --focus "$(yabai -m query --windows | jq '.[] | select(.app == "kitty") | .id')" --resize abs:231:400
   # This elif below is for my macbook pro 14 inch
 elif [[ "$display_resolution" == *"3024 x 1964"* ]]; then
-  yabai -m window --focus "$(yabai -m query --windows | jq '.[] | select(.app == "kitty") | .id')" --move abs:1123:39
+  yabai -m window --focus "$(yabai -m query --windows | jq '.[] | select(.app == "kitty") | .id')" --move abs:1283:39
   yabai -m window --focus "$(yabai -m query --windows | jq '.[] | select(.app == "kitty") | .id')" --resize abs:231:400
   # This elif below is for my short format videos 9:16
 elif [[ "$display_resolution" == *"1536 x 2048"* ]]; then

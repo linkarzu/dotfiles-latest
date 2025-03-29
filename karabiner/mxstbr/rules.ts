@@ -626,7 +626,7 @@ const rules: KarabinerRules[] = [
       m: {
         to: [
           {
-            shell_command: `export PATH="/opt/homebrew/bin:$PATH" && python3 ~/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py video-and-stream`,
+            shell_command: `export PATH="/opt/homebrew/bin:$PATH" && python3 ~/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py main-screen`,
           },
         ],
       },

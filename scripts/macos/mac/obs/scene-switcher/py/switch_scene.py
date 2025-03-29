@@ -4,6 +4,9 @@
 # Feel free to modify, distribute it
 # If you find it useful, you can support me at ko-fi https://ko-fi.com/linkarzu
 # HACK: Video related to this script:
+# https://youtu.be/mmdqzcL7lCU
+# Blogpost article
+# https://linkarzu.com/posts/tools/obs-scene-py/
 
 import os
 import sys

@@ -8,7 +8,7 @@ custom_text=(
   update_freq=10
   label.drawing=on
   padding_right=3
-  label.font="$FONT:Regular:16.0"
+  label.font="$FONT:Regular:14.0"
   # label.padding_left=3
   script="$PLUGIN_DIR/custom_text.sh"
 )

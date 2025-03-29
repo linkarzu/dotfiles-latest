@@ -121,7 +121,10 @@ if __name__ == "__main__":
         colors_file = os.path.expanduser(
             "~/github/dotfiles-latest/sketchybar/felixkratz-linkarzu/colors.sh"
         )
-        blue = get_color_from_shell("BLUE", colors_file)
+        color1 = get_color_from_shell("BLUE", colors_file)
+        color2 = get_color_from_shell("RED", colors_file)
+
+        color = color1 if scene_name == "main-screen" else color2
 
         # Update SketchyBar item immediately
         subprocess.run(
@@ -132,8 +135,8 @@ if __name__ == "__main__":
                 "custom_text",
                 f"label={scene_name}",
                 "icon=",
-                f"icon.color={blue}",
-                f"label.color={blue}",
+                f"icon.color={color}",
+                f"label.color={color}",
                 "icon.drawing=on",
             ]
         )

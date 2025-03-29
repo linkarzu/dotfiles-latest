@@ -672,6 +672,13 @@ const rules: KarabinerRules[] = [
           },
         ],
       },
+      z: {
+        to: [
+          {
+            shell_command: `export PATH="/opt/homebrew/bin:$PATH" && python3 ~/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py zoom-main`,
+          },
+        ],
+      },
       //   k: {
       //     to: [
       //       {

@@ -10,7 +10,15 @@ youtube_banner="$HOME/github/dotfiles-latest/youtube-banner.txt"
 
 if [ -f "$youtube_banner" ]; then
   banner_text=$(<"$youtube_banner")
-  sketchybar -m --set custom_text label="$banner_text" icon="" icon.color=$BLUE label.color=$BLUE icon.drawing=on
+
+  # Choose color based on label value
+  if [[ "$banner_text" == "main-screen" ]]; then
+    color=$BLUE
+  else
+    color=$RED
+  fi
+
+  sketchybar -m --set custom_text label="$banner_text" icon="" icon.color=$color label.color=$color icon.drawing=on
 else
   sketchybar -m --set custom_text label="" icon.drawing=off
 fi

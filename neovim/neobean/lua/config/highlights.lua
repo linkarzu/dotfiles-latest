@@ -11,7 +11,8 @@ local color3_bg = colors["linkarzu_color03"]
 local color4_bg = colors["linkarzu_color01"]
 local color5_bg = colors["linkarzu_color05"]
 local color6_bg = colors["linkarzu_color08"]
-local color_fg = colors["linkarzu_color26"]
+-- local color_fg = colors["linkarzu_color26"]
+local color_fg = colors["linkarzu_color13"]
 
 vim.cmd(
   string.format([[highlight @markup.heading.1.markdown cterm=bold gui=bold guibg=%s guifg=%s]], color_fg, color1_bg)

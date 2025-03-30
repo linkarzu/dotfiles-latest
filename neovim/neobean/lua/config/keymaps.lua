@@ -2838,37 +2838,29 @@ end, { desc = "[P]Paste Github link" })
 --                           Folding section
 -------------------------------------------------------------------------------
 
--- HACK: Fold markdown headings in Neovim with a keymap
--- https://youtu.be/EYczZLNEnIY
---
--- Use <CR> to fold when in normal mode
--- To see help about folds use `:help fold`
-vim.keymap.set("n", "<CR>", function()
-  -- Get the current line number
-  local line = vim.fn.line(".")
-  -- Get the fold level of the current line
-  local foldlevel = vim.fn.foldlevel(line)
-  if foldlevel == 0 then
-    vim.notify("No fold found", vim.log.levels.INFO)
+-- Checks each line to see if it matches a markdown heading (#, ##, etc.):
+-- It’s called implicitly by Neovim’s folding engine by vim.opt_local.foldexpr
+function _G.markdown_foldexpr()
+  local line = vim.fn.getline(vim.v.lnum)
+  local heading_level = line:match("^(#+)%s")
+  if heading_level then
+    return ">" .. #heading_level
   else
-    vim.cmd("normal! za")
-    vim.cmd("normal! zz") -- center the cursor line on screen
+    return "="
   end
-end, { desc = "[P]Toggle fold" })
-
-local function set_foldmethod_expr()
-  -- These are lazyvim.org defaults but setting them just in case a file
-  -- doesn't have them set
-  if vim.fn.has("nvim-0.10") == 1 then
-    vim.opt.foldmethod = "expr"
-    vim.opt.foldexpr = "v:lua.require'lazyvim.util'.ui.foldexpr()"
-    vim.opt.foldtext = ""
-  else
-    vim.opt.foldmethod = "indent"
-    vim.opt.foldtext = "v:lua.require'lazyvim.util'.ui.foldtext()"
-  end
-  vim.opt.foldlevel = 99
 end
+
+local function set_markdown_folding()
+  vim.opt_local.foldmethod = "expr"
+  vim.opt_local.foldexpr = "v:lua.markdown_foldexpr()"
+  vim.opt_local.foldlevel = 99
+end
+
+-- Use autocommand to apply only to markdown files
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "markdown",
+  callback = set_markdown_folding,
+})
 
 -- Function to fold all headings of a specific level
 local function fold_headings_of_level(level)
@@ -2901,7 +2893,6 @@ local function fold_headings_of_level(level)
 end
 
 local function fold_markdown_headings(levels)
-  set_foldmethod_expr()
   -- I save the view to know where to jump back after folding
   local saved_view = vim.fn.winsaveview()
   for _, level in ipairs(levels) do
@@ -2911,39 +2902,6 @@ local function fold_markdown_headings(levels)
   -- Restore the view to jump to where I was
   vim.fn.winrestview(saved_view)
 end
-
--- HACK: Fold markdown headings in Neovim with a keymap
--- https://youtu.be/EYczZLNEnIY
---
--- Keymap for unfolding markdown headings of level 2 or above
--- Changed all the markdown folding and unfolding keymaps from <leader>mfj to
--- zj, zk, zl, z; and zu respectively lamw25wmal
-vim.keymap.set("n", "zu", function()
-  -- "Update" saves only if the buffer has been modified since the last save
-  vim.cmd("silent update")
-  -- vim.keymap.set("n", "<leader>mfu", function()
-  -- Reloads the file to reflect the changes
-  vim.cmd("edit!")
-  vim.cmd("normal! zR") -- Unfold all headings
-  vim.cmd("normal! zz") -- center the cursor line on screen
-end, { desc = "[P]Unfold all headings level 2 or above" })
-
--- HACK: Fold markdown headings in Neovim with a keymap
--- https://youtu.be/EYczZLNEnIY
---
--- gk jummps to the markdown heading above and then folds it
--- zi by default toggles folding, but I don't need it lamw25wmal
-vim.keymap.set("n", "zi", function()
-  -- "Update" saves only if the buffer has been modified since the last save
-  vim.cmd("silent update")
-  -- Difference between normal and normal!
-  -- - `normal` executes the command and respects any mappings that might be defined.
-  -- - `normal!` executes the command in a "raw" mode, ignoring any mappings.
-  vim.cmd("normal gk")
-  -- This is to fold the line under the cursor
-  vim.cmd("normal! za")
-  vim.cmd("normal! zz") -- center the cursor line on screen
-end, { desc = "[P]Fold the heading cursor currently on" })
 
 -- HACK: Fold markdown headings in Neovim with a keymap
 -- https://youtu.be/EYczZLNEnIY
@@ -3009,6 +2967,57 @@ vim.keymap.set("n", "z;", function()
   fold_markdown_headings({ 6, 5, 4 })
   vim.cmd("normal! zz") -- center the cursor line on screen
 end, { desc = "[P]Fold all headings level 4 or above" })
+
+-- HACK: Fold markdown headings in Neovim with a keymap
+-- https://youtu.be/EYczZLNEnIY
+--
+-- Use <CR> to fold when in normal mode
+-- To see help about folds use `:help fold`
+vim.keymap.set("n", "<CR>", function()
+  -- Get the current line number
+  local line = vim.fn.line(".")
+  -- Get the fold level of the current line
+  local foldlevel = vim.fn.foldlevel(line)
+  if foldlevel == 0 then
+    vim.notify("No fold found", vim.log.levels.INFO)
+  else
+    vim.cmd("normal! za")
+    vim.cmd("normal! zz") -- center the cursor line on screen
+  end
+end, { desc = "[P]Toggle fold" })
+
+-- HACK: Fold markdown headings in Neovim with a keymap
+-- https://youtu.be/EYczZLNEnIY
+--
+-- Keymap for unfolding markdown headings of level 2 or above
+-- Changed all the markdown folding and unfolding keymaps from <leader>mfj to
+-- zj, zk, zl, z; and zu respectively lamw25wmal
+vim.keymap.set("n", "zu", function()
+  -- "Update" saves only if the buffer has been modified since the last save
+  vim.cmd("silent update")
+  -- vim.keymap.set("n", "<leader>mfu", function()
+  -- Reloads the file to reflect the changes
+  vim.cmd("edit!")
+  vim.cmd("normal! zR") -- Unfold all headings
+  vim.cmd("normal! zz") -- center the cursor line on screen
+end, { desc = "[P]Unfold all headings level 2 or above" })
+
+-- HACK: Fold markdown headings in Neovim with a keymap
+-- https://youtu.be/EYczZLNEnIY
+--
+-- gk jummps to the markdown heading above and then folds it
+-- zi by default toggles folding, but I don't need it lamw25wmal
+vim.keymap.set("n", "zi", function()
+  -- "Update" saves only if the buffer has been modified since the last save
+  vim.cmd("silent update")
+  -- Difference between normal and normal!
+  -- - `normal` executes the command and respects any mappings that might be defined.
+  -- - `normal!` executes the command in a "raw" mode, ignoring any mappings.
+  vim.cmd("normal gk")
+  -- This is to fold the line under the cursor
+  vim.cmd("normal! za")
+  vim.cmd("normal! zz") -- center the cursor line on screen
+end, { desc = "[P]Fold the heading cursor currently on" })
 
 -------------------------------------------------------------------------------
 --                         End Folding section

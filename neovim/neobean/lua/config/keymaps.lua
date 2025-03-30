@@ -2886,9 +2886,15 @@ local function fold_headings_of_level(level)
     if line_content:match("^" .. string.rep("#", level) .. "%s") then
       -- Move the cursor to the current line
       vim.fn.cursor(line, 1)
-      -- Fold the heading if it matches the level
-      if vim.fn.foldclosed(line) == -1 then
-        vim.cmd("normal! za")
+      -- Check if the current line has a fold level > 0
+      local current_foldlevel = vim.fn.foldlevel(line)
+      if current_foldlevel > 0 then
+        -- Fold the heading if it matches the level
+        if vim.fn.foldclosed(line) == -1 then
+          vim.cmd("normal! za")
+        end
+        -- else
+        --   vim.notify("No fold at line " .. line, vim.log.levels.WARN)
       end
     end
   end

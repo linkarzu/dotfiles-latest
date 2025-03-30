@@ -14,20 +14,20 @@ local color6_bg = colors["linkarzu_color08"]
 local color_fg = colors["linkarzu_color26"]
 
 vim.cmd(
-  string.format([[highlight @markup.heading.1.markdown cterm=bold gui=bold guifg=%s guibg=%s]], color_fg, color1_bg)
+  string.format([[highlight @markup.heading.1.markdown cterm=bold gui=bold guibg=%s guifg=%s]], color_fg, color1_bg)
 )
 vim.cmd(
-  string.format([[highlight @markup.heading.2.markdown cterm=bold gui=bold guifg=%s guibg=%s]], color_fg, color2_bg)
+  string.format([[highlight @markup.heading.2.markdown cterm=bold gui=bold guibg=%s guifg=%s]], color_fg, color2_bg)
 )
 vim.cmd(
-  string.format([[highlight @markup.heading.3.markdown cterm=bold gui=bold guifg=%s guibg=%s]], color_fg, color3_bg)
+  string.format([[highlight @markup.heading.3.markdown cterm=bold gui=bold guibg=%s guifg=%s]], color_fg, color3_bg)
 )
 vim.cmd(
-  string.format([[highlight @markup.heading.4.markdown cterm=bold gui=bold guifg=%s guibg=%s]], color_fg, color4_bg)
+  string.format([[highlight @markup.heading.4.markdown cterm=bold gui=bold guibg=%s guifg=%s]], color_fg, color4_bg)
 )
 vim.cmd(
-  string.format([[highlight @markup.heading.5.markdown cterm=bold gui=bold guifg=%s guibg=%s]], color_fg, color5_bg)
+  string.format([[highlight @markup.heading.5.markdown cterm=bold gui=bold guibg=%s guifg=%s]], color_fg, color5_bg)
 )
 vim.cmd(
-  string.format([[highlight @markup.heading.6.markdown cterm=bold gui=bold guifg=%s guibg=%s]], color_fg, color6_bg)
+  string.format([[highlight @markup.heading.6.markdown cterm=bold gui=bold guibg=%s guifg=%s]], color_fg, color6_bg)
 )

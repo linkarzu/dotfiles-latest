@@ -14,17 +14,17 @@
 # C (#37f499) becomes when darkened 4 steps to the right.
 #
 # Markdown heading 1 - color04
-linkarzu_color18=#5b4996
+linkarzu_color18=#1e1832
 # Markdown heading 2 - color02
-linkarzu_color19=#21925b
+linkarzu_color19=#092b1b
 # Markdown heading 3 - color03
-linkarzu_color20=#027d95
+linkarzu_color20=#00242c
 # Markdown heading 4 - color01
-linkarzu_color21=#585c89
+linkarzu_color21=#232436
 # Markdown heading 5 - color05
-linkarzu_color22=#0f857c
+linkarzu_color22=#063531
 # Markdown heading 6 - color08
-linkarzu_color23=#396592
+linkarzu_color23=#1c3249
 # Markdown heading foreground
 # usually set to color10 which is the terminal background
 linkarzu_color26=#0D1116
@@ -43,11 +43,11 @@ linkarzu_color10=#0D1116
 # Lualine across, 1 color to the right of background
 linkarzu_color17=#141b22
 # Markdown codeblock, 2 to the right of background
-linkarzu_color07=#1c242f
+linkarzu_color07=#141b22
 # Background of inactive tmux pane, 3 to the right of background
 linkarzu_color25=#232e3b
 # line across cursor, 5 to the right of background
-linkarzu_color13=#314154
+linkarzu_color13=#232e3b
 # Tmux inactive windows, 7 colors to the right of background
 linkarzu_color15=#013e4a
 

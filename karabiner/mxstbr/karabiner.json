@@ -1101,10 +1101,10 @@
               {
                 "to": [
                   {
-                    "shell_command": "open -a 'Microsoft Outlook.app'"
+                    "shell_command": "open -a 'Google Chrome.app'"
                   }
                 ],
-                "description": "Open -a 'Microsoft Outlook.app'",
+                "description": "Open -a 'Google Chrome.app'",
                 "type": "basic",
                 "from": {
                   "key_code": "c",
@@ -1804,7 +1804,7 @@
               {
                 "to": [
                   {
-                    "shell_command": "export PATH=\"/opt/homebrew/bin:$PATH\" && python3 ~/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py main-screen"
+                    "shell_command": "export PATH=\"/opt/homebrew/bin:$PATH\" && python3 ~/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py main-1-guest"
                   }
                 ],
                 "type": "basic",
@@ -1902,6 +1902,29 @@
                 "type": "basic",
                 "from": {
                   "key_code": "z",
+                  "modifiers": {
+                    "mandatory": [
+                      "any"
+                    ]
+                  }
+                },
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "hyper_sublayer_o",
+                    "value": 1
+                  }
+                ]
+              },
+              {
+                "to": [
+                  {
+                    "shell_command": "export PATH=\"/opt/homebrew/bin:$PATH\" && python3 ~/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py guests-all-notes"
+                  }
+                ],
+                "type": "basic",
+                "from": {
+                  "key_code": "g",
                   "modifiers": {
                     "mandatory": [
                       "any"

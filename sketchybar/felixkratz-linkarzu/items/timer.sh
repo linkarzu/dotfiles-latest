@@ -13,6 +13,11 @@ stopwatch=(
   label="SW Mode"
 )
 
+preset0=(
+  click_script="sketchybar --set timer popup.drawing=toggle ; python3 ${PLUGIN_DIR}/timer.py 60"
+  label="1 min"
+)
+
 preset1=(
   click_script="sketchybar --set timer popup.drawing=toggle ; python3 ${PLUGIN_DIR}/timer.py 180"
   label="3 min"
@@ -48,6 +53,8 @@ sketchybar --add item timer left \
   --subscribe timer reset_timer \
   --add item timer.stopwatch popup.timer \
   --set timer.stopwatch "${stopwatch[@]}" \
+  --add item timer.preset0 popup.timer \
+  --set timer.preset0 "${preset0[@]}" \
   --add item timer.preset1 popup.timer \
   --set timer.preset1 "${preset1[@]}" \
   --add item timer.preset2 popup.timer \

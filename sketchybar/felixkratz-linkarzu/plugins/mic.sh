@@ -33,7 +33,7 @@ VALIDATED_MIC_NAME=$(echo "$MIC_NAME" | iconv -f UTF-8 -t UTF-8//IGNORE)
 
 # I'll be using this in ~/github/dotfiles-latest/scripts/macos/mac/200-micMute.sh
 # That file will have something like "Yeti" or "AirPods"
-echo "$VALIDATED_MIC_NAME" >"/tmp/${USER}_mic_name"
+echo "$VALIDATED_MIC_NAME" >"$MIC_NAME_FILE"
 
 # Get the current microphone volume
 MIC_VOLUME=$(osascript -e 'input volume of (get volume settings)')

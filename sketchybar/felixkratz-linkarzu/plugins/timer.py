@@ -41,7 +41,7 @@ def stopwatch(start_time):
         delta = current_time - start_time
 
         os.system(
-            'sketchybar --set timer label="Playing Skyrim for: '
+            'sketchybar --set timer label="Timer: '
             + format_seconds(delta)
             + '" label.color='
             + WHITE
@@ -64,7 +64,7 @@ def count_down(start_time, end_time):
             color = WHITE
 
         os.system(
-            'sketchybar --set timer label="Playing Skyrim for: '
+            'sketchybar --set timer label="Timer: '
             + format_seconds(delta)
             + '" label.color='
             + color
@@ -94,7 +94,7 @@ def format_seconds(seconds):
 def finish_event():
     os.system('sketchybar --set timer label="Time Up!" ' + "label.color=" + WHITE)
 
-    for i in range(10):
+    for i in range(2):
         os.system("afplay /System/Library/Sounds/Funk.aiff")
 
     os.system('sketchybar --set timer label=""')

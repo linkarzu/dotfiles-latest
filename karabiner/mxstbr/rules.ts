@@ -523,7 +523,7 @@ const rules: KarabinerRules[] = [
       // t: app("Claude"),
       5: app("DaVinci Resolve"),
       x: app("GoTo"),
-      c: app("Microsoft Outlook"),
+      c: app("Google Chrome"),
       v: app("zoom.us"),
 
       // Below I'm just leaving comments of the shortcuts I specifically use on
@@ -626,7 +626,8 @@ const rules: KarabinerRules[] = [
       m: {
         to: [
           {
-            shell_command: `export PATH="/opt/homebrew/bin:$PATH" && python3 ~/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py main-screen`,
+            // shell_command: `export PATH="/opt/homebrew/bin:$PATH" && python3 ~/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py main-screen`,
+            shell_command: `export PATH="/opt/homebrew/bin:$PATH" && python3 ~/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py main-1-guest`,
           },
         ],
       },
@@ -686,6 +687,13 @@ const rules: KarabinerRules[] = [
       //       },
       //     ],
       //   },
+      g: {
+        to: [
+          {
+            shell_command: `export PATH="/opt/homebrew/bin:$PATH" && python3 ~/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py guests-all-notes`,
+          },
+        ],
+      },
     },
     // e = "etmux" - This is to SSH to devices
     // video that explains how this works below

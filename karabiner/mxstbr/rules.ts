@@ -330,7 +330,7 @@ const rules: KarabinerRules[] = [
   },
 
   {
-    description: "down_arrow -> tmux 3rd session",
+    description: "down_arrow -> sesh",
     manipulators: [
       {
         from: {
@@ -339,13 +339,31 @@ const rules: KarabinerRules[] = [
         to: [
           {
             shell_command:
-              "open btt://execute_assigned_actions_for_trigger/?uuid=79CE855A-4DEA-4340-9878-4C33328B6B85",
+              "open btt://execute_assigned_actions_for_trigger/?uuid=FE2E2A74-F413-4723-9E1A-EBFC7C3E574B",
           },
         ],
         type: "basic",
       },
     ],
   },
+
+  // {
+  //   description: "down_arrow -> tmux 3rd session",
+  //   manipulators: [
+  //     {
+  //       from: {
+  //         key_code: "down_arrow",
+  //       },
+  //       to: [
+  //         {
+  //           shell_command:
+  //             "open btt://execute_assigned_actions_for_trigger/?uuid=79CE855A-4DEA-4340-9878-4C33328B6B85",
+  //         },
+  //       ],
+  //       type: "basic",
+  //     },
+  //   ],
+  // },
 
   {
     description: "up_arrow -> tmux visual mode",
@@ -743,12 +761,13 @@ const rules: KarabinerRules[] = [
       k: open("raycast://extensions/mblode/google-search/index"),
       l: open("raycast://extensions/raycast/file-search/search-files"),
       semicolon: open("raycast://extensions/vishaltelangre/google-drive/index"),
-      quote: open("raycast://extensions/mathieudutour/wolfram-alpha/index"),
+      // quote: open("raycast://extensions/mathieudutour/wolfram-alpha/index"),
       y: open(
         "raycast://extensions/tonka3000/youtube/search-videos?arguments=%7B%22query%22%3A%22%22%7D"
       ),
       u: open("raycast://extensions/raycast/apple-reminders/create-reminder"),
-      i: open("raycast://extensions/raycast/apple-reminders/my-reminders"),
+      i: open("https://google.com/search?q=&tbm=isch"),
+      // i: open("raycast://extensions/raycast/apple-reminders/my-reminders"),
       o: open("raycast://extensions/raycast/github/search-repositories"),
       p: open("raycast://extensions/nhojb/brew/search"),
       h: open("raycast://extensions/mattisssa/spotify-player/search"),

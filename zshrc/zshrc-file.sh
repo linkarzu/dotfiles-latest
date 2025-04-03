@@ -41,6 +41,7 @@ mkdir -p ~/.config/rio
 mkdir -p ~/.config/yazi
 mkdir -p ~/.config/btop
 mkdir -p ~/.config/fastfetch
+mkdir -p ~/.config/sesh
 
 # Create the symlinks I normally use
 # ~/.config dir holds nvim, neofetch, alacritty configs
@@ -127,6 +128,7 @@ create_symlink ~/github/dotfiles-latest/rio/ ~/.config/rio
 create_symlink ~/github/dotfiles-latest/yazi/ ~/.config/yazi
 create_symlink ~/github/dotfiles-latest/btop/ ~/.config/btop
 create_symlink ~/github/dotfiles-latest/fastfetch/ ~/.config/fastfetch
+create_symlink ~/github/dotfiles-latest/sesh ~/.config/sesh
 
 # # This is on the other repo where I keep my ssh config files
 # I commented this as I don't have access to this repo in all the hosts

@@ -664,6 +664,15 @@ vim.keymap.set("n", "J", "mzJ`z")
 vim.keymap.set("n", "n", "nzzzv")
 vim.keymap.set("n", "N", "Nzzzv")
 
+-- Launch, limiting search/replace to current file
+-- https://github.com/MagicDuck/grug-far.nvim?tab=readme-ov-file#-cookbook
+vim.keymap.set(
+  { "v" },
+  "<leader>s1",
+  '<cmd>lua require("grug-far").open({ prefills = { paths = vim.fn.expand("%") } })<cr>',
+  { noremap = true, silent = true }
+)
+
 -- Replaces the word I'm currently on, opens a terminal so that I start typing the new word
 -- It replaces the word globally across the entire file
 vim.keymap.set(

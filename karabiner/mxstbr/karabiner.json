@@ -271,7 +271,7 @@
             ]
           },
           {
-            "description": "down_arrow -> tmux 3rd session",
+            "description": "down_arrow -> sesh",
             "manipulators": [
               {
                 "from": {
@@ -279,7 +279,7 @@
                 },
                 "to": [
                   {
-                    "shell_command": "open btt://execute_assigned_actions_for_trigger/?uuid=79CE855A-4DEA-4340-9878-4C33328B6B85"
+                    "shell_command": "open btt://execute_assigned_actions_for_trigger/?uuid=FE2E2A74-F413-4723-9E1A-EBFC7C3E574B"
                   }
                 ],
                 "type": "basic"
@@ -2480,30 +2480,6 @@
               {
                 "to": [
                   {
-                    "shell_command": "open raycast://extensions/mathieudutour/wolfram-alpha/index"
-                  }
-                ],
-                "description": "Open raycast://extensions/mathieudutour/wolfram-alpha/index",
-                "type": "basic",
-                "from": {
-                  "key_code": "quote",
-                  "modifiers": {
-                    "mandatory": [
-                      "any"
-                    ]
-                  }
-                },
-                "conditions": [
-                  {
-                    "type": "variable_if",
-                    "name": "hyper_sublayer_r",
-                    "value": 1
-                  }
-                ]
-              },
-              {
-                "to": [
-                  {
                     "shell_command": "open raycast://extensions/tonka3000/youtube/search-videos?arguments=%7B%22query%22%3A%22%22%7D"
                   }
                 ],
@@ -2552,10 +2528,10 @@
               {
                 "to": [
                   {
-                    "shell_command": "open raycast://extensions/raycast/apple-reminders/my-reminders"
+                    "shell_command": "open https://google.com/search?q=&tbm=isch"
                   }
                 ],
-                "description": "Open raycast://extensions/raycast/apple-reminders/my-reminders",
+                "description": "Open https://google.com/search?q=&tbm=isch",
                 "type": "basic",
                 "from": {
                   "key_code": "i",

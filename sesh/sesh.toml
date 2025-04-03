@@ -1,0 +1,22 @@
+[[session]]
+name = "Downloads 📥"
+path = "~/Downloads"
+startup_command = "ls"
+
+[[session]]
+name = "tmux config"
+path = "~/github/dotfiles-latest/tmux"
+startup_command = "v tmux.conf.sh"
+preview_command = "bat --color=always ~/github/dotfiles-latest/tmux/tmux.conf.sh"
+
+[[session]]
+name = "sesh config"
+path = "~/github/dotfiles-latest/sesh"
+startup_command = "v sesh.toml"
+preview_command = "bat --color=always ~/github/dotfiles-latest/sesh/sesh.toml"
+
+[[session]]
+name = "zshrc config"
+path = "~/github/dotfiles-latest/zshrc"
+startup_command = "v zshrc-file.sh"
+preview_command = "bat --color=always ~/github/dotfiles-latest/zshrc/zshrc-file.sh"

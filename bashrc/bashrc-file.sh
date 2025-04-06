@@ -13,6 +13,8 @@ boldPurple="\033[1;35m"
 boldBlue="\033[1;34m"
 noColor="\033[0m"
 
+source ~/github/dotfiles-latest/colorscheme/colorscheme-vars.sh
+
 # Current number of entries Zsh is configured to store in memory (HISTSIZE)
 # How many commands Zsh is configured to save to the history file (SAVEHIST)
 # echo "HISTSIZE: $HISTSIZE"

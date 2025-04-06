@@ -13,14 +13,7 @@ boldPurple="\033[1;35m"
 boldBlue="\033[1;34m"
 noColor="\033[0m"
 
-# colorscheme_profile="minty-lemon.sh"
-colorscheme_profile="linkarzu-new-headings.sh"
-# colorscheme_profile="linkarzu-colors.sh"
-# colorscheme_profile="star-saber.sh"
-# colorscheme_profile="eldritch-colors.sh"
-# colorscheme_profile="darkppuccin.sh"
-# colorscheme_profile="catppuccin-mocha.sh"
-# colorscheme_profile="catppuccin-macchiato.sh"
+source ~/github/dotfiles-latest/colorscheme/colorscheme-vars.sh
 
 # Run a clear command right after I log in to any host
 clear

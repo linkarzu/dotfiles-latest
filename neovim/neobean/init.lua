@@ -9,6 +9,11 @@
 vim.g.neovim_mode = vim.env.NEOVIM_MODE or "default"
 -- vim.g.bullets_enable_in_empty_buffers = 0
 
+-- -- I have 2 style options "solid" and "transparent"
+-- -- This style is defined in my zshrc file
+-- -- :lua print(vim.env.MD_HEADING_BG)
+vim.g.md_heading_bg = vim.env.MD_HEADING_BG
+
 -- bootstrap lazy.nvim, LazyVim and your plugins
 require("config.lazy")
 

@@ -251,7 +251,7 @@ const rules: KarabinerRules[] = [
         ],
         to_if_alone: [
           {
-            shell_command: `~/github/dotfiles-latest/scripts/macos/mac/200-micMute.sh`,
+            shell_command: `~/github/dotfiles-latest/scripts/macos/mac/misc/200-micMute.sh`,
           },
         ],
         type: "basic",
@@ -626,7 +626,7 @@ const rules: KarabinerRules[] = [
       // r: {
       //   to: [
       //     {
-      //       shell_command: `~/github/dotfiles-latest/scripts/macos/mac/300-dailyNote.sh`,
+      //       shell_command: `~/github/dotfiles-latest/scripts/macos/mac/misc/300-dailyNote.sh`,
       //     },
       //   ],
       // },

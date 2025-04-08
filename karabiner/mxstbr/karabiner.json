@@ -190,7 +190,7 @@
                 ],
                 "to_if_alone": [
                   {
-                    "shell_command": "~/github/dotfiles-latest/scripts/macos/mac/200-micMute.sh"
+                    "shell_command": "~/github/dotfiles-latest/scripts/macos/mac/misc/200-micMute.sh"
                   }
                 ],
                 "type": "basic"
@@ -1804,7 +1804,7 @@
               {
                 "to": [
                   {
-                    "shell_command": "export PATH=\"/opt/homebrew/bin:$PATH\" && python3 ~/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py main-1-guest"
+                    "shell_command": "export PATH=\"/opt/homebrew/bin:$PATH\" && python3 ~/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py main-screen"
                   }
                 ],
                 "type": "basic",
@@ -1919,7 +1919,7 @@
               {
                 "to": [
                   {
-                    "shell_command": "export PATH=\"/opt/homebrew/bin:$PATH\" && python3 ~/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py guests-all-notes"
+                    "shell_command": "export PATH=\"/opt/homebrew/bin:$PATH\" && python3 ~/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py guests-solo"
                   }
                 ],
                 "type": "basic",
@@ -3007,6 +3007,30 @@
                 "type": "basic",
                 "from": {
                   "key_code": "p",
+                  "modifiers": {
+                    "mandatory": [
+                      "any"
+                    ]
+                  }
+                },
+                "conditions": [
+                  {
+                    "type": "variable_if",
+                    "name": "hyper_sublayer_s",
+                    "value": 1
+                  }
+                ]
+              },
+              {
+                "to": [
+                  {
+                    "shell_command": "open btt://execute_assigned_actions_for_trigger/?uuid=B9BDC928-B26F-4D1D-811B-DBB3A86B4228"
+                  }
+                ],
+                "description": "Open btt://execute_assigned_actions_for_trigger/?uuid=B9BDC928-B26F-4D1D-811B-DBB3A86B4228",
+                "type": "basic",
+                "from": {
+                  "key_code": "t",
                   "modifiers": {
                     "mandatory": [
                       "any"

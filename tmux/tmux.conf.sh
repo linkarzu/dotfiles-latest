@@ -249,7 +249,7 @@ tmux_sshonizer_agen="~/github/dotfiles-latest/tmux/tools/linkarzu/tmux-sshonizer
 ssh_select="~/github/dotfiles-latest/tmux/tools/linkarzu/ssh-select.sh"
 # Script below goes through you `~/.ssh/config` file and shows the hosts in an fzf menu
 ssh_config_select="~/github/dotfiles-latest/tmux/tools/linkarzu/ssh_config_select.sh"
-daily_note="~/github/dotfiles-latest/scripts/macos/mac/300-dailyNote.sh"
+daily_note="~/github/dotfiles-latest/scripts/macos/mac/misc/300-dailyNote.sh"
 
 # I tend to forget my karabiner mappings, so this opens the file in a new tmux
 # session

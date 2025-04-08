@@ -31,7 +31,7 @@ fi
 # Validate MIC_NAME as UTF-8, replace invalid sequences with a '?', then compare with original
 VALIDATED_MIC_NAME=$(echo "$MIC_NAME" | iconv -f UTF-8 -t UTF-8//IGNORE)
 
-# I'll be using this in ~/github/dotfiles-latest/scripts/macos/mac/200-micMute.sh
+# I'll be using this in ~/github/dotfiles-latest/scripts/macos/mac/misc/200-micMute.sh
 # That file will have something like "Yeti" or "AirPods"
 echo "$VALIDATED_MIC_NAME" >"$MIC_NAME_FILE"
 

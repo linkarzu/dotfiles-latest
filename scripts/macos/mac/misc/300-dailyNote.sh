@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# Filename: ~/github/dotfiles-latest/scripts/macos/mac/300-dailyNote.sh
-# ~/github/dotfiles-latest/scripts/macos/mac/300-dailyNote.sh
+# Filename: ~/github/dotfiles-latest/scripts/macos/mac/misc/300-dailyNote.sh
+# ~/github/dotfiles-latest/scripts/macos/mac/misc/300-dailyNote.sh
 
 # # I tried replacing BetterTouchTool with this, never worked, so fuck it
 # # Bring the app to the foreground if it is already open. If not open, launch it

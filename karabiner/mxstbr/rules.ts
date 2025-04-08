@@ -852,6 +852,10 @@ const rules: KarabinerRules[] = [
           },
         ],
       },
+      // execute system task or script
+      t: open(
+        "btt://execute_assigned_actions_for_trigger/?uuid=B9BDC928-B26F-4D1D-811B-DBB3A86B4228"
+      ),
       // Close browser tab
       e: {
         to: [

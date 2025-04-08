@@ -24,6 +24,7 @@ cask "discord"
 cask "postman"
 cask "steam"
 cask "porting-kit"
+cask "element"
 
 # This errored out, I prefer to install it from the yabai script
 # brew "koekeishiya/formulae/yabai"

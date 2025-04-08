@@ -41,7 +41,7 @@ apple_bluetooth=(
 apple_restart=(
   icon=$RESTART
   label="Restart"
-  click_script="~/github/dotfiles-latest/scripts/macos/mac/220-restartConfirm.sh; $POPUP_OFF"
+  click_script="~/github/dotfiles-latest/scripts/macos/mac/misc/220-restartConfirm.sh; $POPUP_OFF"
 )
 
 sketchybar --add item apple.logo left \

@@ -644,8 +644,12 @@ const rules: KarabinerRules[] = [
       m: {
         to: [
           {
-            // shell_command: `export PATH="/opt/homebrew/bin:$PATH" && python3 ~/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py main-screen`,
-            shell_command: `export PATH="/opt/homebrew/bin:$PATH" && python3 ~/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py main-1-guest`,
+            // Do not modify the line above the command, I use it in
+            // ~/github/dotfiles-latest/scripts/macos/mac/260-obsSceneType.sh
+            // to replace the shell command below depending on the type of
+            // recording
+            // lineid_obs_switchscene_main
+            shell_command: `export PATH="/opt/homebrew/bin:$PATH" && python3 ~/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py main-screen`,
           },
         ],
       },
@@ -708,7 +712,8 @@ const rules: KarabinerRules[] = [
       g: {
         to: [
           {
-            shell_command: `export PATH="/opt/homebrew/bin:$PATH" && python3 ~/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py guests-all-notes`,
+            //lineid_obs_switchscene_guest
+            shell_command: `export PATH="/opt/homebrew/bin:$PATH" && python3 ~/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py guests-solo`,
           },
         ],
       },

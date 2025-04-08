@@ -256,6 +256,7 @@ daily_note="~/github/dotfiles-latest/scripts/macos/mac/misc/300-dailyNote.sh"
 karabiner_rules="~/github/scripts/macos/mac/301-openKarabinerRules.sh"
 
 colorscheme_selector="~/github/dotfiles-latest/colorscheme/colorscheme-selector.sh"
+script_selector="~/github/dotfiles-latest/scripts/macos/mac/misc/240-systemTask.sh"
 
 # Don't use C-r because it's used by tmux-resurrect
 # Don't use C-e because I'm already using it for sending command to all panes/windows in current session
@@ -317,6 +318,8 @@ unbind 2
 bind-key -r 2 run-shell "tmux neww $karabiner_rules"
 unbind 6
 bind-key -r 6 run-shell "tmux neww $colorscheme_selector"
+unbind 7
+bind-key -r 7 run-shell "tmux neww $script_selector"
 
 ###############################################################################
 

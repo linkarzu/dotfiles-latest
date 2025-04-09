@@ -15,9 +15,6 @@ noColor="\033[0m"
 
 source ~/github/dotfiles-latest/colorscheme/colorscheme-vars.sh
 
-# Run a clear command right after I log in to any host
-clear
-
 # ~/.config is used by neovim, alacritty and karabiner
 mkdir -p ~/.config
 # Alacritty is inside its own dir

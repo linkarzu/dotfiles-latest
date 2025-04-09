@@ -8,34 +8,6 @@
 
 source ~/github/dotfiles-latest/zshrc/zshrc-common.sh
 
-# echo
-# echo "2"
-# #############################################################################
-#                       DISABLE AUTO-PULL SECTION
-# #############################################################################
-# Instead of directly cloning my repo, to avoid my changes being applied, I
-# instead recommend you fork it, and clone that fork to your local machine
-# That way, my changes won't affect you.
-# If you don't fork, and for example I change my karabiner mappings, from
-# opening the terminal with hyper+space+j to hyper+space+b, it will
-# change your mappings too
-#
-# If you don't want to fork, comment this section if you don't want to always pull
-# my latest changes, otherwise your changes will be overriden by my updates
-#
-# If the variable DISABLE_PULL is UNSET, pull the latest changes
-# I set this var from neovim when opening a tmux pane on the right
-echo
-if [[ -z "$DISABLE_PULL" ]]; then
-  echo "Pulling latest changes, please wait..."
-  (cd ~/github/dotfiles-latest && git pull >/dev/null 2>&1) || echo "Failed to pull dotfiles"
-fi
-# Every time I log into a host I want to pull my github repos, but not cd to that dir
-# So running the command above in a subshell
-#
-# #############################################################################
-# echo "finished 2"
-
 # Detect OS
 case "$(uname -s)" in
 Darwin)

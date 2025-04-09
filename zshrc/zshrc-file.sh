@@ -6,6 +6,8 @@
 # UNIQUE_ID=do_not_delete_this_line
 # #############################################################################
 
+source ~/github/dotfiles-latest/zshrc/zshrc-common.sh
+
 source ~/github/dotfiles-latest/colorscheme/colorscheme-vars.sh
 
 # ~/.config is used by neovim, alacritty and karabiner
@@ -129,8 +131,6 @@ create_symlink ~/github/dotfiles-latest/sesh ~/.config/sesh
 # ln -snf ~/github/dotfiles-latest/neovim/neobean ~/.config/nvim >/dev/null 2>&1
 # ln -snf ~/github/dotfiles-latest/hammerspoon ~/.hammerspoon >/dev/null 2>&1
 # ln -snf ~/github/dotfiles-latest/karabiner/mxstbr ~/.config/karabiner >/dev/null 2>&1
-
-source ~/github/dotfiles-latest/zshrc/zshrc-common.sh
 
 # Current number of entries Zsh is configured to store in memory (HISTSIZE)
 # How many commands Zsh is configured to save to the history file (SAVEHIST)

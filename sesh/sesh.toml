@@ -20,3 +20,10 @@ name = "zshrc config"
 path = "~/github/dotfiles-latest/zshrc"
 startup_command = "v zshrc-file.sh"
 preview_command = "bat --color=always ~/github/dotfiles-latest/zshrc/zshrc-file.sh"
+
+[[session]]
+name = "neovim keymaps"
+path = "~/github/dotfiles-latest/neovim/neobean/lua/config"
+startup_command = "v keymaps.lua"
+preview_command = "bat --color=always ~/github/dotfiles-latest/neovim/neobean/lua/config/keymaps.lua"
+

@@ -20,3 +20,5 @@ alias emacs='~/.config/emacs/bin/doom run'
 
 # golang aliases
 alias coverage='go test -coverprofile=coverage.out && go tool cover -html=coverage.out'
+
+alias pulldeez='echo "Pulling latest changes, please wait..."; (cd ~/github/dotfiles-latest && git pull >/dev/null 2>&1) || echo "Failed to pull dotfiles"; source ~/.zshrc'

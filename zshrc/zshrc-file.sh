@@ -6,6 +6,10 @@
 # UNIQUE_ID=do_not_delete_this_line
 # #############################################################################
 
+# The AUTO-PULL SECTION has been removed
+# now changes have to be explicitly pulled with the alias 'pulldeez' that pulls
+# the changes and then sources the zshrc file
+
 source ~/github/dotfiles-latest/zshrc/zshrc-common.sh
 
 # Detect OS

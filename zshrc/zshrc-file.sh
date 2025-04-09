@@ -236,6 +236,8 @@ alias kgp='kubectl get pods'
 alias kgpa='kubectl get pods --all-namespaces'
 alias kgpo='kubectl get pods -o wide'
 
+alias emacs='~/.config/emacs/bin/doom run'
+
 # golang aliases
 alias coverage='go test -coverprofile=coverage.out && go tool cover -html=coverage.out'
 

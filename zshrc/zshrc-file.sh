@@ -28,9 +28,7 @@ esac
 # macOS-specific configurations
 if [ "$OS" = 'Mac' ]; then
   source ~/github/dotfiles-latest/zshrc/zshrc-macos.sh
-fi
-
 # Linux (Debian)-specific configurations
-if [ "$OS" = 'Linux' ]; then
+elif [ "$OS" = 'Linux' ]; then
   source ~/github/dotfiles-latest/zshrc/zshrc-linux.sh
 fi

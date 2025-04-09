@@ -1,0 +1,16 @@
+#+title: Example
+
+* Example
+
+** TODO finish this video :VIDEO::work:
+*** TODO task 1
+- I'll add some tasks below
+- [X] this is a task
+*** TODO task 2
+- [X] another task
+- bullet point
+** TODO record video
+SCHEDULED: <2025-04-09 Wed 22:00>
+I'm recording the video right now
+
+adding more text

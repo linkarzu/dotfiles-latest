@@ -8,8 +8,6 @@
 
 source ~/github/dotfiles-latest/zshrc/zshrc-common.sh
 
-source ~/github/dotfiles-latest/colorscheme/colorscheme-vars.sh
-
 # ~/.config is used by neovim, alacritty and karabiner
 mkdir -p ~/.config
 # Alacritty is inside its own dir

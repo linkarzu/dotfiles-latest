@@ -215,6 +215,10 @@ export JAVA_HOME="/opt/homebrew/opt/openjdk"
 # Add JAVA_HOME/bin to the beginning of the PATH
 export PATH="$JAVA_HOME/bin:$PATH"
 
+# This was auto added by LM Studio CLI (lms), but I manually moved it to this
+# file
+export PATH="$PATH:/Users/linkarzu/.lmstudio/bin"
+
 # You can use NVIM_APPNAME=nvim-NAME to maintain multiple configurations.
 #
 # NVIM_APPNAME is the name of the directory inside ~/.config

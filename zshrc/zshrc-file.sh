@@ -58,6 +58,3 @@ fi
 if [ "$OS" = 'Linux' ]; then
   source ~/github/dotfiles-latest/zshrc/zshrc-linux.sh
 fi
-
-# Added by LM Studio CLI (lms)
-export PATH="$PATH:/Users/linkarzu/.lmstudio/bin"

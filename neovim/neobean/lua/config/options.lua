@@ -90,7 +90,8 @@ if vim.g.neovim_mode == "skitty" then
 else
   -- I never used relative line numbers, so fuck that
   -- Edit a few days after, I'll give them a try again, so re-enabled them
-  vim.opt.relativenumber = true
+  -- Fuck relative numbers, I'm done with them
+  vim.opt.relativenumber = false
 
   -- When text reaches this limit, it automatically wraps to the next line.
   -- This WILL NOT auto wrap existing lines, or if you paste a long line into a

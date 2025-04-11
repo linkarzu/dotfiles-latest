@@ -2843,6 +2843,82 @@ end, { desc = "[P]Paste Github link" })
 --   vim.api.nvim_input("<C-D>")
 -- end, { desc = "[P]Decrease Indent" })
 
+local function get_markdown_headings()
+  local cursor_line = vim.fn.line(".")
+  local parser = vim.treesitter.get_parser(0, "markdown")
+  if not parser then
+    vim.notify("Markdown parser not available", vim.log.levels.ERROR)
+    return nil, nil, nil, nil, nil, nil
+  end
+  local tree = parser:parse()[1]
+  local query = vim.treesitter.query.parse(
+    "markdown",
+    [[
+    (atx_heading (atx_h1_marker) @h1)
+    (atx_heading (atx_h2_marker) @h2)
+    (atx_heading (atx_h3_marker) @h3)
+    (atx_heading (atx_h4_marker) @h4)
+    (atx_heading (atx_h5_marker) @h5)
+    (atx_heading (atx_h6_marker) @h6)
+  ]]
+  )
+  -- Collect and sort all headings
+  local headings = {}
+  for id, node in query:iter_captures(tree:root(), 0) do
+    local start_line = node:start() + 1 -- Convert to 1-based
+    table.insert(headings, { line = start_line, level = id })
+  end
+  table.sort(headings, function(a, b)
+    return a.line < b.line
+  end)
+  -- Find current heading and track its index
+  local current_heading, current_idx, next_heading, next_same_heading
+  for idx, h in ipairs(headings) do
+    if h.line <= cursor_line then
+      current_heading = h
+      current_idx = idx
+    elseif not next_heading then
+      next_heading = h -- First heading after cursor
+    end
+  end
+  -- Find next same-level heading if current exists
+  if current_heading then
+    -- Look for next same-level after current index
+    for i = current_idx + 1, #headings do
+      local h = headings[i]
+      if h.level == current_heading.level then
+        next_same_heading = h
+        break
+      end
+    end
+  end
+  -- Return all values (nil if not found)
+  return current_heading and current_heading.line or nil,
+    current_heading and current_heading.level or nil,
+    next_heading and next_heading.line or nil,
+    next_heading and next_heading.level or nil,
+    next_same_heading and next_same_heading.line or nil,
+    next_same_heading and next_same_heading.level or nil
+end
+
+-- Print details of current markdown heading, next heading and next same level heading
+vim.keymap.set("n", "<leader>mT", function()
+  local cl, clvl, nl, nlvl, nsl, nslvl = get_markdown_headings()
+  local message_parts = {}
+  if cl then
+    table.insert(message_parts, string.format("Current: H%d (line %d)", clvl, cl))
+  else
+    table.insert(message_parts, "Not in a section")
+  end
+  if nl then
+    table.insert(message_parts, string.format("Next: H%d (line %d)", nlvl, nl))
+  end
+  if nsl then
+    table.insert(message_parts, string.format("Next H%d: line %d", nslvl, nsl))
+  end
+  vim.notify(table.concat(message_parts, " | "), vim.log.levels.INFO)
+end, { desc = "Show current, next, and same-level Markdown headings" })
+
 -------------------------------------------------------------------------------
 --                           Folding section
 -------------------------------------------------------------------------------

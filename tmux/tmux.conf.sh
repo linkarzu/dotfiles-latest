@@ -54,6 +54,18 @@ set -gq allow-passthrough on
 # image.nvim
 set -g visual-activity off
 
+# When playing around with these, make sure you don't have them defined already
+# in your tmux config file, you can also see that with
+# tmux list-keys | grep -i 'C-l'
+#
+# https://github.com/tmux/tmux/wiki/Modifier-Keys#extended-keys
+# When not running tmux I see what C-enter sends
+# I can do `/bin/cat -v` and then pressed C-enter
+# Ghostty sends: ^[[27;5;13~
+# 
+# The problem is that when I run tmux, nothing is sent, so I'm sending those
+# keys here below
+bind-key -n C-Enter send-keys "\e[27;5;13~"
 # Alternate session
 # Switch between the last 2 tmux sessions, similar to 'cd -' in the terminal
 # I use this in combination with the `choose-tree` to sort sessions by time

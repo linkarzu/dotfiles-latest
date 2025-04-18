@@ -594,13 +594,13 @@ set -g @plugin 'christoomey/vim-tmux-navigator'
 # # allow tmux-ressurect to capture pane contents
 # set -g @resurrect-capture-pane-contents 'on'
 
-# automatically saves sessions for you every 15 minutes (this must be the last plugin)
-# https://github.com/tmux-plugins/tmux-continuum
-set -g @plugin 'tmux-plugins/tmux-continuum'
-# enable tmux-continuum functionality
-set -g @continuum-restore 'on'
-# Set the save interval in minutes, default is 15
-set -g @continuum-save-interval '5'
+# # automatically saves sessions for you every 15 minutes (this must be the last plugin)
+# # https://github.com/tmux-plugins/tmux-continuum
+# set -g @plugin 'tmux-plugins/tmux-continuum'
+# # enable tmux-continuum functionality
+# set -g @continuum-restore 'on'
+# # Set the save interval in minutes, default is 15
+# set -g @continuum-save-interval '5'
 
 # Initialize TMUX plugin manager
 # (keep this line at the very bottom of tmux.conf)

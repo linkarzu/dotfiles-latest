@@ -66,6 +66,12 @@ set -g visual-activity off
 # The problem is that when I run tmux, nothing is sent, so I'm sending those
 # keys here below
 bind-key -n C-Enter send-keys "\e[27;5;13~"
+
+# I want to send Ctrl+l to clear the screen, ghostty sends ^L
+# This is not a good idea, as I use C-l to navigate to the right mux pane
+# unbind-key -n C-l
+# bind-key -n C-l send-keys C-l
+
 # Alternate session
 # Switch between the last 2 tmux sessions, similar to 'cd -' in the terminal
 # I use this in combination with the `choose-tree` to sort sessions by time
@@ -225,14 +231,14 @@ unbind K
 # unbind L
 unbind C-j
 unbind C-k
-unbind C-l
+# unbind C-l
 bind J select-layout even-horizontal
 bind K select-layout even-vertical
 # bind L select-layout tiled
 # bind L run-shell ~/github/dotfiles-latest/tmux/layouts/7030/apply_layout.sh
 bind C-j select-layout main-horizontal
 bind C-k select-layout main-vertical
-bind C-l run-shell ~/github/dotfiles-latest/tmux/layouts/2x3/apply_layout.sh
+# bind C-l run-shell ~/github/dotfiles-latest/tmux/layouts/2x3/apply_layout.sh
 
 # Update: In karabiner elements I remapped hyper+f to ctrl+b which allows me to
 # now use the meta key, just make sure to configure option as alt in your

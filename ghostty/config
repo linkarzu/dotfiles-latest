@@ -223,6 +223,13 @@ keybind = super+r=reload_config
 # This doesn't work when in tmux, if outside tmux the regular ctrl+l works
 # keybind = super+k=clear_screen
 
+# When not running tmux I see what C-enter sends
+# I can do `/bin/cat -v` and then pressed C-enter
+# Ghostty sends: ^[[27;5;13~
+# 
+# The problem is that when I run tmux, nothing is sent, so I'm sending those
+# keys in my tmux.conf file
+
 # Customize the macOS app icon.
 # 
 # This only affects the icon that appears in the dock, application

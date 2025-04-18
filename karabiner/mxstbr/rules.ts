@@ -663,14 +663,16 @@ const rules: KarabinerRules[] = [
       1: {
         to: [
           {
-            shell_command: `export PATH="/opt/homebrew/bin:$PATH" && python3 ~/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py guest1`,
+            // lineid_obs_switchscene_guest1
+            shell_command: `export PATH="/opt/homebrew/bin:$PATH" && python3 ~/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py guest1-1guest`,
           },
         ],
       },
       2: {
         to: [
           {
-            shell_command: `export PATH="/opt/homebrew/bin:$PATH" && python3 ~/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py guest2`,
+            // lineid_obs_switchscene_guest2
+            shell_command: `export PATH="/opt/homebrew/bin:$PATH" && python3 ~/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py `,
           },
         ],
       },
@@ -713,7 +715,7 @@ const rules: KarabinerRules[] = [
         to: [
           {
             //lineid_obs_switchscene_guest
-            shell_command: `export PATH="/opt/homebrew/bin:$PATH" && python3 ~/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py guests-all-notes`,
+            shell_command: `export PATH="/opt/homebrew/bin:$PATH" && python3 ~/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py guests-all-notes-right`,
           },
         ],
       },

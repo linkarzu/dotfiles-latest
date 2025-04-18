@@ -2919,6 +2919,48 @@ vim.keymap.set("n", "<leader>mT", function()
   vim.notify(table.concat(message_parts, " | "), vim.log.levels.INFO)
 end, { desc = "Show current, next, and same-level Markdown headings" })
 
+-- -- Create next heading similar to the way its done in emacs lamw26wmal
+-- -- When inside tmux
+-- -- C-CR does not work because Neovim recognizes both CR and C-CR as the same "\r",
+-- -- you can see this with:
+-- -- :lua print(vim.inspect(vim.fn.getcharstr()))
+-- --
+-- -- If I run this outside tmux, for C-CR, in Ghostty I get
+-- -- "<80><fc>\4\r"
+-- -- So to fix this, I'm sending the keys in my tmux.conf file
+vim.keymap.set({ "n", "i" }, "<C-CR>", function()
+  -- Capture all needed return values
+  local _, level, next_line, next_level, next_same_line = get_markdown_headings()
+  if not level then
+    vim.notify("No heading context found", vim.log.levels.WARN)
+    return
+  end
+  local heading_prefix = string.rep("#", level) .. " "
+  local insert_line = next_same_line and next_same_line or vim.fn.line("$") + 1
+  -- If there’s a higher-level heading coming next, insert above it
+  if next_line and next_level and (next_level < level) then
+    insert_line = next_line
+  end
+  -- Insert heading line and an empty line after it
+  vim.api.nvim_buf_set_lines(0, insert_line - 1, insert_line - 1, false, { heading_prefix, "" })
+  -- Move cursor to the end of heading marker
+  vim.api.nvim_win_set_cursor(0, { insert_line, #heading_prefix })
+  -- Enter insert mode and type a space
+  vim.api.nvim_feedkeys("i ", "n", false)
+end, { desc = "[P]Insert heading emacs style" })
+
+-- -- When inside tmux
+-- -- C-CR does not work because Neovim recognizes both CR and C-CR as the same "\r",
+-- -- you can see this with:
+-- -- :lua print(vim.inspect(vim.fn.getcharstr()))
+-- --
+-- -- If I run this outside tmux, for C-CR, in Ghostty I get
+-- -- "<80><fc>\4\r"
+-- -- So to fix this, I'm sending the keys in my tmux.conf file
+-- vim.keymap.set({ "n", "i" }, "<C-CR>", function()
+--   vim.notify("Ctrl+Enter detected", vim.log.levels.INFO)
+-- end, { desc = "Ctrl+Enter CSIu mapping" })
+
 -------------------------------------------------------------------------------
 --                           Folding section
 -------------------------------------------------------------------------------

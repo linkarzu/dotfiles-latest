@@ -26,11 +26,17 @@ case "$choice" in
   guest_scene="guests-all-notes-right"
   guest_1="guest1-1guest"
   ;;
-6)
+5)
   main_scene="main-2-guest"
   guest_scene="guests2-all-notes-right"
   guest_1="guest1-2guest"
   guest_2="guest2-2guest"
+  ;;
+6)
+  main_scene="main-2-guest-live"
+  guest_scene="guests2-all-notes-right-live"
+  guest_1="guest1-2guest-live"
+  guest_2="guest2-2guest-live"
   ;;
 *)
   echo "Invalid choice. Only 1 and 3 are supported right now."

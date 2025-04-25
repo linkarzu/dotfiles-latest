@@ -23,6 +23,10 @@ case "$choice" in
   main_scene="main-screen"
   guest_scene="guests-solo"
   ;;
+2)
+  main_scene="main-screen-live"
+  guest_scene="guests-solo-live"
+  ;;
 3)
   main_scene="main-1-guest"
   guest_scene="guests-all-notes-right"

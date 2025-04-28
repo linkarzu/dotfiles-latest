@@ -14,17 +14,17 @@
 # C (#37f499) becomes when darkened 4 steps to the right.
 #
 # Markdown heading 1 - color04
-linkarzu_color18=#1e1832
+linkarzu_color18=#2d244b
 # Markdown heading 2 - color02
-linkarzu_color19=#092b1b
+linkarzu_color19=#10492d
 # Markdown heading 3 - color03
-linkarzu_color20=#00242c
+linkarzu_color20=#013e4a
 # Markdown heading 4 - color01
-linkarzu_color21=#232436
+linkarzu_color21=#2c2e44
 # Markdown heading 5 - color05
-linkarzu_color22=#063531
+linkarzu_color22=#07423e
 # Markdown heading 6 - color08
-linkarzu_color23=#1c3249
+linkarzu_color23=#264361
 # Markdown heading foreground
 # usually set to color10 which is the terminal background
 linkarzu_color26=#0D1116

@@ -1,5 +1,5 @@
 -- Surround in "", 4 words in a remote location
--- gsar{text}{flash_char}4w"
+-- gsar{text}{flash_char}4e"
 -- gsa - surround add (leaves you in pending mode)
 -- r - remote flash
 -- {text} - stuff to search with flash

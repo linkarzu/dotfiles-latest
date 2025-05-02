@@ -3021,8 +3021,8 @@ vim.api.nvim_create_autocmd("FileType", {
 
 -- Function to fold all headings of a specific level
 local function fold_headings_of_level(level)
-  -- Move to the top of the file
-  vim.cmd("normal! gg")
+  -- Move to the top of the file without adding to jumplist
+  vim.cmd("keepjumps normal! gg")
   -- Get the total number of lines
   local total_lines = vim.fn.line("$")
   for line = 1, total_lines do
@@ -3033,8 +3033,8 @@ local function fold_headings_of_level(level)
     -- "%s" -> Matches any whitespace character after the "#" characters
     -- So this will match `## `, `### `, `#### ` for example, which are markdown headings
     if line_content:match("^" .. string.rep("#", level) .. "%s") then
-      -- Move the cursor to the current line
-      vim.fn.cursor(line, 1)
+      -- Move the cursor to the current line without adding to jumplist
+      vim.cmd(string.format("keepjumps call cursor(%d, 1)", line))
       -- Check if the current line has a fold level > 0
       local current_foldlevel = vim.fn.foldlevel(line)
       if current_foldlevel > 0 then

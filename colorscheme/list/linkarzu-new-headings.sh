@@ -20,9 +20,9 @@ linkarzu_color19=#10492d
 # Markdown heading 3 - color03
 linkarzu_color20=#013e4a
 # Markdown heading 4 - color01
-linkarzu_color21=#2c2e44
+linkarzu_color21=#4b314c
 # Markdown heading 5 - color05
-linkarzu_color22=#07423e
+linkarzu_color22=#334800
 # Markdown heading 6 - color08
 linkarzu_color23=#264361
 # Markdown heading foreground
@@ -32,8 +32,8 @@ linkarzu_color26=#0D1116
 linkarzu_color04=#987afb
 linkarzu_color02=#37f499
 linkarzu_color03=#04d1f9
-linkarzu_color01=#949ae5
-linkarzu_color05=#19dfcf
+linkarzu_color01=#fca6ff
+linkarzu_color05=#acf200
 linkarzu_color08=#5fa9f4
 linkarzu_color06=#1682ef
 
@@ -52,13 +52,13 @@ linkarzu_color13=#232e3b
 linkarzu_color15=#013e4a
 
 # Comments
-linkarzu_color09=#a5afc2
+linkarzu_color09=#b7bfce
 # Underline spellbad
 linkarzu_color11=#f16c75
 # Underline spellcap
 linkarzu_color12=#f1fc79
 # Cursor and tmux windows text
-linkarzu_color14=#ebfafa
+linkarzu_color14=#ffffff
 # Selected text
 linkarzu_color16=#e9b3fd
 # Cursor color

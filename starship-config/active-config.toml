@@ -35,10 +35,10 @@ time_format = '%y/%m/%d'
 [kubernetes]
 disabled = false
 # context = user@cluster
-# format = '[$user@$cluster \($namespace\)](#19dfcf) '
-# format = '[$cluster \($namespace\)](#19dfcf) '
+# format = '[$user@$cluster \($namespace\)](#acf200) '
+# format = '[$cluster \($namespace\)](#acf200) '
 # Apply separate colors for cluster and namespace
-format = '[$cluster](#19dfcf bold) [$namespace](#37f499 bold) '
+format = '[$cluster](#acf200 bold) [$namespace](#37f499 bold) '
 # format = 'on [⛵ ($user on )($cluster in )$context \($namespace\)](dimmed green) '
 # Only dirs that have this file inside will show the kubernetes prompt
 # detect_files = ['900-detectkubernetes.sh']

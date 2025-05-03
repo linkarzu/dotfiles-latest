@@ -343,11 +343,30 @@ if vim.g.neovide then
   -- NOTE: vsync is configured in the neovide/config.toml file, I disabled it and set
   -- this to 120 even though my monitor is 75Hz, had a similar case in wezterm,
   -- see: https://github.com/wez/wezterm/issues/6334
-  vim.g.neovide_refresh_rate = 75
-  -- This is how fast the cursor animation "moves", default 0.06
-  vim.g.neovide_cursor_animation_length = 0.04
+  vim.g.neovide_refresh_rate = 120
+  -- This is how fast the cursor animation "moves", the higher the number, the
+  -- more you will see the trail when jumping to end of line
+  -- default 0.150
+  vim.g.neovide_cursor_animation_length = 0.18
+  -- Time it takes for the cursor to complete its animation in seconds for short
+  -- horizontal travels of one or two characters, like when typing.
+  -- Default 0.04
+  vim.g.neovide_cursor_short_animation_length = 0.15
+  -- Time it takes for a window to complete animation from one position to another
+  -- position in seconds, such as :split.
+  -- Default 0.15
+  vim.g.neovide_position_animation_length = 0.20
+  -- changes how much the back of the cursor trails the front. Set to 1.0 to
+  -- make the front jump to the destination immediately with a maximum trail size.
+  -- A lower value makes a smoother animation, with a shorter trail, but also adds lag
   -- Default 0.7
-  vim.g.neovide_cursor_trail_size = 0.7
+  vim.g.neovide_cursor_trail_size = 7
+
+  -- Really weird issue in which my winbar would be drawn multiple times as I
+  -- scrolled down the file, this fixed it, found in:
+  -- https://github.com/neovide/neovide/issues/1550
+  -- Default 0.3
+  vim.g.neovide_scroll_animation_length = 0
 
   -- produce particles behind the cursor, if want to disable them, set it to ""
   -- vim.g.neovide_cursor_vfx_mode = "railgun"
@@ -356,11 +375,6 @@ if vim.g.neovide then
   vim.g.neovide_cursor_vfx_mode = "sonicboom"
   -- vim.g.neovide_cursor_vfx_mode = "ripple"
   -- vim.g.neovide_cursor_vfx_mode = "wireframe"
-
-  -- Really weird issue in which my winbar would be drawn multiple times as I
-  -- scrolled down the file, this fixed it, found in:
-  -- https://github.com/neovide/neovide/issues/1550
-  vim.g.neovide_scroll_animation_length = 0
 
   -- This allows me to use the right "alt" key in macOS, because I have some
   -- neovim keymaps that use alt, like alt+t for the terminal

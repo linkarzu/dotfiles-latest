@@ -182,6 +182,7 @@ fi
 #                        Colorscheme configuration
 #############################################################################
 
+# This is set in ~/github/dotfiles-latest/colorscheme/colorscheme-vars.sh
 ~/github/dotfiles-latest/zshrc/colorscheme-set.sh "$colorscheme_profile"
 
 #############################################################################

@@ -26,7 +26,6 @@ CURRENT_MIC=$(SwitchAudioSource -t input -c)
 if [[ "$MIC_VOLUME" =~ ^[0-9]+$ ]]; then
   # If volume is less than 90 (including 0), set it to 90
   if [ "$MIC_VOLUME" -gt 0 ]; then
-    sketchybar -m --set mic label="$MIC_NAME-0 " icon= icon.color=$RED label.color=$RED
     # Mute all microphones, not onlyt he active one
     while IFS= read -r device; do
       # Skip the iPhone microphone
@@ -40,13 +39,9 @@ if [[ "$MIC_VOLUME" =~ ^[0-9]+$ ]]; then
     SwitchAudioSource -t input -s "$CURRENT_MIC"
     # osascript -e 'display notification "Mic Muted 🔇" with title "Muted 🔴"'
     ~/github/dotfiles-latest/sketchybar/felixkratz-linkarzu/plugins/mic.sh
+    sketchybar -m --set mic label="$MIC_NAME-0 " icon= icon.color=$RED label.color=$RED
     # Otherwise set it to 0
   else
-    if [[ "$MIC_NAME" == Yeti* ]]; then
-      sketchybar -m --set mic label="$MIC_NAME-90 " icon= icon.color=$BLUE label.color=$BLUE
-    else
-      sketchybar -m --set mic label="$MIC_NAME-90 " icon= icon.color=$ORANGE label.color=$ORANGE
-    fi
     # Unmute all microphones, not onlyt he active one
     while IFS= read -r device; do
       # Skip the iPhone microphone
@@ -60,6 +55,11 @@ if [[ "$MIC_VOLUME" =~ ^[0-9]+$ ]]; then
     SwitchAudioSource -t input -s "$CURRENT_MIC"
     # osascript -e 'display notification "Mic Unmuted 🔈" with title "Unmuted 🟢"'
     ~/github/dotfiles-latest/sketchybar/felixkratz-linkarzu/plugins/mic.sh
+    if [[ "$MIC_NAME" == Yeti* ]]; then
+      sketchybar -m --set mic label="$MIC_NAME-90 " icon= icon.color=$BLUE label.color=$BLUE
+    else
+      sketchybar -m --set mic label="$MIC_NAME-90 " icon= icon.color=$ORANGE label.color=$ORANGE
+    fi
   fi
 else
   osascript -e 'display notification "Make sure its connected" with title "Mic not detected"'

@@ -42,6 +42,7 @@ return {
   {
     "3rd/image.nvim",
     enabled = false,
+    cond = vim.g.neovide == nil,
     dependencies = { "luarocks.nvim" },
     config = function()
       require("image").setup({

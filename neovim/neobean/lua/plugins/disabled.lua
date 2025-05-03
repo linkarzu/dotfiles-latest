@@ -15,13 +15,16 @@ return {
   { "akinsho/bufferline.nvim", enabled = is_neovide },
   { "Rics-Dev/project-explorer.nvim", enabled = is_neovide },
 
-  -- -- Disable '3rd/image.nvim' if running Neovide, or you will get the error:
-  -- -- Failed to run `config` for image.nvim
-  -- -- .../lazy/image.nvim/lua/image/utils/term.lua:34: Failed to get terminal size
-  {
-    "3rd/image.nvim",
-    cond = function()
-      return not (vim.g.neovide == true)
-    end,
-  },
+  -- NOTE: Disable neovide plugins in the plugin itself, see:
+  -- ~/github/dotfiles-latest/neovim/neobean/lua/plugins/smear-cursor.lua
+  --
+  -- -- -- Disable '3rd/image.nvim' if running Neovide, or you will get the error:
+  -- -- -- Failed to run `config` for image.nvim
+  -- -- -- .../lazy/image.nvim/lua/image/utils/term.lua:34: Failed to get terminal size
+  -- {
+  --   "3rd/image.nvim",
+  --   cond = function()
+  --     return not (vim.g.neovide == true)
+  --   end,
+  -- },
 }

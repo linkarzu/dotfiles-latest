@@ -601,6 +601,16 @@ const rules: KarabinerRules[] = [
       u: open(
         "btt://execute_assigned_actions_for_trigger/?uuid=2FF1FD5D-72C2-42CA-B6AD-05A4DC3CEE0C"
       ),
+      // u: {
+      //   to: [
+      //     {
+      //       // shell_command: `source ~/.bashrc && export PATH="/opt/homebrew/bin:$PATH" && (cd ~/github/obsidian_main/ && NVIM_APPNAME="neobean" Neovide)`,
+      //       shell_command: `~/github/dotfiles-latest/neovide/neovide-sessionizer.sh`,
+      //       // shell_command:
+      //       //   'osascript -e \'tell app "Terminal" to do script "cd ~/github/obsidian_main && NVIM_APPNAME=neobean /opt/homebrew/bin/neovide"\'',
+      //     },
+      //   ],
+      // },
       // php
       i: open(
         "btt://execute_assigned_actions_for_trigger/?uuid=03F1E256-FF80-43BA-873C-195628FA5996"

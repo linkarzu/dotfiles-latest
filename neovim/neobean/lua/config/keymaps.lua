@@ -3847,7 +3847,14 @@ vim.keymap.set("n", "<leader>fO", open_in_file_manager, { desc = "[P]Open curren
 vim.keymap.set("n", "<leader>fN", function()
   local file_path = vim.fn.expand("%:p")
   if file_path ~= "" then
-    local command = "open -a Neovide " .. vim.fn.shellescape(file_path)
+    -- local command = "open -a Neovide " .. vim.fn.shellescape(file_path)
+    -- -- Open neovide in the correct directory, have to cd first for it to work
+    -- -- lamw26wmal
+    local command = 'bash -c "(cd '
+      .. vim.fn.shellescape(vim.fn.getcwd())
+      .. " && NVIM_APPNAME=neobean Neovide "
+      .. vim.fn.shellescape(vim.fn.expand("%:p"))
+      .. ')"'
     -- -- I'm not using the --no-tabs arg, because if I do, my alternate neovim
     -- -- buffer doesn't work
     -- local command = "open -a Neovide --args --no-tabs " .. vim.fn.shellescape(file_path)

@@ -244,3 +244,14 @@ vim.api.nvim_create_autocmd("BufRead", {
     end, 100) -- Delay in milliseconds (100ms should be enough)
   end,
 })
+
+-- Clear jumps when I open Neovim, otherwise there'a lot of crap that links to
+-- different files, trying this and will see if it works out or not
+vim.api.nvim_create_autocmd("BufWinEnter", {
+  once = true,
+  callback = function()
+    vim.schedule(function()
+      vim.cmd("clearjumps")
+    end)
+  end,
+})

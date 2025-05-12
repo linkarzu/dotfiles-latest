@@ -49,14 +49,14 @@ if vim.g.neovim_mode == "skitty" then
   vim.opt.statusline = "%m"
 
   -- Line numbers
-  vim.opt.number = false
-  vim.opt.relativenumber = false
+  vim.opt.number = true
+  vim.opt.relativenumber = true
 
   -- Disable the gutter
   vim.opt.signcolumn = "no"
 
   -- Text width and wrapping
-  vim.opt.textwidth = 28
+  vim.opt.textwidth = 25
 
   -- -- I tried these 2 with prettier prosewrap in "preserve" mode, and I'm not sure
   -- -- what they do, I think lines are wrapped, but existing ones are not, so if I

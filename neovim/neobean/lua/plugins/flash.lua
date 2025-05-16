@@ -59,7 +59,7 @@ return {
         --
         -- Useful if you do `vtf` or `vff` and then keep pressing f to jump to
         -- the next `f`s
-        enabled = true,
+        enabled = false,
       },
     },
   },

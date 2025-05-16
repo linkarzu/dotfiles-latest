@@ -24,7 +24,7 @@ tmux set -g @catppuccin_pane_border_style "fg=$linkarzu_color09"
 
 # This is the classic colored tmux bar that goes across the entire screen
 # set -g @catppuccin_status_background "theme"
-tmux set -g @catppuccin_status_background "$linkarzu_color10"
+tmux set -g @catppuccin_status_background "default"
 
 # default for catppuccin_session_color is #{?client_prefix,$thm_red,$thm_green}
 # https://github.com/catppuccin/tmux/issues/140#issuecomment-1956204278

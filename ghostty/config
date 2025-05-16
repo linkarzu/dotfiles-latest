@@ -264,3 +264,57 @@ keybind = super+r=reload_config
 # 
 macos-icon = official
 
+# The opacity level (opposite of transparency) of the background. A value of
+# 1 is fully opaque and a value of 0 is fully transparent. A value less than 0
+# or greater than 1 will be clamped to the nearest valid value.
+# 
+# On macOS, background opacity is disabled when the terminal enters native
+# fullscreen. This is because the background becomes gray and it can cause
+# widgets to show through which isn't generally desirable.
+# 
+# On macOS, changing this configuration requires restarting Ghostty completely.
+background-opacity = 0.8
+
+# Whether to blur the background when `background-opacity` is less than 1.
+# 
+# Valid values are:
+# 
+#   * a nonnegative integer specifying the *blur intensity*
+#   * `false`, equivalent to a blur intensity of 0
+#   * `true`, equivalent to the default blur intensity of 20, which is
+#     reasonable for a good looking blur. Higher blur intensities may
+#     cause strange rendering and performance issues.
+# 
+# Supported on macOS and on some Linux desktop environments, including:
+# 
+#   * KDE Plasma (Wayland and X11)
+# 
+# Warning: the exact blur intensity is _ignored_ under KDE Plasma, and setting
+# this setting to either `true` or any positive blur intensity value would
+# achieve the same effect. The reason is that KWin, the window compositor
+# powering Plasma, only has one global blur setting and does not allow
+# applications to specify individual blur settings.
+# 
+# To configure KWin's global blur setting, open System Settings and go to
+# "Apps & Windows" > "Window Management" > "Desktop Effects" and select the
+# "Blur" plugin. If disabled, enable it by ticking the checkbox to the left.
+# Then click on the "Configure" button and there will be two sliders that
+# allow you to set background blur and noise intensities for all apps,
+# including Ghostty.
+# 
+# All other Linux desktop environments are as of now unsupported. Users may
+# need to set environment-specific settings and/or install third-party plugins
+# in order to support background blur, as there isn't a unified interface for
+# doing so.
+background-blur = true
+
+# The opacity level (opposite of transparency) of an unfocused split.
+# Unfocused splits by default are slightly faded out to make it easier to see
+# which split is focused. To disable this feature, set this value to 1.
+# 
+# A value of 1 is fully opaque and a value of 0 is fully transparent. Because
+# "0" is not useful (it makes the window look very weird), the minimum value
+# is 0.15. This value still looks weird but you can at least see what's going
+# on. A value outside of the range 0.15 to 1 will be clamped to the nearest
+# valid value.
+unfocused-split-opacity = 0.7

@@ -949,7 +949,7 @@ const rules: KarabinerRules[] = [
       //   "btt://execute_assigned_actions_for_trigger/?uuid=5EC0D2D3-869C-4284-B063-B53A17BF7C4C"
       // ),
       // Restart yabai
-      o: {
+      r: {
         to: [
           {
             // shell_command: `/opt/homebrew/bin/yabai --restart-service`,

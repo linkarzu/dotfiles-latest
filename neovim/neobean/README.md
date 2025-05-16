@@ -415,7 +415,7 @@ NVIM_APPNAME=linkarzu/dotfiles-latest/neovim/neobean nvim
   in the search bar for grug-far
 
 ```regex
-## How do you manage your passwords\?
+# How do you manage your passwords\?
 
 - I've tried many different password managers in the past, I've switched from
   `LastPass` to `Dashlane` and finally ended up in `1password`
@@ -434,13 +434,6 @@ NVIM_APPNAME=linkarzu/dotfiles-latest/neovim/neobean nvim
 ```bash
 Laborum aute consectetur sit reprehenderit.
 Laborum aute consectetur sit reprehenderit.
-
-# h1 Heading 8-)
-## h2 Heading
-### h3 Heading
-#### h4 Heading
-##### h5 Heading
-###### h6 Heading
 
 Minim tempor ullamco do eu pariatur minim.
 Minim tempor ullamco do eu pariatur minim.

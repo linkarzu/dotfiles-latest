@@ -3360,7 +3360,7 @@
                 ],
                 "type": "basic",
                 "from": {
-                  "key_code": "o",
+                  "key_code": "r",
                   "modifiers": {
                     "mandatory": [
                       "any"

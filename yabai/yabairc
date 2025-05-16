@@ -119,6 +119,9 @@ opacity_value=0.87
 
 # Make the below apps transparent
 yabai -m signal --add event=window_focused app="^${apps_transparent}$" action="yabai -m config active_window_opacity $opacity_value"
+# I don't want to be moving Ghostty around to other desktops, so I'll set its
+# opacity to 1 and manage its transparency through the ghostty config file
+yabai -m signal --add event=window_focused app="Ghostty" action="yabai -m config active_window_opacity 1"
 yabai -m signal --add event=window_focused app="^${apps_transparent}$" action="yabai -m config normal_window_opacity 0.00001"
 
 # I want the apps here to always be shown, probably they'll be on the right

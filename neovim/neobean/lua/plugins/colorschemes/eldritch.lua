@@ -12,6 +12,11 @@ return {
   lazy = true,
   name = "eldritch",
   opts = {
+    transparent = true,
+    styles = {
+      sidebars = "transparent",
+      floats = "transparent",
+    },
     -- Overriding colors globally using a definitions table
     on_colors = function(global_colors)
       -- Define all color overrides in a single table
@@ -97,6 +102,11 @@ return {
 
         -- Inline code in markdown
         ["@markup.raw.markdown_inline"] = { fg = colors["linkarzu_color02"] },
+        -- Background color of markdown folds
+        -- Folded = { bg = colors["linkarzu_color04"] },
+        -- Set this to NONE when handling transparency in the terminal and not
+        -- through yabai
+        Folded = { bg = "NONE" },
 
         -- Change the spell underline color
         SpellBad = { sp = colors["linkarzu_color11"], undercurl = true, bold = true, italic = true },
@@ -155,8 +165,10 @@ return {
         NoiceCompletionItemKindDefault = { fg = colors["linkarzu_color10"] },
 
         NoiceMini = { bg = colors["linkarzu_color10"] },
-        StatusLine = { bg = colors["linkarzu_color10"] },
-        Folded = { bg = colors["linkarzu_color10"] },
+        -- Winbar is liked to the StatusLine color, so to set winbar
+        -- transparent, I set the bg to NONE
+        StatusLine = { bg = "NONE" },
+        -- StatusLine = { bg = colors["linkarzu_color10"] },
 
         DiagnosticInfo = { fg = colors["linkarzu_color03"] },
         DiagnosticHint = { fg = colors["linkarzu_color02"] },

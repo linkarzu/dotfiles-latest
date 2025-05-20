@@ -43,3 +43,16 @@ tmux set -g @catppuccin_window_current_text "#[fg=$linkarzu_color14]#W"
 #
 # Second option shows a message when panes are syncronized
 tmux set -g @catppuccin_window_current_text "#W#{?window_zoomed_flag,#[fg=$linkarzu_color04] (    ),}#{?pane_synchronized,#[fg=$linkarzu_color04] SYNCHRONIZED-PANES,}"
+
+# This changes the colors of visual selection and choose-tree
+# https://unix.stackexchange.com/questions/141311/tmux-hightlight-colour-setting
+# set -g mode-style "fg=$linkarzu_color13,bg=$linkarzu_color03"
+# set -g mode-style "fg=#04d1f9,bg=#314154"
+# set -g mode-style "fg=blue,bg=red"
+#
+# set -g never worked for me
+# The color was applied, but then it was overriden
+# Since I'm using the catppuccin theme, found this in the catpucchin tmux repo and that did it
+# https://github.com/catppuccin/tmux/blob/fe0d245e1c971789d87ab80f492a20709af91c91/catppuccin_tmux.conf#L308-L310
+# set -wF mode-style "fg=$linkarzu_color13,bg=$linkarzu_color02"
+tmux set -wF mode-style "fg=$linkarzu_color02,bg=$linkarzu_color13"

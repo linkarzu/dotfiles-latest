@@ -3653,6 +3653,31 @@ vim.keymap.set("n", "<leader>fC", function()
   create_daily_note(current_line)
 end, { desc = "[P]Create daily note" })
 
+-- Create a daily note for the next day based on the current filename lamw26wmal
+vim.keymap.set("n", "<leader>fA", function()
+  local filename = vim.fn.expand("%:t")
+  local year, month, day = filename:match("^(%d+)%-(%d+)%-(%d+)%-%w+%.md$")
+  if not (year and month and day) then
+    vim.api.nvim_echo({ { "Current file is not a valid daily note filename", "ErrorMsg" } }, false, {})
+    return
+  end
+  -- Convert to timestamp and add one day
+  local timestamp = os.time({ year = year, month = month, day = day })
+  if not timestamp then
+    vim.api.nvim_echo({ { "Invalid date in filename", "ErrorMsg" } }, false, {})
+    return
+  end
+  local next_day = os.date("*t", timestamp + 86400)
+  local date_line = string.format(
+    "[[%04d-%02d-%02d-%s]]",
+    next_day.year,
+    next_day.month,
+    next_day.day,
+    os.date("%A", os.time({ year = next_day.year, month = next_day.month, day = next_day.day }))
+  )
+  create_daily_note(date_line)
+end, { desc = "[P]Create next day's daily note from current file" })
+
 -- - I have several `.md` documents that do not follow markdown guidelines
 -- - There are some old ones that have more than one H1 heading in them, so when I
 --   open one of those old documents, I want to add one more `#` to each heading

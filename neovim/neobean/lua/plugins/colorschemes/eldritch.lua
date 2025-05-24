@@ -127,7 +127,10 @@ return {
         MiniFilesTitle = { sp = colors["linkarzu_color10"] },
         MiniFilesTitleFocused = { sp = colors["linkarzu_color10"] },
 
-        NormalFloat = { bg = colors["linkarzu_color10"] },
+        -- Set LazyGit transparent
+        -- NormalFloat = { bg = colors["linkarzu_color10"] },
+        NormalFloat = { bg = "NONE" },
+
         FloatBorder = { bg = colors["linkarzu_color10"] },
         FloatTitle = { bg = colors["linkarzu_color10"] },
         NotifyBackground = { bg = colors["linkarzu_color10"] },

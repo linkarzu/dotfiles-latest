@@ -1,0 +1,51 @@
+{
+  "browsers": [
+    {
+      "default": false,
+      "domains": [
+        "instructure.com",
+        "meet.google.com",
+        "miumg.instructure.com",
+        "umg.edu.gt"
+      ],
+      "name": "Brave Browser",
+      "shortcut": "1"
+    },
+    {
+      "default": false,
+      "domains": [],
+      "name": "Google Chrome",
+      "shortcut": "2"
+    },
+    {
+      "default": true,
+      "domains": [],
+      "name": "Vivaldi",
+      "shortcut": "4"
+    },
+    {
+      "default": false,
+      "domains": [],
+      "name": "Microsoft Edge",
+      "shortcut": "7"
+    },
+    {
+      "default": false,
+      "domains": [],
+      "name": "Zen",
+      "shortcut": "8"
+    },
+    {
+      "default": false,
+      "domains": [],
+      "name": "Safari",
+      "shortcut": "12"
+    }
+  ],
+  "comment": "I disabled below as it didn't work with miumg.instructure.com",
+  "expandShortenURLs": false,
+  "logLevel": "error",
+  "pinningSeconds": 30,
+  "stripTrackingAttributes": true,
+  "useOnlyRunningBrowsers": false
+}

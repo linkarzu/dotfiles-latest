@@ -142,6 +142,20 @@ yabai -m signal --add event=mission_control_enter action="yabai -m config normal
 yabai -m signal --add event=mission_control_exit action="yabai -m config active_window_opacity 1.0"
 
 ###############################################################################
+#                             Yabai Spaces
+###############################################################################
+
+# I want to have all the apps in desktop 1, and just a few in other desktops
+# If apps are organized incorrectly, just restart yabai
+# https://github.com/koekeishiya/yabai/issues/1685
+
+yabai -m space 1 --label default
+yabai -m space 2 --label terminal
+
+yabai -m rule --add app="^.*$" space=default
+yabai -m rule --add app="^Ghostty$" space=terminal
+
+###############################################################################
 #                             sub-layer=normal
 ###############################################################################
 

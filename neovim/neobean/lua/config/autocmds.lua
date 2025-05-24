@@ -255,3 +255,28 @@ vim.api.nvim_create_autocmd("BufWinEnter", {
     end)
   end,
 })
+
+-- Disable harper_ls when a markdown file inside ~/github/obsidian_main/075-umg is opened
+local umg_root = vim.fn.expand("~/github/obsidian_main/075-umg")
+-- Only register the autocmd if the target directory exists
+if vim.fn.isdirectory(umg_root) == 1 then
+  vim.api.nvim_create_autocmd("BufRead", {
+    group = augroup("umg_markdown_disable_ls"),
+    pattern = "*.md",
+    callback = function()
+      local file_path = vim.fn.expand("%:p")
+      -- Check that the file resides inside umg_root
+      if vim.startswith(file_path, umg_root .. "/") then
+        -- Prevent running twice for the same buffer
+        if vim.b.harper_ls_disabled then
+          return
+        end
+        vim.b.harper_ls_disabled = true
+        vim.schedule(function()
+          pcall(vim.api.nvim_command, "LspStop harper_ls")
+        end)
+        vim.notify("UMG markdown opened: harper_ls disabled", vim.log.levels.INFO)
+      end
+    end,
+  })
+end

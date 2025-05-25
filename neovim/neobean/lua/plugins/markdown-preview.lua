@@ -14,4 +14,8 @@ return {
       desc = "Markdown Preview",
     },
   },
+  init = function()
+    -- The default filename is 「${name}」and I just hate those symbols
+    vim.g.mkdp_page_title = "${name}"
+  end,
 }

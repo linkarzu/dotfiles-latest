@@ -1186,6 +1186,13 @@ fs.writeFileSync(
             rules,
           },
           fn_function_keys: [
+            // Open presentify
+            {
+              from: { key_code: "f3" },
+              to: [
+                { key_code: "a", modifiers: ["left_option", "left_control"] },
+              ],
+            },
             // I use ctrl+z with Trickster
             {
               from: { key_code: "f4" },

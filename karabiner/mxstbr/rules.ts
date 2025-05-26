@@ -541,7 +541,7 @@ const rules: KarabinerRules[] = [
       // t: app("Claude"),
       5: app("DaVinci Resolve"),
       x: app("GoTo"),
-      c: app("Google Chrome"),
+      c: app("Calendar"),
       v: app("zoom.us"),
 
       // Below I'm just leaving comments of the shortcuts I specifically use on

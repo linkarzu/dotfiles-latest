@@ -1101,10 +1101,10 @@
               {
                 "to": [
                   {
-                    "shell_command": "open -a 'Google Chrome.app'"
+                    "shell_command": "open -a 'Calendar.app'"
                   }
                 ],
-                "description": "Open -a 'Google Chrome.app'",
+                "description": "Open -a 'Calendar.app'",
                 "type": "basic",
                 "from": {
                   "key_code": "c",

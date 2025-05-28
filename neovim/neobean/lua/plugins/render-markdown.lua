@@ -138,5 +138,10 @@ return {
         "Headline6Fg",
       },
     },
+    code = {
+      -- if I'm not using yabai, I cannot make the color of the codeblocks
+      -- transparent, so just disabling all rendering 😢
+      style = "none",
+    },
   },
 }

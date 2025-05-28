@@ -877,7 +877,7 @@ M.tmux_pane_function = function(dir)
   -- zsh-vi-mode section on the .zshrc file
   -- Also modify this in your tmux.conf file if you want it to work when in tmux
   -- copy-mode
-  local pane_direction = vim.g.tmux_pane_direction or "bottom"
+  local pane_direction = vim.g.tmux_pane_direction or "right"
   -- NOTE: Below, the first number is the size of the pane if split horizontally,
   -- the 2nd number is the size of the pane if split vertically
   local pane_size = (pane_direction == "right") and 60 or 15

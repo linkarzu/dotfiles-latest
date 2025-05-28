@@ -137,7 +137,7 @@ generate_btop_config() {
 
   cat >"$btop_conf_file" <<EOF
 # Main background, empty for terminal default, need to be empty if you want transparent background
-theme[main_bg]="$linkarzu_color10"
+theme[main_bg]=""
 
 # Main text color
 theme[main_fg]="$linkarzu_color14"

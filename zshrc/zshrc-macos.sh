@@ -426,7 +426,7 @@ if [ -f "$(brew --prefix)/opt/zsh-vi-mode/share/zsh-vi-mode/zsh-vi-mode.plugin.z
   function tmux_left_pane() {
     # This defines if the tmux pane created by neovim is on the right or
     # bottom, make sure you also configure the neovi keymap to match
-    export TMUX_PANE_DIRECTION="bottom"
+    export TMUX_PANE_DIRECTION="right"
     if [[ $TMUX_PANE_DIRECTION == "right" ]]; then
       tmux select-pane -L # Move to the left (opposite of right)
     elif [[ $TMUX_PANE_DIRECTION == "bottom" ]]; then

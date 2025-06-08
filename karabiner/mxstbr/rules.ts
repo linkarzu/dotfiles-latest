@@ -701,6 +701,13 @@ const rules: KarabinerRules[] = [
           },
         ],
       },
+      k: {
+        to: [
+          {
+            shell_command: `export PATH="/opt/homebrew/bin:$PATH" && python3 ~/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py keyboard`,
+          },
+        ],
+      },
       t: {
         to: [
           {

@@ -18,6 +18,17 @@ return {
       -- I use this keymap with mini.files, but snacks explorer was taking over
       -- https://github.com/folke/snacks.nvim/discussions/949
       { "<leader>e", false },
+      {
+        "<leader>sg",
+        function()
+          Snacks.picker.grep({
+            -- Exclude results from grep picker
+            -- I think these have to be specified in gitignore syntax
+            exclude = { "dictionaries/words.txt" },
+          })
+        end,
+        desc = "Grep",
+      },
       -- Open git log in vertical view
       {
         "<leader>gl",

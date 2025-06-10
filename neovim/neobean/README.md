@@ -64,6 +64,7 @@
   * [markdown-preview.nvim image size](#markdown-previewnvim-image-size)
   * [Plugin that enables vio and vao](#plugin-that-enables-vio-and-vao)
   * [Record macro or new macro](#record-macro-or-new-macro)
+    + [To lowercase](#to-lowercase)
   * [Increment decrement selection](#increment-decrement-selection)
   * [Surround](#surround)
   * [Syntax highlighting (treesitter)](#syntax-highlighting-treesitter)
@@ -466,13 +467,15 @@ Minim tempor ullamco do eu pariatur minim.
 
 ### Record macro or new macro
 
+#### To lowercase
+
 - I want to convert all the words inside '' to lowercase, as they're in
   uppercase
 - Without macros I position myself on the first line, press `vi'u`
   - select inside ' and then lowercase
 - I want to do this for 13 lines, so I'll create a macro:
 - Position your cursor on the first line where you want to start the macro
-- Press `qa` to start recording the macro in registar `a`
+- Press `qa` to start recording the macro in register `a`
 - Perform the desired actions:
   - Press `vi'u`
   - Press `j` to move to the next line

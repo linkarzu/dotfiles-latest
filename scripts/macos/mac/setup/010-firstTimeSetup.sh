@@ -492,10 +492,10 @@ defaults write -g AppleWindowTabbingMode -string "always"
 # Through GUI KeyRepeat rate min is 2 (30 ms)
 # Through GUI InitialKeyRepeat rate min is 15 (225 ms)
 # To see what the CURRENT VALUE for each the **Key repeat rate** and the **Delay until repeat** are
-# defaults read KeyRepeat
-# defaults read InitialKeyRepeat
+# defaults read -g KeyRepeat
+# defaults read -g InitialKeyRepeat
 defaults write -g KeyRepeat -int 1
-defaults write -g InitialKeyRepeat -int 20
+defaults write -g InitialKeyRepeat -int 25
 
 # Set mouse to secondary click on the right side
 # It doesn't work, so trying to set it to OneTwoButton first to see if it works

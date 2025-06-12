@@ -15,7 +15,7 @@ echo "7 - 3 guest"
 echo "8 - 3 guest livestream"
 read -rp "Enter number: " choice
 
-target_file="$HOME/github/dotfiles-latest/karabiner/mxstbr/rules.ts"
+target_file="$HOME/github/dotfiles-latest/kanata/configs/macos.kbd"
 
 # Determine new scene name
 case "$choice" in
@@ -70,10 +70,16 @@ case "$choice" in
 esac
 
 # Replace just the scene name in the next line after the marker
-sed -i '' "/lineid_obs_switchscene_main/{n;s|switch_scene\.py [^\\\`]*|switch_scene.py $main_scene|;}" "$target_file"
-sed -i '' "/lineid_obs_switchscene_guest/{n;s|switch_scene\.py [^\\\`]*|switch_scene.py $guest_scene|;}" "$target_file"
-sed -i '' "/lineid_obs_switchscene_guest1/{n;s|switch_scene\.py [^\\\`]*|switch_scene.py $guest_1|;}" "$target_file"
-sed -i '' "/lineid_obs_switchscene_guest2/{n;s|switch_scene\.py [^\\\`]*|switch_scene.py $guest_2|;}" "$target_file"
-sed -i '' "/lineid_obs_switchscene_guest3/{n;s|switch_scene\.py [^\\\`]*|switch_scene.py $guest_3|;}" "$target_file"
+sed -i '' "/lineid_obs_switchscene_main/{n;s|\(switch_scene\.py \)[a-zA-Z0-9\-]*|\1$main_scene|;}" "$target_file"
+sed -i '' "/lineid_obs_switchscene_guest/{n;s|\(switch_scene\.py \)[a-zA-Z0-9\-]*|\1$guest_scene|;}" "$target_file"
+sed -i '' "/lineid_obs_switchscene_guest1/{n;s|\(switch_scene\.py \)[a-zA-Z0-9\-]*|\1$guest_1|;}" "$target_file"
+sed -i '' "/lineid_obs_switchscene_guest2/{n;s|\(switch_scene\.py \)[a-zA-Z0-9\-]*|\1$guest_2|;}" "$target_file"
+sed -i '' "/lineid_obs_switchscene_guest3/{n;s|\(switch_scene\.py \)[a-zA-Z0-9\-]*|\1$guest_3|;}" "$target_file"
 
 echo "Replaced scene with '$main_scene' in $target_file"
+
+# Reload Kanata if the target file is a Kanata config
+if [[ "$target_file" == *kanata* ]]; then
+  echo "Reloading Kanata via launchctl..."
+  launchctl kickstart -k gui/$(id -u)/com.linkarzu.kanata
+fi

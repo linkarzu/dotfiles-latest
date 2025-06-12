@@ -8,6 +8,9 @@
 # Blogpost article
 # https://linkarzu.com/posts/tools/obs-scene-py/
 
+# NOTE: If you have auth disabled in OBS, you can call this script with the
+# --no-auth flag, so that it does not try to get the secret from 1password
+
 import os
 import sys
 import subprocess

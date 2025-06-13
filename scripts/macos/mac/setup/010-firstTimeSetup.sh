@@ -495,7 +495,7 @@ defaults write -g AppleWindowTabbingMode -string "always"
 # defaults read -g KeyRepeat
 # defaults read -g InitialKeyRepeat
 defaults write -g KeyRepeat -int 1
-defaults write -g InitialKeyRepeat -int 25
+defaults write -g InitialKeyRepeat -int 50
 
 # Set mouse to secondary click on the right side
 # It doesn't work, so trying to set it to OneTwoButton first to see if it works

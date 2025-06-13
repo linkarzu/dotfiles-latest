@@ -22,7 +22,7 @@ volume_icon=(
   icon=$VOLUME_100
   icon.width=0
   icon.align=left
-  icon.color=$GREY
+  icon.color=$WHITE
   icon.font="$FONT:Regular:14.0"
   label.width=25
   label.align=left
@@ -33,6 +33,16 @@ status_bracket=(
   background.color=$BACKGROUND_1
   background.border_color=$BACKGROUND_2
 )
+
+# Check if the current audio output is AirPods
+CONNECTED_OUTPUT=$(SwitchAudioSource -t output -c)
+if [[ "$CONNECTED_OUTPUT" == *"AirPods"* ]]; then
+  volume_icon[2]="icon=$AIRPODS"
+elif [[ "$CONNECTED_OUTPUT" == *"External"* ]]; then
+  volume_icon[2]="icon=$HEADPHONES"
+else
+  volume_icon[2]="icon=$VOLUME_100"
+fi
 
 sketchybar --add slider volume right \
   --set volume "${volume_slider[@]}" \

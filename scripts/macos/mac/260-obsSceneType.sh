@@ -13,6 +13,7 @@ echo "5 - 2 guest"
 echo "6 - 2 guest livestream"
 echo "7 - 3 guest"
 echo "8 - 3 guest livestream"
+echo "11 - Solo keyboard"
 read -rp "Enter number: " choice
 
 target_file="$HOME/github/dotfiles-latest/kanata/configs/macos.kbd"
@@ -62,6 +63,10 @@ case "$choice" in
   guest_1="guest1-3guest-live"
   guest_2="guest2-3guest-live"
   guest_3="guest3-3guest-live"
+  ;;
+11)
+  main_scene="main-screen-keyboard"
+  guest_scene="guests-solo-keyboard"
   ;;
 *)
   echo "Invalid choice. Only 1 and 3 are supported right now."

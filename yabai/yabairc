@@ -68,6 +68,13 @@ if command -v sketchybar &>/dev/null; then
     yabai -m config bottom_padding 0
     yabai -m config left_padding 0
     yabai -m config right_padding 230
+  elif [[ "$display_resolution" == *"3200 x 1600"* ]]; then
+    # # This is for the BetterDisplay virtual screen for the zoom OBS scene for main app
+    # # yabai -m config top_padding 39
+    yabai -m config top_padding 38
+    yabai -m config bottom_padding 0
+    yabai -m config left_padding 0
+    yabai -m config right_padding 230
   elif [[ "$display_resolution" == *"3024 x 1964"* ]]; then
     # # This matches my macbook 14 inch
     # # yabai -m config top_padding 39
@@ -151,9 +158,18 @@ yabai -m signal --add event=mission_control_exit action="yabai -m config active_
 
 yabai -m space 1 --label default
 yabai -m space 2 --label terminal
+yabai -m space 3 --label desk3
+yabai -m space 4 --label desk4
 
 yabai -m rule --add app="^.*$" space=default
 yabai -m rule --add app="^Ghostty$" space=terminal
+yabai -m rule --add app="^Discord$" space=desk4
+yabai -m rule --add app="^WhatsApp Web$" space=desk4
+yabai -m rule --add app="^OBS Studio$" space=desk4
+yabai -m rule --add app="^Mail$" space=desk4
+yabai -m rule --add app="^1password$" space=desk4
+yabai -m rule --add app="^Calendar$" space=desk4
+yabai -m rule --add app="^Google Chrome$" space=desk4
 
 ###############################################################################
 #                             sub-layer=normal

@@ -13,7 +13,7 @@
     },
     {
       "default": false,
-      "domains": [],
+      "domains": ["vdo.ninja"],
       "name": "Google Chrome",
       "shortcut": "2"
     },

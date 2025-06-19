@@ -167,9 +167,10 @@ yabai -m rule --add app="^Discord$" space=desk4
 yabai -m rule --add app="^WhatsApp Web$" space=desk4
 yabai -m rule --add app="^OBS Studio$" space=desk4
 yabai -m rule --add app="^Mail$" space=desk4
-yabai -m rule --add app="^1password$" space=desk4
+yabai -m rule --add app="^1Password$" space=desk4
 yabai -m rule --add app="^Calendar$" space=desk4
 yabai -m rule --add app="^Google Chrome$" space=desk4
+yabai -m rule --add app="^Microsoft Teams$" space=desk4
 
 ###############################################################################
 #                             sub-layer=normal

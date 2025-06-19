@@ -530,6 +530,11 @@ defaults write com.apple.Accessibility DifferentiateWithoutColor -bool true
 
 ############################################
 
+# Set menu bar clock to analog style (default is digital)
+# To get CURRENT VALUE
+# defaults read com.apple.menuextra.clock IsAnalog
+defaults write com.apple.menuextra.clock IsAnalog -bool true
+
 # Automatically hide the dock
 defaults write com.apple.dock autohide -bool true
 

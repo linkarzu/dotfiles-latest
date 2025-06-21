@@ -194,7 +194,9 @@ yabai -m rule --add app=".*" sub-layer=normal
 
 # "mouse_follows_focus on" will move the mouse back to the center, but DISABLE it or it will
 # be a nightmare to use iStat Menus
-yabai -m config mouse_follows_focus off
+# Update: Fuck iStat Menus, neverd used it anyway. I need for my mouse to follow
+# trickster
+yabai -m config mouse_follows_focus on
 
 # I don't understand what this does, I've enabled and disabled it in the past,
 # and still don't get it

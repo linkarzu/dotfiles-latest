@@ -14,6 +14,8 @@ export PATH="/opt/homebrew/bin:$PATH"
 
 # Identify *one* kitty window (the first that shows up) — bail if none
 kitty_id="$(yabai -m query --windows | jq -r '.[] | select(.app == "kitty") | .id' | head -n1)"
+# Identify *all* OBS Studio windows (collect every id)
+obs_ids=($(yabai -m query --windows | jq -r '.[] | select(.app == "OBS Studio") | .id'))
 [[ -z "$kitty_id" ]] && exit 0 # nothing to do yet
 
 # To find the position and size of an app
@@ -25,6 +27,12 @@ display_resolution=$(system_profiler SPDisplaysDataType | grep Resolution)
 if [[ $(echo "$display_resolution" | grep -c "Resolution") -ge 2 ]]; then
   yabai -m window --focus "$kitty_id" --move abs:1369:39
   yabai -m window --focus "$kitty_id" --resize abs:231:300
+  # Loop through every OBS Studio window and make them full screen on my laptop
+  # monitor
+  for id in "${obs_ids[@]}"; do
+    yabai -m window --focus "$id" --move abs:1600:187
+    yabai -m window --focus "$id" --resize abs:1512:950
+  done
   exit 0
 fi
 # First condition is to match my macbook pro, the * are used as wildcards

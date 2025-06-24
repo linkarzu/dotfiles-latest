@@ -1,0 +1,48 @@
+# Filter the list of presented browser by the fact if a browser is already opened
+# More information: https://eligere.dev/docs/config/configuration/#useonlyrunningbrowsers
+useOnlyRunningBrowsers = false
+
+# Removing some tracking attributes from URLs
+# More information: https://eligere.dev/docs/config/configuration/#striptrackingattributes
+stripTrackingAttributes = true
+
+# Resolves the final URL that is hidden under shorten URL
+# More information and how to combine with other features: https://eligere.dev/docs/config/configuration/#expandShortenURLs
+expandShortenURLs = true
+
+# Number of seconds to make a browser the default one temporary
+# Mope information: https://eligere.dev/docs/config/configuration/#pinningseconds
+pinningSeconds = 30
+
+# Level of verbosity for .eligere.log for troubleshooting
+# More information: https://eligere.dev/docs/config/configuration/#loglevel
+logLevel = "warning"
+
+[[browsers]]
+# Name of a browser from "/Applications" folder. Required property.
+name = "Safari"
+shortcut = "s"
+# Eligere can map all links for "apps" applications to this browser configuration.
+# Mor information: https://eligere.dev/docs/config/configuration/#apps---optional
+apps = ["Messages"]
+domains = ["apple.com"]
+
+[[browsers]]
+name     = "Brave Browser"
+shortcut = "1"
+domains  = [
+  "instructure.com",
+  "meet.google.com",
+  "miumg.instructure.com",
+  "umg.edu.gt",
+]
+
+[[browsers]]
+name     = "Google Chrome"
+shortcut = "2"
+domains  = ["vdo.ninja"]
+
+[[browsers]]
+name     = "Vivaldi"
+shortcut = "4"
+default  = true

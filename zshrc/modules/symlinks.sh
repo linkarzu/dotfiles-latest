@@ -15,6 +15,7 @@ mkdir -p ~/.config/yazi
 mkdir -p ~/.config/btop
 mkdir -p ~/.config/fastfetch
 mkdir -p ~/.config/sesh
+mkdir -p ~/.config/eligere
 
 # Create the symlinks I normally use
 # ~/.config dir holds nvim, neofetch, alacritty configs
@@ -80,6 +81,7 @@ create_symlink ~/github/dotfiles-latest/yabai/yabairc ~/.yabairc
 create_symlink ~/github/dotfiles-latest/.prettierrc.yaml ~/.prettierrc.yaml
 create_symlink ~/github/dotfiles-latest/ubersicht/.simplebarrc ~/.simplebarrc
 create_symlink ~/github/dotfiles-latest/eligere/.eligere.json ~/.eligere.json
+create_symlink ~/github/dotfiles-latest/eligere/eligere.toml ~/.config/eligere/.eligere.toml
 if command -v code &>/dev/null; then
   create_symlink ~/github/dotfiles-latest/vscode/settings.json "$HOME/Library/Application Support/Code/User/settings.json"
 fi

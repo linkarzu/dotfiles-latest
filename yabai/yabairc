@@ -64,10 +64,13 @@ if command -v sketchybar &>/dev/null; then
   elif [[ "$display_resolution" == *"3200 x 1800"* ]]; then
     # # This matches my asus 27 inch monitor
     # # yabai -m config top_padding 39
+    # lineid_asus_monitor_top_pad
     yabai -m config top_padding 38
     # lineid_asus_monitor_bottom_pad
     yabai -m config bottom_padding 0
+    # lineid_asus_monitor_left_pad
     yabai -m config left_padding 0
+    # lineid_asus_monitor_right_pad
     yabai -m config right_padding 230
   elif [[ "$display_resolution" == *"3200 x 1600"* ]]; then
     # # This is for the BetterDisplay virtual screen for the zoom OBS scene for main app

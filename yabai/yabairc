@@ -175,6 +175,7 @@ yabai -m rule --add app="^1Password$" space=desk4
 yabai -m rule --add app="^Calendar$" space=desk4
 yabai -m rule --add app="^Google Chrome$" space=desk4
 yabai -m rule --add app="^Microsoft Teams$" space=desk4
+yabai -m rule --add app="^ChatGPT$" space=desk4
 
 ###############################################################################
 #                             sub-layer=normal

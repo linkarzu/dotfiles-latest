@@ -28,6 +28,7 @@ apps = ["Messages"]
 domains = ["apple.com"]
 
 [[browsers]]
+default  = true
 name     = "Brave Browser"
 shortcut = "1"
 domains  = [
@@ -45,4 +46,3 @@ domains  = ["vdo.ninja"]
 [[browsers]]
 name     = "Vivaldi"
 shortcut = "4"
-default  = true

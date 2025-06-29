@@ -4078,4 +4078,70 @@ end, { desc = "[P] execute 400-autoPushGithub.sh" })
 --   "<cmd>silent !tmux neww ~/github/dotfiles-latest/tmux/tools/prime/tmux-sessionizer.sh<CR>"
 -- )
 
+-------------------------------------------------------------------------------
+--                        Custom Markdown Folding
+-------------------------------------------------------------------------------
+
+-- Custom markdown folding expression that properly handles multiple H1 sections
+function _G.markdown_foldexpr()
+  local lnum = vim.v.lnum
+  local line = vim.fn.getline(lnum)
+  local heading = line:match("^(#+)%s")
+  if heading then
+    local level = #heading
+    if level == 1 then
+      -- All H1 headings start a new fold level
+      return ">1"
+    elseif level >= 2 and level <= 6 then
+      -- Regular handling for H2-H6
+      return ">" .. level
+    end
+  end
+  return "="
+end
+
+-- Custom foldtext function for markdown to show heading titles
+function _G.markdown_foldtext()
+  local line = vim.fn.getline(vim.v.foldstart)
+  local num_lines = vim.v.foldend - vim.v.foldstart + 1
+  
+  -- Clean up the line by removing markdown syntax and render-markdown concealed characters
+  local text = line:gsub("^#+%s*", ""):gsub("%s*$", "")  -- Remove # symbols and trailing spaces
+  text = text:gsub("󰎤%s*", ""):gsub("󰎧%s*", ""):gsub("󰎪%s*", "")  -- Remove heading icons
+  text = text:gsub("󰎭%s*", ""):gsub("󰎱%s*", ""):gsub("󰎳%s*", "")  -- Remove more heading icons
+  
+  -- Show fold with heading text and line count
+  return "    " .. text .. " (" .. num_lines .. " lines) "
+end
+
+local function set_markdown_folding()
+  vim.opt_local.foldmethod = "expr"
+  vim.opt_local.foldexpr = "v:lua.markdown_foldexpr()"
+  vim.opt_local.foldtext = "v:lua.markdown_foldtext()"
+  vim.opt_local.foldlevel = 99
+
+  -- Detect frontmatter closing line
+  local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+  local found_first = false
+  local frontmatter_end = nil
+  for i, line in ipairs(lines) do
+    if line == "---" then
+      if not found_first then
+        found_first = true
+      else
+        frontmatter_end = i
+        break
+      end
+    end
+  end
+  vim.b.frontmatter_end = frontmatter_end
+end
+
+-- Apply custom folding to markdown files
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "markdown",
+  callback = set_markdown_folding,
+  desc = "Set up custom markdown folding",
+})
+
 return M

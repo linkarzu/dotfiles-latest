@@ -1023,6 +1023,11 @@ end, { desc = "[P]Reload current buffer" })
 --                             Image section
 -- ############################################################################
 
+-- There's confusion with the pasting image keymaps. I have 2 keymaps:
+-- One pastes the image in the same dir as the file, using the img-clip plugin settings
+-- One pastes the image in the "assets" dir, useful for my blog or re-using images
+-- lamw26wmal
+--
 -- HACK: View and paste images in Neovim like in Obsidian
 -- https://youtu.be/0O3kqGwNzTI
 --
@@ -3653,30 +3658,43 @@ vim.keymap.set("n", "<leader>fC", function()
   create_daily_note(current_line)
 end, { desc = "[P]Create daily note" })
 
--- Create a daily note for the next day based on the current filename lamw26wmal
-vim.keymap.set("n", "<leader>fA", function()
-  local filename = vim.fn.expand("%:t")
-  local year, month, day = filename:match("^(%d+)%-(%d+)%-(%d+)%-%w+%.md$")
-  if not (year and month and day) then
+-- Extract the Y-M-D parts from the current filename
+local function current_file_date()
+  local fname = vim.fn.expand("%:t")
+  local y, m, d = fname:match("^(%d+)%-(%d+)%-(%d+)%-%w+%.md$")
+  return y, m, d
+end
+
+-- Create N consecutive daily notes, starting tomorrow
+local function create_next_n_days(n)
+  local y, m, d = current_file_date()
+  if not (y and m and d) then
     vim.api.nvim_echo({ { "Current file is not a valid daily note filename", "ErrorMsg" } }, false, {})
     return
   end
-  -- Convert to timestamp and add one day
-  local timestamp = os.time({ year = year, month = month, day = day })
-  if not timestamp then
-    vim.api.nvim_echo({ { "Invalid date in filename", "ErrorMsg" } }, false, {})
-    return
+  local base_ts = os.time({ year = y, month = m, day = d })
+  for i = 1, n do
+    local t = os.date("*t", base_ts + 86400 * i)
+    local link = string.format(
+      "[[%04d-%02d-%02d-%s]]",
+      t.year,
+      t.month,
+      t.day,
+      os.date("%A", os.time({ year = t.year, month = t.month, day = t.day }))
+    )
+    create_daily_note(link)
   end
-  local next_day = os.date("*t", timestamp + 86400)
-  local date_line = string.format(
-    "[[%04d-%02d-%02d-%s]]",
-    next_day.year,
-    next_day.month,
-    next_day.day,
-    os.date("%A", os.time({ year = next_day.year, month = next_day.month, day = next_day.day }))
-  )
-  create_daily_note(date_line)
+end
+
+-- Create a daily note for the next day based on the current filename lamw26wmal
+vim.keymap.set("n", "<leader>fA", function()
+  create_next_n_days(1)
 end, { desc = "[P]Create next day's daily note from current file" })
+
+-- Create the next 7 daily notes (one week) lamw26wmal
+vim.keymap.set("n", "<leader>fW", function()
+  create_next_n_days(7)
+end, { desc = "[P]Create next week's daily notes from current file" })
 
 -- - I have several `.md` documents that do not follow markdown guidelines
 -- - There are some old ones that have more than one H1 heading in them, so when I

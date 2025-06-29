@@ -4078,4 +4078,28 @@ end, { desc = "[P] execute 400-autoPushGithub.sh" })
 --   "<cmd>silent !tmux neww ~/github/dotfiles-latest/tmux/tools/prime/tmux-sessionizer.sh<CR>"
 -- )
 
+-- Simple checkbox toggle function
+vim.keymap.set("n", "<leader>ct", function()
+  local line = vim.api.nvim_get_current_line()
+  local new_line
+  
+  -- Toggle between different checkbox states
+  if line:match("^(%s*%- )%[ %]") then
+    -- [ ] -> [x]
+    new_line = line:gsub("^(%s*%- )%[ %]", "%1[x]")
+  elseif line:match("^(%s*%- )%[x%]") then
+    -- [x] -> [i]
+    new_line = line:gsub("^(%s*%- )%[x%]", "%1[i]")
+  elseif line:match("^(%s*%- )%[i%]") then
+    -- [i] -> [ ]
+    new_line = line:gsub("^(%s*%- )%[i%]", "%1[ ]")
+  else
+    -- Not a checkbox, do nothing
+    vim.notify("Not a checkbox line", vim.log.levels.WARN)
+    return
+  end
+  
+  vim.api.nvim_set_current_line(new_line)
+end, { desc = "Toggle checkbox state ([ ] -> [x] -> [i] -> [ ])" })
+
 return M

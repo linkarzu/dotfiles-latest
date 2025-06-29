@@ -56,8 +56,13 @@ vim.keymap.set({ "n", "v", "i" }, "<M-R>", function()
   if has_panes then
     vim.fn.system("tmux kill-pane -t :.+")
   end
-  os.execute('open "btt://execute_assigned_actions_for_trigger/?uuid=481BDF1F-D0C3-4B5A-94D2-BD3C881FAA6F"')
-end, { desc = "[P]Restart Neovim via BTT" })
+  -- macOS-specific BetterTouchTool restart command
+  if vim.fn.has("mac") == 1 then
+    os.execute('open "btt://execute_assigned_actions_for_trigger/?uuid=481BDF1F-D0C3-4B5A-94D2-BD3C881FAA6F"')
+  else
+    vim.notify("Neovim restart via BTT is only available on macOS", vim.log.levels.INFO)
+  end
+end, { desc = "[P]Restart Neovim via BTT (macOS only)" })
 
 -- Disable this keymap overriding it with a no-operation function (noop)
 -- Otherwise when by mistake press <M-r> to restart neovim, it does "r" to
@@ -4050,8 +4055,13 @@ vim.keymap.set("n", "<leader>fz", function()
   end
 end, { desc = "[P]source ~/.zshrc" })
 
--- Execute my 400-autoPushGithub.sh script
+-- Execute my 400-autoPushGithub.sh script (macOS only)
 vim.keymap.set("n", "<leader>gP", function()
+  -- Check if running on macOS
+  if vim.fn.has("mac") == 0 then
+    vim.notify("This keymap is only available on macOS", vim.log.levels.WARN)
+    return
+  end
   local script_path = "~/github/dotfiles-latest/scripts/macos/mac/400-autoPushGithub.sh --nowait"
   -- Expand the home directory in the path
   script_path = vim.fn.expand(script_path)

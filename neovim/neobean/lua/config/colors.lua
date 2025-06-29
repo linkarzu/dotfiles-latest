@@ -6,11 +6,21 @@
 -- Function to load colors from the external file
 local function load_colors()
   local colors = {}
-  local active_file = os.getenv("HOME") .. "/github/dotfiles-latest/neovim/neobean/lua/config/active-colorscheme.sh"
+  
+  -- Get the directory of this current file and look for active-colorscheme.sh relative to it
+  local current_file = debug.getinfo(1, 'S').source:sub(2) -- Remove the '@' prefix
+  local current_dir = current_file:match("(.*/)")
+  local active_file = current_dir .. "active-colorscheme.sh"
 
   local file = io.open(active_file, "r")
   if not file then
-    error("Could not open the active colorscheme file: " .. active_file)
+    -- Fallback to original hardcoded path for existing setups
+    active_file = os.getenv("HOME") .. "/github/dotfiles-latest/neovim/neobean/lua/config/active-colorscheme.sh"
+    file = io.open(active_file, "r")
+    if not file then
+      error("Could not find active colorscheme file at:\n" .. 
+            current_dir .. "active-colorscheme.sh\nor\n" .. active_file)
+    end
   end
 
   for line in file:lines() do

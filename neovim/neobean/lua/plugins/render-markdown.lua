@@ -102,6 +102,9 @@ return {
         -- Highlight for item associated with checked checkbox
         scope_highlight = nil,
       },
+      custom = {
+        todo = { raw = "[i]", rendered = "   󰡌 ", highlight = "RenderMarkdownTodo" },
+      },
     },
     html = {
       -- Turn on / off all HTML rendering

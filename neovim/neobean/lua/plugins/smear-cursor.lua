@@ -1,6 +1,7 @@
 return {
   "sphamba/smear-cursor.nvim",
-  enabled = vim.g.neovim_mode ~= "skitty", -- Disable plugin for skitty mode
+  -- enabled = vim.g.neovim_mode ~= "skitty", -- Disable plugin for skitty mode
+  enabled = false,
   cond = vim.g.neovide == nil,
   opts = {
     stiffness = 0.8, -- 0.6      [0, 1]

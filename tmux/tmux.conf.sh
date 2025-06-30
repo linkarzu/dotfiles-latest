@@ -325,6 +325,8 @@ unbind 6
 bind-key -r 6 run-shell "tmux neww $colorscheme_selector"
 unbind 7
 bind-key -r 7 run-shell "tmux neww $script_selector"
+unbind 8
+bind-key -r 8 run-shell "$tmux_sessionizer ~/github/dotfiles-private"
 
 ###############################################################################
 

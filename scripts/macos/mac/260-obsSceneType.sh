@@ -16,7 +16,7 @@ echo "8 - 3 guest livestream"
 echo "11 - Solo keyboard"
 read -rp "Enter number: " choice
 
-target_file="$HOME/github/dotfiles-latest/kanata/configs/macos.kbd"
+target_file="$HOME/github/dotfiles-private/kanata/configs/macos.kbd"
 
 # Determine new scene name
 case "$choice" in

@@ -1,6 +1,8 @@
-app_version: 0.4.0-preview.0
+app_version: 0.4.0-preview.2
 behavior_configs:
-- base_wheel_speed: 16
+- base_move_speed: 5.0
+  base_wheel_speed: 16.0
+  free_mode_auto_off_s: 10
   grid_action_level: subgrid
   hide_cursor_on_click: false
   hide_location: bottom_left
@@ -8,15 +10,20 @@ behavior_configs:
   initial_overlay_monitor: last_used
   move_duration_ms: 100
   move_real_cursor_with_virtual: false
+  move_speed_multiplier: 3.0
+  movement_easing: 0.1
   multi_action_timeout_ms: 400
   name: main_behavior
+  send_escape_after_global_alt_tap__windows: true
   tap_threshold_ms: 300
-  wheel_mode_auto_off_s: 10
-  wheel_speed_multiplier: 4
-  wheel_step_size: 100
-  wheel_step_size_large: 500
+  wheel_easing: 0.1
+  wheel_speed_multiplier: 4.0
+  wheel_step_size: 100.0
+  wheel_step_size_large: 500.0
 classname: AppConfig
 custom_monitor_assignments: []
+display_input: none
+event_tap_location: hid_head
 grid_configs:
 - always_show_subgrid: false
   grid_defn:
@@ -35,7 +42,9 @@ grid_configs:
     keys: ''
     num_cells_x: 2
     num_cells_y: 1
+  hold_subgrid_key_for_nudge: false
   name: position_based_columns
+  nudges_per_cell: 4
   strategy: subgrid
   subgrid_dims:
   - 10
@@ -258,6 +267,7 @@ keyboard_layout:
     126: "\x1E"
 keymaps:
 - entries:
+    back mouse button: null
     back mouse button (w/o overlay): null
     close UI element: Escape
     cycle click count: null
@@ -268,10 +278,11 @@ keymaps:
     cycle mouse button: null
     decrease overlay opacity: ArrowDown
     edit config: Tab
-    enter wheel mode: null
+    enter free mode: null
     execute mouse action: Space
     execute mouse move: ControlRight tap
-    exit wheel mode: Escape
+    exit free mode: Escape
+    forward mouse button: null
     forward mouse button (w/o overlay): null
     hide overlay: Escape
     hold for back button: null
@@ -287,18 +298,30 @@ keymaps:
     jump to left edge: null
     jump to right edge: null
     jump to top: null
+    left mouse button: null
     left mouse button (w/o overlay): null
+    middle mouse button: null
     middle mouse button (w/o overlay): null
+    move down: null
+    move left: null
+    move right: null
+    move up: null
     release hold/drag: null
     repeat last mouse action: null
+    right mouse button: null
     right mouse button (w/o overlay): null
-    show overlay: OptionRight tap
+    show overlay: cmd+shift+alt+ctrl+z
+    subgrid nudge down: null
+    subgrid nudge left: null
+    subgrid nudge right: null
+    subgrid nudge up: null
     switch monitor left: null
     switch monitor right: null
     toggle continuous mode: null
     toggle continuous mode until closed: null
+    toggle free mode: ControlRight tap
     toggle overlay: null
-    toggle wheel mode: ControlRight tap
+    toggle overlay lock: null
     undo last key: Backspace
     wheel down: J
     wheel down fast: null
@@ -361,6 +384,7 @@ style_configs:
   cursor_size: 7
   font_family: '[Apple System Font]'
   font_size_multiplier: 0.5
+  font_weight: 500
   grid_line_style: dots
   grid_rgba:
   - 0.58

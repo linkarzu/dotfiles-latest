@@ -1,3 +1,5 @@
+source ~/github/dotfiles-private/zshrc/zshrc-macos.sh
+
 # This below is to automate the process of creating the
 # com.linkarzu.autoPushGithub.plist file which will run every X seconds and
 # automaticaly push changes to some github repos

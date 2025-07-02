@@ -1,5 +1,3 @@
-source ~/github/dotfiles-private/zshrc/zshrc-macos.sh
-
 # This below is to automate the process of creating the
 # com.linkarzu.autoPushGithub.plist file which will run every X seconds and
 # automaticaly push changes to some github repos
@@ -202,6 +200,14 @@ fi
 
 # disable auto-update when running 'brew something'
 export HOMEBREW_NO_AUTO_UPDATE="1"
+
+# Stuff in my private dotfiles that is still in beta, so I'm still testing it
+# Usually shared in my discord in the #early-releases channel with youtube members
+# NOTE: If you want to become a YouTube member
+# https://www.youtube.com/channel/UCrSIvbFncPSlK6AdwE2QboA/join
+if [ -f ~/github/dotfiles-private/zshrc/zshrc-macos.sh ]; then
+  source ~/github/dotfiles-private/zshrc/zshrc-macos.sh
+fi
 
 # Stuff that I want to load, but not to have visible in my public dotfiles
 if [ -f "$HOME/Library/Mobile Documents/com~apple~CloudDocs/github/.zshrc_local" ]; then

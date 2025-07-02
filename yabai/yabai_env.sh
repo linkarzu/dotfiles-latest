@@ -14,7 +14,7 @@ if [[ $(echo "$display_resolution" | grep -c "Resolution") -ge 2 ]]; then
   apps_stream="(Microsoft Edge|OBS Studio|Jitsi Meet|Discord)"
   # This keeps apps always below, seems to be working fine when I switch to other
   # apps
-  apps_mgoff_below="(Calculator|iStat Menus|Hammerspoon|BetterDisplay|GIMP|Notes|Activity Monitor|App StoreSoftware Update|TestRig|Gemini|Raycast|OBS Studio|Microsoft Edge|Cisco Packet Tracer|Stickies|kitty|ProLevel|Photo Booth|Hand Mirror|SteerMouse|remote-viewer|Jitsi Meet|DaVinci Resolve|Discord)"
+  apps_mgoff_below="(Calculator|iStat Menus|Hammerspoon|BetterDisplay|GIMP|Notes|Activity Monitor|App StoreSoftware Update|TestRig|Gemini|Raycast|OBS Studio|Microsoft Edge|Cisco Packet Tracer|Stickies|kitty|ProLevel|Photo Booth|Hand Mirror|SteerMouse|remote-viewer|Jitsi Meet|DaVinci Resolve|Discord|Google Chrome)"
 else
   apps_stream="()"
   # This keeps apps always below, seems to be working fine when I switch to other

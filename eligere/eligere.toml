@@ -41,8 +41,8 @@ domains  = [
 [[browsers]]
 name     = "Google Chrome"
 shortcut = "2"
-domains  = ["vdo.ninja"]
 
 [[browsers]]
 name     = "Vivaldi"
 shortcut = "4"
+domains  = ["vdo.ninja"]

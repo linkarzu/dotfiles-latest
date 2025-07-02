@@ -16,6 +16,7 @@ mkdir -p ~/.config/btop
 mkdir -p ~/.config/fastfetch
 mkdir -p ~/.config/sesh
 mkdir -p ~/.config/eligere
+mkdir -p ~/.config/aerospace
 
 # Create the symlinks I normally use
 # ~/.config dir holds nvim, neofetch, alacritty configs
@@ -105,6 +106,7 @@ create_symlink ~/github/dotfiles-latest/yazi/ ~/.config/yazi
 create_symlink ~/github/dotfiles-latest/btop/ ~/.config/btop
 create_symlink ~/github/dotfiles-latest/fastfetch/ ~/.config/fastfetch
 create_symlink ~/github/dotfiles-latest/sesh ~/.config/sesh
+create_symlink ~/github/dotfiles-latest/aerospace ~/.config/aerospace
 
 # # This is on the other repo where I keep my ssh config files
 # I commented this as I don't have access to this repo in all the hosts

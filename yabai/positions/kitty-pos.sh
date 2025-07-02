@@ -16,6 +16,7 @@ export PATH="/opt/homebrew/bin:$PATH"
 kitty_id="$(yabai -m query --windows | jq -r '.[] | select(.app == "kitty") | .id' | head -n1)"
 # Identify *all* OBS Studio windows (collect every id)
 obs_ids=($(yabai -m query --windows | jq -r '.[] | select(.app == "OBS Studio") | .id'))
+chrome_ids=($(yabai -m query --windows | jq -r '.[] | select(.app == "Google Chrome") | .id'))
 [[ -z "$kitty_id" ]] && exit 0 # nothing to do yet
 
 # To find the position and size of an app
@@ -32,6 +33,10 @@ if [[ $(echo "$display_resolution" | grep -c "Resolution") -ge 2 ]]; then
   for id in "${obs_ids[@]}"; do
     yabai -m window --focus "$id" --move abs:1600:187
     yabai -m window --focus "$id" --resize abs:1512:950
+  done
+  for id in "${chrome_ids[@]}"; do
+    yabai -m window --focus "$id" --move abs:1600:187
+    yabai -m window --focus "$id" --resize abs:292:490
   done
   exit 0
 fi

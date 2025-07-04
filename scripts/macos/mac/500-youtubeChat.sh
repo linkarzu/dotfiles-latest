@@ -15,7 +15,7 @@ fi
 stream_id="${BASH_REMATCH[1]}"
 
 # Open YouTube chat in a dedicated Chrome app window
-open -na "Google Chrome" --args --app="https://www.youtube.com/live_chat?v=${stream_id}"
+open -na "Vivaldi" --args --app="https://www.youtube.com/live_chat?v=${stream_id}"
 
 sleep 2
 

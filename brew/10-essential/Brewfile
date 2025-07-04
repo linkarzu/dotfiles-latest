@@ -68,5 +68,6 @@ cask "spotify"
 cask "hammerspoon"
 cask "hot"
 brew "fastfetch"
+cask "kindavim"
 
 

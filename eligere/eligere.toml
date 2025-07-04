@@ -8,7 +8,8 @@ stripTrackingAttributes = true
 
 # Resolves the final URL that is hidden under shorten URL
 # More information and how to combine with other features: https://eligere.dev/docs/config/configuration/#expandShortenURLs
-expandShortenURLs = true
+# Disabled this as one of my SAML logins wasn't opening in the right browser
+expandShortenURLs = false
 
 # Number of seconds to make a browser the default one temporary
 # Mope information: https://eligere.dev/docs/config/configuration/#pinningseconds
@@ -31,18 +32,21 @@ domains = ["apple.com"]
 default  = true
 name     = "Brave Browser"
 shortcut = "1"
+
+[[browsers]]
+name     = "Google Chrome"
+shortcut = "2"
+domains  = [
+  "vdo.ninja",
+]
+
+[[browsers]]
+name     = "Vivaldi"
+shortcut = "4"
 domains  = [
   "instructure.com",
   "meet.google.com",
   "miumg.instructure.com",
   "umg.edu.gt",
+  "vdo.ninja",
 ]
-
-[[browsers]]
-name     = "Google Chrome"
-shortcut = "2"
-
-[[browsers]]
-name     = "Vivaldi"
-shortcut = "4"
-domains  = ["vdo.ninja"]

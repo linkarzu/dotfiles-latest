@@ -13,6 +13,8 @@ echo "5 - 2 guest"
 echo "6 - 2 guest livestream"
 echo "7 - 3 guest"
 echo "8 - 3 guest livestream"
+echo "9 - 4 guest"
+echo "10 - 4 guest livestream"
 echo "11 - Solo keyboard"
 read -rp "Enter number: " choice
 
@@ -65,6 +67,22 @@ case "$choice" in
   guest_1="guest1-3guest-live"
   guest_2="guest2-3guest-live"
   guest_3="guest3-3guest-live"
+  ;;
+9)
+  main_scene="main-4-guest"
+  guest_scene="guests4-all-notes-right"
+  guest_1="guest1-4guest"
+  guest_2="guest2-4guest"
+  guest_3="guest3-4guest"
+  guest_4="guest4-4guest"
+  ;;
+10)
+  main_scene="main-4-guest-live"
+  guest_scene="guests4-all-notes-right-live"
+  guest_1="guest1-4guest-live"
+  guest_2="guest2-4guest-live"
+  guest_3="guest3-4guest-live"
+  guest_4="guest4-4guest-live"
   ;;
 11)
   main_scene="main-screen-keyboard"

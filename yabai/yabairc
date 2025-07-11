@@ -177,6 +177,7 @@ yabai -m rule --add app="^Google Chrome$" space=desk4
 yabai -m rule --add app="^Microsoft Teams$" space=desk4
 yabai -m rule --add app="^ChatGPT$" space=desk4
 yabai -m rule --add app="^Vivaldi$" space=desk4
+yabai -m rule --add app="^socialstream$" space=desk4
 
 ###############################################################################
 #                             sub-layer=normal

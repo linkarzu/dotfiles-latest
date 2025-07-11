@@ -100,6 +100,7 @@ sed -i '' "/lineid_obs_switchscene_guest/{n;s|\(switch_scene\.py \)[a-zA-Z0-9\-]
 sed -i '' "/lineid_obs_switchscene_guest1/{n;s|\(switch_scene\.py \)[a-zA-Z0-9\-]*|\1$guest_1|;}" "$target_file"
 sed -i '' "/lineid_obs_switchscene_guest2/{n;s|\(switch_scene\.py \)[a-zA-Z0-9\-]*|\1$guest_2|;}" "$target_file"
 sed -i '' "/lineid_obs_switchscene_guest3/{n;s|\(switch_scene\.py \)[a-zA-Z0-9\-]*|\1$guest_3|;}" "$target_file"
+sed -i '' "/lineid_obs_switchscene_guest4/{n;s|\(switch_scene\.py \)[a-zA-Z0-9\-]*|\1$guest_4|;}" "$target_file"
 
 echo "Replaced scene with '$main_scene' in $target_file"
 

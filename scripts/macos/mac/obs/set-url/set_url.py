@@ -10,7 +10,6 @@ import subprocess
 import obsws_python as obs
 
 # --- Vars ---
-onepassword_secret = "op://helixdeeznuts/obs-websocket-password/credential"
 requirements = ["obsws-python"]
 
 
@@ -42,24 +41,11 @@ def ensure_venv():
 ensure_venv()
 
 
-def get_password():
-    try:
-        result = subprocess.check_output(
-            ["op", "read", onepassword_secret], stderr=subprocess.STDOUT
-        )
-        return result.decode("utf-8").strip()
-    except subprocess.CalledProcessError as e:
-        print(f"1Password Error: {e.output.decode().strip()}")
-        sys.exit(1)
-
-
 # Function to set the input's URL property
 def set_input_url(input_name, new_url):
     host = "localhost"
     port = 4455
-    password = get_password() if "--no-auth" not in sys.argv else None
-
-    client = obs.ReqClient(host=host, port=port, password=password)
+    client = obs.ReqClient(host=host, port=port, password=None)
 
     try:
         # Send request to update input settings

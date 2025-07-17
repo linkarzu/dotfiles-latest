@@ -24,7 +24,7 @@ CURRENT_MIC=$(SwitchAudioSource -t input -c)
 
 # Check if MIC_VOLUME is a number
 if [[ "$MIC_VOLUME" =~ ^[0-9]+$ ]]; then
-  # If volume is less than 90 (including 0), set it to 90
+  # If volume is less than $MIC_LEVEL (including 0), set it to $MIC_LEVEL
   if [ "$MIC_VOLUME" -gt 0 ]; then
     # Mute all microphones, not onlyt he active one
     while IFS= read -r device; do
@@ -49,16 +49,16 @@ if [[ "$MIC_VOLUME" =~ ^[0-9]+$ ]]; then
         continue
       fi
       SwitchAudioSource -t input -s "$device"
-      osascript -e "set volume input volume 90"
+      osascript -e "set volume input volume $MIC_LEVEL"
     done < <(SwitchAudioSource -t input -a | awk -v ORS="\n" '1')
     # Restore the original microphone
     SwitchAudioSource -t input -s "$CURRENT_MIC"
     # osascript -e 'display notification "Mic Unmuted 🔈" with title "Unmuted 🟢"'
     ~/github/dotfiles-latest/sketchybar/felixkratz-linkarzu/plugins/mic.sh
     if [[ "$MIC_NAME" == Yeti* ]]; then
-      sketchybar -m --set mic label="$MIC_NAME-90 " icon= icon.color=$BLUE label.color=$BLUE
+      sketchybar -m --set mic label="$MIC_NAME-$MIC_LEVEL " icon= icon.color=$BLUE label.color=$BLUE
     else
-      sketchybar -m --set mic label="$MIC_NAME-90 " icon= icon.color=$ORANGE label.color=$ORANGE
+      sketchybar -m --set mic label="$MIC_NAME-$MIC_LEVEL " icon= icon.color=$ORANGE label.color=$ORANGE
     fi
   fi
 else

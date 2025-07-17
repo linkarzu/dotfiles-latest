@@ -51,9 +51,9 @@ if [ "$BUTTON" = "left" ]; then
     sketchybar -m --set mic label="" icon=
   else
     # Update SketchyBar with the microphone's name and volume
-    if [[ $MIC_VOLUME -lt 90 ]]; then
-      osascript -e 'set volume input volume 90'
-      sketchybar -m --set mic label="$MIC_NAME 90" icon= icon.color=$WHITE label.color=$WHITE
+    if [[ $MIC_VOLUME -lt $MIC_LEVEL ]]; then
+      osascript -e 'set volume input volume $MIC_LEVEL'
+      sketchybar -m --set mic label="$MIC_NAME $MIC_LEVEL" icon= icon.color=$WHITE label.color=$WHITE
     elif [[ $MIC_VOLUME -gt 0 ]]; then
       osascript -e 'set volume input volume 0'
       sketchybar -m --set mic label="$MIC_NAME 0" icon= icon.color=$RED label.color=$RED

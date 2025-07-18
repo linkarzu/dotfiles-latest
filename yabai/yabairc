@@ -168,6 +168,7 @@ yabai -m space 4 --label desk4
 yabai -m rule --add app="^.*$" space=default
 yabai -m rule --add app="^Ghostty$" space=terminal
 yabai -m rule --add app="^Discord$" space=desk4
+yabai -m rule --add app="^Element$" space=desk4
 yabai -m rule --add app="^WhatsApp Web$" space=desk4
 yabai -m rule --add app="^OBS Studio$" space=desk4
 yabai -m rule --add app="^Mail$" space=desk4

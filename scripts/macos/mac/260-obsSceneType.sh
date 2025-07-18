@@ -16,6 +16,8 @@ echo "8 - 3 guest livestream"
 echo "9 - 4 guest"
 echo "10 - 4 guest livestream"
 echo "11 - Solo keyboard"
+echo "12 - 5 guest"
+echo "13 - 5 guest livestream"
 read -rp "Enter number: " choice
 
 target_file="$HOME/github/dotfiles-private/kanata/configs/macos.kbd"
@@ -83,14 +85,37 @@ case "$choice" in
   guest_2="guest2-4guest-live"
   guest_3="guest3-4guest-live"
   guest_4="guest4-4guest-live"
-  guest_1_full="cam-full-guest1"
-  guest_2_full="cam-full-guest2"
-  guest_3_full="cam-full-guest3"
-  guest_4_full="cam-full-guest4"
+  guest_1_full="cam-full-guest1-4guest"
+  guest_2_full="cam-full-guest2-4guest"
+  guest_3_full="cam-full-guest3-4guest"
+  guest_4_full="cam-full-guest4-4guest"
   ;;
 11)
   main_scene="main-screen-keyboard"
   guest_scene="guests-solo-keyboard"
+  ;;
+12)
+  main_scene="main-5-guest"
+  guest_scene="guests5-all-notes-right"
+  guest_1="guest1-5guest"
+  guest_2="guest2-5guest"
+  guest_3="guest3-5guest"
+  guest_4="guest4-5guest"
+  guest_5="guest5-5guest"
+  ;;
+13)
+  main_scene="main-5-guest-live"
+  guest_scene="guests5-all-notes-right-live"
+  guest_1="guest1-5guest-live"
+  guest_2="guest2-5guest-live"
+  guest_3="guest3-5guest-live"
+  guest_4="guest4-5guest-live"
+  guest_5="guest5-5guest-live"
+  guest_1_full="cam-full-guest1-5guest"
+  guest_2_full="cam-full-guest2-5guest"
+  guest_3_full="cam-full-guest3-5guest"
+  guest_4_full="cam-full-guest4-5guest"
+  guest_5_full="cam-full-guest5-5guest"
   ;;
 *)
   echo "Invalid choice. Only 1 and 3 are supported right now."
@@ -105,10 +130,12 @@ sed -i '' "/lineid_obs_switchscene_guest1/{n;s|\(switch_scene\.py \)[a-zA-Z0-9\-
 sed -i '' "/lineid_obs_switchscene_guest2/{n;s|\(switch_scene\.py \)[a-zA-Z0-9\-]*|\1$guest_2|;}" "$target_file"
 sed -i '' "/lineid_obs_switchscene_guest3/{n;s|\(switch_scene\.py \)[a-zA-Z0-9\-]*|\1$guest_3|;}" "$target_file"
 sed -i '' "/lineid_obs_switchscene_guest4/{n;s|\(switch_scene\.py \)[a-zA-Z0-9\-]*|\1$guest_4|;}" "$target_file"
+sed -i '' "/lineid_obs_switchscene_guest5/{n;s|\(switch_scene\.py \)[a-zA-Z0-9\-]*|\1$guest_5|;}" "$target_file"
 sed -i '' "/lineid_obs_switchscene_cam_guest1/{n;s|\(switch_scene\.py \)[a-zA-Z0-9\-]*|\1$guest_1_full|;}" "$target_file"
 sed -i '' "/lineid_obs_switchscene_cam_guest2/{n;s|\(switch_scene\.py \)[a-zA-Z0-9\-]*|\1$guest_2_full|;}" "$target_file"
 sed -i '' "/lineid_obs_switchscene_cam_guest3/{n;s|\(switch_scene\.py \)[a-zA-Z0-9\-]*|\1$guest_3_full|;}" "$target_file"
 sed -i '' "/lineid_obs_switchscene_cam_guest4/{n;s|\(switch_scene\.py \)[a-zA-Z0-9\-]*|\1$guest_4_full|;}" "$target_file"
+sed -i '' "/lineid_obs_switchscene_cam_guest5/{n;s|\(switch_scene\.py \)[a-zA-Z0-9\-]*|\1$guest_5_full|;}" "$target_file"
 
 echo "Replaced scene with '$main_scene' in $target_file"
 

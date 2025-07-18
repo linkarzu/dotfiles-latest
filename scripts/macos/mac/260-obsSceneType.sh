@@ -83,6 +83,10 @@ case "$choice" in
   guest_2="guest2-4guest-live"
   guest_3="guest3-4guest-live"
   guest_4="guest4-4guest-live"
+  guest_1_full="cam-full-guest1"
+  guest_2_full="cam-full-guest2"
+  guest_3_full="cam-full-guest3"
+  guest_4_full="cam-full-guest4"
   ;;
 11)
   main_scene="main-screen-keyboard"
@@ -101,6 +105,10 @@ sed -i '' "/lineid_obs_switchscene_guest1/{n;s|\(switch_scene\.py \)[a-zA-Z0-9\-
 sed -i '' "/lineid_obs_switchscene_guest2/{n;s|\(switch_scene\.py \)[a-zA-Z0-9\-]*|\1$guest_2|;}" "$target_file"
 sed -i '' "/lineid_obs_switchscene_guest3/{n;s|\(switch_scene\.py \)[a-zA-Z0-9\-]*|\1$guest_3|;}" "$target_file"
 sed -i '' "/lineid_obs_switchscene_guest4/{n;s|\(switch_scene\.py \)[a-zA-Z0-9\-]*|\1$guest_4|;}" "$target_file"
+sed -i '' "/lineid_obs_switchscene_cam_guest1/{n;s|\(switch_scene\.py \)[a-zA-Z0-9\-]*|\1$guest_1_full|;}" "$target_file"
+sed -i '' "/lineid_obs_switchscene_cam_guest2/{n;s|\(switch_scene\.py \)[a-zA-Z0-9\-]*|\1$guest_2_full|;}" "$target_file"
+sed -i '' "/lineid_obs_switchscene_cam_guest3/{n;s|\(switch_scene\.py \)[a-zA-Z0-9\-]*|\1$guest_3_full|;}" "$target_file"
+sed -i '' "/lineid_obs_switchscene_cam_guest4/{n;s|\(switch_scene\.py \)[a-zA-Z0-9\-]*|\1$guest_4_full|;}" "$target_file"
 
 echo "Replaced scene with '$main_scene' in $target_file"
 

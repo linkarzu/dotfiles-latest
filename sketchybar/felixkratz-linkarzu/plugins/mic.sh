@@ -15,7 +15,7 @@ CURRENT_MIC=$(SwitchAudioSource -t input -c)
 AVAILABLE_INPUTS=$(SwitchAudioSource -a -t input)
 
 # Look for a device name that contains "Yeti"
-YETI_DEVICE=$(echo "$AVAILABLE_INPUTS" | grep -i "Yeti")
+YETI_DEVICE=$(echo "$AVAILABLE_INPUTS" | grep -i "Shure")
 
 if [[ -n "$YETI_DEVICE" && "$CURRENT_MIC" != "$YETI_DEVICE" ]]; then
   # Only switch if the current device is not already Yeti

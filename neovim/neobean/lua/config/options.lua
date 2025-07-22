@@ -127,14 +127,6 @@ else
   -- })
 
   -- Winbar
-  -- Require the colors.lua module and access the colors directly without
-  -- additional file reads
-  local colors = require("config.colors")
-  -- Winbar is liked to the StatusLine color, so to set winbar
-  -- transparent, I set the bg to NONE in my eldritch.lua file StatusLine = { bg = "NONE" },
-  vim.cmd(string.format([[highlight WinBar1 guifg=%s]], colors["linkarzu_color03"]))
-  vim.cmd(string.format([[highlight WinBar2 guifg=%s]], colors["linkarzu_color02"]))
-  vim.cmd(string.format([[highlight WinBar3 guifg=%s gui=bold]], colors["linkarzu_color24"]))
   -- Function to get the full path and replace the home directory with ~
   local function get_winbar_path()
     local full_path = vim.fn.expand("%:p:h")

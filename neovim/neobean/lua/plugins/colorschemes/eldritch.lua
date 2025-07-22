@@ -171,6 +171,10 @@ return {
         -- Winbar is liked to the StatusLine color, so to set winbar
         -- transparent, I set the bg to NONE
         StatusLine = { bg = "NONE" },
+        -- Foreground colors for the Winbar segments
+        WinBar1 = { fg = colors["linkarzu_color03"] },
+        WinBar2 = { fg = colors["linkarzu_color02"] },
+        WinBar3 = { fg = colors["linkarzu_color24"], bold = true },
         -- StatusLine = { bg = colors["linkarzu_color10"] },
 
         DiagnosticInfo = { fg = colors["linkarzu_color03"] },
@@ -215,6 +219,43 @@ return {
       -- Apply all highlight definitions at once
       for group, props in pairs(highlight_definitions) do
         highlights[group] = props
+      end
+
+      -- Inline code inside Markdown
+      highlights["RenderMarkdownCodeInline"] = { fg = colors["linkarzu_color26"], bg = colors["linkarzu_color02"] }
+
+      -- Headline background / foreground colours
+      local md_heading_defs
+      if vim.g.md_heading_bg == "transparent" then
+        md_heading_defs = {
+          Headline1Bg = { fg = colors["linkarzu_color04"], bg = colors["linkarzu_color18"] },
+          Headline2Bg = { fg = colors["linkarzu_color02"], bg = colors["linkarzu_color19"] },
+          Headline3Bg = { fg = colors["linkarzu_color03"], bg = colors["linkarzu_color20"] },
+          Headline4Bg = { fg = colors["linkarzu_color01"], bg = colors["linkarzu_color21"] },
+          Headline5Bg = { fg = colors["linkarzu_color05"], bg = colors["linkarzu_color22"] },
+          Headline6Bg = { fg = colors["linkarzu_color08"], bg = colors["linkarzu_color23"] },
+
+          Headline1Fg = { fg = colors["linkarzu_color04"], bold = true },
+          Headline2Fg = { fg = colors["linkarzu_color02"], bold = true },
+          Headline3Fg = { fg = colors["linkarzu_color03"], bold = true },
+          Headline4Fg = { fg = colors["linkarzu_color01"], bold = true },
+          Headline5Fg = { fg = colors["linkarzu_color05"], bold = true },
+          Headline6Fg = { fg = colors["linkarzu_color08"], bold = true },
+        }
+      else
+        md_heading_defs = {
+          Headline1Bg = { fg = colors["linkarzu_color26"], bg = colors["linkarzu_color18"] },
+          Headline2Bg = { fg = colors["linkarzu_color26"], bg = colors["linkarzu_color19"] },
+          Headline3Bg = { fg = colors["linkarzu_color26"], bg = colors["linkarzu_color20"] },
+          Headline4Bg = { fg = colors["linkarzu_color26"], bg = colors["linkarzu_color21"] },
+          Headline5Bg = { fg = colors["linkarzu_color26"], bg = colors["linkarzu_color22"] },
+          Headline6Bg = { fg = colors["linkarzu_color26"], bg = colors["linkarzu_color23"] },
+        }
+      end
+
+      -- Apply all the Render-Markdown highlight groups
+      for name, spec in pairs(md_heading_defs) do
+        highlights[name] = spec
       end
     end,
   },

@@ -2490,6 +2490,7 @@ end, { desc = "[P]Spelling language Spanish and English" })
 -- https://youtu.be/uLFAMYFmpkE
 --
 -- Show spelling suggestions / spell suggestions
+-- NOTE: I changed this to accept the first spelling suggestion
 vim.keymap.set("n", "<leader>mss", function()
   -- Simulate pressing "z=" with "m" option using feedkeys
   -- vim.api.nvim_replace_termcodes ensures "z=" is correctly interpreted

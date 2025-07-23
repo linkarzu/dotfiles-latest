@@ -26,23 +26,43 @@ vivaldi_ids=($(yabai -m query --windows | jq -r '.[] | select(.app == "Vivaldi")
 display_resolution=$(system_profiler SPDisplaysDataType | grep Resolution)
 # Check if more than one display is connected by counting Resolution lines
 if [[ $(echo "$display_resolution" | grep -c "Resolution") -ge 2 ]]; then
-  yabai -m window --focus "$kitty_id" --move abs:1369:39
-  yabai -m window --focus "$kitty_id" --resize abs:231:300
-  # Loop through every OBS Studio window and make them full screen on my laptop
-  # monitor
-  for id in "${obs_ids[@]}"; do
-    yabai -m window --focus "$id" --move abs:1600:187
-    yabai -m window --focus "$id" --resize abs:1512:950
-  done
-  for id in "${vivaldi_ids[@]}"; do
-    yabai -m window --focus "$id" --move abs:1600:187
-    yabai -m window --focus "$id" --resize abs:292:490
-  done
-  exit 0
+  if [[ "$display_resolution" == *"3200 x 1800"* ]]; then
+    yabai -m window --focus "$kitty_id" --move abs:1369:39
+    yabai -m window --focus "$kitty_id" --resize abs:231:300
+    # Loop through every OBS Studio window and make them full screen on my laptop
+    # monitor
+    for id in "${obs_ids[@]}"; do
+      yabai -m window --focus "$id" --move abs:1600:187
+      yabai -m window --focus "$id" --resize abs:1512:950
+    done
+    for id in "${vivaldi_ids[@]}"; do
+      yabai -m window --focus "$id" --move abs:1600:187
+      yabai -m window --focus "$id" --resize abs:292:490
+    done
+    exit 0
+  elif [[ "$display_resolution" == *"2560 x 1440"* ]]; then
+    yabai -m window --focus "$kitty_id" --move abs:1049:39
+    yabai -m window --focus "$kitty_id" --resize abs:231:300
+    # Loop through every OBS Studio window and make them full screen on my laptop
+    # monitor
+    for id in "${obs_ids[@]}"; do
+      yabai -m window --focus "$id" --move abs:1280:193
+      yabai -m window --focus "$id" --resize abs:1512:950
+    done
+    for id in "${vivaldi_ids[@]}"; do
+      yabai -m window --focus "$id" --move abs:1280:193
+      yabai -m window --focus "$id" --resize abs:292:490
+    done
+    exit 0
+  fi
 fi
 # First condition is to match my macbook pro, the * are used as wildcards
 if [[ "$display_resolution" == *"3456 x 2234"* ]]; then
   yabai -m window --focus "$kitty_id" --move abs:1,139:41
+  yabai -m window --focus "$kitty_id" --resize abs:231:300
+  # This elif below is for the 720p res in BetterDisplay
+elif [[ "$display_resolution" == *"2560 x 1440"* ]]; then
+  yabai -m window --focus "$kitty_id" --move abs:1049:39
   yabai -m window --focus "$kitty_id" --resize abs:231:300
   # This elif below is for my macbook pro 14 inch
 elif [[ "$display_resolution" == *"3024 x 1964"* ]]; then

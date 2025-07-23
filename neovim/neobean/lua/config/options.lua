@@ -127,6 +127,38 @@ else
   -- })
 
   -- Winbar
+  -- Function to shorten long paths (> shorten_if_more_than real dirs)
+  local function shorten_path(path)
+    local shorten_if_more_than = 6 -- change this to 5, 7, etc
+    -- Strip and remember the root ("/" or "~/")
+    local prefix = ""
+    if path:sub(1, 2) == "~/" then
+      prefix = "~/"
+      path = path:sub(3)
+    elseif path:sub(1, 1) == "/" then
+      prefix = "/"
+      path = path:sub(2)
+    end
+    -- Split the remaining path into its components
+    local parts = {}
+    for part in string.gmatch(path, "[^/]+") do
+      table.insert(parts, part)
+    end
+    -- Shorten only when there are more than shorten_if_more_than directories
+    if #parts > shorten_if_more_than then
+      local first = parts[1]
+      local last_four = table.concat({
+        parts[#parts - 3],
+        parts[#parts - 2],
+        parts[#parts - 1],
+        parts[#parts],
+      }, "/")
+      return prefix .. first .. "/../" .. last_four
+    end
+
+    -- Re-attach the prefix when no shortening is needed
+    return prefix .. table.concat(parts, "/")
+  end
   -- Function to get the full path and replace the home directory with ~
   local function get_winbar_path()
     local full_path = vim.fn.expand("%:p:h")
@@ -140,6 +172,7 @@ else
   local function update_winbar()
     local home_replaced = get_winbar_path()
     local buffer_count = get_buffer_count()
+    local display_path = shorten_path(home_replaced)
     vim.opt.winbar = "%#WinBar1#%m "
       .. "%#WinBar2#("
       .. buffer_count
@@ -149,7 +182,7 @@ else
       .. vim.fn.expand("%:t")
       -- This shows the file path on the right
       .. "%*%=%#WinBar1#"
-      .. home_replaced
+      .. display_path
     -- I don't need the hostname as I have it in lualine
     -- .. vim.fn.systemlist("hostname")[1]
   end

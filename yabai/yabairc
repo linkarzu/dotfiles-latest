@@ -79,6 +79,17 @@ if command -v sketchybar &>/dev/null; then
     yabai -m config bottom_padding 0
     yabai -m config left_padding 0
     yabai -m config right_padding 230
+  elif [[ "$display_resolution" == *"2560 x 1440"* ]]; then
+    # This is for the 720p res in BetterDisplay
+    # # yabai -m config top_padding 39
+    # lineid_asus_monitor_top_pad
+    yabai -m config top_padding 38
+    # lineid_asus_monitor_bottom_pad
+    yabai -m config bottom_padding 0
+    # lineid_asus_monitor_left_pad
+    yabai -m config left_padding 0
+    # lineid_asus_monitor_right_pad
+    yabai -m config right_padding 230
   elif [[ "$display_resolution" == *"3024 x 1964"* ]]; then
     # # This matches my macbook 14 inch
     # # yabai -m config top_padding 39

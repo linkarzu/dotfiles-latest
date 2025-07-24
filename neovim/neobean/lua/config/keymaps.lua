@@ -1946,6 +1946,42 @@ end, { desc = "[P](macOS) Delete image file under cursor" })
 --                         Begin of markdown section
 -- ############################################################################
 
+-- Select text inside codeblocks
+-- Select everything between the opening ```<lang> and the closing ``` fences
+vim.keymap.set("n", "vio", function()
+  -- Find opening fence above cursor
+  local cur = vim.fn.line(".")
+  local open = nil
+  for l = cur, 1, -1 do
+    if vim.fn.getline(l):match("^%s*```%S+") then
+      open = l
+      break
+    end
+  end
+  if not open then
+    print("No opening ```<lang> fence found")
+    return
+  end
+  -- Find closing fence below the opening one
+  local close = nil
+  for l = open + 1, vim.fn.line("$") do
+    if vim.fn.getline(l):match("^%s*```%s*$") then
+      close = l
+      break
+    end
+  end
+  if not close then
+    print("No closing ``` fence found")
+    return
+  end
+  if close - open <= 1 then
+    print("Code-block is empty")
+    return
+  end
+  -- Visual-select lines open+1 .. close-1
+  vim.cmd(("normal! %dGV%dG"):format(open + 1, close - 1))
+end, { desc = "[P]Select inside fenced code-block" })
+
 -- Keymap to auto-format and save all Markdown files in the CURRENT REPOSITORY,
 -- lamw26wmal if the TOC is not updated, this will take care of it
 vim.keymap.set("n", "<leader>mfA", function()

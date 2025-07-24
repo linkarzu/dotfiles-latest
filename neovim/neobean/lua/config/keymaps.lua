@@ -1946,7 +1946,7 @@ end, { desc = "[P](macOS) Delete image file under cursor" })
 --                         Begin of markdown section
 -- ############################################################################
 
--- Select text inside codeblocks
+-- Select text inside codeblocks lamw26wmal
 -- Select everything between the opening ```<lang> and the closing ``` fences
 vim.keymap.set("n", "vio", function()
   -- Find opening fence above cursor

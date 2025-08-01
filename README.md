@@ -2,6 +2,7 @@
 
 <!-- toc -->
 
+- [Contributing](#contributing)
 - [Repo overview](#repo-overview)
 - [How can you apply my dotfiles?](#how-can-you-apply-my-dotfiles)
 - [In case you want to test out my Neobean config](#in-case-you-want-to-test-out-my-neobean-config)
@@ -13,6 +14,36 @@
 - [Point my `~/.zshrc` file to the desired repo](#point-my-zshrc-file-to-the-desired-repo)
 
 <!-- tocstop -->
+
+## Contributing
+
+<!-- markdownlint-disable -->
+<!-- prettier-ignore-start -->
+
+<!-- tip=green, info=blue, warning=yellow, danger=red -->
+
+<br>
+
+> [!IMPORTANT]
+> - Please. Do not submit PRs, they won't be reviewed or accepted.
+
+<!-- prettier-ignore-end -->
+<!-- markdownlint-restore -->
+
+- I have accepted a single PR in the past, it was literally to fix a typo and I
+  thought I would be OK with PRs, but that no longer will be the case.
+- Link, but why are you being such a bitch? We're just trying to help
+  - I'm busy enough already with my day job, family, scheduling interviews,
+    creating content, thumbnails, editing videos, sharing stuff, doom scrolling,
+    and don't want to deal with reviewing PRs, testing stuff, understanding it,
+    etc.
+  - Keep in mind that these are my personal dotfiles, so if something stops
+    working for me, I'll review it and fix it when I have the time.
+  - So my advise is, grab the bits and pieces you like about my dots, and fix
+    whatever does not work, in your own dots.
+- Having said all that, I do agree to discussions, because they not only help
+  me, but help others as well. I don't promise I will accept the suggestions
+  though, but I'll try to read them.
 
 ## Repo overview
 

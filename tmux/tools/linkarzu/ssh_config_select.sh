@@ -30,7 +30,7 @@ fi
 fzf_header=$'Select an SSH host to connect to:'
 
 # Use fzf to select a host
-selected_host=$(awk '/^Host / && !/\*/ {print $2}' "$ssh_config" | fzf --height=40% --reverse --header="$fzf_header" --prompt="Type or select SSH host: ")
+selected_host=$(awk '/^Host / && !/\*/ {for (i=2; i<=NF; i++) print $i}' "$ssh_config" | fzf --height=40% --reverse --header="$fzf_header" --prompt="Type or select SSH host: ")
 
 # Exit if no selection is made
 if [[ -z $selected_host ]]; then

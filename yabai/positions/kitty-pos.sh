@@ -42,7 +42,7 @@ if [[ $(echo "$display_resolution" | grep -c "Resolution") -ge 2 ]]; then
     exit 0
   elif [[ "$display_resolution" == *"2560 x 1440"* ]]; then
     yabai -m window --focus "$kitty_id" --move abs:1049:39
-    yabai -m window --focus "$kitty_id" --resize abs:231:300
+    yabai -m window --focus "$kitty_id" --resize abs:231:230
     # Loop through every OBS Studio window and make them full screen on my laptop
     # monitor
     for id in "${obs_ids[@]}"; do

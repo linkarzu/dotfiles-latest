@@ -178,7 +178,7 @@ rm -rf ~/.cache/linkarzu
 ## You're a fraud, why do you ask for money, isn't YouTube Ads enough?
 
 - I explain all of this in the "about me page" link below:
-  - [youre-a-fraud-why-do-you-ask-for-money-isnt-youtube-ads-enough](https://linkarzu.com/about/#youre-a-fraud-why-do-you-ask-for-money-isnt-youtube-ads-enough){:target="\_blank"}
+  - [youre-a-fraud-why-do-you-ask-for-money-isnt-youtube-ads-enough](https://linkarzu.com/about/#youre-a-fraud-why-do-you-ask-for-money-isnt-youtube-ads-enough)
   - Above you'll also find links to my discord, social media, etc
 
 ## Some of my YouTube videos

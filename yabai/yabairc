@@ -174,7 +174,14 @@ yabai -m signal --add event=mission_control_exit action="yabai -m config active_
 yabai -m space 1 --label default
 yabai -m space 2 --label terminal
 yabai -m space 3 --label desk3
-yabai -m space 4 --label desk4
+
+# Check if desk4 exists, label it if it does
+if yabai -m query --spaces | jq -e '.[] | select(.label=="desk4")' >/dev/null; then
+  yabai -m space 4 --label desk4
+  target_space="desk4"
+else
+  target_space="default"
+fi
 
 yabai -m rule --add app="^.*$" space=default
 yabai -m rule --add app="^Ghostty$" space=terminal

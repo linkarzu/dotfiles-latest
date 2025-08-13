@@ -186,7 +186,7 @@ rm -rf ~/.cache/linkarzu
 [Neovim vs Emacs | Roundtable w/ TJ DeVries, DistroTube, Greg Anders & Joshua Blais](https://youtu.be/SnhcXR9CKno)
 
 <div align="left">
-    <a href=" https://youtu.be/SnhcXR9CKno ">
+    <a href="https://youtu.be/SnhcXR9CKno">
         <img
           src="./assets/img/imgs/250813-neovim-vs-emacs.avif"
           alt=" Neovim vs Emacs | Roundtable w/ TJ DeVries, DistroTube, Greg Anders & Joshua Blais "
@@ -200,7 +200,7 @@ rm -rf ~/.cache/linkarzu
 [The Power User's 2025 Guide to macOS ricing - Yabai, Simple-bar, SketchyBar, Fastfetch, Btop & More](https://youtu.be/8pqFtkQip4I)
 
 <div align="left">
-    <a href=" https://youtu.be/8pqFtkQip4I ">
+    <a href="https://youtu.be/8pqFtkQip4I">
         <img
           src="./assets/img/imgs/250120-macos-ricing-link.avif"
           alt=" The Power User's 2025 Guide to macOS ricing | Yabai, Simple-bar, SketchyBar, Fastfetch, Btop & More "
@@ -214,7 +214,7 @@ rm -rf ~/.cache/linkarzu
 [How I Recreated (and Improved) My Obsidian Note-Taking Workflow in Neovim](https://youtu.be/k_g8q5JeisY)
 
 <div align="left">
-    <a href=" https://youtu.be/k_g8q5JeisY ">
+    <a href="https://youtu.be/k_g8q5JeisY">
         <img
           src="./assets/img/imgs/250220-thux-neovim-like-obsidian.avif"
           alt=" How I Recreated (and Improved) My Obsidian Note-Taking Workflow in Neovim "
@@ -228,7 +228,7 @@ rm -rf ~/.cache/linkarzu
 [Images in Neovim - Setting up Snacks Image and Comparing it to Image.nvim](https://youtu.be/G27MHyT-u2I)
 
 <div align="left">
-    <a href=" https://youtu.be/G27MHyT-u2I ">
+    <a href="https://youtu.be/G27MHyT-u2I">
         <img
           src="./assets/img/imgs/250218-thux-snacks-image.avif"
           alt=" Images in Neovim | Setting up Snacks Image and Comparing it to Image.nvim "
@@ -242,7 +242,7 @@ rm -rf ~/.cache/linkarzu
 [Why I'm Moving from Telescope to Snacks Picker - Why I'm not Using fzf-lua - Frecency feature](https://youtu.be/7hEWG3GP6m0)
 
 <div align="left">
-    <a href=" https://youtu.be/7hEWG3GP6m0 ">
+    <a href="https://youtu.be/7hEWG3GP6m0">
         <img
           src="./assets/img/imgs/250210-thux-snacks-picker.avif"
           alt=" Why I'm Moving from Telescope to Snacks Picker | Why I'm not Using fzf-lua | Frecency feature "
@@ -256,7 +256,7 @@ rm -rf ~/.cache/linkarzu
 [From macOS Chaos to Primeagen Workflow | Neovim, Tmux, Yabai](https://youtu.be/ckBs1Z9KCT4)
 
 <div align="left">
-    <a href=" https://youtu.be/ckBs1Z9KCT4 ">
+    <a href="https://youtu.be/ckBs1Z9KCT4">
         <img
           src="./assets/img/imgs/250813-primeagen-workflow.avif"
           alt=" From macOS Chaos to Primeagen Workflow | Neovim, Tmux, Yabai "
@@ -270,7 +270,7 @@ rm -rf ~/.cache/linkarzu
 [My complete Neovim markdown setup and workflow in 2025](https://youtu.be/1YEbKDlxfss)
 
 <div align="left">
-    <a href=" https://youtu.be/1YEbKDlxfss ">
+    <a href="https://youtu.be/1YEbKDlxfss">
         <img
           src="./assets/img/imgs/250220-neovim-workflow-2025.avif"
           alt=" My complete Neovim markdown setup and workflow in 2025 "
@@ -284,7 +284,7 @@ rm -rf ~/.cache/linkarzu
 [Ghostty Shaders - Ghostty config file syntax highlighting - glsl treesitter - glsl_analyzer](https://youtu.be/yJDn__NhOqI)
 
 <div align="left">
-    <a href=" https://youtu.be/yJDn__NhOqI ">
+    <a href="https://youtu.be/yJDn__NhOqI">
         <img
           src="./assets/img/imgs/250220-thux-ghostty-shaders.avif"
           alt=" Ghostty Shaders | Ghostty config file syntax highlighting | glsl treesitter | glsl_analyzer "

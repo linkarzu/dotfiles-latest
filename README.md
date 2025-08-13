@@ -9,10 +9,7 @@
   * [Install Neobean config](#install-neobean-config)
   * [Remove Neobean config](#remove-neobean-config)
   * [Video to set up multiple distros](#video-to-set-up-multiple-distros)
-- [Join the Discord server](#join-the-discord-server)
-- [Follow me on social media](#follow-me-on-social-media)
-- [You like my content and want to support me?](#you-like-my-content-and-want-to-support-me)
-- [How do you manage your passwords?](#how-do-you-manage-your-passwords)
+- [You're a fraud, why do you ask for money, isn't YouTube Ads enough?](#youre-a-fraud-why-do-you-ask-for-money-isnt-youtube-ads-enough)
 - [Some of my YouTube videos](#some-of-my-youtube-videos)
 - [Point my `~/.zshrc` file to the desired repo](#point-my-zshrc-file-to-the-desired-repo)
 
@@ -178,71 +175,27 @@ rm -rf ~/.cache/linkarzu
     </a>
 </div>
 
-## Join the Discord server
+## You're a fraud, why do you ask for money, isn't YouTube Ads enough?
 
-- My discord server is now open to the public, feel free to join and hang out
-  with others
-- join the [discord server in this link](https://discord.gg/NgqMgwwtMH)
-
-<div align="left">
-    <a href="https://discord.gg/NgqMgwwtMH">
-        <img
-          src="./assets/img/imgs/250210-discord-free.avif"
-          alt=" Join the discord server"
-          width="400"
-        />
-    </a>
-</div>
-
-## Follow me on social media
-
-- [Twitter (or "X")](https://x.com/link_arzu)
-- [LinkedIn](https://www.linkedin.com/in/christianarzu)
-- [TikTok](https://www.tiktok.com/@linkarzu)
-- [Instagram](https://www.instagram.com/link_arzu)
-- [GitHub](https://github.com/linkarzu)
-- [Threads](https://www.threads.net/@link_arzu)
-- [OnlyFans 🍆](https://linkarzu.com/assets/img/imgs/250126-whyugae.avif)
-- [YouTube (subscribe MF, subscribe)](https://www.youtube.com/@linkarzu)
-- [Ko-Fi](https://ko-fi.com/linkarzu/goal?g=6)
-
-## You like my content and want to support me?
-
-- I have a Ko-Fi page, you can
-  [donate here](https://ko-fi.com/linkarzu/goal?g=6)
-
-<div align="left">
-    <a href="https://ko-fi.com/linkarzu/goal?g=6">
-        <img
-          src="./assets/img/imgs/250103-ko-fi-donate.avif"
-          alt=" Support me in Ko-Fi "
-          width="400"
-        />
-    </a>
-</div>
-
-## How do you manage your passwords?
-
-- In case you want to support me, but don't want to donate, I have a 1password
-  referral link, in which (in theory) I get a small amount in case you use it
-- This helps me keep my blogpost ad free and helps me keep creating content
-- I've tried many different password managers in the past, I've switched from
-  `LastPass` to `Dashlane` and finally ended up in `1password`
-- You want to find out why? More info in my article:
-  - [How I use 1password to keep all my accounts safe](https://linkarzu.com/posts/1password/1password/)
-- **`CLICK ON THE IMAGE BELOW TO START YOUR 14 DAY FREE TRIAL`**
-
-<div align="left">
-    <a href="https://www.dpbolvw.net/click-101327218-15917064">
-        <img
-          src="./assets/img/imgs/250124-1password-banner.avif"
-          alt=" Start your 14 day free 1password trial "
-          width="400"
-        />
-    </a>
-</div>
+- I explain all of this in the "about me page" link below:
+  - [youre-a-fraud-why-do-you-ask-for-money-isnt-youtube-ads-enough](https://linkarzu.com/about/#youre-a-fraud-why-do-you-ask-for-money-isnt-youtube-ads-enough){:target="\_blank"}
+  - Above you'll also find links to my discord, social media, etc
 
 ## Some of my YouTube videos
+
+[Neovim vs Emacs | Roundtable w/ TJ DeVries, DistroTube, Greg Anders & Joshua Blais](https://youtu.be/SnhcXR9CKno)
+
+<div align="left">
+    <a href=" https://youtu.be/SnhcXR9CKno ">
+        <img
+          src="./assets/img/imgs/250813-neovim-vs-emacs.avif"
+          alt=" Neovim vs Emacs | Roundtable w/ TJ DeVries, DistroTube, Greg Anders & Joshua Blais "
+          width="400"
+        />
+    </a>
+</div>
+
+---
 
 [The Power User's 2025 Guide to macOS ricing - Yabai, Simple-bar, SketchyBar, Fastfetch, Btop & More](https://youtu.be/8pqFtkQip4I)
 
@@ -300,13 +253,13 @@ rm -rf ~/.cache/linkarzu
 
 ---
 
-[Advanced MINI.FILES Keymaps for Neovim – System Clipboard Integration and More](https://youtu.be/BzblG2eV8dU)
+[From macOS Chaos to Primeagen Workflow | Neovim, Tmux, Yabai](https://youtu.be/ckBs1Z9KCT4)
 
 <div align="left">
-    <a href=" https://youtu.be/BzblG2eV8dU ">
+    <a href=" https://youtu.be/ckBs1Z9KCT4 ">
         <img
-          src="./assets/img/imgs/minifiles-yazi.png"
-          alt=" Advanced MINI.FILES Keymaps for Neovim – System Clipboard Integration and More "
+          src="./assets/img/imgs/250813-primeagen-workflow.avif"
+          alt=" From macOS Chaos to Primeagen Workflow | Neovim, Tmux, Yabai "
           width="400"
         />
     </a>

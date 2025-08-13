@@ -6,6 +6,9 @@
 - [Repo overview](#repo-overview)
 - [How can you apply my dotfiles?](#how-can-you-apply-my-dotfiles)
 - [In case you want to test out my Neobean config](#in-case-you-want-to-test-out-my-neobean-config)
+  * [Install Neobean config](#install-neobean-config)
+  * [Remove Neobean config](#remove-neobean-config)
+  * [Video to set up multiple distros](#video-to-set-up-multiple-distros)
 - [Join the Discord server](#join-the-discord-server)
 - [Follow me on social media](#follow-me-on-social-media)
 - [You like my content and want to support me?](#you-like-my-content-and-want-to-support-me)
@@ -103,6 +106,8 @@
 
 ## In case you want to test out my Neobean config
 
+### Install Neobean config
+
 - This is the Neovim config you see me using on each one of my videos
 - In case you want to test it out without modifying or changing your existing
   neovim config, run the `git clone` commands below to clone my dotfiles in your
@@ -119,6 +124,24 @@ git clone git@github.com:linkarzu/dotfiles-latest ~/.config/linkarzu/dotfiles-la
 NVIM_APPNAME=linkarzu/dotfiles-latest/neovim/neobean nvim
 ```
 
+- When you open this, you will see everything red as seen on the image below
+- Don't panic, this is normal, just press enter several times when you see the
+  `-- More --` at the bottom
+- Then restart Neovim a couple of times and you'll be good
+
+<div align="left">
+  <img
+    src="./assets/img/imgs/250813-open-neobean.avif"
+    alt="How my macOS looks as of Feb 2025 "
+    width="800"
+  />
+</div>
+
+- When you open a file, Mason is probably going to install several packages the
+  first time, that's also normal
+
+---
+
 - You can create an alias in your `.bashrc` or `.zshrc` file to run my config
 
 ```bash
@@ -127,7 +150,18 @@ alias neobean='NVIM_APPNAME=linkarzu/dotfiles-latest/neovim/neobean nvim'
 
 - Then to run this config, just run `neobean`
 
----
+### Remove Neobean config
+
+- In case you want to clean up the config after testing it
+
+```bash
+rm -rf ~/.config/linkarzu
+rm -rf ~/.local/share/linkarzu
+rm -rf ~/.local/state/linkarzu
+rm -rf ~/.cache/linkarzu
+```
+
+### Video to set up multiple distros
 
 - I have a video in which I show you how to download and setup my `neobean`
   config, but also other neovim distributions, so I highly recommend you check

@@ -86,7 +86,7 @@
 - The idea is that you to scavenge around, find the things that are useful to
   you, and apply them to your own config
 - In case you actually want to apply my entire dotfiles settings on your own
-  macOS computer, you can, I have a
+  macOS computer, you can. I have a
   [blogpost article](https://linkarzu.com/posts/2024-macos-workflow/clone-dotfiles/)
   in which I describe the process and a video as well (This is one of my first
   videos, but it still works)
@@ -106,7 +106,7 @@
 - This is the Neovim config you see me using on each one of my videos
 - In case you want to test it out without modifying or changing your existing
   neovim config, run the `git clone` commands below to clone my dotfiles in your
-  .config directory and we will run my config below
+  `.config` directory and we will run my config below
 
 ```bash
 mkdir -p ~/.config

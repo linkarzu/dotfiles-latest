@@ -176,7 +176,7 @@ yabai -m space 2 --label terminal
 yabai -m space 3 --label desk3
 
 # Check if desk4 exists, label it if it does
-if yabai -m query --spaces | jq -e '.[] | select(.label=="desk4")' >/dev/null; then
+if yabai -m query --spaces | jq -e '.[] | select(.index==4)' >/dev/null; then
   yabai -m space 4 --label desk4
   target_space="desk4"
 else
@@ -185,20 +185,20 @@ fi
 
 yabai -m rule --add app="^.*$" space=default
 yabai -m rule --add app="^Ghostty$" space=terminal
-yabai -m rule --add app="^Discord$" space=desk4
-yabai -m rule --add app="^Element$" space=desk4
-yabai -m rule --add app="^WhatsApp Web$" space=desk4
-yabai -m rule --add app="^OBS Studio$" space=desk4
-yabai -m rule --add app="^Mail$" space=desk4
-yabai -m rule --add app="^1Password$" space=desk4
-yabai -m rule --add app="^Calendar$" space=desk4
-yabai -m rule --add app="^Google Chrome$" space=desk4
-yabai -m rule --add app="^Microsoft Teams$" space=desk4
-yabai -m rule --add app="^ChatGPT$" space=desk4
-yabai -m rule --add app="^Vivaldi$" space=desk4
-yabai -m rule --add app="^socialstream$" space=desk4
-yabai -m rule --add app="^Signal$" space=desk4
-yabai -m rule --add app="^Google Photos$" space=desk4
+yabai -m rule --add app="^Discord$" space=$target_space
+yabai -m rule --add app="^Element$" space=$target_space
+yabai -m rule --add app="^WhatsApp Web$" space=$target_space
+yabai -m rule --add app="^OBS Studio$" space=$target_space
+yabai -m rule --add app="^Mail$" space=$target_space
+yabai -m rule --add app="^1Password$" space=$target_space
+yabai -m rule --add app="^Calendar$" space=$target_space
+yabai -m rule --add app="^Google Chrome$" space=$target_space
+yabai -m rule --add app="^Microsoft Teams$" space=$target_space
+yabai -m rule --add app="^ChatGPT$" space=$target_space
+yabai -m rule --add app="^Vivaldi$" space=$target_space
+yabai -m rule --add app="^socialstream$" space=$target_space
+yabai -m rule --add app="^Signal$" space=$target_space
+yabai -m rule --add app="^Google Photos$" space=$target_space
 
 ###############################################################################
 #                             sub-layer=normal

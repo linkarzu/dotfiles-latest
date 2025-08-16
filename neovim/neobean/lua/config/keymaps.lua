@@ -667,7 +667,7 @@ vim.keymap.set("n", "N", "Nzzzv")
 -- Launch, limiting search/replace to current file
 -- https://github.com/MagicDuck/grug-far.nvim?tab=readme-ov-file#-cookbook
 vim.keymap.set(
-  { "v" },
+  { "v", "n" },
   "<leader>s1",
   '<cmd>lua require("grug-far").open({ prefills = { paths = vim.fn.expand("%") } })<cr>',
   { noremap = true, silent = true }
@@ -1792,8 +1792,11 @@ vim.keymap.set("n", "<leader>if", function()
       -- Construct absolute image path
       local current_file_path = vim.fn.expand("%:p:h")
       local absolute_image_path = current_file_path .. "/" .. image_path
-      -- Open the containing folder in Finder and select the image file
-      local command = "open -R " .. vim.fn.shellescape(absolute_image_path)
+      -- Open the containing folder in Finder or forklift and select the image file
+      -- Line below for finder
+      -- local command = "open -R " .. vim.fn.shellescape(absolute_image_path)
+      -- Line below for forklift
+      local command = "open -a ForkLift " .. vim.fn.shellescape(absolute_image_path)
       local success = vim.fn.system(command)
       if success == 0 then
         print("Opened image in Finder: " .. absolute_image_path)

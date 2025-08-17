@@ -284,6 +284,17 @@ return {
     table.insert(
       snippets,
       s({
+        trig = "blank",
+        name = 'Add this {:target="_blank"}',
+        desc = 'Add this {:target="_blank"}',
+      }, {
+        t('{:target="_blank"}'),
+      })
+    )
+
+    table.insert(
+      snippets,
+      s({
         trig = "todo",
         name = "Add TODO: item",
         desc = "Add TODO: item",

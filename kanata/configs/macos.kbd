@@ -115,7 +115,7 @@
   ;; Other layers tap-hold-press
   ;; mapr configured for both the glove80 and the macbook keyboard
   mappr (tap-hold-press $tap-time $hold-time ret (layer-toggle apps))
-  msymb (tap-hold-press $tap-time $hold-time bspc (layer-toggle symb))
+  msymb (tap-hold $tap-time $hold-time bspc (layer-toggle symb))
   mnavi (tap-hold-press $tap-time $hold-time esc (layer-toggle navi))
 
 
@@ -236,11 +236,11 @@
   (spc caps) caps $chord-time first-release ()
 
   ;; lineid_obs_switchscene_main
-  (spc o m) (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py main-screen --no-auth") $chord-time first-release ()
+  (spc o m) (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py main-1-guest-live --no-auth") $chord-time first-release ()
   ;; lineid_obs_switchscene_guest
-  (spc o i) (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py guests-solo --no-auth") $chord-time first-release ()
+  (spc o i) (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py guests-all-notes-right-live --no-auth") $chord-time first-release ()
   ;; lineid_obs_switchscene_guest1
-  (spc o a) (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py guest1-0guest --no-auth") $chord-time first-release ()
+  (spc o a) (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py guest1-1guest-live --no-auth") $chord-time first-release ()
   ;; lineid_obs_switchscene_guest2
   (spc o s) (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py  --no-auth") $chord-time first-release ()
   ;; lineid_obs_switchscene_guest3

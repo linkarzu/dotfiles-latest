@@ -5,6 +5,7 @@
 - [Install kitty](#install-kitty)
 - [See themes](#see-themes)
 - [Configure themes](#configure-themes)
+- [Generate the default config](#generate-the-default-config)
 
 <!-- tocstop -->
 
@@ -46,3 +47,15 @@ rm -rf ~/github/dotfiles-latest/kitty/themes/.github/
 ```
 
 - Then just include the file in my kitty.conf file and the theme gets applied
+
+## Generate the default config
+
+- [kitty/conf](https://sw.kovidgoyal.net/kitty/conf/)
+- What I do is just delete my symlink
+
+```bash
+rm ~/.config/kitty
+```
+
+- Then open kitty and press `cmd+,` on macOS, this will generate a default
+  config file

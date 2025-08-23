@@ -171,20 +171,28 @@ yabai -m signal --add event=mission_control_exit action="yabai -m config active_
 # If apps are organized incorrectly, just restart yabai
 # https://github.com/koekeishiya/yabai/issues/1685
 
-yabai -m space 1 --label default
-yabai -m space 2 --label terminal
+yabai -m space 1 --label desk1
+yabai -m space 2 --label desk2
 yabai -m space 3 --label desk3
+yabai -m space 4 --label desk4
+yabai -m space 5 --label desk5
+yabai -m space 6 --label desk6
+yabai -m space 7 --label desk7
+yabai -m space 8 --label desk8
+yabai -m space 9 --label desk9
+yabai -m space 10 --label desk10
 
 # Check if desk4 exists, label it if it does
-if yabai -m query --spaces | jq -e '.[] | select(.index==4)' >/dev/null; then
-  yabai -m space 4 --label desk4
-  target_space="desk4"
+if yabai -m query --spaces | jq -e '.[] | select(.index==11)' >/dev/null; then
+  yabai -m space 11 --label desk11
+  target_space="desk11"
 else
-  target_space="default"
+  target_space="desk1"
 fi
 
-yabai -m rule --add app="^.*$" space=default
-yabai -m rule --add app="^Ghostty$" space=terminal
+yabai -m rule --add app="^.*$" space=desk1
+yabai -m rule --add app="^Ghostty$" space=desk2
+yabai -m rule --add app="^kitty$" space=desk1
 yabai -m rule --add app="^Discord$" space=$target_space
 yabai -m rule --add app="^Element$" space=$target_space
 yabai -m rule --add app="^WhatsApp Web$" space=$target_space
@@ -199,6 +207,12 @@ yabai -m rule --add app="^Vivaldi$" space=$target_space
 yabai -m rule --add app="^socialstream$" space=$target_space
 yabai -m rule --add app="^Signal$" space=$target_space
 yabai -m rule --add app="^Google Photos$" space=$target_space
+
+# exact title match
+yabai -m rule --add app="^kitty$" title="^kitty:dotfiles$" space=desk3
+yabai -m rule --add app="^kitty$" title="^kitty:home$" space=desk4
+yabai -m rule --add app="^kitty$" title="^kitty:obsidian$" space=desk5
+yabai -m rule --add app="^kitty$" title="^kitty:blogpost$" space=desk6
 
 ###############################################################################
 #                             sub-layer=normal

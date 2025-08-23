@@ -144,7 +144,7 @@
   mmgrv (tap-hold $tap-time $hold-time x M-grv)
   mescc (tap-hold $tap-time $hold-time esc caps)
   maltt (tap-hold $tap-time $hold-time b (macro @aghost 100 C-b 20 spc)) ;; tmux alternate session
-  maltk (tap-hold $tap-time $hold-time n (macro @akitty 100 C-b 20 l)) ;; kitty alternate session
+  maltk (tap-hold $tap-time $hold-time b (macro @akitty 100 C-b 20 l)) ;; kitty alternate session
   mtcop (tap-hold $tap-time $hold-time m (macro @aghost 100 C-b 20 v)) ;; tmux copy mode
   mretu (tap-hold $tap-time $hold-time tab ret)
 
@@ -182,7 +182,7 @@
   XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     @msymb
   @mretu q      w      e      r      t      y      u      i      o      p      \      XX     \ 
   @mnavi @mlctl @msyst @mlmet @mlalt @mtrik h      @mralt @mrmet @mmous @mrctl @mral2 @mappr
-  lsft   @mmtab @mmgrv @mcopy @mpast @maltt @maltk @mtcop ,      @mhome /      XX     rsft
+  lsft   @mmtab @mmgrv @mcopy @mpast @maltk n      @mtcop ,      @mhome /      XX     rsft
   XX    XX   XX   @msymb            @mhypr             @mappr      XX         XX     XX     XX
 )
 
@@ -190,7 +190,7 @@
   esc   XX     XX      XX      XX      XX      XX      XX      XX      XX      XX      XX      XX
   grv   XX     XX      XX      XX      XX      XX      XX      XX      XX      XX      XX      XX   XX
   tab  @adavin @amword @aexcel @arecut @ateams @ayoutu @awhats @asocia @a--obs @a1pass XX      XX   XX
-  XX   @afindr XX      @adisco @aforkl @achrom @aspoti @aghost @abrave @akitty @achatg @asystm ret
+  XX   @afindr XX      @adisco @aforkl @achrom @aspoti @akitty @abrave XX      @achatg @asystm ret
   lsft @a-zoom @anotes @acalen @aprevw @avival @aneovd @a-mail @awinap XX      XX      ▲       rsft
   fn    lctl lalt lmet                 spc                     rmet    ralt    ◀       ▼       ▶
 )
@@ -237,6 +237,10 @@
   fn    lctl lalt lmet                  _                      rmet    ralt    ◀      ▼       ▶
 )
 
+(defalias
+  kittyname (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && $HOME/github/dotfiles-latest/sketchybar/felixkratz-linkarzu/plugins/kitty_name.sh")
+)
+
 (defchordsv2
   ;; (participating-keys1) action1 timeout1 release-behaviour1 (disabled-layers1)
   (w e r) M-= $chord-time first-release () ;; zoom in
@@ -254,23 +258,24 @@
   ;; (spc a s) (macro @aghost 100 C-b 20 spc) $chord-time first-release () ;; tmux alternate session
   (c o p) (macro @aghost 100 C-b 20 v 20 S-/ 20 \ . S-2 \ . ret 20 k 20 S-v 20 n 200 y 20 esc) $chord-time first-release () ;; copy last tmux block
 
-  (spc t h) (macro @aghost 100 C-b 20 C-h) $chord-time first-release () ;; home
-  (spc t j) (macro @aghost 100 C-b 20 C-u) $chord-time first-release () ;; dotfiles-latest
-  (spc t r) (macro @aghost 100 C-b 20 @1) $chord-time first-release () ;; daily note
-  (spc t l) (macro @aghost 100 C-b 20 C-o) $chord-time first-release () ;; blogpost
-  (spc t u) (macro @aghost 100 C-b 20 C-t) $chord-time first-release () ;; obsidian
+  ;; (spc t h) (macro @aghost 100 C-b 20 C-h) $chord-time first-release () ;; home
+  ;; (spc t j) (macro @aghost 100 C-b 20 C-u) $chord-time first-release () ;; dotfiles-latest
+  ;; (spc t l) (macro @aghost 100 C-b 20 C-o) $chord-time first-release () ;; blogpost
+  ;; (spc t u) (macro @aghost 100 C-b 20 C-t) $chord-time first-release () ;; obsidian
   (spc t p) (macro @aghost 100 C-b 20 C-y) $chord-time first-release () ;; containerdata_nfs
   (spc t n) (macro @aghost 100 C-b 20 f) $chord-time first-release () ;; find
-  (spc t e) (macro @aghost 100 C-b 20 @8) $chord-time first-release () ;; kanata private
+  ;; (spc t e) (macro @aghost 100 C-b 20 @8) $chord-time first-release () ;; kanata private
+  (spc t r) (macro @aghost 100 C-b 20 @1) $chord-time first-release () ;; daily note
 
   ;; You have to update sketchybar from here as well, not only on the 
   ;; ~/github/dotfiles-latest/sketchybar/felixkratz-linkarzu/plugins/front_app.sh
   ;; This directly updates sketchybar when switching to a specific kitty instance
-  (spc z h) (macro @akitty 300 C-b 20 h 20 (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && $HOME/github/dotfiles-latest/sketchybar/felixkratz-linkarzu/plugins/kitty_name.sh")) $chord-time first-release () ;; home
-  (spc z j) (macro @akitty 300 C-b 20 d 20 (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && $HOME/github/dotfiles-latest/sketchybar/felixkratz-linkarzu/plugins/kitty_name.sh")) $chord-time first-release () ;; dotfiles-latest
-  (spc z l) (macro @akitty 300 C-b 20 b 20 (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && $HOME/github/dotfiles-latest/sketchybar/felixkratz-linkarzu/plugins/kitty_name.sh")) $chord-time first-release () ;; blogpost
-  (spc z u) (macro @akitty 300 C-b 20 o 20 (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && $HOME/github/dotfiles-latest/sketchybar/felixkratz-linkarzu/plugins/kitty_name.sh")) $chord-time first-release () ;; obsidian
-  (spc z r) (macro @akitty 300 C-b 20 @1 20 (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && $HOME/github/dotfiles-latest/sketchybar/felixkratz-linkarzu/plugins/kitty_name.sh")) $chord-time first-release () ;; daily note
+  (spc t h) (macro @akitty 300 C-b 20 h 20 @kittyname) $chord-time first-release () ;; home
+  (spc t j) (macro @akitty 300 C-b 20 d 20 @kittyname) $chord-time first-release () ;; dotfiles-latest
+  (spc t l) (macro @akitty 300 C-b 20 b 20 @kittyname) $chord-time first-release () ;; blogpost
+  (spc t u) (macro @akitty 300 C-b 20 o 20 @kittyname) $chord-time first-release () ;; obsidian
+  (spc t e) (macro @akitty 100 C-b 20 p 20 @kittyname) $chord-time first-release () ;; kanata private
+  ;; (spc t r) (macro @akitty 300 C-b 20 @1 20 @kittyname) $chord-time first-release () ;; daily note
 
   (spc e m) (cmd open "raycast://extensions/raycast/emoji-symbols/search-emoji-symbols") $chord-time first-release ()
   (spc b o) (cmd open "raycast://extensions/lardissone/raindrop-io/search") $chord-time first-release ()

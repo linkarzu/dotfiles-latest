@@ -1,0 +1,14 @@
+# Create a new OS window
+# Any definitions specified before the first new_os_window will apply to first OS window.
+new_os_window
+# Set the --class for the new OS window
+os_window_class mywindow
+# Change the OS window state to normal, fullscreen, maximized or minimized
+os_window_state normal
+cd /System/Volumes/Data/mnt/github_nfs/linkarzu.github.io
+
+# How to get the title from within kitty:
+# kitten @ ls | jq -r '.[] | select(.is_focused) | .tabs[] | select(.is_focused) | .windows[] | select(.is_focused) | .title'
+launch --title "kitty:blogpost"
+focus
+focus_os_window

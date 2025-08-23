@@ -47,7 +47,7 @@ generate_kitty_config() {
 
   cat >"$kitty_conf_file" <<EOF
 foreground            $linkarzu_color14
-background            $linkarzu_color07
+background            $linkarzu_color10
 selection_foreground  $linkarzu_color14
 selection_background   $linkarzu_color16
 url_color             $linkarzu_color03

@@ -51,11 +51,14 @@ done
 # the screen as it will be my "sticky notes", I also set its size
 ~/github/dotfiles-latest/yabai/positions/kitty-pos.sh
 
-# Focus Ghostty window before restarting Neovim
-ghostty_window_id=$(yabai -m query --windows | jq '.[] | select(.app == "Ghostty") | .id' | head -n 1)
-if [[ -n "$ghostty_window_id" ]]; then
-  yabai -m window --focus "$ghostty_window_id"
-fi
+# # Focus Ghostty window before restarting Neovim
+# ghostty_window_id=$(yabai -m query --windows | jq '.[] | select(.app == "Ghostty") | .id' | head -n 1)
+# if [[ -n "$ghostty_window_id" ]]; then
+#   yabai -m window --focus "$ghostty_window_id"
+# fi
+#
+# # Restart Neovim
+# open "btt://execute_assigned_actions_for_trigger/?uuid=481BDF1F-D0C3-4B5A-94D2-BD3C881FAA6F"
+#
 
-# Restart Neovim
-open "btt://execute_assigned_actions_for_trigger/?uuid=481BDF1F-D0C3-4B5A-94D2-BD3C881FAA6F"
+# osascript -e 'display notification "Yabai restarted" with title "Yabai"'

@@ -13,7 +13,7 @@
 export PATH="/opt/homebrew/bin:$PATH"
 
 # Identify *one* kitty window (the first that shows up) — bail if none
-kitty_id="$(yabai -m query --windows | jq -r '.[] | select(.app == "kitty") | .id' | head -n1)"
+# kitty_id="$(yabai -m query --windows | jq -r '.[] | select(.app == "kitty") | .id' | head -n1)"
 # Identify *all* OBS Studio windows (collect every id)
 obs_ids=($(yabai -m query --windows | jq -r '.[] | select(.app == "OBS Studio") | .id'))
 vivaldi_ids=($(yabai -m query --windows | jq -r '.[] | select(.app == "Vivaldi") | .id'))

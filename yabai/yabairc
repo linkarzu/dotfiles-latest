@@ -192,7 +192,7 @@ fi
 
 yabai -m rule --add app="^.*$" space=desk1
 yabai -m rule --add app="^Ghostty$" space=desk2
-yabai -m rule --add app="^kitty$" space=desk1
+yabai -m rule --add app="^kitty$" space=desk3
 yabai -m rule --add app="^Discord$" space=$target_space
 yabai -m rule --add app="^Element$" space=$target_space
 yabai -m rule --add app="^WhatsApp Web$" space=$target_space
@@ -209,10 +209,10 @@ yabai -m rule --add app="^Signal$" space=$target_space
 yabai -m rule --add app="^Google Photos$" space=$target_space
 
 # exact title match
-yabai -m rule --add app="^kitty$" title="^kitty:dotfiles$" space=desk3
-yabai -m rule --add app="^kitty$" title="^kitty:home$" space=desk4
-yabai -m rule --add app="^kitty$" title="^kitty:obsidian$" space=desk5
-yabai -m rule --add app="^kitty$" title="^kitty:blogpost$" space=desk6
+yabai -m rule --add app="^kitty$" title="^kitty:home$" space=desk3
+yabai -m rule --add app="^kitty$" title="^kitty:dotfiles$" space=desk4
+yabai -m rule --add app="^kitty$" title="^kitty:obsidian$" space=desk4
+yabai -m rule --add app="^kitty$" title="^kitty:blogpost$" space=desk4
 
 ###############################################################################
 #                             sub-layer=normal

@@ -9,9 +9,9 @@
   "logo": {
     // If working with tmux, you need to use kitty-icat instead of kitty-direct
     // https://discord.com/channels/1005603569187160125/1324828708128821271/1327261766014599218
-    // "type": "kitty",
+    "type": "kitty",
     // "type": "kitty-direct",
-    "type": "kitty-icat",
+    // "type": "kitty-icat",
     // "source": "~/.config/fastfetch/images/star-saber-ship-linkarzu.png",
     "source": "~/.config/fastfetch/images/link-green.png",
     "height": 15,

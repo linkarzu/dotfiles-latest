@@ -1,6 +1,6 @@
 # # Create a new OS window
 # # Any definitions specified before the first new_os_window will apply to first OS window.
-#winblogpost.kitty-session new_os_window
+# new_os_window
 # # Set the --class for the new OS window
 # os_window_class mywindow
 # # Change the OS window state to normal, fullscreen, maximized or minimized
@@ -8,13 +8,13 @@
 
 # This defines how new windows (split panes will be open)
 # https://sw.kovidgoyal.net/kitty/layouts/#arrange-windows
-layout stack
+layout tall
 
 cd ~/github/dotfiles-latest
 
 # How to get the title from within kitty:
 # kitten @ ls | jq -r '.[] | select(.is_focused) | .tabs[] | select(.is_focused) | .windows[] | select(.is_focused) | .title'
-# launch --title "kitty:dotfiles"
-launch --title "kitty:dotfiles" /bin/zsh -i -c 'v'
+launch --title "kitty:dotfiles"
+# launch --title "kitty:dotfiles" /bin/zsh -i -c 'v'
 focus
 focus_os_window

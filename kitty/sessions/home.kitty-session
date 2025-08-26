@@ -1,6 +1,6 @@
 # # Create a new OS window
 # # Any definitions specified before the first new_os_window will apply to first OS window.
-new_os_window
+# new_os_window
 # # Set the --class for the new OS window
 # os_window_class mywindow
 # # Change the OS window state to normal, fullscreen, maximized or minimized

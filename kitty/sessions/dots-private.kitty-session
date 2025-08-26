@@ -8,13 +8,13 @@
 
 # This defines how new windows (split panes will be open)
 # https://sw.kovidgoyal.net/kitty/layouts/#arrange-windows
-layout stack
+layout tall
 
 cd ~/github/dotfiles-private
 
 # How to get the title from within kitty:
 # kitten @ ls | jq -r '.[] | select(.is_focused) | .tabs[] | select(.is_focused) | .windows[] | select(.is_focused) | .title'
-# launch --title "kitty:dots-private"
-launch --title "kitty:dots-private" /bin/zsh -i -c 'v'
+launch --title "kitty:dots-private"
+# launch --title "kitty:dots-private" /bin/zsh -i -c 'v'
 focus
 focus_os_window

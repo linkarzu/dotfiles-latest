@@ -270,12 +270,12 @@
   ;; You have to update sketchybar from here as well, not only on the 
   ;; ~/github/dotfiles-latest/sketchybar/felixkratz-linkarzu/plugins/front_app.sh
   ;; This directly updates sketchybar when switching to a specific kitty instance
-  (spc t h) (macro @akitty 300 C-b 20 h 20 @kittyname) $chord-time first-release () ;; home
-  (spc t j) (macro @akitty 300 C-b 20 d 20 @kittyname) $chord-time first-release () ;; dotfiles-latest
-  (spc t l) (macro @akitty 300 C-b 20 b 20 @kittyname) $chord-time first-release () ;; blogpost
-  (spc t u) (macro @akitty 300 C-b 20 o 20 @kittyname) $chord-time first-release () ;; obsidian
-  (spc t e) (macro @akitty 100 C-b 20 p 20 @kittyname) $chord-time first-release () ;; kanata private
-  ;; (spc t r) (macro @akitty 300 C-b 20 @1 20 @kittyname) $chord-time first-release () ;; daily note
+  (spc t h) (macro @akitty 300 C-b 20 h) $chord-time first-release () ;; home
+  (spc t j) (macro @akitty 300 C-b 20 d) $chord-time first-release () ;; dotfiles-latest
+  (spc t l) (macro @akitty 300 C-b 20 b) $chord-time first-release () ;; blogpost
+  (spc t u) (macro @akitty 300 C-b 20 o) $chord-time first-release () ;; obsidian
+  (spc t e) (macro @akitty 100 C-b 20 p) $chord-time first-release () ;; kanata private
+  ;; (spc t r) (macro @akitty 300 C-b 20 @1) $chord-time first-release () ;; daily note
 
   (spc e m) (cmd open "raycast://extensions/raycast/emoji-symbols/search-emoji-symbols") $chord-time first-release ()
   (spc b o) (cmd open "raycast://extensions/lardissone/raindrop-io/search") $chord-time first-release ()

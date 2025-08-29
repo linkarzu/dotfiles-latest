@@ -14,7 +14,7 @@ cd ~/github/dotfiles-latest
 
 # How to get the title from within kitty:
 # kitten @ ls | jq -r '.[] | select(.is_focused) | .tabs[] | select(.is_focused) | .windows[] | select(.is_focused) | .title'
-launch --title "dotfiles"
-# launch --title "kitty:dotfiles" /bin/zsh -i -c 'v'
+# launch --title "dotfiles"
+launch --title "dotfiles" /bin/zsh -i -c 'v'
 focus
 focus_os_window

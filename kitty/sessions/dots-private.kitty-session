@@ -14,7 +14,7 @@ cd ~/github/dotfiles-private
 
 # How to get the title from within kitty:
 # kitten @ ls | jq -r '.[] | select(.is_focused) | .tabs[] | select(.is_focused) | .windows[] | select(.is_focused) | .title'
-launch --title "dots-private"
-# launch --title "kitty:dots-private" /bin/zsh -i -c 'v'
+# launch --title "dots-private"
+launch --title "dots-private" /bin/zsh -i -c 'v'
 focus
 focus_os_window

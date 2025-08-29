@@ -14,7 +14,7 @@ cd ~/github/obsidian_main
 
 # How to get the title from within kitty:
 # kitten @ ls | jq -r '.[] | select(.is_focused) | .tabs[] | select(.is_focused) | .windows[] | select(.is_focused) | .title'
-launch --title "obsidian"
-# launch --title "kitty:obsidian" /bin/zsh -i -c 'v'
+# launch --title "obsidian"
+launch --title "obsidian" /bin/zsh -i -c 'v'
 focus
 focus_os_window

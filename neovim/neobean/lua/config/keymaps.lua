@@ -1949,6 +1949,24 @@ end, { desc = "[P](macOS) Delete image file under cursor" })
 --                         Begin of markdown section
 -- ############################################################################
 
+-- Check if Marksman LSP is running, start it if not, otherwise restart lamw26wmal
+vim.keymap.set("n", "<leader>mR", function()
+  local is_running = false
+  for _, client in ipairs(vim.lsp.get_clients()) do
+    if client.name == "marksman" then
+      is_running = true
+      break
+    end
+  end
+  if is_running then
+    vim.cmd("LspRestart marksman")
+    vim.notify("Marksman LSP restarted", vim.log.levels.INFO)
+  else
+    vim.cmd("LspStart marksman")
+    vim.notify("Marksman LSP started", vim.log.levels.INFO)
+  end
+end, { desc = "Start/Restart Marksman LSP" })
+
 -- Select text inside codeblocks lamw26wmal
 -- Select everything between the opening ```<lang> and the closing ``` fences
 vim.keymap.set("n", "vio", function()

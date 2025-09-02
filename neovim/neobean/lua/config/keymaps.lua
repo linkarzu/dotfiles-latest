@@ -1949,6 +1949,53 @@ end, { desc = "[P](macOS) Delete image file under cursor" })
 --                         Begin of markdown section
 -- ############################################################################
 
+-- Copy all HTTPS links in current buffer to clipboard (one per line) lamw26wmal
+vim.keymap.set("n", "<leader>ml", function()
+  -- Get all lines in current buffer
+  local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+  -- Prepare a set for unique URLs and an ordered list to preserve first-seen order
+  local seen = {}
+  local urls = {}
+  -- Lua pattern for https URLs
+  local pat = "https://%S+"
+  -- Characters to trim from the end of a found URL (common closers/punctuation)
+  local function rtrim_url(u)
+    -- Remove trailing ), ], }, ., ,, ;, :, ?, !, ', ", >
+    while u:match("[%)%]%}%.%,%;%:%?%!%'%\">%)]$") do
+      u = u:sub(1, #u - 1)
+    end
+    -- Balance a trailing unmatched ')' from markdown links like (https://...))
+    local open_paren = select(2, u:gsub("%(", ""))
+    local close_paren = select(2, u:gsub("%)", ""))
+    if close_paren > open_paren and u:sub(-1) == ")" then
+      u = u:sub(1, #u - 1)
+    end
+    return u
+  end
+  -- Scan each line and collect matches
+  for _, line in ipairs(lines) do
+    for m in line:gmatch(pat) do
+      local url = rtrim_url(m)
+      if not seen[url] then
+        seen[url] = true
+        table.insert(urls, url)
+      end
+    end
+  end
+  -- If none found, inform and exit
+  if #urls == 0 then
+    print("No https URLs found in buffer")
+    return
+  end
+  -- Join and copy to system clipboard register +
+  local blob = table.concat(urls, "\n")
+  vim.fn.setreg("+", blob)
+  -- Also put into unnamed register
+  vim.fn.setreg('"', blob)
+  -- Notify how many were copied
+  print(("Copied %d URL(s) to clipboard"):format(#urls))
+end, { desc = "[P]Markdown: copy all https links in buffer to clipboard" })
+
 -- Check if Marksman LSP is running, start it if not, otherwise restart lamw26wmal
 vim.keymap.set("n", "<leader>mR", function()
   local is_running = false
@@ -1965,7 +2012,7 @@ vim.keymap.set("n", "<leader>mR", function()
     vim.cmd("LspStart marksman")
     vim.notify("Marksman LSP started", vim.log.levels.INFO)
   end
-end, { desc = "Start/Restart Marksman LSP" })
+end, { desc = "[P]Start/Restart Marksman LSP" })
 
 -- Select text inside codeblocks lamw26wmal
 -- Select everything between the opening ```<lang> and the closing ``` fences

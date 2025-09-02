@@ -14,6 +14,10 @@ return {
         -- Setting this to false makes it a popup and true the search bar at the bottom
         -- search middle
         bottom_search = false,
+        -- This enables the border on vim.lsp.buf.hover() that I bring up with
+        -- uppercase K, solution provided by @abhra-linux in my video:
+        -- https://youtu.be/SXKsIyYJIrU
+        lsp_doc_border = true, -- add a border to hover docs and signature help
       },
       messages = {
         -- NOTE: If you enable messages, then the cmdline is enabled automatically.

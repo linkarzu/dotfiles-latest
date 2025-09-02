@@ -207,6 +207,7 @@ yabai -m rule --add app="^Vivaldi$" space=$target_space
 yabai -m rule --add app="^socialstream$" space=$target_space
 yabai -m rule --add app="^Signal$" space=$target_space
 yabai -m rule --add app="^Google Photos$" space=$target_space
+yabai -m rule --add app="^Notes$" space=$target_space
 
 # exact title match
 yabai -m rule --add app="^kitty$" title="^kitty:home$" space=desk3

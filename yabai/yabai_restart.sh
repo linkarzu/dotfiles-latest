@@ -20,20 +20,20 @@ yabai --restart-service
 # I think this causes the apps not to show with my transparent apps
 # sleep 1
 
-# Restart the apps in apps_transp_ignore to apply the settings
-# Convert the string to an array, properly handling spaces in app names
-# Remove parentheses and split on |
-IFS='|' read -ra apps <<<"$(echo "$apps_transp_ignore" | tr -d '()')"
-
-# Iterate through the array
-for app in "${apps[@]}"; do
-  # Trim leading/trailing whitespace
-  app=$(echo "$app" | xargs)
-  pkill "$app"
-  sleep 1
-  open -a "$app"
-  sleep 1
-done
+# # Restart the apps in apps_transp_ignore to apply the settings
+# # Convert the string to an array, properly handling spaces in app names
+# # Remove parentheses and split on |
+# IFS='|' read -ra apps <<<"$(echo "$apps_transp_ignore" | tr -d '()')"
+#
+# # Iterate through the array
+# for app in "${apps[@]}"; do
+#   # Trim leading/trailing whitespace
+#   app=$(echo "$app" | xargs)
+#   pkill "$app"
+#   sleep 1
+#   open -a "$app"
+#   sleep 1
+# done
 
 # IFS='|' read -ra apps <<<"$(echo "$apps_scratchpad" | tr -d '()')"
 #

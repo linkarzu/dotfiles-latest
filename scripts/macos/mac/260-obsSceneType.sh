@@ -38,23 +38,29 @@ case "$choice" in
   main_scene="main-1-guest"
   guest_scene="guests-all-notes-right"
   guest_1="guest1-1guest"
+  guest_1_full="cam-full-guest1"
   ;;
 4)
   main_scene="main-1-guest-live"
   guest_scene="guests-all-notes-right-live"
   guest_1="guest1-1guest-live"
+  guest_1_full="cam-full-guest1"
   ;;
 5)
   main_scene="main-2-guest"
   guest_scene="guests2-all-notes-right"
   guest_1="guest1-2guest"
   guest_2="guest2-2guest"
+  guest_1_full="cam-full-guest1"
+  guest_2_full="cam-full-guest2"
   ;;
 6)
   main_scene="main-2-guest-live"
   guest_scene="guests2-all-notes-right-live"
   guest_1="guest1-2guest-live"
   guest_2="guest2-2guest-live"
+  guest_1_full="cam-full-guest1"
+  guest_2_full="cam-full-guest2"
   ;;
 7)
   main_scene="main-3-guest"
@@ -62,6 +68,9 @@ case "$choice" in
   guest_1="guest1-3guest"
   guest_2="guest2-3guest"
   guest_3="guest3-3guest"
+  guest_1_full="cam-full-guest1"
+  guest_2_full="cam-full-guest2"
+  guest_3_full="cam-full-guest3"
   ;;
 8)
   main_scene="main-3-guest-live"
@@ -69,6 +78,9 @@ case "$choice" in
   guest_1="guest1-3guest-live"
   guest_2="guest2-3guest-live"
   guest_3="guest3-3guest-live"
+  guest_1_full="cam-full-guest1"
+  guest_2_full="cam-full-guest2"
+  guest_3_full="cam-full-guest3"
   ;;
 9)
   main_scene="main-4-guest"
@@ -77,6 +89,10 @@ case "$choice" in
   guest_2="guest2-4guest"
   guest_3="guest3-4guest"
   guest_4="guest4-4guest"
+  guest_1_full="cam-full-guest1"
+  guest_2_full="cam-full-guest2"
+  guest_3_full="cam-full-guest3"
+  guest_4_full="cam-full-guest4"
   ;;
 10)
   main_scene="main-4-guest-live"
@@ -85,10 +101,10 @@ case "$choice" in
   guest_2="guest2-4guest-live"
   guest_3="guest3-4guest-live"
   guest_4="guest4-4guest-live"
-  guest_1_full="cam-full-guest1-4guest"
-  guest_2_full="cam-full-guest2-4guest"
-  guest_3_full="cam-full-guest3-4guest"
-  guest_4_full="cam-full-guest4-4guest"
+  guest_1_full="cam-full-guest1"
+  guest_2_full="cam-full-guest2"
+  guest_3_full="cam-full-guest3"
+  guest_4_full="cam-full-guest4"
   ;;
 11)
   main_scene="main-screen-keyboard"
@@ -102,6 +118,11 @@ case "$choice" in
   guest_3="guest3-5guest"
   guest_4="guest4-5guest"
   guest_5="guest5-5guest"
+  guest_1_full="cam-full-guest1"
+  guest_2_full="cam-full-guest2"
+  guest_3_full="cam-full-guest3"
+  guest_4_full="cam-full-guest4"
+  guest_5_full="cam-full-guest5"
   ;;
 13)
   main_scene="main-5-guest-live"
@@ -111,11 +132,11 @@ case "$choice" in
   guest_3="guest3-5guest-live"
   guest_4="guest4-5guest-live"
   guest_5="guest5-5guest-live"
-  guest_1_full="cam-full-guest1-5guest"
-  guest_2_full="cam-full-guest2-5guest"
-  guest_3_full="cam-full-guest3-5guest"
-  guest_4_full="cam-full-guest4-5guest"
-  guest_5_full="cam-full-guest5-5guest"
+  guest_1_full="cam-full-guest1"
+  guest_2_full="cam-full-guest2"
+  guest_3_full="cam-full-guest3"
+  guest_4_full="cam-full-guest4"
+  guest_5_full="cam-full-guest5"
   ;;
 *)
   echo "Invalid choice. Only 1 and 3 are supported right now."

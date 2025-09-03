@@ -165,6 +165,7 @@
   ;; Sublayers
   msubl (tap-hold-release $subl-time $subl-time spc (layer-while-held sublayers))
   msess (tap-hold-release $subl-time $subl-time t (layer-while-held sessions))
+  mrayc (tap-hold-release $subl-time $subl-time r (layer-while-held raycast))
 
   ;; Execute script
   ;; maltt (cmd open "btt://execute_assigned_actions_for_trigger/?uuid=F35EF770-FAA5-448A-957D-70BB449DEB0F")
@@ -195,7 +196,7 @@
   ;;     a      s      d      f      g      h      j      k      l      ;      '
   XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX        ;;F1
   XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX ;;NUM
-  XX     XX     XX     XX     XX     @msess XX     XX     XX     XX     XX     XX     XX     XX ;;Q
+  XX     XX     XX     XX     @mrayc @msess XX     XX     XX     XX     XX     XX     XX     XX ;;Q
   XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX        ;;A
   XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX        ;;Z
   XX    XX   XX   XX            XX             XX      XX         XX     XX     XX              ;;MOD
@@ -215,8 +216,29 @@
   ;;     a      s      d      f      g      h      j      k      l      ;      '
   XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX        ;;F1  
   XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX ;;NUM 
-  XX     XX     XX     XX     @sdail XX     XX     @sobsi XX     XX     XX     XX     XX     XX ;;Q   
+  XX     XX     XX     @spriv @sdail XX     XX     @sobsi XX     XX     XX     XX     XX     XX ;;Q   
   XX     XX     XX     XX     XX     XX     @shome @sdots XX     @sblog XX     XX     XX        ;;A   
+  XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX        ;;Z   
+  XX    XX   XX   XX            XX             XX      XX         XX     XX     XX              ;;MOD 
+)
+
+;; Aliases for raycast
+(defalias
+  remoj (cmd open "raycast://extensions/raycast/emoji-symbols/search-emoji-symbols")
+  rrain (cmd open "raycast://extensions/lardissone/raindrop-io/search")
+  rgoog (cmd open "raycast://extensions/mblode/google-search/index")
+  rfile (cmd open "raycast://extensions/raycast/file-search/search-files")
+  rvide (cmd open "raycast://extensions/tonka3000/youtube/search-videos?arguments=%7B%22query%22%3A%22%22%7D")
+  rdriv (cmd open "raycast://extensions/vishaltelangre/google-drive/index")
+  rspot (cmd open "raycast://extensions/mattisssa/spotify-player/search")
+)
+
+(deflayer raycast
+  ;;     a      s      d      f      g      h      j      k      l      ;      '
+  XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX        ;;F1  
+  XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX ;;NUM 
+  XX     XX     XX     @remoj XX     XX     @rvide XX     XX     XX     XX     XX     XX     XX ;;Q   
+  XX     XX     XX     XX     XX     XX     @rspot @rrain @rgoog @rfile @rdriv XX     XX        ;;A   
   XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX        ;;Z   
   XX    XX   XX   XX            XX             XX      XX         XX     XX     XX              ;;MOD 
 )
@@ -296,12 +318,6 @@
   (spc t p) (macro @aghost 100 C-b 20 C-y) $chord-time first-release () ;; containerdata_nfs
   (spc t n) (macro @aghost 100 C-b 20 f) $chord-time first-release () ;; find
 
-  (spc e m) (cmd open "raycast://extensions/raycast/emoji-symbols/search-emoji-symbols") $chord-time first-release ()
-  (spc b o) (cmd open "raycast://extensions/lardissone/raindrop-io/search") $chord-time first-release ()
-  (spc s e) (cmd open "raycast://extensions/mblode/google-search/index") $chord-time first-release ()
-  (spc f i) (cmd open "raycast://extensions/raycast/file-search/search-files") $chord-time first-release ()
-  (spc y o) (cmd open "raycast://extensions/tonka3000/youtube/search-videos?arguments=%7B%22query%22%3A%22%22%7D") $chord-time first-release ()
-  (spc d r) (cmd open "raycast://extensions/vishaltelangre/google-drive/index") $chord-time first-release ()
   (spc caps) caps $chord-time first-release ()
 
   ;; lineid_obs_switchscene_main

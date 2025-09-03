@@ -55,9 +55,14 @@
   scam; S-C-A-M-; ;; raycast snippets
 )
 
+(defvar
+  switchapp-script "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh "
+  aspoti (concat $switchapp-arg-base "Spotify")
+)
+
 ;; applications aliases
 (defalias
-  aspoti (cmd sudo -u linkarzu zsh -lc "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh Spotify")
+  aspoti (cmd sudo -u linkarzu zsh -lc $aspoti)
   aweztr (cmd sudo -u linkarzu zsh -lc "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh WezTerm")
   aghost (cmd sudo -u linkarzu zsh -lc "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh Ghostty")
   akitty (cmd sudo -u linkarzu zsh -lc "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh kitty")

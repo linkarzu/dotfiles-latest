@@ -272,15 +272,27 @@
   ocag4 (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py  --no-auth")
   ;; lineid_obs_switchscene_cam_guest5
   ocag5 (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py  --no-auth")
+
+  ostar (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py starting-soon --no-auth")
+  oback (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py be-right-back --no-auth")
+  okeyb (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py keyboard --no-auth")
+  ozkbd (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py zoom-main-keyboard --no-auth")
+
+;; top 38, bottom 0, left 0, right 230
+  ozmai (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py zoom-main --no-auth && $HOME/github/dotfiles-latest/yabai/positions/yabai-custom-pad.sh 38 90 0 230 && $HOME/github/dotfiles-latest/yabai/yabai_restart.sh")
+  oz-in (cmd sudo -u linkarzu bash -c "$HOME/github/dotfiles-latest/yabai/positions/yabai-custom-pad.sh 38 90 0 230 && $HOME/github/dotfiles-latest/yabai/yabai_restart.sh")
+  ozout (cmd sudo -u linkarzu bash -c "$HOME/github/dotfiles-latest/yabai/positions/yabai-custom-pad.sh 38 0 0 230 && $HOME/github/dotfiles-latest/yabai/yabai_restart.sh")
+  oghaf (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py guests-solo-half --no-auth && $HOME/github/dotfiles-latest/yabai/positions/yabai-custom-pad.sh 48 10 10 400 && $HOME/github/dotfiles-latest/yabai/yabai_restart.sh && pkill kitty")
+
 )
 
 (deflayer obs
   ;;     a      s      d      f      g      h      j      k      l      ;      '
   XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX        ;;F1  
   XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX ;;NUM 
-  XX     @ocag1 @ocag2 @ocag3 @ocag4 @ocag5 XX     XX     @ogues XX     XX     XX     XX     XX ;;Q   
-  XX     @ogue1 @ogue2 @ogue3 @ogue4 @ogue5 XX     XX     XX     XX     XX     XX     XX        ;;A   
-  XX     XX     XX     XX     XX     XX     XX     @omain XX     XX     XX     XX     XX        ;;Z   
+  XX     @ocag1 @ocag2 @ocag3 @ocag4 @ocag5 @oz-in @ozout @ogues XX     XX     XX     XX     XX ;;Q   
+  XX     @ogue1 @ogue2 @ogue3 @ogue4 @ogue5 @oghaf XX     @okeyb XX     XX     XX     XX        ;;A   
+  XX     @ozmai @ozkbd XX     XX     @oback @ostar @omain XX     XX     XX     XX     XX        ;;Z   
   XX    XX   XX   XX            XX             XX      XX         XX     XX     XX              ;;MOD 
 )
 
@@ -361,14 +373,6 @@
 
   (spc caps) caps $chord-time first-release ()
 
-  (spc o n) (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py starting-soon --no-auth") $chord-time first-release ()
-  (spc o c) (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py be-right-back --no-auth") $chord-time first-release ()
-  (spc o k) (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py keyboard --no-auth") $chord-time first-release ()
-  ;; top 38, bottom 0, left 0, right 230
-  (spc o z) (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py zoom-main --no-auth && $HOME/github/dotfiles-latest/yabai/positions/yabai-custom-pad.sh 38 90 0 230 && $HOME/github/dotfiles-latest/yabai/yabai_restart.sh") $chord-time first-release ()
-  (spc o x) (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py zoom-main-keyboard --no-auth") $chord-time first-release ()
-  (spc o h) (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py guests-solo-half --no-auth && $HOME/github/dotfiles-latest/yabai/positions/yabai-custom-pad.sh 48 10 10 400 && $HOME/github/dotfiles-latest/yabai/yabai_restart.sh && pkill kitty") $chord-time first-release ()
-
   ;; dismiss macos notifications
   (n o t) (cmd open "btt://execute_assigned_actions_for_trigger/?uuid=92B63395-5930-463A-9301-57BA344D6981") $chord-time first-release ()
   ;; Start video recording
@@ -376,8 +380,6 @@
   ;; Stop video recording
   (s t o) (cmd open "btt://execute_assigned_actions_for_trigger/?uuid=762AF6E2-41EE-4B74-A2D3-9B96C3D777B5") $chord-time first-release ()
   (y a b) (cmd sudo -u linkarzu bash -c "$HOME/github/dotfiles-latest/yabai/yabai_restart.sh") $chord-time first-release ()
-  (z o m) (cmd sudo -u linkarzu bash -c "$HOME/github/dotfiles-latest/yabai/positions/yabai-custom-pad.sh 38 90 0 230 && $HOME/github/dotfiles-latest/yabai/yabai_restart.sh") $chord-time first-release ()
-  (z o n) (cmd sudo -u linkarzu bash -c "$HOME/github/dotfiles-latest/yabai/positions/yabai-custom-pad.sh 38 0 0 230 && $HOME/github/dotfiles-latest/yabai/yabai_restart.sh") $chord-time first-release ()
   (p o s) (cmd sudo -u linkarzu bash -c "$HOME/github/dotfiles-latest/yabai/positions/kitty-pos.sh") $chord-time first-release ()
   (a s d f) (cmd sudo -u linkarzu bash -c "~/github/dotfiles-latest/scripts/macos/mac/misc/200-micMute.sh") $chord-time first-release ()
   ;; (a s) (cmd open "btt://execute_assigned_actions_for_trigger/?uuid=F35EF770-FAA5-448A-957D-70BB449DEB0F") $chord-time first-release ()

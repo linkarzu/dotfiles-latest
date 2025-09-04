@@ -190,32 +190,32 @@ vim.api.nvim_create_autocmd("FileType", {
   end,
 })
 
--- Show LSP diagnostics (inlay hints) in a hover window / popup lamw26wmal
--- https://github.com/neovim/nvim-lspconfig/wiki/UI-Customization#show-line-diagnostics-automatically-in-hover-window
--- https://www.reddit.com/r/neovim/comments/1168p97/how_can_i_make_lspconfig_wrap_around_these_hints/
--- If you want to increase the hover time, modify vim.o.updatetime = 200 in your
--- options.lua file
---
--- -- In case you want to use custom borders
--- local border = {
---   { "🭽", "FloatBorder" },
---   { "▔", "FloatBorder" },
---   { "🭾", "FloatBorder" },
---   { "▕", "FloatBorder" },
---   { "🭿", "FloatBorder" },
---   { "▁", "FloatBorder" },
---   { "🭼", "FloatBorder" },
---   { "▏", "FloatBorder" },
--- }
-vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
-  group = vim.api.nvim_create_augroup("float_diagnostic", { clear = true }),
-  callback = function()
-    vim.diagnostic.open_float(nil, {
-      focus = false,
-      border = "rounded",
-    })
-  end,
-})
+-- -- Show LSP diagnostics (inlay hints) in a hover window / popup lamw26wmal
+-- -- https://github.com/neovim/nvim-lspconfig/wiki/UI-Customization#show-line-diagnostics-automatically-in-hover-window
+-- -- https://www.reddit.com/r/neovim/comments/1168p97/how_can_i_make_lspconfig_wrap_around_these_hints/
+-- -- If you want to increase the hover time, modify vim.o.updatetime = 200 in your
+-- -- options.lua file
+-- --
+-- -- -- In case you want to use custom borders
+-- -- local border = {
+-- --   { "🭽", "FloatBorder" },
+-- --   { "▔", "FloatBorder" },
+-- --   { "🭾", "FloatBorder" },
+-- --   { "▕", "FloatBorder" },
+-- --   { "🭿", "FloatBorder" },
+-- --   { "▁", "FloatBorder" },
+-- --   { "🭼", "FloatBorder" },
+-- --   { "▏", "FloatBorder" },
+-- -- }
+-- vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
+--   group = vim.api.nvim_create_augroup("float_diagnostic", { clear = true }),
+--   callback = function()
+--     vim.diagnostic.open_float(nil, {
+--       focus = false,
+--       border = "rounded",
+--     })
+--   end,
+-- })
 
 -- When I open markdown files I want to fold the markdown headings
 -- Originally I thought about using it only for skitty-notes, but I think I want

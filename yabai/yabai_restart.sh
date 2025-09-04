@@ -47,9 +47,9 @@ yabai --restart-service
 #   sleep 0.7
 # done
 
-# After yabai is restarted, I want kitty to be moved to a specific position on
-# the screen as it will be my "sticky notes", I also set its size
-~/github/dotfiles-latest/yabai/positions/kitty-pos.sh
+# # After yabai is restarted, I want kitty to be moved to a specific position on
+# # the screen as it will be my "sticky notes", I also set its size
+# ~/github/dotfiles-latest/yabai/positions/kitty-pos.sh
 
 # # Focus Ghostty window before restarting Neovim
 # ghostty_window_id=$(yabai -m query --windows | jq '.[] | select(.app == "Ghostty") | .id' | head -n 1)

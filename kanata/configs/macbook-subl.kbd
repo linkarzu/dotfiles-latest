@@ -88,6 +88,7 @@
   a-zoom (cmd sudo -u linkarzu zsh -lc "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh zoom.us")
   anotes (cmd sudo -u linkarzu zsh -lc "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh Notes")
   asocia (cmd sudo -u linkarzu zsh -lc "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh socialstream")
+  calibr (cmd sudo -u linkarzu zsh -lc "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh 'E-book Viewer'")
 )
 
 ;; applications aliases
@@ -217,6 +218,7 @@
   sdail (macro @aghost 100 C-b 20 @1)
   scont (macro @aghost 100 C-b 20 C-y) ;; containerdata_nfs
   sfind (macro @aghost 100 C-b 20 f)
+  s-lua (macro @akitty 100 C-b 20 a)
 )
 
 (deflayer sessions
@@ -224,7 +226,7 @@
   XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX        ;;F1  
   XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX ;;NUM 
   XX     XX     XX     @spriv @sdail XX     XX     @sobsi XX     XX     @scont XX     XX     XX ;;Q   
-  XX     XX     XX     XX     XX     XX     @shome @sdots XX     @sblog XX     XX     XX        ;;A   
+  XX     XX     XX     XX     XX     XX     @shome @sdots @s-lua @sblog XX     XX     XX        ;;A   
   XX     XX     XX     XX     XX     XX     @sfind XX     XX     XX     XX     XX     XX        ;;Z   
   XX    XX   XX   XX            XX             XX      XX         XX     XX     XX              ;;MOD 
 )
@@ -304,7 +306,7 @@
   esc   XX     XX      XX      XX      XX      XX      XX      XX      XX      XX      XX      XX
   grv   XX     XX      XX      XX      XX      XX      XX      XX      XX      XX      XX      XX   XX
   tab  @adavin @amword @aexcel @arecut @ateams @ayoutu @awhats @asocia @a--obs @a1pass XX      XX   XX
-  XX   @afindr XX      @adisco @aforkl @achrom @aspoti @akitty @abrave XX      @achatg @asystm ret
+  XX   @afindr @calibr      @adisco @aforkl @achrom @aspoti @akitty @abrave XX      @achatg @asystm ret
   lsft @a-zoom @anotes @acalen @aprevw @avival @aneovd @a-mail @awinap XX      XX      ▲       rsft
   fn    lctl lalt lmet                 spc                     rmet    ralt    ◀       ▼       ▶
 )

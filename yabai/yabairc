@@ -164,58 +164,6 @@ yabai -m signal --add event=mission_control_enter action="yabai -m config normal
 yabai -m signal --add event=mission_control_exit action="yabai -m config active_window_opacity 1.0"
 
 ###############################################################################
-#                             Yabai Spaces
-###############################################################################
-
-# I want to have all the apps in desktop 1, and just a few in other desktops
-# If apps are organized incorrectly, just restart yabai
-# https://github.com/koekeishiya/yabai/issues/1685
-
-yabai -m space 1 --label desk1
-yabai -m space 2 --label desk2
-yabai -m space 3 --label desk3
-yabai -m space 4 --label desk4
-yabai -m space 5 --label desk5
-yabai -m space 6 --label desk6
-yabai -m space 7 --label desk7
-yabai -m space 8 --label desk8
-yabai -m space 9 --label desk9
-yabai -m space 10 --label desk10
-
-# Check if desk4 exists, label it if it does
-if yabai -m query --spaces | jq -e '.[] | select(.index==11)' >/dev/null; then
-  yabai -m space 11 --label desk11
-  target_space="desk11"
-else
-  target_space="desk1"
-fi
-
-yabai -m rule --add app="^.*$" space=desk1
-yabai -m rule --add app="^Ghostty$" space=desk2
-yabai -m rule --add app="^kitty$" space=desk3
-yabai -m rule --add app="^Discord$" space=$target_space
-yabai -m rule --add app="^Element$" space=$target_space
-yabai -m rule --add app="^WhatsApp Web$" space=$target_space
-yabai -m rule --add app="^OBS Studio$" space=$target_space
-yabai -m rule --add app="^Mail$" space=$target_space
-yabai -m rule --add app="^1Password$" space=$target_space
-yabai -m rule --add app="^Calendar$" space=$target_space
-yabai -m rule --add app="^Google Chrome$" space=$target_space
-yabai -m rule --add app="^Microsoft Teams$" space=$target_space
-yabai -m rule --add app="^ChatGPT$" space=$target_space
-yabai -m rule --add app="^Vivaldi$" space=$target_space
-yabai -m rule --add app="^socialstream$" space=$target_space
-yabai -m rule --add app="^Signal$" space=$target_space
-yabai -m rule --add app="^Google Photos$" space=$target_space
-yabai -m rule --add app="^Notes$" space=$target_space
-
-# exact title match
-yabai -m rule --add app="^kitty$" title="^kitty:home$" space=desk3
-yabai -m rule --add app="^kitty$" title="^kitty:dotfiles$" space=desk4
-yabai -m rule --add app="^kitty$" title="^kitty:obsidian$" space=desk4
-yabai -m rule --add app="^kitty$" title="^kitty:blogpost$" space=desk4
-
-###############################################################################
 #                             sub-layer=normal
 ###############################################################################
 
@@ -245,14 +193,6 @@ yabai -m config mouse_follows_focus on
 # and still don't get it
 # This option as removed https://github.com/koekeishiya/yabai/issues/1887
 # yabai -m config window_topmost off
-
-# Configure the layout mode
-# "stack" - is what I use, keeps a single app on the front
-# "bsp" - binary space partitioning enables automatic tiling (partitioning)
-# "float" - default mode, windows are not managed
-yabai -m config layout stack
-# yabai -m config layout bsp
-# yabai -m config layout float
 
 ###############################################################################
 #                              Signal events
@@ -313,6 +253,70 @@ yabai -m config \
   mouse_action1 move \
   mouse_action2 resize \
   mouse_drop_action swap
+
+###############################################################################
+#                             Yabai Spaces
+###############################################################################
+
+# Configure the layout mode
+# "stack" - is what I use, keeps a single app on the front
+# "bsp" - binary space partitioning enables automatic tiling (partitioning)
+# "float" - default mode, windows are not managed
+yabai -m config layout stack
+# yabai -m config layout bsp
+# yabai -m config layout float
+
+# I want to have all the apps in desktop 1, and just a few in other desktops
+# If apps are organized incorrectly, just restart yabai
+# https://github.com/koekeishiya/yabai/issues/1685
+
+yabai -m space 1 --label desk1
+yabai -m space 2 --label desk2
+yabai -m space 3 --label desk3 --layout bsp
+yabai -m space 4 --label desk4
+yabai -m space 5 --label desk5
+yabai -m space 6 --label desk6
+yabai -m space 7 --label desk7
+yabai -m space 8 --label desk8
+yabai -m space 9 --label desk9
+yabai -m space 10 --label desk10
+
+# Check if desk4 exists, label it if it does
+if yabai -m query --spaces | jq -e '.[] | select(.index==11)' >/dev/null; then
+  yabai -m config --space 11 top_padding 8
+  yabai -m config --space 11 bottom_padding 0
+  yabai -m config --space 11 left_padding 0
+  yabai -m config --space 11 right_padding 0
+  yabai -m space 11 --label desk11
+  target_space="desk11"
+else
+  target_space="desk1"
+fi
+
+yabai -m rule --add app="^.*$" space=desk1
+yabai -m rule --add app="^Ghostty$" space=desk2
+yabai -m rule --add app="^kitty$" space=desk3
+yabai -m rule --add app="^Discord$" space=$target_space
+yabai -m rule --add app="^Element$" space=$target_space
+yabai -m rule --add app="^WhatsApp Web$" space=$target_space
+yabai -m rule --add app="^OBS Studio$" space=$target_space
+yabai -m rule --add app="^Mail$" space=$target_space
+yabai -m rule --add app="^1Password$" space=$target_space
+yabai -m rule --add app="^Calendar$" space=$target_space
+yabai -m rule --add app="^Google Chrome$" space=$target_space
+yabai -m rule --add app="^Microsoft Teams$" space=$target_space
+yabai -m rule --add app="^ChatGPT$" space=$target_space
+yabai -m rule --add app="^Vivaldi$" space=$target_space
+yabai -m rule --add app="^socialstream$" space=$target_space
+yabai -m rule --add app="^Signal$" space=$target_space
+yabai -m rule --add app="^Google Photos$" space=$target_space
+yabai -m rule --add app="^Notes$" space=$target_space
+
+# # exact title match
+# yabai -m rule --add app="^kitty$" title="^kitty:home$" space=desk3
+# yabai -m rule --add app="^kitty$" title="^kitty:dotfiles$" space=desk4
+# yabai -m rule --add app="^kitty$" title="^kitty:obsidian$" space=desk4
+# yabai -m rule --add app="^kitty$" title="^kitty:blogpost$" space=desk4
 
 # THIS IS VERY IMPORTANT
 # It ensures that when I restart yabai, all the rules (including the manage=off rules)

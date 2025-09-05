@@ -155,9 +155,8 @@
   ;; Other layers tap-hold-press
   ;; mapr configured for both the glove80 and the macbook keyboard
   ;; mappr (tap-hold-press $tap-time $hold-time ret (layer-toggle apps))
-  msymb (tap-hold $tap-time $hold-time bspc (layer-toggle symb))
+  msymb (tap-hold-press $tap-time $hold-time bspc (layer-toggle symb))
   mnavi (tap-hold-press $tap-time $hold-time esc (layer-toggle navi))
-
 
   ;; Other layers tap-hold
   msyst (tap-hold $tap-time $hold-time s (layer-toggle syst))

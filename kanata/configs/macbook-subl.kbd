@@ -154,7 +154,7 @@
 
   ;; Other layers tap-hold-press
   ;; mapr configured for both the glove80 and the macbook keyboard
-  mappr (tap-hold-press $tap-time $hold-time ret (layer-toggle apps))
+  ;; mappr (tap-hold-press $tap-time $hold-time ret (layer-toggle apps))
   msymb (tap-hold $tap-time $hold-time bspc (layer-toggle symb))
   mnavi (tap-hold-press $tap-time $hold-time esc (layer-toggle navi))
 
@@ -168,10 +168,14 @@
   ;; Sublayers
   ;; I implemented sublayers thanks to the help in this discussion
   ;; https://github.com/jtroo/kanata/discussions/1765
-  msubl (tap-hold-release $subl-time $subl-time spc (layer-while-held sublayers))
-  msess (tap-hold-release $subl-time $subl-time t (layer-while-held sessions))
-  mrayc (tap-hold-release $subl-time $subl-time r (layer-while-held raycast))
-  m-obs (tap-hold-release $subl-time $subl-time o (layer-while-held obs))
+  ;; DO NOT USE THE SUBLAYERS IN A FREQUENTLY PRESSED KEY LIKE SPACEBAR
+  ;; It made typing spaces a pain in the ass, enter is not pressed to often, so it works way better
+  msubl (tap-hold-press $subl-time $subl-time ret (layer-while-held sublayers))
+
+  msess (tap-hold-press $subl-time $subl-time t (layer-while-held sessions))
+  mrayc (tap-hold-press $subl-time $subl-time r (layer-while-held raycast))
+  m-obs (tap-hold-press $subl-time $subl-time o (layer-while-held obs))
+  mapps (tap-hold-press $subl-time $subl-time bspc (layer-while-held apps))
 
   ;; Execute script
   ;; maltt (cmd open "btt://execute_assigned_actions_for_trigger/?uuid=F35EF770-FAA5-448A-957D-70BB449DEB0F")
@@ -193,19 +197,19 @@
   XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX
   XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     @msymb
   @mretu q      w      e      r      t      y      u      i      o      p      \      XX     \ 
-  @mnavi @mlctl @msyst @mlmet @mlalt @mtrik h      @mralt @mrmet @mmous @mrctl @mral2 @mappr
+  @mnavi @mlctl @msyst @mlmet @mlalt @mtrik h      @mralt @mrmet @mmous @mrctl @mral2 @msubl
   lsft   @mmtab @mmgrv @mcopy @mpast @maltk n      @mtcop ,      @mhome /      XX     rsft
-  XX    XX   XX   @msymb            @msubl             @mappr      XX         XX     XX     XX
+  XX    XX   XX   @msymb            spc             @msubl      XX         XX     XX     XX
 )
 
 (deflayer sublayers
   ;;     a      s      d      f      g      h      j      k      l      ;      '
-  XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX        ;;F1
-  XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX ;;NUM
-  XX     XX     XX     XX     @mrayc @msess XX     XX     XX     @m-obs XX     XX     XX     XX ;;Q
-  XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX        ;;A
-  XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX        ;;Z
-  XX    XX   XX   XX            XX             XX      XX         XX     XX     XX              ;;MOD
+  XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX            ;;F1
+  XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     @mapps ;;NUM
+  XX     XX     XX     XX     @mrayc @msess XX     XX     XX     @m-obs XX     XX     XX     XX     ;;Q
+  XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX            ;;A
+  XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX            ;;Z
+  XX    XX   XX @mapps         XX             XX      XX         XX     XX     XX                   ;;MOD
 )
 
 ;; Aliases for sessions

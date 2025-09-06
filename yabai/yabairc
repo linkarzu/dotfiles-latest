@@ -284,8 +284,6 @@ yabai -m space 10 --label desk10
 # Check if desk4 exists, label it if it does
 if yabai -m query --spaces | jq -e '.[] | select(.index==11)' >/dev/null; then
   yabai -m config --space 11 top_padding 8
-  yabai -m config --space 11 bottom_padding 0
-  yabai -m config --space 11 left_padding 0
   yabai -m config --space 11 right_padding 0
   yabai -m space 11 --label desk11
   target_space="desk11"
@@ -296,6 +294,10 @@ fi
 yabai -m rule --add app="^.*$" space=desk1
 yabai -m rule --add app="^Ghostty$" space=desk2
 yabai -m rule --add app="^kitty$" space=desk3
+
+yabai -m rule --add app="^E-book Viewer$" space=desk4
+yabai -m config --space 4 right_padding 0
+
 yabai -m rule --add app="^Discord$" space=$target_space
 yabai -m rule --add app="^Element$" space=$target_space
 yabai -m rule --add app="^WhatsApp Web$" space=$target_space

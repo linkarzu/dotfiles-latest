@@ -175,6 +175,7 @@
   mrayc (tap-hold-press $subl-time $subl-time r (layer-while-held raycast))
   m-obs (tap-hold-press $subl-time $subl-time o (layer-while-held obs))
   mapps (tap-hold-press $subl-time $subl-time bspc (layer-while-held apps))
+  msym2 (tap-hold-press $subl-time $subl-time s (layer-while-held symbols2))
 
   ;; Execute script
   ;; maltt (cmd open "btt://execute_assigned_actions_for_trigger/?uuid=F35EF770-FAA5-448A-957D-70BB449DEB0F")
@@ -206,7 +207,7 @@
   XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX            ;;F1
   XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     @mapps ;;NUM
   XX     XX     XX     XX     @mrayc @msess XX     XX     XX     @m-obs XX     XX     XX     XX     ;;Q
-  XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX            ;;A
+  XX     XX     @msym2 XX     XX     XX     XX     XX     XX     XX     XX     XX     XX            ;;A
   XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX            ;;Z
   XX    XX   XX @mapps         XX             XX      XX         XX     XX     XX                   ;;MOD
 )
@@ -243,16 +244,27 @@
   rvide (cmd open "raycast://extensions/tonka3000/youtube/search-videos?arguments=%7B%22query%22%3A%22%22%7D")
   rdriv (cmd open "raycast://extensions/vishaltelangre/google-drive/index")
   rspot (cmd open "raycast://extensions/mattisssa/spotify-player/search")
+  rbrav (cmd open "raycast://extensions/ron-myers/brave/search-tab")
 )
 
 (deflayer raycast
   ;;     a      s      d      f      g      h      j      k      l      ;      '
   XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX        ;;F1  
   XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX ;;NUM 
-  XX     XX     XX     @remoj XX     XX     @rvide XX     XX     XX     XX     XX     XX     XX ;;Q   
+  XX     XX     XX     @remoj XX     XX     @rvide XX     XX     @rbrav XX     XX     XX     XX ;;Q   
   XX     XX     XX     XX     XX     XX     @rspot @rrain @rgoog @rfile @rdriv XX     XX        ;;A   
   XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX        ;;Z   
   XX    XX   XX   XX            XX             XX      XX         XX     XX     XX              ;;MOD 
+)
+
+(deflayer symbols2
+  ;;     a      s      d      f      g      h      j      k      l      ;      '
+  XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX            ;;F1
+  XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     bspc   ;;NUM
+  XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     ;;Q
+  XX     XX     XX     XX     XX     XX     XX     -      `      =      XX     XX     XX            ;;A
+  XX     XX     XX     XX     XX     XX     XX     S--    S-`    S-=    XX     XX     XX            ;;Z
+  XX    XX   XX     XX         XX             XX      XX         XX     XX     XX                   ;;MOD
 )
 
 ;; Aliases for obs
@@ -366,12 +378,6 @@
   (s d f) M-- $chord-time first-release () ;; zoom out
   (q w e) volu $chord-time first-release ()
   (a s d) vold $chord-time first-release ()
-  (spc j k) - $chord-time first-release ()
-  (spc j l) S-- $chord-time first-release ()
-  (spc u i) ` $chord-time first-release ()
-  (spc u o) S-` $chord-time first-release ()
-  (spc m ,) = $chord-time first-release ()
-  (spc m .) S-= $chord-time first-release ()
 
   (spc f g) (macro M-(tab 20 tab)) $chord-time first-release () ;; switch to the third app
   (spc s c) M-C-q $chord-time first-release () ;; Lock screen

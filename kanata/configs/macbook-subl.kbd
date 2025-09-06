@@ -345,8 +345,8 @@
   esc  XX     XX      XX      XX      XX      XX      XX      XX      XX      XX      XX      XX
   grv  XX     XX      XX      XX      XX      XX      XX      XX      XX      XX      XX      XX    XX
   tab  XX     XX      M-w     XX      @s-task prev    brdn    brup    next    ▶⏸      XX      XX    XX
-  XX   XX     XX      XX      XX      XX      M-S-[   XX      XX      M-S-]   XX      XX      ret
-  lsft XX     XX      @scolor XX      XX      @saircn @sairsw XX      XX      XX      ▲       rsft
+  XX   XX     XX      M-=     volu    @scolor M-S-[   XX      XX      M-S-]   XX      XX      ret
+  lsft M-C-q  XX      M--     vold    XX      @saircn @sairsw XX      XX      XX      ▲       rsft
   fn    lctl lalt lmet                 lrld                 rmet  ralt        ◀       ▼       ▶
 )
 
@@ -364,8 +364,8 @@
   XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX            ;;F1
   XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     bspc   ;;NUM
   XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     ;;Q
-  XX     XX     XX     volu   M-=    XX     XX     XX     XX     XX     XX     XX     XX            ;;A
-  XX     XX     XX     vold   M--    XX     XX     XX     XX     XX     XX     XX     XX            ;;Z
+  XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX            ;;A
+  XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX            ;;Z
   XX    XX   XX     XX         XX             XX      XX         XX     XX     XX                   ;;MOD
 )
 
@@ -391,7 +391,6 @@
   (a s d) vold $chord-time first-release ()
 
   (spc f g) (macro M-(tab 20 tab)) $chord-time first-release () ;; switch to the third app
-  (spc s c) M-C-q $chord-time first-release () ;; Lock screen
   ;; (spc a s) (macro @aghost 100 C-b 20 spc) $chord-time first-release () ;; tmux alternate session
   (c o p) (macro @aghost 100 C-b 20 v 20 S-/ 20 \ . S-2 \ . ret 20 k 20 S-v 20 n 200 y 20 esc) $chord-time first-release () ;; copy last tmux block
 

@@ -320,7 +320,7 @@
   esc  XX     XX      XX      XX      XX      XX      XX      XX      XX      XX      XX      XX
   grv  XX     XX      XX      XX      XX      XX      XX      XX      XX      XX      XX      XX    XX
   tab  S-1    S-2     S-3     S-4     S-5     S-6     S-7     S-8     S-9     S-0     XX      XX    XX
-  XX   1      2       3       4       5       6       7       8       9       0       XX      ret
+  XX   1      2       3       4       5       6       7       8       9       0       XX      @msym2
   lsft @mleft XX      XX      [       S-[     S-]     ]       _       .       /       ▲       rsft
   fn    lctl lalt lmet                  bspc                      @msym2    ralt    ◀      ▼       ▶
 )

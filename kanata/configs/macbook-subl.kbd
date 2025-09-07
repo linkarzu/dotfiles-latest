@@ -345,16 +345,8 @@
   fn    lctl lalt lmet                  _                      rmet    ralt    ◀      ▼       ▶
 )
 
-(defalias
-  kittyname (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && $HOME/github/dotfiles-latest/sketchybar/felixkratz-linkarzu/plugins/kitty_name.sh")
-)
-
 (defchordsv2
   ;; (participating-keys1) action1 timeout1 release-behaviour1 (disabled-layers1)
-  (w e r) M-= $chord-time first-release () ;; zoom in
-  (s d f) M-- $chord-time first-release () ;; zoom out
-  (q w e) volu $chord-time first-release ()
-  (a s d) vold $chord-time first-release ()
 
   (spc f g) (macro M-(tab 20 tab)) $chord-time first-release () ;; switch to the third app
   ;; (spc a s) (macro @aghost 100 C-b 20 spc) $chord-time first-release () ;; tmux alternate session

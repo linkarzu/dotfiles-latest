@@ -301,6 +301,7 @@
   saircn (cmd open "btt://execute_assigned_actions_for_trigger/?uuid=9A1CFA49-416C-480E-9430-184D2DAEE1CA") ;; Connect airpods
   scolor (cmd open "btt://execute_assigned_actions_for_trigger/?uuid=6793CE15-C70A-43E7-ADA9-479DF1539A39") ;; colorscheme-selector
   sairsw (cmd bash -c "/opt/homebrew/bin/SwitchAudioSource -s 'AirPods Pro'; /opt/homebrew/bin/SwitchAudioSource -t input -s 'AirPods Pro'") ;; Switch to airpods
+  smute (cmd sudo -u linkarzu bash -c "~/github/dotfiles-latest/scripts/macos/mac/misc/200-micMute.sh")
 )
 
 ;; To live reload / hot reload the config:
@@ -310,7 +311,7 @@
   esc  XX     XX      XX      XX      XX      XX      XX      XX      XX      XX      XX      XX
   grv  XX     XX      XX      XX      XX      XX      XX      XX      XX      XX      XX      XX    XX
   tab  XX     XX      M-w     XX      @s-task prev    brdn    brup    next    ▶⏸      XX      XX    XX
-  XX   XX     XX      M-=     volu    @scolor M-S-[   XX      XX      M-S-]   XX      XX      ret
+  XX   @smute XX      M-=     volu    @scolor M-S-[   XX      XX      M-S-]   XX      XX      ret
   lsft M-C-q  XX      M--     vold    XX      @saircn @sairsw XX      XX      XX      ▲       rsft
   fn    lctl lalt lmet                 lrld                 rmet  ralt        ◀       ▼       ▶
 )
@@ -369,7 +370,6 @@
   (s t o) (cmd open "btt://execute_assigned_actions_for_trigger/?uuid=762AF6E2-41EE-4B74-A2D3-9B96C3D777B5") $chord-time first-release ()
   (y a b) (cmd sudo -u linkarzu bash -c "$HOME/github/dotfiles-latest/yabai/yabai_restart.sh") $chord-time first-release ()
   (p o s) (cmd sudo -u linkarzu bash -c "$HOME/github/dotfiles-latest/yabai/positions/kitty-pos.sh") $chord-time first-release ()
-  (a s d f) (cmd sudo -u linkarzu bash -c "~/github/dotfiles-latest/scripts/macos/mac/misc/200-micMute.sh") $chord-time first-release ()
   ;; (a s) (cmd open "btt://execute_assigned_actions_for_trigger/?uuid=F35EF770-FAA5-448A-957D-70BB449DEB0F") $chord-time first-release ()
 )
 

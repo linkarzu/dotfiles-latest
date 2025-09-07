@@ -175,7 +175,7 @@
   mrayc (tap-hold-press $subl-time $subl-time r (layer-while-held raycast))
   m-obs (tap-hold-press $subl-time $subl-time o (layer-while-held obs-scenes))
   mapps (tap-hold-press $subl-time $subl-time bspc (layer-while-held applications))
-  msym2 (tap-hold-press $subl-time $subl-time s (layer-while-held symbols2))
+  msym2 (tap-hold-press $subl-time $subl-time ret (layer-while-held symbols2))
   mleft (tap-hold-press $subl-time $subl-time z (layer-while-held left-hand))
 
   ;; Execute script
@@ -208,7 +208,7 @@
   XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX            ;;F1
   XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     @mapps ;;NUM
   XX     XX     XX     XX     @mrayc @msess XX     XX     XX     @m-obs XX     XX     XX     XX     ;;Q
-  XX     XX     @msym2 XX     XX     XX     XX     XX     XX     XX     XX     XX     XX            ;;A
+  XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX            ;;A
   XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX            ;;Z
   XX    XX   XX @mapps         XX             XX      XX         XX     XX     XX                   ;;MOD
 )
@@ -356,7 +356,7 @@
   tab  S-1    S-2     S-3     S-4     S-5     S-6     S-7     S-8     S-9     S-0     XX      XX    XX
   XX   1      2       3       4       5       6       7       8       9       0       XX      ret
   lsft @mleft XX      XX      [       S-[     S-]     ]       _       .       /       ▲       rsft
-  fn    lctl lalt lmet                  bspc                      rmet    ralt    ◀      ▼       ▶
+  fn    lctl lalt lmet                  bspc                      @msym2    ralt    ◀      ▼       ▶
 )
 
 (deflayer left-hand

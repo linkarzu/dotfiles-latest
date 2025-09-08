@@ -185,7 +185,7 @@
   sblog (macro @akitty 300 C-b 20 b)
   sobsi (macro @akitty 100 C-b 20 o)
   spriv (macro @akitty 100 C-b 20 p)
-  sdail (macro @aghost 100 C-b 20 @1)
+  sdail (macro @akitty 100 C-b 20 i)
   scont (macro @aghost 100 C-b 20 C-y) ;; containerdata_nfs
   sfind (macro @aghost 100 C-b 20 f)
   s-lua (macro @akitty 100 C-b 20 a)

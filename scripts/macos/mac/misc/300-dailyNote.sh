@@ -28,8 +28,6 @@ current_weekday=$(date +"%A")
 note_dir=${main_note_dir}/${current_year}/${current_month_num}-${current_month_abbr}
 note_name=${current_year}-${current_month_num}-${current_day}-${current_weekday}
 full_path=${note_dir}/${note_name}.md
-# Use note name as the session name
-tmux_session_name=${note_name}
 
 # Check if the directory exists, if not, create it
 if [ ! -d "$note_dir" ]; then
@@ -56,33 +54,35 @@ fi
 ###############################################################################
 
 kitty_sess_file="$HOME/github/dotfiles-latest/kitty/sessions/daily.kitty-session"
-date_path="${current_year}/${current_month_num}-${current_month_abbr}"
 
 # If today's date_path exists in the session file, just jump to the session
-if grep -Fq "$date_path" "$kitty_sess_file"; then
+if grep -Fq "${note_name}.md" "$kitty_sess_file"; then
   kitten @ action goto_session "$kitty_sess_file"
   exit 0
 fi
 
-# If we reach this point, we need to update the daily note kitty session file
-# Extract the current directory from the first 'cd …' line in the session file
-current_dir_in_file="$(awk '/^cd[[:space:]]/ {print $2; exit}' "$kitty_sess_file")"
+# # Build the exact launch command line with today's file path
+launch_cmd="launch --title \"${note_name}\" /bin/zsh -i -c 'export MD_HEADING_BG=transparent; NVIM_APPNAME=neobean nvim +norm\\\ G \"${full_path}\"'"
 
-# Escape slashes and '&' for sed (BSD compatible)
-old_esc="$(printf '%s' "$current_dir_in_file" | sed -e 's/[\/&]/\\&/g')"
-new_esc="$(printf '%s' "$note_dir" | sed -e 's/[\/&]/\\&/g')"
+# # Safely update the lines below the marker comments in the kitty session file
+# # - Replace the line after "# kitty_session_cd_line" with: cd $note_dir
+# # - Replace the line after "# kitty_session_launch_line" with: $launch_cmd
+awk -v dir="$note_dir" -v launch="$launch_cmd" '
+  /^# kitty_session_cd_line$/    { print; getline; print "cd " dir; next }
+  /^# kitty_session_launch_line$/ { print; getline; print launch; next }
+  { print }
+' "$kitty_sess_file" >"${kitty_sess_file}.tmp" && mv "${kitty_sess_file}.tmp" "$kitty_sess_file"
 
-# Replace ALL occurrences of the old directory with the new note_dir (affects cd line and launch path)
-tmp_file="${kitty_sess_file}.tmp"
-sed -E "s|$old_esc|$new_esc|g" "$kitty_sess_file" >"$tmp_file" && mv "$tmp_file" "$kitty_sess_file"
-
-# Switch to the (updated) session
-kitten @ action goto_session "$kitty_sess_file" || echo "WARN: goto_session failed after cd update"
+# # Jump to the (updated) session
+kitten @ action goto_session "$kitty_sess_file"
 
 ###############################################################################
 #                      Daily note with Tmux Sessions
 ###############################################################################
 
+# # Use note name as the session name
+# tmux_session_name=${note_name}
+#
 # # Check if a tmux session with the note name already exists
 # if ! tmux has-session -t="$tmux_session_name" 2>/dev/null; then
 #   # Create a new tmux session with the note name in detached mode and start

@@ -14,6 +14,14 @@ return {
     -- Folke has a keymap to toggle inaly hints with <leader>uh
     inlay_hints = { enabled = false },
 
+    -- Add a border to the diagnostics window or popup
+    -- https://github.com/LazyVim/LazyVim/discussions/2825#discussioncomment-8914135
+    diagnostics = {
+      float = {
+        border = "rounded",
+      },
+    },
+
     servers = {
       -- https://www.reddit.com/r/neovim/comments/1j7ookn/comment/mgysste/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button
       -- The hover window configuration for the diagnostics is done in lamw26wmal

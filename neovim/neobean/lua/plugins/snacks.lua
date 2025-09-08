@@ -186,6 +186,10 @@ return {
           if item.file:match("lazyvim/lua/config/keymaps%.lua") then
             item.score_add = (item.score_add or 0) - 30
           end
+          -- Demote my old kanata config file
+          if item.file:match("kanata/configs/macos%.kbd") then
+            item.score_add = (item.score_add or 0) - 30
+          end
           -- Boost the "neobean" keymaps file:
           -- if item.file:match("neobean/lua/config/keymaps%.lua") then
           --   item.score_add = (item.score_add or 0) + 100
@@ -195,7 +199,7 @@ return {
         -- In case you want to make sure that the score manipulation above works
         -- or if you want to check the score of each file
         debug = {
-          scores = false, -- show scores in the list
+          scores = true, -- show scores in the list
         },
         -- I like the "ivy" layout, so I set it as the default globaly, you can
         -- still override it in different keymaps

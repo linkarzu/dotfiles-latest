@@ -55,25 +55,36 @@ fi
 
 kitty_sess_file="$HOME/github/dotfiles-latest/kitty/sessions/daily.kitty-session"
 
+# # If a kitty window with today's title already exists, focus it and exit
+# if kitten @ ls | jq -e --arg t "^${note_name}$" '.[] | .tabs[] | .windows[] | select(.title|test($t))' >/dev/null; then
+#   kitten @ focus-window --match "title:^${note_name}$"
+#   # kitten @ action goto_session "$kitty_sess_file"
+#   # echo "accessed 1"
+#   exit 0
+# fi
+
 # If today's date_path exists in the session file, just jump to the session
 if grep -Fq "${note_name}.md" "$kitty_sess_file"; then
   kitten @ action goto_session "$kitty_sess_file"
+  # echo "accessed 2"
   exit 0
 fi
 
 # # Build the exact launch command line with today's file path
 launch_cmd="launch --title \"${note_name}\" /bin/zsh -i -c 'export MD_HEADING_BG=transparent; NVIM_APPNAME=neobean nvim +norm\\\ G \"${full_path}\"'"
 
-# # Safely update the lines below the marker comments in the kitty session file
-# # - Replace the line after "# kitty_session_cd_line" with: cd $note_dir
-# # - Replace the line after "# kitty_session_launch_line" with: $launch_cmd
+# Safely update the lines below the marker comments in the kitty session file
+# - Replace the line after "# kitty_session_cd_line" with: cd $note_dir
+# - Replace the line after "# kitty_session_launch_line" with: $launch_cmd
 awk -v dir="$note_dir" -v launch="$launch_cmd" '
   /^# kitty_session_cd_line$/    { print; getline; print "cd " dir; next }
   /^# kitty_session_launch_line$/ { print; getline; print launch; next }
   { print }
 ' "$kitty_sess_file" >"${kitty_sess_file}.tmp" && mv "${kitty_sess_file}.tmp" "$kitty_sess_file"
 
-# # Jump to the (updated) session
+# If we make it to this point, the kitty session file was updated, so we'll
+# close the session and then open it, in case yesterday's session is still open
+kitten @ action close_session "$HOME/github/dotfiles-latest/kitty/sessions/daily.kitty-session"
 kitten @ action goto_session "$kitty_sess_file"
 
 ###############################################################################

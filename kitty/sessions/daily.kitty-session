@@ -1,0 +1,5 @@
+layout tall
+cd /Users/linkarzu/github/obsidian_main/250-daily/2025/09-Sep
+launch /bin/zsh -i -c 'export MD_HEADING_BG=transparent; NVIM_APPNAME=neobean nvim +norm\ G "/Users/linkarzu/github/obsidian_main/250-daily/2025/09-Sep/2025-09-07-Sunday.md"'
+focus
+focus_os_window

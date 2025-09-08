@@ -122,7 +122,7 @@
   ;; Other layers tap-hold-press
   ;; mapr configured for both the glove80 and the macbook keyboard
   ;; mappr (tap-hold-press $tap-time $hold-time ret (layer-toggle apps))
-  msymb (tap-hold-press $tap-time $hold-time bspc (layer-while-held symb))
+  msymb (tap-hold-press $tap-time $hold-time bspc (layer-while-held symbols))
   mnavi (tap-hold-press $tap-time $hold-time esc (layer-toggle navi))
 
   ;; Other layers tap-hold
@@ -225,14 +225,23 @@
   XX    XX   XX   XX            XX             XX      XX         XX     XX     XX              ;;MOD 
 )
 
+(deflayer symbols
+  XX   XX     XX      XX      XX      XX      XX      XX      XX      XX      XX      XX      XX
+  XX   XX     XX      XX      XX      XX      XX      XX      XX      XX      XX      XX      XX     XX
+  XX   S-1    S-2     S-3     S-4     S-5     S-6     S-7     S-8     S-9     S-0     XX      XX     XX
+  bspc 1      2       3       4       5       6       7       8       9       0       XX      @msym2
+  spc  @mleft XX      XX      [       ]       S-[     S-]     ,       .       /       XX      rsft
+  XX    XX   XX     XX         spc            @msym2      XX         XX     XX     XX                   ;;MOD
+)
+
 (deflayer symbols2
   ;;     a      s      d      f      g      h      j      k      l      ;      '
   XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX            ;;F1
   XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     bspc   ;;NUM
-  XX     XX     XX     XX     XX     XX     XX     S--    S-`    S-=    XX     XX     XX     XX     ;;Q
-  XX     XX     XX     XX     bspc   XX     XX     -      `      =      XX     XX     XX            ;;A
-  XX     XX     XX     XX     XX     XX     XX     S--    S-`    S-=    XX     XX     XX            ;;Z
-  XX    XX   XX     XX         XX             XX      XX         XX     XX     XX                   ;;MOD
+  XX     XX     S--    S-`    S-=    XX     XX     -      `      =      XX     XX     XX     XX     ;;Q
+  bspc   S-1    S-2    S-3    S-4    S-5    S-6    S-7    S-8    S-9    S-0    XX     XX            ;;A
+  spc    S-,    S-.    S-/    [      ]      S-[    S-]    ,      .      /      XX     XX            ;;Z
+  XX    XX   XX     XX         spc             XX      XX         XX     XX     XX                  ;;MOD
 )
 
 ;; Aliases for obs
@@ -316,15 +325,6 @@
   XX   @smute XX      M-=     volu    @scolor M-S-[   XX      XX      M-S-]   XX      XX      ret
   lsft M-C-q  XX      M--     vold    XX      @saircn @sairsw XX      XX      XX      ▲       rsft
   fn    lctl lalt lmet                 lrld                 rmet  ralt        ◀       ▼       ▶
-)
-
-(deflayer symb
-  esc  XX     XX      XX      XX      XX      XX      XX      XX      XX      XX      XX      XX
-  grv  XX     XX      XX      XX      XX      XX      XX      XX      XX      XX      XX      XX    XX
-  tab  S-1    S-2     S-3     S-4     S-5     S-6     S-7     S-8     S-9     S-0     XX      XX    XX
-  XX   1      2       3       4       5       6       7       8       9       0       XX      @msym2
-  lsft @mleft XX      XX      [       S-[     S-]     ]       _       .       /       ▲       rsft
-  fn    lctl lalt lmet                  bspc                      @msym2    ralt    ◀      ▼       ▶
 )
 
 (deflayer left-hand

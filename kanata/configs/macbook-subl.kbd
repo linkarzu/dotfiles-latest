@@ -115,6 +115,8 @@
   maltt (tap-hold $tap-time $hold-time b (macro @aghost 100 C-b 20 spc)) ;; tmux alternate session
   maltk (tap-hold $tap-time $hold-time b (macro @akitty 100 C-b 20 l)) ;; kitty alternate session
   mtcop (tap-hold $tap-time $hold-time m (macro @aghost 100 C-b 20 v)) ;; tmux copy mode
+  mdail (tap-hold $tap-time $hold-time r (macro @akitty 100 C-b 20 i)) ;; daily note
+  mskit (tap-hold $tap-time $hold-time e (macro @akitty 100 C-b 20 k)) ;; skitty-notes
   mretu (tap-hold $tap-time $hold-time tab ret)
 
   ;; Other layers tap-hold-press
@@ -162,7 +164,7 @@
   ;;     a      s      d      f      g      h      j      k      l      ;      '
   XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX
   XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     @msymb
-  @mretu q      w      e      r      t      y      u      i      o      p      \      XX     \ 
+  @mretu q      w      @mskit @mdail t      y      u      i      o      p      \      XX     \ 
   @mnavi @mlctl @msyst @mlmet @mlalt @mtrik h      @mralt @mrmet @mmous @mrctl @mral2 @msubl
   lsft   @mmtab @mmgrv @mcopy @mpast @maltk n      @mtcop ,      @mhome /      XX     rsft
   XX    XX   XX   @msymb            spc             @msubl      XX         XX     XX     XX

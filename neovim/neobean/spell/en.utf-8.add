@@ -16,11 +16,8 @@ undercurl
 fi
 ko
 TODO
-mutiline
 bolds
 unbold
-#ulletpoint
-#ulletpoint
 markdownlint
 youtube
 tocstop
@@ -640,7 +637,6 @@ PR
 BSP
 Kovid
 Sylvan
-#arget
 Auphonic
 Typst
 Vimothée
@@ -660,8 +656,6 @@ Lowkey
 Backlinks
 Kakoune
 XOA
-#alibre
-#alibre
 calibre
 Calibre
 youtubers

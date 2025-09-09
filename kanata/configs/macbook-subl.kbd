@@ -20,10 +20,12 @@
 
 ;; Variables
 (defvar
+ tap-higher 400
  tap-time 300
  hold-time 300
  chord-time 60
  subl-time 200
+ tmux-delay 40
 )
 
 ;; Only one defsrc is allowed.
@@ -66,6 +68,7 @@
   achatg (cmd sudo -u linkarzu zsh -lc "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh ChatGPT")
   asystm (cmd sudo -u linkarzu zsh -lc "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh 'System Settings'")
   ayoutu (cmd sudo -u linkarzu zsh -lc "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh YouTube")
+  ayouts (cmd sudo -u linkarzu zsh -lc "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh YouTubeStudio")
   awhats (cmd sudo -u linkarzu zsh -lc "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh 'WhatsApp Web'")
   aprevw (cmd sudo -u linkarzu zsh -lc "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh Preview")
   a--obs (cmd sudo -u linkarzu zsh -lc "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh OBS")
@@ -112,11 +115,11 @@
   mmtab (tap-hold $tap-time $hold-time z M-tab)
   mmgrv (tap-hold $tap-time $hold-time x M-grv)
   mescc (tap-hold $tap-time $hold-time esc caps)
-  maltt (tap-hold $tap-time $hold-time b (macro @aghost 100 C-b 20 spc)) ;; tmux alternate session
-  maltk (tap-hold $tap-time $hold-time b (macro @akitty 100 C-b 20 l)) ;; kitty alternate session
-  mtcop (tap-hold $tap-time $hold-time m (macro @aghost 100 C-b 20 v)) ;; tmux copy mode
-  mdail (tap-hold $tap-time $hold-time r (macro @akitty 100 C-b 20 i)) ;; daily note
-  mskit (tap-hold $tap-time $hold-time e (macro @akitty 100 C-b 20 k)) ;; skitty-notes
+  maltt (tap-hold $tap-time $hold-time b (macro @aghost 100 C-b $tmux-delay spc)) ;; tmux alternate session
+  maltk (tap-hold $tap-time $hold-time b (macro @akitty 100 C-b $tmux-delay l)) ;; kitty alternate session
+  mtcop (tap-hold $tap-time $hold-time m (macro @aghost 100 C-b $tmux-delay v)) ;; tmux copy mode
+  mdail (tap-hold $tap-higher $tap-higher r (macro @akitty 100 C-b $tmux-delay i)) ;; daily note
+  mskit (tap-hold $tap-higher $tap-higher e (macro @akitty 100 C-b $tmux-delay k)) ;; skitty-notes
   mretu (tap-hold $tap-time $hold-time tab ret)
 
   ;; Other layers tap-hold-press
@@ -182,15 +185,15 @@
 
 ;; Aliases for sessions
 (defalias
-  shome (macro @akitty 300 C-b 20 h)
-  sdots (macro @akitty 300 C-b 20 d)
-  sblog (macro @akitty 300 C-b 20 b)
-  sobsi (macro @akitty 100 C-b 20 o)
-  spriv (macro @akitty 100 C-b 20 p)
-  sdail (macro @akitty 100 C-b 20 i)
-  scont (macro @aghost 100 C-b 20 C-y) ;; containerdata_nfs
-  sfind (macro @aghost 100 C-b 20 f)
-  s-lua (macro @akitty 100 C-b 20 a)
+  shome (macro @akitty 300 C-b $tmux-delay h)
+  sdots (macro @akitty 300 C-b $tmux-delay d)
+  sblog (macro @akitty 300 C-b $tmux-delay b)
+  sobsi (macro @akitty 100 C-b $tmux-delay o)
+  spriv (macro @akitty 100 C-b $tmux-delay p)
+  sdail (macro @akitty 100 C-b $tmux-delay i)
+  scont (macro @aghost 100 C-b $tmux-delay C-y) ;; containerdata_nfs
+  sfind (macro @aghost 100 C-b $tmux-delay f)
+  s-lua (macro @akitty 100 C-b $tmux-delay a)
 )
 
 (deflayer sessions
@@ -298,7 +301,7 @@
   esc   XX     XX      XX      XX      XX      XX      XX      XX      XX      XX      XX      XX
   grv   XX     XX      XX      XX      XX      XX      XX      XX      XX      XX      XX      XX   XX
   tab  @adavin @amword @aexcel @arecut @ateams @ayoutu @awhats @asocia @a--obs @a1pass XX      XX   XX
-  XX   @afindr @calibr @adisco @aforkl @achrom @aspoti @akitty @abrave XX      @achatg @asystm ret
+  XX   @afindr @calibr @adisco @aforkl @achrom @aspoti @akitty @abrave @ayouts @achatg @asystm ret
   lsft @a-zoom @anotes @acalen @aprevw @avival @aneovd @a-mail @awinap XX      XX      ▲       rsft
   fn    lctl lalt lmet                 spc                     rmet    ralt    ◀       ▼       ▶
 )
@@ -308,7 +311,7 @@
 ;; the root user. If you need to execute as a different user, on Unix platforms 
 ;; you can use sudo -u USER before the rest of your command to achieve this.
 (defalias
-  s-task (macro @aghost 100 C-b 20 @7)
+  s-task (macro @aghost 100 C-b $tmux-delay @7)
   saircn (cmd open "btt://execute_assigned_actions_for_trigger/?uuid=9A1CFA49-416C-480E-9430-184D2DAEE1CA") ;; Connect airpods
   scolor (cmd open "btt://execute_assigned_actions_for_trigger/?uuid=6793CE15-C70A-43E7-ADA9-479DF1539A39") ;; colorscheme-selector
   sairsw (cmd bash -c "/opt/homebrew/bin/SwitchAudioSource -s 'AirPods Pro'; /opt/homebrew/bin/SwitchAudioSource -t input -s 'AirPods Pro'") ;; Switch to airpods
@@ -351,8 +354,8 @@
   ;; (participating-keys1) action1 timeout1 release-behaviour1 (disabled-layers1)
 
   (spc f g) (macro M-(tab 20 tab)) $chord-time first-release () ;; switch to the third app
-  ;; (spc a s) (macro @aghost 100 C-b 20 spc) $chord-time first-release () ;; tmux alternate session
-  (c o p) (macro @aghost 100 C-b 20 v 20 S-/ 20 \ . S-2 \ . ret 20 k 20 S-v 20 n 200 y 20 esc) $chord-time first-release () ;; copy last tmux block
+  ;; (spc a s) (macro @aghost 100 $tmux-delay 20 spc) $chord-time first-release () ;; tmux alternate session
+  (c o p) (macro @aghost 100 $tmux-delay 20 v 20 S-/ 20 \ . S-2 \ . ret 20 k 20 S-v 20 n 200 y 20 esc) $chord-time first-release () ;; copy last tmux block
 
   (spc caps) caps $chord-time first-release ()
 

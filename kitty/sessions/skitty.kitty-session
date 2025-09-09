@@ -15,6 +15,6 @@ cd ~/github/skitty
 # How to get the title from within kitty:
 # kitten @ ls | jq -r '.[] | select(.is_focused) | .tabs[] | select(.is_focused) | .windows[] | select(.is_focused) | .title'
 # launch --title "lua"
-launch --title "skitty-notes" /bin/zsh -i -c 'v ~/github/skitty/video-ideas.md'
+launch --title "skitty-notes" /bin/zsh -i -c 'export NEOVIM_MODE=skitty; v ~/github/skitty/video-ideas.md'
 focus
 focus_os_window

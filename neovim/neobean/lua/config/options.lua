@@ -56,7 +56,8 @@ if vim.g.neovim_mode == "skitty" then
   vim.opt.signcolumn = "no"
 
   -- Text width and wrapping
-  vim.opt.textwidth = 25
+  -- vim.opt.textwidth = 25
+  vim.opt.textwidth = 80
 
   -- -- I tried these 2 with prettier prosewrap in "preserve" mode, and I'm not sure
   -- -- what they do, I think lines are wrapped, but existing ones are not, so if I

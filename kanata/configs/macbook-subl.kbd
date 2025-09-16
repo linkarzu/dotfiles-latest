@@ -45,6 +45,8 @@
 
 ;; scams
 (defalias
+  scam2 S-C-A-M-2 ;; BetterDisplay fav res 1
+  scam3 S-C-A-M-3 ;; BetterDisplay fav res 2
   scam6 S-C-A-M-6 ;; homerow
   scam0 S-C-A-M-0 ;; cleanshot capture area
   scam9 S-C-A-M-9 ;; cleanshot capture previous area
@@ -346,7 +348,7 @@
   ;;     a      s      d      f      g      h      j      k      l      ;      '
   XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX            ;;F1
   XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     bspc   ;;NUM
-  XX     XX     XX     XX     XX     XX     @syaba XX     XX     XX     @sposi XX     XX     XX     ;;Q
+  XX     XX     XX     XX     XX     XX     @syaba @scam3 @scam2 XX     @sposi XX     XX     XX     ;;Q
   XX     XX     XX     XX     XX     XX     XX     @sstar @sstop XX     XX     XX     XX            ;;A
   XX     XX     XX     XX     XX     XX     @snoti XX     XX     XX     XX     XX     XX            ;;Z
   XX    XX   XX     XX         XX             XX      XX         XX     XX     XX                   ;;MOD

@@ -15,6 +15,7 @@ return {
       "htmx-lsp",
       "tailwindcss-language-server",
       "harper-ls",
+      "tree-sitter-cli",
       -- marksman and markdownlint come by default in the lazyvim config
       --
       -- I installed markdown-toc as I use to to automatically create and upate

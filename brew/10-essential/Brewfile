@@ -23,6 +23,7 @@ brew "ripgrep"
 brew "fd"
 # Used to check if specific font packages are installed
 brew "fontconfig"
+brew "tree-sitter-cli"
 
 ###############################################################################
 

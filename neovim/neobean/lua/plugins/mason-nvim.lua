@@ -15,7 +15,9 @@ return {
       "htmx-lsp",
       "tailwindcss-language-server",
       "harper-ls",
-      "tree-sitter-cli",
+      -- Not installing the tree-sitter CLI through mason due do this
+      -- https://github.com/LazyVim/LazyVim/issues/6437#issuecomment-3304278107
+      -- "tree-sitter-cli",
       -- marksman and markdownlint come by default in the lazyvim config
       --
       -- I installed markdown-toc as I use to to automatically create and upate

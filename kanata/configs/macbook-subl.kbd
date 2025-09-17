@@ -119,7 +119,7 @@
   mescc (tap-hold $tap-time $hold-time esc caps)
   maltt (tap-hold $tap-time $hold-time b (macro @aghost 100 C-b $tmux-delay spc)) ;; tmux alternate session
   maltk (tap-hold $tap-time $hold-time b (macro @akitty 100 C-b $tmux-delay l)) ;; kitty alternate session
-  mtcop (tap-hold $tap-time $hold-time m (macro @aghost 100 C-b $tmux-delay v)) ;; tmux copy mode
+  mtcop (tap-hold $tap-time $hold-time m (macro @akitty 100 A-M-h)) ;; tmux copy mode
   mdail (tap-hold $tap-higher $tap-higher r (macro @akitty 100 C-b $tmux-delay i)) ;; daily note
   mskit (tap-hold $tap-higher $tap-higher e (macro @akitty 100 C-b $tmux-delay k)) ;; skitty-notes
   mretu (tap-hold $tap-time $hold-time tab ret)
@@ -342,6 +342,8 @@
   sstop (cmd open "btt://execute_assigned_actions_for_trigger/?uuid=762AF6E2-41EE-4B74-A2D3-9B96C3D777B5")
   syaba (cmd sudo -u linkarzu bash -c "$HOME/github/dotfiles-latest/yabai/yabai_restart.sh")
   sposi (cmd sudo -u linkarzu bash -c "$HOME/github/dotfiles-latest/yabai/positions/kitty-pos.sh")
+  ;; copy last kitty command using mikesmithgh/kitty-scrollback.nvim
+  scopy (macro @akitty 100 A-M-h 200 S-/ 20 \ . S-2 \ . ret 20 k 20 S-v 20 n 200 \ y)
 )
 
 (deflayer letter-s
@@ -349,7 +351,7 @@
   XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX            ;;F1
   XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     bspc   ;;NUM
   XX     XX     XX     XX     XX     XX     @syaba @scam3 @scam2 XX     @sposi XX     XX     XX     ;;Q
-  XX     XX     XX     XX     XX     XX     XX     @sstar @sstop XX     XX     XX     XX            ;;A
+  XX     XX     XX     @scopy XX     XX     XX     @sstar @sstop XX     XX     XX     XX            ;;A
   XX     XX     XX     XX     XX     XX     @snoti XX     XX     XX     XX     XX     XX            ;;Z
   XX    XX   XX     XX         XX             XX      XX         XX     XX     XX                   ;;MOD
 )
@@ -376,7 +378,5 @@
 
 (defchordsv2
   (spc f g) (macro M-(tab 20 tab)) $chord-time first-release () ;; switch to the third app
-  (c o p) (macro @aghost 100 $tmux-delay 20 v 20 S-/ 20 \ . S-2 \ . ret 20 k 20 S-v 20 n 200 y 20 esc) $chord-time first-release () ;; copy last tmux block
   (spc caps) caps $chord-time first-release ()
 )
-

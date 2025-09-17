@@ -43,6 +43,16 @@ vim.opt.timeoutlen = 1000
 -- I find the animations a bit laggy
 vim.g.snacks_animate = false
 
+if vim.g.scrollback_mode == "neobean" then
+  -- disable winbar entirely
+  vim.opt.winbar = ""
+  -- Line numbers
+  vim.opt.number = false
+  vim.opt.relativenumber = false
+  -- Disable the gutter
+  vim.opt.signcolumn = "no"
+end
+
 -- Conditional settings based on mode
 if vim.g.neovim_mode == "skitty" then
   vim.opt.laststatus = 2
@@ -265,17 +275,19 @@ vim.opt.conceallevel = 0
 -- https://github.com/LazyVim/LazyVim/issues/2592#issuecomment-2015093693
 -- Only upate if there are updates
 -- https://github.com/folke/lazy.nvim/issues/702#issuecomment-1903484213
-local function augroup(name)
-  return vim.api.nvim_create_augroup("lazyvim_" .. name, { clear = true })
+if vim.g.scrollback_mode ~= "neobean" then
+  local function augroup(name)
+    return vim.api.nvim_create_augroup("lazyvim_" .. name, { clear = true })
+  end
+  vim.api.nvim_create_autocmd("VimEnter", {
+    group = augroup("autoupdate"),
+    callback = function()
+      if require("lazy.status").has_updates then
+        require("lazy").update({ show = false })
+      end
+    end,
+  })
 end
-vim.api.nvim_create_autocmd("VimEnter", {
-  group = augroup("autoupdate"),
-  callback = function()
-    if require("lazy.status").has_updates then
-      require("lazy").update({ show = false })
-    end
-  end,
-})
 
 -- I added `localoptions` to save the language spell settings, otherwise, the
 -- language of my markdown documents was not remembered if I set it to spanish

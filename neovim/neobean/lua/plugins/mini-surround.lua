@@ -8,7 +8,7 @@
 -- https://github.com/echasnovski/mini.surround
 
 return {
-  "echasnovski/mini.surround",
+  "nvim-mini/mini.surround",
   recommended = true,
   keys = function(_, keys)
     -- Populate the keys based on the user's options

@@ -30,6 +30,7 @@
   * [Install pre-requisites](#install-pre-requisites)
   * [Clone my repo](#clone-my-repo)
   * [How do I start using Neovim?](#how-do-i-start-using-neovim)
+- [Pin LazyVim distro to a specific version](#pin-lazyvim-distro-to-a-specific-version)
 - [Plugins](#plugins)
   * [colorscheme](#colorscheme)
   * [completion](#completion)
@@ -233,6 +234,10 @@ NVIM_APPNAME=linkarzu/dotfiles-latest/neovim/neobean nvim
         />
     </a>
 </div>
+
+## Pin LazyVim distro to a specific version
+
+Do it in `~/github/dotfiles-latest/neovim/neobean/lua/plugins/core.lua`
 
 ## Plugins
 

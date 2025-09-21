@@ -5,5 +5,5 @@ return {
   --
   -- To see the releases, go here
   -- https://github.com/LazyVim/LazyVim/releases
-  -- { "LazyVim/LazyVim", version = "v13.9.1" },
+  -- { "LazyVim/LazyVim", version = "v14.15.0" },
 }

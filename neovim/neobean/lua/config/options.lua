@@ -43,7 +43,7 @@ vim.opt.timeoutlen = 1000
 -- I find the animations a bit laggy
 vim.g.snacks_animate = false
 
-if vim.g.scrollback_mode == "neobean" then
+if vim.g.scrollback_mode == "neobean" or vim.g.simpler_scrollback == "deeznuts" then
   -- disable winbar entirely
   vim.opt.winbar = ""
   -- Line numbers

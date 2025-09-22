@@ -347,7 +347,8 @@ return {
         },
       },
       dashboard = {
-        enabled = vim.g.scrollback_mode ~= "neobean", -- Disable for scrollback_mode
+        -- enabled = vim.g.scrollback_mode ~= "neobean", -- Disable for scrollback_mode
+        enabled = vim.g.scrollback_mode ~= "neobean" and vim.g.simpler_scrollback ~= "deeznuts",
         preset = {
           keys = {
             -- { icon = " ", key = "f", desc = "Find File", action = ":lua Snacks.dashboard.pick('files')" },

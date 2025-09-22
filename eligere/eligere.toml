@@ -38,6 +38,7 @@ name     = "Google Chrome"
 shortcut = "2"
 domains  = [
   "vdo.ninja",
+  "birlasoft.com"
 ]
 
 [[browsers]]

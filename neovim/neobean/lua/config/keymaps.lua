@@ -82,7 +82,7 @@ end, { noremap = true, silent = true })
 -- vim.keymap.set("n", "<c-u>", "<c-u>zz")
 
 -- Quit or exit neovim, easier than to do <leader>qq
-vim.keymap.set({ "n", "v", "i" }, "<M-q>", "<cmd>wqa<cr>", { desc = "[P]Quit All" })
+vim.keymap.set({ "n", "v", "i" }, "<M-q>", "<cmd>q!<cr>", { desc = "[P]Quit All" })
 
 -- -- This, by default configured as <leader>sk but I run it too often lamw25wmal
 -- vim.keymap.set({ "n", "v", "i" }, "<M-k>", "<cmd>Telescope keymaps<cr>", { desc = "[P]Key Maps" })
@@ -315,6 +315,7 @@ vim.keymap.set("v", "gl", "$h", { desc = "[P]Go to the end of the line" })
 if vim.g.simpler_scrollback == "deeznuts" then
   -- yank and quit when using my scrollback config
   vim.keymap.set({ "n", "v" }, "y", [["+y<cmd>q!<cr>]], { desc = "[P]Yank to system clipboard + Quit" })
+  vim.keymap.set({ "n", "v" }, "q", "<cmd>q!<cr>", { desc = "[P]Quit" })
 else
   vim.keymap.set({ "n", "v" }, "<leader>y", [["+y]], { desc = "[P]Yank to system clipboard" })
 end

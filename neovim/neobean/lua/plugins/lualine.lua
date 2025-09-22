@@ -146,7 +146,8 @@ return {
   event = "VeryLazy",
   -- enabled = true,
   -- enabled = vim.g.neovim_mode ~= "skitty", -- Disable lualine for skitty mode
-  enabled = vim.g.scrollback_mode ~= "neobean", -- Disable for scrollback_mode
+  -- enabled = vim.g.scrollback_mode ~= "neobean", -- Disable for scrollback_mode
+  enabled = vim.g.scrollback_mode ~= "neobean" and vim.g.simpler_scrollback ~= "deeznuts",
   opts = function(_, opts)
     if vim.g.neovim_mode == "skitty" then
       -- For skitty mode, only keep section_x and disable all others

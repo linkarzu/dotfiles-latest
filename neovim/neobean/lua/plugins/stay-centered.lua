@@ -2,6 +2,7 @@
 return {
   {
     "arnamak/stay-centered.nvim",
+    enabled = vim.g.scrollback_mode ~= "neobean" and vim.g.simpler_scrollback ~= "deeznuts",
     opts = function()
       require("stay-centered").setup({
         -- Add any configurations here, like skip_filetypes if needed

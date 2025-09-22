@@ -282,7 +282,7 @@ vim.opt.conceallevel = 0
 -- Only upate if there are updates
 -- https://github.com/folke/lazy.nvim/issues/702#issuecomment-1903484213
 if vim.g.scrollback_mode ~= "neobean" and vim.g.simpler_scrollback ~= "deeznuts" then
-  vim.notify("auto updating plugins", vim.log.levels.INFO)
+  -- vim.notify("auto updating plugins", vim.log.levels.INFO)
   local function augroup(name)
     return vim.api.nvim_create_augroup("lazyvim_" .. name, { clear = true })
   end

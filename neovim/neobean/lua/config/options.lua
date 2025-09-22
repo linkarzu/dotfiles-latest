@@ -43,16 +43,6 @@ vim.opt.timeoutlen = 1000
 -- I find the animations a bit laggy
 vim.g.snacks_animate = false
 
-if vim.g.scrollback_mode == "neobean" or vim.g.simpler_scrollback == "deeznuts" then
-  -- disable winbar entirely
-  vim.opt.winbar = ""
-  -- Line numbers
-  vim.opt.number = false
-  vim.opt.relativenumber = false
-  -- Disable the gutter
-  vim.opt.signcolumn = "no"
-end
-
 -- Conditional settings based on mode
 if vim.g.neovim_mode == "skitty" then
   vim.opt.laststatus = 2
@@ -98,6 +88,22 @@ if vim.g.neovim_mode == "skitty" then
   -- Set the winbar to display the current file name on the left (without the extension) and "linkarzu.com" aligned to the right
   vim.opt.winbar =
     '%#WinBar1# %{luaeval(\'vim.fn.fnamemodify(vim.fn.expand("%:t"), ":r")\')}%*%=%#WinBar1# linkarzu.com %*'
+elseif vim.g.scrollback_mode == "neobean" or vim.g.simpler_scrollback == "deeznuts" then
+  -- disable winbar entirely
+  vim.opt.winbar = ""
+
+  -- Line numbers
+  vim.opt.number = false
+  vim.opt.relativenumber = false
+
+  -- Disable the gutter
+  vim.opt.signcolumn = "no"
+
+  -- Disables the statusbar at the bottom
+  vim.opt.laststatus = 0
+
+  -- No colorcolumn in skitty
+  vim.opt.colorcolumn = ""
 else
   -- I never used relative line numbers, so fuck that
   -- Edit a few days after, I'll give them a try again, so re-enabled them
@@ -275,7 +281,8 @@ vim.opt.conceallevel = 0
 -- https://github.com/LazyVim/LazyVim/issues/2592#issuecomment-2015093693
 -- Only upate if there are updates
 -- https://github.com/folke/lazy.nvim/issues/702#issuecomment-1903484213
-if vim.g.scrollback_mode ~= "neobean" then
+if vim.g.scrollback_mode ~= "neobean" and vim.g.simpler_scrollback ~= "deeznuts" then
+  vim.notify("auto updating plugins", vim.log.levels.INFO)
   local function augroup(name)
     return vim.api.nvim_create_augroup("lazyvim_" .. name, { clear = true })
   end

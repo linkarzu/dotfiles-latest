@@ -58,7 +58,8 @@ if command -v sketchybar &>/dev/null; then
     # Resolution for my shorts
   elif [[ "$display_resolution" == *"1536 x 2048"* ]]; then
     yabai -m config top_padding 38
-    yabai -m config bottom_padding 220
+    yabai -m config bottom_padding 0
+    # yabai -m config bottom_padding 220
     yabai -m config left_padding 0
     yabai -m config right_padding 0
   elif [[ "$display_resolution" == *"3200 x 1800"* ]]; then

@@ -451,7 +451,7 @@ echo "########################################################################"
 # Configure apps that start after booting up (login items)
 # https://apple.stackexchange.com/questions/310495/can-login-items-be-added-via-the-command-line-in-high-sierra
 osascript -e 'tell application "System Events" to make login item at end with properties {path:"/Applications/kitty.app", hidden:false}'
-osascript -e 'tell application "System Events" to make login item at end with properties {path:"/Applications/Ghostty.app", hidden:false}'
+# osascript -e 'tell application "System Events" to make login item at end with properties {path:"/Applications/Ghostty.app", hidden:false}'
 
 # MacOS stores the current session info in a file while your logged on and
 # stores info on what Apps are currently open, window size and position.

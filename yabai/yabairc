@@ -249,7 +249,7 @@ yabai -m config \
   split_ratio 0.50 \
   split_type auto \
   auto_balance off \
-  window_gap 06 \
+  window_gap 02 \
   mouse_modifier fn \
   mouse_action1 move \
   mouse_action2 resize \
@@ -275,7 +275,7 @@ yabai -m space 1 --label desk1
 yabai -m space 2 --label desk2
 yabai -m space 3 --label desk3 --layout bsp
 yabai -m space 4 --label desk4
-yabai -m space 5 --label desk5
+yabai -m space 5 --label desk5 --layout bsp
 yabai -m space 6 --label desk6
 yabai -m space 7 --label desk7
 yabai -m space 8 --label desk8
@@ -299,18 +299,20 @@ yabai -m rule --add app="^kitty$" space=desk3
 yabai -m rule --add app="^E-book Viewer$" space=desk4
 yabai -m config --space 4 right_padding 0
 
+yabai -m rule --add app="^socialstream$" space=desk5
+
 yabai -m rule --add app="^Discord$" space=$target_space
 yabai -m rule --add app="^Element$" space=$target_space
 yabai -m rule --add app="^WhatsApp Web$" space=$target_space
 yabai -m rule --add app="^OBS Studio$" space=$target_space
 yabai -m rule --add app="^Mail$" space=$target_space
 yabai -m rule --add app="^1Password$" space=$target_space
+yabai -m rule --add app="^YouTubeStudio$" space=$target_space
 yabai -m rule --add app="^Calendar$" space=$target_space
 yabai -m rule --add app="^Google Chrome$" space=$target_space
 yabai -m rule --add app="^Microsoft Teams$" space=$target_space
 yabai -m rule --add app="^ChatGPT$" space=$target_space
 yabai -m rule --add app="^Vivaldi$" space=$target_space
-yabai -m rule --add app="^socialstream$" space=$target_space
 yabai -m rule --add app="^Signal$" space=$target_space
 yabai -m rule --add app="^Google Photos$" space=$target_space
 yabai -m rule --add app="^Notes$" space=$target_space

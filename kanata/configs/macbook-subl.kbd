@@ -197,6 +197,7 @@
   scont (macro @aghost 100 C-b $tmux-delay C-y) ;; containerdata_nfs
   sfind (macro @aghost 100 C-b $tmux-delay f)
   s-lua (macro @akitty 100 C-b $tmux-delay a)
+  sscri (macro @akitty 100 C-b $tmux-delay ;)
 )
 
 (deflayer sessions
@@ -204,7 +205,7 @@
   XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX        ;;F1  
   XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX ;;NUM 
   XX     XX     XX     @spriv @sdail XX     XX     @sobsi XX     XX     @scont XX     XX     XX ;;Q   
-  XX     XX     XX     XX     XX     XX     @shome @sdots @s-lua @sblog XX     XX     XX        ;;A   
+  XX     XX     XX     XX     XX     XX     @shome @sdots @s-lua @sblog @sscri XX     XX        ;;A   
   XX     XX     XX     XX     XX     XX     @sfind XX     XX     XX     XX     XX     XX        ;;Z   
   XX    XX   XX   XX            XX             XX      XX         XX     XX     XX              ;;MOD 
 )

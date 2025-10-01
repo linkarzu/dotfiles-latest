@@ -95,6 +95,8 @@ source "$ITEM_DIR/front_app.sh"
 # Shows you the value of the input volume level
 source "$ITEM_DIR/mic.sh"
 
+source "$ITEM_DIR/mikrotik.sh"
+
 ###############################################################################
 #                                 Center
 ###############################################################################

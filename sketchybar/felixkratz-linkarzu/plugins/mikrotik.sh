@@ -26,7 +26,7 @@ GATEWAY=$(echo "$CURRENT_ISP" | awk '/0\.0\.0\.0\/0/ {print $(NF-1)}')
 # echo "gateway=$GATEWAY" >>/tmp/mikrotik.sh.log
 
 if [ "$GATEWAY" == "1.0.0.1" ]; then
-  CURRENT_GATEWAY="TIGO"
+  CURRENT_GATEWAY="CLARO"
   COLOR="$GREEN"
 else
   CURRENT_GATEWAY="SIST"

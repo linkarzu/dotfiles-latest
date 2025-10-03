@@ -147,8 +147,6 @@
   mrayc (tap-hold-press $subl-time $subl-time r (layer-while-held raycast))
   m-obs (tap-hold-press $subl-time $subl-time o (layer-while-held obs-scenes))
   mapps (tap-hold-press $subl-time $subl-time bspc (layer-while-held applications))
-  msym2 (tap-hold-press $subl-time $subl-time ret (layer-while-held symbols2))
-  mleft (tap-hold-press $subl-time $subl-time z (layer-while-held left-hand))
   mlets (tap-hold-press $subl-time $subl-time s (layer-while-held letter-s))
 
   ;; Execute script
@@ -235,20 +233,10 @@
 (deflayer symbols
   XX   XX     XX      XX      XX      XX      XX      XX      XX      XX      XX      XX      XX
   XX   XX     XX      XX      XX      XX      XX      XX      XX      XX      XX      XX      XX     XX
-  XX   S-1    S-2     S-3     S-4     S-5     S-6     S-7     S-8     S-9     S-0     XX      XX     XX
-  bspc 1      2       3       4       5       6       7       8       9       0       XX      @msym2
-  spc  @mleft XX      XX      [       ]       S-[     S-]     ,       .       /       XX      rsft
-  XX    XX   XX     XX         spc            @msym2      XX         XX     XX     XX                   ;;MOD
-)
-
-(deflayer symbols2
-  ;;     a      s      d      f      g      h      j      k      l      ;      '
-  XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX            ;;F1
-  XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     bspc   ;;NUM
-  XX     XX     S--    S-`    S-=    XX     XX     -      `      =      XX     XX     XX     XX     ;;Q
-  bspc   S-1    S-2    S-3    S-4    S-5    S-6    S-7    S-8    S-9    S-0    XX     XX            ;;A
-  spc    S-,    S-.    S-/    [      ]      S-[    S-]    ,      .      /      XX     XX            ;;Z
-  XX    XX   XX     XX         spc             XX      XX         XX     XX     XX                  ;;MOD
+  S--  S-1    S-2     S-3     S-4     S-5     S-6     S-7     S-8     S-9     S-0     -       XX     -
+  S-`  1      2       3       4       5       6       7       8       9       0       `       ret
+  S-=  S-,    S-.     S-/     [       ]       S-[     S-]     ,       .       /       XX      =
+  XX    XX   XX     XX         spc            ret      XX         XX     XX     XX                   ;;MOD
 )
 
 ;; Aliases for obs
@@ -380,4 +368,5 @@
 (defchordsv2
   (spc f g) (macro M-(tab 20 tab)) $chord-time first-release () ;; switch to the third app
   (spc caps) caps $chord-time first-release ()
+  (j k l) bspc $chord-time first-release ()
 )

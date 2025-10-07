@@ -44,24 +44,25 @@ TRANSMIT_SPEED_HUMAN=$(
 # echo "TRANSMIT_SPEED_HUMAN=$TRANSMIT_SPEED_HUMAN" >>/tmp/mikrotik.sh.log
 # echo "RECEIVE_SPEED_HUMAN=$RECEIVE_SPEED_HUMAN" >>/tmp/mikrotik.sh.log
 
-if [ "$MAINISP_STATUS" == "UP" ]; then
-  COLOR="$GREEN"
-  if [ "$BACKUPISP_STATUS" = "UP" ]; then
-    BACKUPISP_ARROW=""
-  else
-    BACKUPISP_ARROW=""
-  fi
-  ISPS_STATUS="A:${MAINGATEWAY} B:${BACKGATEWAY}$BACKUPISP_ARROW"
+if [ "$BACKUPISP_STATUS" = "UP" ]; then
+  BACKGATEWAY_DISPLAY=$(printf %s "$BACKGATEWAY" | tr '[:lower:]' '[:upper:]')
+  BACKUPISP_ARROW=""
 else
-  COLOR="$RED"
-  if [ "$BACKUPISP_STATUS" = "UP" ]; then
-    BACKUPISP_ARROW=""
-  else
-    BACKUPISP_ARROW=""
+  BACKGATEWAY_DISPLAY=$(printf %s "$BACKGATEWAY" | tr '[:upper:]' '[:lower:]')
+  BACKUPISP_ARROW=""
+fi
+
+if [ "$MAINISP_STATUS" = "UP" ]; then
+  COLOR="$GREEN"
+  ISPS_STATUS="A:${MAINGATEWAY} B:${BACKGATEWAY_DISPLAY}$BACKUPISP_ARROW"
+else
+  COLOR="$BLUE"
+  if [ "$BACKUPISP_STATUS" = "DOWN" ]; then
     TRANSMIT_SPEED_HUMAN=0
     RECEIVE_SPEED_HUMAN=0
+    COLOR="$RED"
   fi
-  ISPS_STATUS="B:${BACKGATEWAY}$BACKUPISP_ARROW"
+  ISPS_STATUS="B:${BACKGATEWAY_DISPLAY}$BACKUPISP_ARROW"
 fi
 
 sketchybar -m --set mikrotik \

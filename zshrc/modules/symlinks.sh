@@ -76,7 +76,6 @@ create_symlink ~/github/dotfiles-latest/zshrc/zshrc-file.sh ~/.zshrc
 create_symlink ~/github/dotfiles-latest/bashrc/bashrc-file.sh ~/.bashrc
 create_symlink ~/github/dotfiles-latest/tmux/tmux.conf.sh ~/.tmux.conf
 create_symlink ~/github/dotfiles-latest/alacritty/alacritty.toml ~/.config/alacritty/alacritty.toml
-create_symlink ~/github/dotfiles-latest/kitty/kitty.conf ~/.config/kitty/kitty.conf
 create_symlink ~/github/dotfiles-latest/wezterm/wezterm.lua ~/.config/wezterm/wezterm.lua
 create_symlink ~/github/dotfiles-latest/yabai/yabairc ~/.yabairc
 create_symlink ~/github/dotfiles-latest/.prettierrc.yaml ~/.prettierrc.yaml
@@ -107,6 +106,7 @@ create_symlink ~/github/dotfiles-latest/btop/ ~/.config/btop
 create_symlink ~/github/dotfiles-latest/fastfetch/ ~/.config/fastfetch
 create_symlink ~/github/dotfiles-latest/sesh ~/.config/sesh
 create_symlink ~/github/dotfiles-latest/aerospace ~/.config/aerospace
+create_symlink ~/github/dotfiles-latest/kitty ~/.config/kitty
 
 # # This is on the other repo where I keep my ssh config files
 # I commented this as I don't have access to this repo in all the hosts

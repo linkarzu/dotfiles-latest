@@ -23,7 +23,7 @@ if [ ${#schemes[@]} -eq 0 ]; then
 fi
 
 # Use fzf to select a script
-selected_script=$(printf "%s\n" "${schemes[@]}" | fzf --height=40% --reverse --header="Select a script to execute" --prompt="Script > ")
+selected_script=$(printf "%s\n" "${schemes[@]}" | fzf --height=100% --reverse --header="Type or move using arrows" --prompt="Select a script to execute > ")
 
 # Check if a selection was made
 if [ -z "$selected_script" ]; then

@@ -24,7 +24,7 @@ if [ ${#schemes[@]} -eq 0 ]; then
 fi
 
 # Use fzf to select a scheme
-selected_scheme=$(printf "%s\n" "${schemes[@]}" | fzf --height=40% --reverse --header="Select a Color Scheme" --prompt="Theme > ")
+selected_scheme=$(printf "%s\n" "${schemes[@]}" | fzf --height=100% --reverse --header="Type or move using arrows" --prompt="Select a colorscheme > ")
 
 # Check if a selection was made
 if [ -z "$selected_scheme" ]; then

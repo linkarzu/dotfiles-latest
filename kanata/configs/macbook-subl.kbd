@@ -242,25 +242,25 @@
 ;; Aliases for obs
 (defalias
   ;; lineid_obs_switchscene_main
-  omain (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py main-screen --no-auth")
+  omain (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py main-3-guest-live --no-auth")
   ;; lineid_obs_switchscene_guest
-  ogues (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py guests-solo --no-auth")
+  ogues (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py guests3-all-notes-right-live --no-auth")
   ;; lineid_obs_switchscene_guest1
-  ogue1 (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py guest1-0guest --no-auth")
+  ogue1 (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py guest1-3guest-live --no-auth")
   ;; lineid_obs_switchscene_guest2
-  ogue2 (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py  --no-auth")
+  ogue2 (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py guest2-3guest-live --no-auth")
   ;; lineid_obs_switchscene_guest3
-  ogue3 (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py  --no-auth")
+  ogue3 (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py guest3-3guest-live --no-auth")
   ;; lineid_obs_switchscene_guest4
   ogue4 (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py  --no-auth")
   ;; lineid_obs_switchscene_guest5
   ogue5 (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py  --no-auth")
   ;; lineid_obs_switchscene_cam_guest1
-  ocag1 (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py  --no-auth")
+  ocag1 (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py cam-full-guest1 --no-auth")
   ;; lineid_obs_switchscene_cam_guest2
-  ocag2 (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py  --no-auth")
+  ocag2 (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py cam-full-guest2 --no-auth")
   ;; lineid_obs_switchscene_cam_guest3
-  ocag3 (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py  --no-auth")
+  ocag3 (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py cam-full-guest3 --no-auth")
   ;; lineid_obs_switchscene_cam_guest4
   ocag4 (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py  --no-auth")
   ;; lineid_obs_switchscene_cam_guest5
@@ -303,9 +303,12 @@
 ;; the root user. If you need to execute as a different user, on Unix platforms 
 ;; you can use sudo -u USER before the rest of your command to achieve this.
 (defalias
-  s-task (macro @aghost 100 C-b $tmux-delay @7)
+  ;; kitty floating windows or Quake like quick access terminal kitten quick-access-terminal
+  s-quak (macro @akitty 100 A-M-a $tmux-delay d)
+  s-task (macro @akitty 100 A-M-a $tmux-delay t)
+  scolor (macro @akitty 100 A-M-a $tmux-delay c)
+
   saircn (cmd open "btt://execute_assigned_actions_for_trigger/?uuid=9A1CFA49-416C-480E-9430-184D2DAEE1CA") ;; Connect airpods
-  scolor (cmd open "btt://execute_assigned_actions_for_trigger/?uuid=6793CE15-C70A-43E7-ADA9-479DF1539A39") ;; colorscheme-selector
   sairsw (cmd bash -c "/opt/homebrew/bin/SwitchAudioSource -s 'AirPods Pro'; /opt/homebrew/bin/SwitchAudioSource -t input -s 'AirPods Pro'") ;; Switch to airpods
   smute (cmd sudo -u linkarzu bash -c "~/github/dotfiles-latest/scripts/macos/mac/misc/200-micMute.sh")
 )
@@ -317,7 +320,7 @@
   esc  XX     XX      XX      XX      XX      XX      XX      XX      XX      XX      XX      XX        ;;F1 
   grv  XX     XX      XX      XX      XX      XX      XX      XX      XX      XX      XX      XX    XX  ;;NUM
   tab  XX     XX      M-w     XX      @s-task prev    brdn    brup    next    ▶⏸      XX      XX    XX  ;;Q  
-  XX   @smute XX      M-=     volu    @scolor M-S-[   XX      XX      M-S-]   XX      XX      ret       ;;A  
+  XX   @smute XX      M-=     volu    @scolor M-S-[   @s-quak XX      M-S-]   XX      XX      ret       ;;A  
   lsft M-C-q  XX      M--     vold    XX      @saircn @sairsw XX      XX      XX      ▲       rsft      ;;Z  
   fn    lctl lalt lmet                 lrld                 rmet  ralt        ◀       ▼       ▶         ;;MOD
 )

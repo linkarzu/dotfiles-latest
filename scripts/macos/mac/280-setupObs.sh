@@ -30,7 +30,8 @@ fi
 
 # pick a file
 selected_file=$(printf "%s\n" "${files[@]}" |
-  fzf --height=40% --reverse --header="Select a meeting file" --prompt="Meeting > ")
+  sort -r |
+  fzf --height=100% --reverse --header="Type or move using arrows" --prompt="Select a meeting file > ")
 
 echo "[DEBUG] selected_file: $selected_file" >>"$LOG_FILE"
 

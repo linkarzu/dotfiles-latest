@@ -1,9 +1,0 @@
-# Set layout as stack here because the cursor moves briefly to a window when
-# this session is called
-layout stack
-# kitty_session_cd_line
-cd /Users/linkarzu/github/obsidian_main/250-daily/2025/09-Sep
-# kitty_session_launch_line
-launch --title "2025-09-08-Monday" /bin/zsh -i -c 'export MD_HEADING_BG=transparent; NVIM_APPNAME=neobean nvim +norm\ G "/Users/linkarzu/github/obsidian_main/250-daily/2025/09-Sep/2025-09-08-Monday.md"'
-focus
-focus_os_window

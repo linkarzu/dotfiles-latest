@@ -316,9 +316,9 @@ if vim.g.simpler_scrollback == "deeznuts" then
   -- yank and quit when using my scrollback config
   vim.keymap.set({ "n", "v" }, "y", [["+y<cmd>q!<cr>]], { desc = "[P]Yank to system clipboard + Quit" })
   -- vim.keymap.set({ "n", "v" }, "q", "<cmd>q!<cr>", { desc = "[P]Quit" })
-else
-  vim.keymap.set({ "n", "v" }, "<leader>y", [["+y]], { desc = "[P]Yank to system clipboard" })
 end
+
+vim.keymap.set({ "n", "v" }, "<leader>y", [["+y]], { desc = "[P]Yank to system clipboard" })
 
 -- HACK: Paste unformatted text from Neovim to Slack, Discord, Word or any other app
 -- https://youtu.be/S3drTCO7Ct4

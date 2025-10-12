@@ -97,3 +97,4 @@ neovim/neobean-sticky/lua/config/modules
 neovim/neobean-sticky/lua/plugins/core.lua
 neovim/lazyvim/lazyvim.json
 neovim/neobean/lua/.DS_Store
+kitty/sessions/daily.kitty-session

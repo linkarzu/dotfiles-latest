@@ -92,10 +92,6 @@ elseif vim.g.scrollback_mode == "neobean" or vim.g.simpler_scrollback == "deeznu
   -- disable winbar entirely
   vim.opt.winbar = ""
 
-  -- Line numbers
-  vim.opt.number = false
-  vim.opt.relativenumber = false
-
   -- Disable the gutter
   vim.opt.signcolumn = "no"
 

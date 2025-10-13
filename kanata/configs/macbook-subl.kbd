@@ -311,6 +311,8 @@
   saircn (cmd open "btt://execute_assigned_actions_for_trigger/?uuid=9A1CFA49-416C-480E-9430-184D2DAEE1CA") ;; Connect airpods
   sairsw (cmd bash -c "/opt/homebrew/bin/SwitchAudioSource -s 'AirPods Pro'; /opt/homebrew/bin/SwitchAudioSource -t input -s 'AirPods Pro'") ;; Switch to airpods
   smute (cmd sudo -u linkarzu bash -c "~/github/dotfiles-latest/scripts/macos/mac/misc/200-micMute.sh")
+
+  syabm (tap-hold-press $subl-time $subl-time M-= (layer-while-held yabai-manage))
 )
 
 ;; To live reload / hot reload the config:
@@ -320,7 +322,7 @@
   esc  XX     XX      XX      XX      XX      XX      XX      XX      XX      XX      XX      XX        ;;F1 
   grv  XX     XX      XX      XX      XX      XX      XX      XX      XX      XX      XX      XX    XX  ;;NUM
   tab  XX     XX      M-w     XX      @s-task prev    brdn    brup    next    ▶⏸      XX      XX    XX  ;;Q  
-  XX   @smute XX      M-=     volu    @scolor M-S-[   @s-quak XX      M-S-]   XX      XX      ret       ;;A  
+  XX   @smute XX      @syabm  volu    @scolor M-S-[   @s-quak XX      M-S-]   XX      XX      ret       ;;A  
   lsft M-C-q  XX      M--     vold    XX      @saircn @sairsw XX      XX      XX      ▲       rsft      ;;Z  
   fn    lctl lalt lmet                 lrld                 rmet  ralt        ◀       ▼       ▶         ;;MOD
 )
@@ -347,6 +349,27 @@
   XX     XX     XX     XX     XX     XX     @snoti XX     XX     XX     XX     XX     XX            ;;Z
   XX    XX   XX     XX         XX             XX      XX         XX     XX     XX                   ;;MOD
 )
+
+(defalias
+  yseas (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && yabai -m window --swap east")
+  yswes (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && yabai -m window --swap west")
+  yfnor (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && yabai -m window --focus north")
+  yfsou (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && yabai -m window --focus south")
+  yfeas (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && yabai -m window --focus east")
+  yfwes (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && yabai -m window --focus west")
+  ywrem (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && yabai -m window --close")
+)
+
+(deflayer yabai-manage
+  ;;     a      s      d      f      g      h      j      k      l      ;      '
+  XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX            ;;F1
+  XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     bspc   ;;NUM
+  XX     XX     XX     XX     @ywrem XX     @yswes XX     XX     @yseas XX     XX     XX     XX     ;;Q
+  XX     XX     XX     XX     XX     XX     @yfwes @yfsou @yfnor @yfeas XX     XX     XX            ;;A
+  XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX            ;;Z
+  XX    XX   XX     XX         XX             XX      XX         XX     XX     XX                   ;;MOD
+)
+
 
 (deflayer left-hand
   ;;     a      s      d      f      g      h      j      k      l      ;      '

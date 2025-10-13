@@ -3803,14 +3803,40 @@ local function create_next_n_days(n)
 end
 
 -- Create a daily note for the next day based on the current filename lamw26wmal
-vim.keymap.set("n", "<leader>fA", function()
+vim.keymap.set("n", "<leader>mA", function()
   create_next_n_days(1)
 end, { desc = "[P]Create next day's daily note from current file" })
 
 -- Create the next 7 daily notes (one week) lamw26wmal
-vim.keymap.set("n", "<leader>fW", function()
+vim.keymap.set("n", "<leader>mW", function()
   create_next_n_days(7)
 end, { desc = "[P]Create next week's daily notes from current file" })
+
+-- Create the next N daily notes (prompt) lamw26wmal
+vim.keymap.set("n", "<leader>mD", function()
+  -- Ask for number of days starting from tomorrow
+  vim.ui.input({ prompt = "How many days to create (starting tomorrow): ", default = "7" }, function(answer)
+    -- Validate empty input
+    if not answer or answer == "" then
+      vim.api.nvim_echo({ { "Creation cancelled", "WarningMsg" } }, false, {})
+      return
+    end
+    -- Convert to number
+    local n = tonumber(answer)
+    -- Validate number
+    if not n then
+      vim.api.nvim_echo({ { "Please enter a valid number", "ErrorMsg" } }, false, {})
+      return
+    end
+    -- Ensure integer > 0
+    n = math.floor(n)
+    if n <= 0 then
+      vim.api.nvim_echo({ { "Enter a number greater than zero", "ErrorMsg" } }, false, {})
+      return
+    end
+    create_next_n_days(n)
+  end)
+end, { desc = "[P]Create N next daily notes from current file" })
 
 -- - I have several `.md` documents that do not follow markdown guidelines
 -- - There are some old ones that have more than one H1 heading in them, so when I
@@ -3980,7 +4006,7 @@ end, { desc = "Decrease headings in visual selection" })
 -- This deletes all marks in the current buffer, including lowercase, uppercase, and numbered marks
 -- Fix should be applied on April 2024
 -- https://github.com/chentoast/marks.nvim/issues/13
-vim.keymap.set("n", "<leader>mD", function()
+vim.keymap.set("n", "<leader>mZ", function()
   -- Delete all marks in the current buffer
   vim.cmd("delmarks!")
   print("All marks deleted.")

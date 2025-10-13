@@ -272,11 +272,11 @@
   ozkbd (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py zoom-main-keyboard --no-auth")
 
 ;; top 38, bottom 0, left 0, right 230
-  ozmai (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py zoom-main --no-auth && $HOME/github/dotfiles-latest/yabai/positions/yabai-custom-pad.sh 38 90 0 230 && $HOME/github/dotfiles-latest/yabai/yabai_restart.sh")
-  oz-in (cmd sudo -u linkarzu bash -c "$HOME/github/dotfiles-latest/yabai/positions/yabai-custom-pad.sh 38 90 0 230 && $HOME/github/dotfiles-latest/yabai/yabai_restart.sh")
-  ozout (cmd sudo -u linkarzu bash -c "$HOME/github/dotfiles-latest/yabai/positions/yabai-custom-pad.sh 38 0 0 230 && $HOME/github/dotfiles-latest/yabai/yabai_restart.sh")
-  oghaf (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py guests-solo-half --no-auth && $HOME/github/dotfiles-latest/yabai/positions/yabai-custom-pad.sh 48 10 10 400 && $HOME/github/dotfiles-latest/yabai/yabai_restart.sh")
-  ofull (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py main-screen-full --no-auth && $HOME/github/dotfiles-latest/yabai/positions/yabai-custom-pad.sh 38 0 0 0 && $HOME/github/dotfiles-latest/yabai/yabai_restart.sh")
+  ozmai (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py zoom-main --no-auth && $HOME/github/dotfiles-latest/yabai/positions/yabai-custom-pad.sh 42 90 0 230 && $HOME/github/dotfiles-latest/yabai/yabai_restart.sh")
+  oz-in (cmd sudo -u linkarzu bash -c "$HOME/github/dotfiles-latest/yabai/positions/yabai-custom-pad.sh 42 90 3 230 && $HOME/github/dotfiles-latest/yabai/yabai_restart.sh")
+  ozout (cmd sudo -u linkarzu bash -c "$HOME/github/dotfiles-latest/yabai/positions/yabai-custom-pad.sh 42 3 3 230 && $HOME/github/dotfiles-latest/yabai/yabai_restart.sh")
+  oghaf (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py guests-solo-half --no-auth; $HOME/github/dotfiles-latest/yabai/positions/yabai-custom-pad.sh 48 10 10 400 && $HOME/github/dotfiles-latest/yabai/yabai_restart.sh")
+  ofull (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py main-screen-full --no-auth; $HOME/github/dotfiles-latest/yabai/positions/yabai-custom-pad.sh 42 3 3 3 && $HOME/github/dotfiles-latest/yabai/yabai_restart.sh")
 )
 
 (deflayer obs-scenes

@@ -52,51 +52,51 @@ if command -v sketchybar &>/dev/null; then
   if [[ "$display_resolution" == *"3456 x 2234"* ]]; then
     # yabai -m config top_padding 12
     yabai -m config top_padding 12
-    yabai -m config bottom_padding 0
-    yabai -m config left_padding 0
+    yabai -m config bottom_padding 3
+    yabai -m config left_padding 3
     yabai -m config right_padding 230
     # Resolution for my shorts
   elif [[ "$display_resolution" == *"1536 x 2048"* ]]; then
-    yabai -m config top_padding 38
-    yabai -m config bottom_padding 0
+    yabai -m config top_padding 42
+    yabai -m config bottom_padding 3
     # yabai -m config bottom_padding 220
-    yabai -m config left_padding 0
+    yabai -m config left_padding 3
     yabai -m config right_padding 0
   elif [[ "$display_resolution" == *"3200 x 1800"* ]]; then
     # # This matches my asus 27 inch monitor
     # # yabai -m config top_padding 39
     # lineid_asus_monitor_top_pad
-    yabai -m config top_padding 38
+    yabai -m config top_padding 42
     # lineid_asus_monitor_bottom_pad
-    yabai -m config bottom_padding 0
+    yabai -m config bottom_padding 3
     # lineid_asus_monitor_left_pad
-    yabai -m config left_padding 0
+    yabai -m config left_padding 3
     # lineid_asus_monitor_right_pad
     yabai -m config right_padding 230
   elif [[ "$display_resolution" == *"3200 x 1600"* ]]; then
     # # This is for the BetterDisplay virtual screen for the zoom OBS scene for main app
     # # yabai -m config top_padding 39
-    yabai -m config top_padding 38
-    yabai -m config bottom_padding 0
-    yabai -m config left_padding 0
+    yabai -m config top_padding 42
+    yabai -m config bottom_padding 3
+    yabai -m config left_padding 3
     yabai -m config right_padding 230
   elif [[ "$display_resolution" == *"2560 x 1440"* ]]; then
     # This is for the 720p res in BetterDisplay
     # # yabai -m config top_padding 39
     # lineid_asus_monitor_top_pad
-    yabai -m config top_padding 38
+    yabai -m config top_padding 42
     # lineid_asus_monitor_bottom_pad
-    yabai -m config bottom_padding 0
+    yabai -m config bottom_padding 3
     # lineid_asus_monitor_left_pad
-    yabai -m config left_padding 0
+    yabai -m config left_padding 3
     # lineid_asus_monitor_right_pad
     yabai -m config right_padding 230
   elif [[ "$display_resolution" == *"3024 x 1964"* ]]; then
     # # This matches my macbook 14 inch
     # # yabai -m config top_padding 39
     yabai -m config top_padding 10
-    yabai -m config bottom_padding 0
-    yabai -m config left_padding 0
+    yabai -m config bottom_padding 3
+    yabai -m config left_padding 3
     yabai -m config right_padding 230
     # # For videos thumbnails
     # yabai -m config top_padding 400
@@ -322,6 +322,9 @@ yabai -m rule --add app="^Notes$" space=$target_space
 # yabai -m rule --add app="^kitty$" title="^kitty:dotfiles$" space=desk4
 # yabai -m rule --add app="^kitty$" title="^kitty:obsidian$" space=desk4
 # yabai -m rule --add app="^kitty$" title="^kitty:blogpost$" space=desk4
+
+yabai -m signal --add event=window_focused action="$HOME/github/dotfiles-latest/yabai/update_border_color.sh"
+yabai -m signal --add event=space_changed action="$HOME/github/dotfiles-latest/yabai/update_border_color.sh"
 
 # THIS IS VERY IMPORTANT
 # It ensures that when I restart yabai, all the rules (including the manage=off rules)

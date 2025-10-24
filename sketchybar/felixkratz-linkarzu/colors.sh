@@ -6,7 +6,7 @@
 # Source the colorscheme file
 source "$HOME/github/dotfiles-latest/colorscheme/active/active-colorscheme.sh"
 
-export MIC_LEVEL=35
+export MIC_LEVEL=30
 
 ### Sonokai
 # export BLACK=0xff181819

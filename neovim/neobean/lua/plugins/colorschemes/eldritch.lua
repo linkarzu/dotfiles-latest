@@ -116,6 +116,10 @@ return {
 
         MiniDiffSignAdd = { fg = colors["linkarzu_color05"], bold = true },
         MiniDiffSignChange = { fg = colors["linkarzu_color02"], bold = true },
+        MiniDiffOverAdd = { bg = colors["linkarzu_color19"], fg = colors["linkarzu_color14"] },
+        MiniDiffOverContext = { bg = colors["linkarzu_color20"], fg = colors["linkarzu_color14"] },
+        MiniDiffOverDelete = { bg = colors["linkarzu_color21"], fg = colors["linkarzu_color14"] },
+        MiniDiffOverChange = { bg = colors["linkarzu_color04"], fg = colors["linkarzu_color14"] },
 
         -- Codeblocks for the render-markdown plugin
         RenderMarkdownCode = { bg = colors["linkarzu_color07"] },

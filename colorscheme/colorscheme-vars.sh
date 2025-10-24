@@ -12,6 +12,8 @@ colorscheme_profile="radioactive-fiambre.sh"
 # colorscheme_profile="darkppuccin.sh"
 # colorscheme_profile="catppuccin-mocha.sh"
 # colorscheme_profile="catppuccin-macchiato.sh"
+# colorscheme_profile="pastel-fiambre.sh"
+# colorscheme_profile="pikachu.sh"
 
 # # I have 2 Neovim markdown heading style options
 export MD_HEADING_BG=transparent

@@ -353,6 +353,8 @@
 )
 
 (defalias
+  ysnor (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && yabai -m window --swap north")
+  yssou (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && yabai -m window --swap south")
   yseas (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && yabai -m window --swap east")
   yswes (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && yabai -m window --swap west")
   yfnor (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && yabai -m window --focus north")
@@ -360,15 +362,16 @@
   yfeas (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && yabai -m window --focus east")
   yfwes (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && yabai -m window --focus west")
   ywrem (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && yabai -m window --close")
+  ysmir (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && yabai -m space --mirror y-axis")
 )
 
 (deflayer yabai-manage
   ;;     a      s      d      f      g      h      j      k      l      ;      '
   XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX            ;;F1
   XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     bspc   ;;NUM
-  XX     XX     XX     XX     @ywrem XX     @yswes XX     XX     @yseas XX     XX     XX     XX     ;;Q
+  XX     XX     XX     XX     @ywrem XX     @yswes @yssou @ysnor @yseas XX     XX     XX     XX     ;;Q
   XX     XX     XX     XX     XX     XX     @yfwes @yfsou @yfnor @yfeas XX     XX     XX            ;;A
-  XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX            ;;Z
+  XX     XX     XX     XX     XX     XX     XX     @ysmir XX     XX     XX     XX     XX            ;;Z
   XX    XX   XX     XX         XX             XX      XX         XX     XX     XX                   ;;MOD
 )
 

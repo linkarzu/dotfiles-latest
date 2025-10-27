@@ -61,4 +61,4 @@ yabai --restart-service
 # open "btt://execute_assigned_actions_for_trigger/?uuid=481BDF1F-D0C3-4B5A-94D2-BD3C881FAA6F"
 #
 
-# osascript -e 'display notification "Yabai restarted" with title "Yabai"'
+osascript -e 'display notification "Yabai restarted" with title "Yabai"'

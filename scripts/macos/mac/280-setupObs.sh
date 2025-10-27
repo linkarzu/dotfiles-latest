@@ -46,4 +46,4 @@ fi
 echo "[DEBUG] Running: python3 \"$PY_SCRIPT\" \"$MD_DIR/$selected_file\"" >>"$LOG_FILE"
 python3 "$PY_SCRIPT" "$MD_DIR/$selected_file"
 
-export MD_HEADING_BG=transparent && NVIM_APPNAME=neobean nvim "$MD_DIR/$selected_file"
+# export MD_HEADING_BG=transparent && NVIM_APPNAME=neobean nvim "$MD_DIR/$selected_file"

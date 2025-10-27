@@ -14,7 +14,6 @@
 import os
 import sys
 import subprocess
-import obsws_python as obs
 
 # --- Vars ---
 onepassword_secret = "op://helixdeeznuts/obs-websocket-password/credential"
@@ -53,6 +52,10 @@ def ensure_venv():
 
 
 ensure_venv()
+
+# Don't move this above with other imports, leave it here, this has to be
+# imported after creating the venv
+import obsws_python as obs
 
 
 def get_password():

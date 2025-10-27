@@ -290,14 +290,27 @@ yabai -m space 8 --label desk8
 yabai -m space 9 --label desk9
 yabai -m space 10 --label desk10
 
-# Check if desk4 exists, label it if it does
-if yabai -m query --spaces | jq -e '.[] | select(.index==11)' >/dev/null; then
-  yabai -m config --space 11 top_padding 8
-  yabai -m config --space 11 right_padding 0
-  yabai -m space 11 --label desk11
-  target_space="desk11"
+# When more than 1 display, I always want the non_stream_space to be the first
+# space on the display with less spaces. I move all my sensitive aps there
+displays_json="$(yabai -m query --displays)"
+display_count="$(echo "$displays_json" | jq 'length')"
+# Default target
+non_stream_space="desk1"
+# Single display → desk1
+if [ "$display_count" -eq 1 ]; then
+  non_stream_space="desk1"
 else
-  target_space="desk1"
+  # Multiple displays, pick the display with the fewest spaces, take its first space
+  first_space_index="$(
+    echo "$displays_json" |
+      jq 'min_by(.spaces | length) | .spaces[0]'
+  )"
+  # Build label deskN
+  non_stream_space="desk${first_space_index}"
+  # Label that space
+  yabai -m space "$first_space_index" --label "$non_stream_space"
+  yabai -m config --space "$first_space_index" top_padding 8
+  yabai -m config --space "$first_space_index" right_padding 0
 fi
 
 yabai -m rule --add app="^.*$" space=desk1
@@ -309,21 +322,21 @@ yabai -m config --space 4 right_padding 0
 
 yabai -m rule --add app="^socialstream$" space=desk5
 
-yabai -m rule --add app="^Discord$" space=$target_space
-yabai -m rule --add app="^Element$" space=$target_space
-yabai -m rule --add app="^WhatsApp Web$" space=$target_space
-yabai -m rule --add app="^OBS Studio$" space=$target_space
-yabai -m rule --add app="^Mail$" space=$target_space
-yabai -m rule --add app="^1Password$" space=$target_space
-yabai -m rule --add app="^YouTubeStudio$" space=$target_space
-yabai -m rule --add app="^Calendar$" space=$target_space
-yabai -m rule --add app="^Google Chrome$" space=$target_space
-yabai -m rule --add app="^Microsoft Teams$" space=$target_space
-yabai -m rule --add app="^ChatGPT$" space=$target_space
-yabai -m rule --add app="^Vivaldi$" space=$target_space
-yabai -m rule --add app="^Signal$" space=$target_space
-yabai -m rule --add app="^Google Photos$" space=$target_space
-yabai -m rule --add app="^Notes$" space=$target_space
+yabai -m rule --add app="^Discord$" space="$non_stream_space"
+yabai -m rule --add app="^Element$" space="$non_stream_space"
+yabai -m rule --add app="^WhatsApp Web$" space="$non_stream_space"
+yabai -m rule --add app="^OBS Studio$" space="$non_stream_space"
+yabai -m rule --add app="^Mail$" space="$non_stream_space"
+yabai -m rule --add app="^1Password$" space="$non_stream_space"
+yabai -m rule --add app="^YouTubeStudio$" space="$non_stream_space"
+yabai -m rule --add app="^Calendar$" space="$non_stream_space"
+yabai -m rule --add app="^Google Chrome$" space="$non_stream_space"
+yabai -m rule --add app="^Microsoft Teams$" space="$non_stream_space"
+yabai -m rule --add app="^ChatGPT$" space="$non_stream_space"
+yabai -m rule --add app="^Vivaldi$" space="$non_stream_space"
+yabai -m rule --add app="^Signal$" space="$non_stream_space"
+yabai -m rule --add app="^Google Photos$" space="$non_stream_space"
+yabai -m rule --add app="^Notes$" space="$non_stream_space"
 
 # # exact title match
 # yabai -m rule --add app="^kitty$" title="^kitty:home$" space=desk3

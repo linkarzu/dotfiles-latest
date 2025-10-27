@@ -278,7 +278,12 @@ yabai -m space 1 --label desk1
 yabai -m space 2 --label desk2
 yabai -m space 3 --label desk3 --layout bsp
 yabai -m space 4 --label desk4
+
+# For a strange reason, socialstream main screen shows on the right all the
+# time, this flips it
 yabai -m space 5 --label desk5 --layout bsp
+yabai -m space desk5 --mirror y-axis
+
 yabai -m space 6 --label desk6
 yabai -m space 7 --label desk7
 yabai -m space 8 --label desk8

@@ -317,8 +317,6 @@
   syabm (tap-hold-press $subl-time $subl-time M-= (layer-while-held yabai-manage))
 )
 
-;; To live reload / hot reload the config:
-;; If kanata can’t parse the file, the previous configuration will continue to be used.
 (deflayer system
   ;;   a      s       d       f       g       h       j       k       l       ;       '
   esc  XX     XX      XX      XX      XX      XX      XX      XX      XX      XX      XX      XX        ;;F1 
@@ -326,7 +324,7 @@
   tab  XX     XX      M-w     XX      @s-task prev    brdn    brup    next    ▶⏸      XX      XX    XX  ;;Q  
   XX   @smute XX      @syabm  volu    @scolor M-S-[   @s-quak XX      M-S-]   XX      XX      ret       ;;A  
   lsft M-C-q  XX      M--     vold    XX      @saircn @sairsw XX      XX      XX      ▲       rsft      ;;Z  
-  fn    lctl lalt lmet                 lrld                 rmet  ralt        ◀       ▼       ▶         ;;MOD
+  fn    lctl lalt lmet                 XX                 rmet  ralt        ◀       ▼       ▶         ;;MOD
 )
 
 (defalias
@@ -340,13 +338,17 @@
   sposi (cmd sudo -u linkarzu bash -c "$HOME/github/dotfiles-latest/yabai/positions/kitty-pos.sh")
   ;; copy last kitty command kitty scrollback
   scopy (macro @akitty 200 A-M-i 500 S-/ 20 \ . S-2 \ . ret 20 k 20 S-v 20 S-n 400 y)
+
+  ;; To live reload / hot reload the config:
+  ;; If kanata can’t parse the file, the previous configuration will continue to be used.
+  slrld (macro 200 lrld (cmd sudo -u linkarzu bash -c "~/github/dotfiles-latest/scripts/macos/mac/misc/550-kanataRestartNotif.sh"))
 )
 
 (deflayer letter-s
   ;;     a      s      d      f      g      h      j      k      l      ;      '
   XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX            ;;F1
   XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     bspc   ;;NUM
-  XX     XX     XX     XX     XX     XX     @syaba @scam3 @scam2 XX     @sposi XX     XX     XX     ;;Q
+  XX     XX     XX     XX     @slrld XX     @syaba @scam3 @scam2 XX     @sposi XX     XX     XX     ;;Q
   XX     XX     XX     @scopy XX     XX     XX     @sstar @sstop XX     XX     XX     XX            ;;A
   XX     XX     XX     XX     XX     XX     @snoti XX     XX     XX     XX     XX     XX            ;;Z
   XX    XX   XX     XX         XX             XX      XX         XX     XX     XX                   ;;MOD

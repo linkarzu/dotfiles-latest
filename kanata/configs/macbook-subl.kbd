@@ -339,7 +339,7 @@
   syaba (cmd sudo -u linkarzu bash -c "$HOME/github/dotfiles-latest/yabai/yabai_restart.sh")
   sposi (cmd sudo -u linkarzu bash -c "$HOME/github/dotfiles-latest/yabai/positions/kitty-pos.sh")
   ;; copy last kitty command kitty scrollback
-  scopy (macro @akitty 200 A-M-i 200 S-/ 20 \ . S-2 \ . ret 20 k 20 S-v 20 S-n 300 y)
+  scopy (macro @akitty 200 A-M-i 500 S-/ 20 \ . S-2 \ . ret 20 k 20 S-v 20 S-n 400 y)
 )
 
 (deflayer letter-s

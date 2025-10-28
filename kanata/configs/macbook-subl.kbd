@@ -341,7 +341,7 @@
 
   ;; To live reload / hot reload the config:
   ;; If kanata can’t parse the file, the previous configuration will continue to be used.
-  slrld (macro 200 lrld (cmd sudo -u linkarzu bash -c "~/github/dotfiles-latest/scripts/macos/mac/misc/550-kanataRestartNotif.sh"))
+  slrld (macro (cmd sudo -u linkarzu bash -c "~/github/dotfiles-latest/scripts/macos/mac/misc/550-kanataRestartNotif.sh") 500 lrld)
 )
 
 (deflayer letter-s

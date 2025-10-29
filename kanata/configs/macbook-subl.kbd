@@ -7,6 +7,11 @@
 ;; OS key code mappings
 ;; https://github.com/jtroo/kanata/blob/main/parser/src/keys/mod.rs
 
+;; The user executing the command is the user that kanata was started with. 
+;; For example, if kanata was started by root, the command will be run by 
+;; the root user. If you need to execute as a different user, on Unix platforms 
+;; you can use sudo -u USER before the rest of your command to achieve this.
+
 (include mac-common.kbd)
 
 (defcfg
@@ -49,127 +54,6 @@
   fn   lctl  lalt lmet          spc         rmet ralt ◀    ▼    ▶
 )
 
-;; scams
-(defalias
-  scam2 S-C-A-M-2 ;; BetterDisplay fav res 1
-  scam3 S-C-A-M-3 ;; BetterDisplay fav res 2
-  scam6 S-C-A-M-6 ;; homerow
-  scam0 S-C-A-M-0 ;; cleanshot capture area
-  scam9 S-C-A-M-9 ;; cleanshot capture previous area
-  scamt S-C-A-M-tab ;; cleanshot capture history
-  scam= S-C-A-M-= ;; cleanshot capture history
-  scamw S-C-A-M-w ;; paste app
-  scamz S-C-A-M-z ;; mouseless app
-  scamd S-C-A-M-d ;; presentify app
-  scamg S-C-A-M-g ;; raycast
-  scam; S-C-A-M-; ;; raycast snippets
-)
-
-;; applications aliases
-(defalias
-  aspoti (cmd sudo -u linkarzu zsh -lc "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh Spotify")
-  aweztr (cmd sudo -u linkarzu zsh -lc "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh WezTerm")
-  aghost (cmd sudo -u linkarzu zsh -lc "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh Ghostty")
-  akitty (cmd sudo -u linkarzu zsh -lc "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh kitty")
-  avival (cmd sudo -u linkarzu zsh -lc "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh Vivaldi")
-  achrom (cmd sudo -u linkarzu zsh -lc "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh 'Google Chrome'")
-  achatg (cmd sudo -u linkarzu zsh -lc "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh ChatGPT")
-  asystm (cmd sudo -u linkarzu zsh -lc "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh 'System Settings'")
-  ayoutu (cmd sudo -u linkarzu zsh -lc "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh YouTube")
-  ayouts (cmd sudo -u linkarzu zsh -lc "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh YouTubeStudio")
-  awhats (cmd sudo -u linkarzu zsh -lc "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh 'WhatsApp Web'")
-  aprevw (cmd sudo -u linkarzu zsh -lc "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh Preview")
-  a--obs (cmd sudo -u linkarzu zsh -lc "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh OBS")
-  abrave (cmd sudo -u linkarzu zsh -lc "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh 'Brave Browser'")
-  aneovd (cmd sudo -u linkarzu zsh -lc "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh Neovide")
-  a-mail (cmd sudo -u linkarzu zsh -lc "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh Mail")
-  adisco (cmd sudo -u linkarzu zsh -lc "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh Discord")
-  a1pass (cmd sudo -u linkarzu zsh -lc "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh 1Password")
-  afindr (cmd sudo -u linkarzu zsh -lc "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh Finder")
-  aforkl (cmd sudo -u linkarzu zsh -lc "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh ForkLift")
-  audemy (cmd sudo -u linkarzu zsh -lc "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh Udemy")
-  asetap (cmd sudo -u linkarzu zsh -lc "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh Setapp")
-  amword (cmd sudo -u linkarzu zsh -lc "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh 'Microsoft Word'")
-  aexcel (cmd sudo -u linkarzu zsh -lc "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh 'Microsoft Excel'")
-  arecut (cmd sudo -u linkarzu zsh -lc "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh Recut")
-  ateams (cmd sudo -u linkarzu zsh -lc "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh 'Microsoft Teams'")
-  awinap (cmd sudo -u linkarzu zsh -lc "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh 'Windows App'")
-  adavin (cmd sudo -u linkarzu zsh -lc "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh 'DaVinci Resolve'")
-  acalen (cmd sudo -u linkarzu zsh -lc "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh Calendar")
-  a-zoom (cmd sudo -u linkarzu zsh -lc "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh zoom.us")
-  anotes (cmd sudo -u linkarzu zsh -lc "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh Notes")
-  asocia (cmd sudo -u linkarzu zsh -lc "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh socialstream")
-  calibr (cmd sudo -u linkarzu zsh -lc "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh 'E-book Viewer'")
-)
-
-(defalias
-  ;; Modifier keys
-  mlmet (tap-hold $tap-time $hold-time d lmet)
-  mrmet (tap-hold $tap-time $hold-time k rmet)
-  mlalt (tap-hold $tap-time $hold-time f lalt)
-  mralt (tap-hold $tap-time $hold-time j ralt)
-  mral2 (tap-hold $tap-time $hold-time ' ralt)
-  mlctl (tap-hold $tap-time $hold-time a lctl)
-  mrctl (tap-hold $tap-time $hold-time ; rctl)
-
-  ;; Double actions,.
-  mtrik (tap-hold $tap-time $hold-time g C-z) ;; trickster
-  mhome (tap-hold $tap-time $hold-time . @scam6) ;; homerow
-  mmous (tap-hold $tap-time $hold-time l @scamz) ;; mouseless
-  mcopy (tap-hold $tap-time $hold-time c M-c)
-  ;; scopyntf (cmd sudo -u linkarzu bash -c "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/400-sketchybarNotif.sh Copied")
-  ;; mcopy (tap-hold $tap-time $hold-time c (macro M-c 200 @scopyntf))
-  mpast (tap-hold $tap-time $hold-time v M-v)
-  mmtab (tap-hold $tap-time $hold-time z M-tab)
-  mmgrv (tap-hold $tap-time $hold-time x M-grv)
-  mescc (tap-hold $tap-time $hold-time esc caps)
-  maltt (tap-hold $tap-time $hold-time b (macro @aghost 100 C-b $tmux-delay spc)) ;; tmux alternate session
-  maltk (tap-hold $tap-time $hold-time b (macro @akitty 100 C-b $tmux-delay l)) ;; kitty alternate session
-  mtcop (tap-hold $tap-time $hold-time m (macro @akitty 100 A-M-i)) ;; tmux copy mode / kitty scrollback
-  mdail (tap-hold $tap-higher $tap-higher r (macro @akitty 100 C-b $tmux-delay i)) ;; daily note session
-  mskit (tap-hold $tap-higher $tap-higher e (macro @akitty 100 C-b $tmux-delay k)) ;; skitty-notes session
-  ;; mdail (tap-hold $tap-higher $tap-higher r (macro @akitty 100 A-M-a $tmux-delay n)) ;; daily note floating
-  ;; mskit (tap-hold $tap-higher $tap-higher e (macro @akitty 100 A-M-a $tmux-delay s)) ;; skitty-notes floating
-  mretu (tap-hold $tap-time $hold-time tab ret)
-
-  ;; Other layers tap-hold-press
-  ;; mapr configured for both the glove80 and the macbook keyboard
-  ;; mappr (tap-hold-press $tap-time $hold-time ret (layer-toggle apps))
-  msymb (tap-hold-press $tap-time $hold-time bspc (layer-while-held symbols))
-  mnavi (tap-hold-press $tap-time $hold-time esc (layer-toggle navi))
-
-  ;; Other layers tap-hold
-  msyst (tap-hold $tap-time $hold-time s (layer-toggle system))
-
-  ;; Multi
-  ;; mhypr (tap-hold $tap-time $hold-time spc (multi lsft lctl lalt lmet)) ;; Hyper key
-
-  ;; Sublayers
-  ;; I implemented sublayers thanks to the help in this discussion
-  ;; https://github.com/jtroo/kanata/discussions/1765
-  ;; DO NOT USE THE SUBLAYERS IN A FREQUENTLY PRESSED KEY LIKE SPACEBAR
-  ;; It made typing spaces a pain in the ass, enter is not pressed to often, so it works way better
-  msubl (tap-hold-press $subl-time $subl-time ret (layer-while-held sublayers))
-
-  msess (tap-hold-press $subl-time $subl-time t (layer-while-held sessions))
-  mrayc (tap-hold-press $subl-time $subl-time r (layer-while-held raycast))
-  m-obs (tap-hold-press $subl-time $subl-time o (layer-while-held obs-scenes))
-  mapps (tap-hold-press $subl-time $subl-time bspc (layer-while-held applications))
-  mlets (tap-hold-press $subl-time $subl-time s (layer-while-held letter-s))
-
-  ;; Execute script
-  ;; maltt (cmd open "btt://execute_assigned_actions_for_trigger/?uuid=F35EF770-FAA5-448A-957D-70BB449DEB0F")
-
-  ;; key and script at the same time
-  ;; maltt (tap-hold $tap-time $hold-time lsft (cmd open "btt://execute_assigned_actions_for_trigger/?uuid=F35EF770-FAA5-448A-957D-70BB449DEB0F"))
-)
-
-(defalias
-  1 1
-  8 8
-  7 7
-)
-
 ;; Main layer
 ;; Set cmd on "d" due to cmd+r, cmd+f
 (deflayer main
@@ -192,20 +76,6 @@
   XX    XX   XX @mapps         XX             XX      XX         XX     XX     XX                   ;;MOD
 )
 
-;; Aliases for sessions
-(defalias
-  shome (macro @akitty 300 C-b $tmux-delay h)
-  sdots (macro @akitty 300 C-b $tmux-delay d)
-  sblog (macro @akitty 300 C-b $tmux-delay b)
-  sobsi (macro @akitty 100 C-b $tmux-delay o)
-  spriv (macro @akitty 100 C-b $tmux-delay p)
-  sdail (macro @akitty 100 C-b $tmux-delay i)
-  scont (macro @aghost 100 C-b $tmux-delay C-y) ;; containerdata_nfs
-  sfind (macro @aghost 100 C-b $tmux-delay f)
-  s-lua (macro @akitty 100 C-b $tmux-delay a)
-  sscri (macro @akitty 100 C-b $tmux-delay ;)
-)
-
 (deflayer sessions
   ;;     a      s      d      f      g      h      j      k      l      ;      '
   XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX        ;;F1  
@@ -214,18 +84,6 @@
   XX     XX     XX     XX     XX     XX     @shome @sdots @s-lua @sblog @sscri XX     XX        ;;A   
   XX     XX     XX     XX     XX     XX     @sfind XX     XX     XX     XX     XX     XX        ;;Z   
   XX    XX   XX   XX            XX             XX      XX         XX     XX     XX              ;;MOD 
-)
-
-;; Aliases for raycast
-(defalias
-  remoj (cmd open "raycast://extensions/raycast/emoji-symbols/search-emoji-symbols")
-  rrain (cmd open "raycast://extensions/lardissone/raindrop-io/search")
-  rgoog (cmd open "raycast://extensions/mblode/google-search/index")
-  rfile (cmd open "raycast://extensions/raycast/file-search/search-files")
-  rvide (cmd open "raycast://extensions/tonka3000/youtube/search-videos?arguments=%7B%22query%22%3A%22%22%7D")
-  rdriv (cmd open "raycast://extensions/vishaltelangre/google-drive/index")
-  rspot (cmd open "raycast://extensions/mattisssa/spotify-player/search")
-  rbrav (cmd open "raycast://extensions/ron-myers/brave/search-tab")
 )
 
 (deflayer raycast
@@ -247,46 +105,6 @@
   XX    XX   XX     XX         spc            ret      XX         XX     XX     XX                   ;;MOD
 )
 
-;; Aliases for obs
-(defalias
-  ;; lineid_obs_switchscene_main
-  omain (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py main-screen --no-auth")
-  ;; lineid_obs_switchscene_guest
-  ogues (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py guests-solo --no-auth")
-  ;; lineid_obs_switchscene_guest1
-  ogue1 (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py guest1-0guest --no-auth")
-  ;; lineid_obs_switchscene_guest2
-  ogue2 (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py  --no-auth")
-  ;; lineid_obs_switchscene_guest3
-  ogue3 (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py  --no-auth")
-  ;; lineid_obs_switchscene_guest4
-  ogue4 (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py  --no-auth")
-  ;; lineid_obs_switchscene_guest5
-  ogue5 (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py  --no-auth")
-  ;; lineid_obs_switchscene_cam_guest1
-  ocag1 (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py  --no-auth")
-  ;; lineid_obs_switchscene_cam_guest2
-  ocag2 (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py  --no-auth")
-  ;; lineid_obs_switchscene_cam_guest3
-  ocag3 (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py  --no-auth")
-  ;; lineid_obs_switchscene_cam_guest4
-  ocag4 (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py  --no-auth")
-  ;; lineid_obs_switchscene_cam_guest5
-  ocag5 (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py  --no-auth")
-
-  ostar (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py starting-soon --no-auth")
-  oback (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py be-right-back --no-auth")
-  okeyb (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py keyboard --no-auth")
-  ozkbd (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py zoom-main-keyboard --no-auth")
-
-;; top 38, bottom 0, left 0, right 230
-  ozmai (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py zoom-main --no-auth && $HOME/github/dotfiles-latest/yabai/positions/yabai-custom-pad.sh 42 90 0 230 && $HOME/github/dotfiles-latest/yabai/yabai_restart.sh")
-  oz-in (cmd sudo -u linkarzu bash -c "$HOME/github/dotfiles-latest/yabai/positions/yabai-custom-pad.sh 42 90 3 230 && $HOME/github/dotfiles-latest/yabai/yabai_restart.sh")
-  ozout (cmd sudo -u linkarzu bash -c "$HOME/github/dotfiles-latest/yabai/positions/yabai-custom-pad.sh 42 3 3 230 && $HOME/github/dotfiles-latest/yabai/yabai_restart.sh")
-  oghaf (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py guests-solo-half --no-auth; $HOME/github/dotfiles-latest/yabai/positions/yabai-custom-pad.sh 48 10 10 400 && $HOME/github/dotfiles-latest/yabai/yabai_restart.sh")
-  ofull (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py main-screen-full --no-auth; $HOME/github/dotfiles-latest/yabai/positions/yabai-custom-pad.sh 42 3 3 3 && $HOME/github/dotfiles-latest/yabai/yabai_restart.sh")
-)
-
 (deflayer obs-scenes
   ;;     a      s      d      f      g      h      j      k      l      ;      '
   XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX        ;;F1  
@@ -297,30 +115,15 @@
   XX    XX   XX   XX            XX             XX      XX         XX     XX     XX              ;;MOD 
 )
 
+;; apps
 (deflayer applications
-  esc   XX     XX      XX      XX      XX      XX      XX      XX      XX      XX      XX      XX
-  grv   XX     XX      XX      XX      XX      XX      XX      XX      XX      XX      XX      XX   XX
-  tab  @adavin @amword @aexcel @arecut @ateams @ayoutu @awhats @asocia @a--obs @a1pass XX      XX   XX
-  XX   @afindr @calibr @adisco @aforkl @achrom @aspoti @akitty @abrave @ayouts @achatg @asystm ret
-  lsft @a-zoom @anotes @acalen @aprevw @avival @aneovd @a-mail @awinap XX      XX      ▲       rsft
-  fn    lctl lalt lmet                 spc                     rmet    ralt    ◀       ▼       ▶
-)
-
-;; The user executing the command is the user that kanata was started with. 
-;; For example, if kanata was started by root, the command will be run by 
-;; the root user. If you need to execute as a different user, on Unix platforms 
-;; you can use sudo -u USER before the rest of your command to achieve this.
-(defalias
-  ;; kitty floating windows or Quake like quick access terminal kitten quick-access-terminal
-  s-quak (macro @akitty 100 A-M-a $tmux-delay d)
-  s-task (macro @akitty 100 A-M-a $tmux-delay t)
-  scolor (macro @akitty 100 A-M-a $tmux-delay c)
-
-  saircn (cmd open "btt://execute_assigned_actions_for_trigger/?uuid=9A1CFA49-416C-480E-9430-184D2DAEE1CA") ;; Connect airpods
-  sairsw (cmd bash -c "/opt/homebrew/bin/SwitchAudioSource -s 'AirPods Pro'; /opt/homebrew/bin/SwitchAudioSource -t input -s 'AirPods Pro'") ;; Switch to airpods
-  smute (cmd sudo -u linkarzu bash -c "~/github/dotfiles-latest/scripts/macos/mac/misc/200-micMute.sh")
-
-  syabm (tap-hold-press $subl-time $subl-time M-= (layer-while-held yabai-manage))
+  ;;     a      s      d      f      g      h      j      k      l      ;      '
+  esc   XX     XX      XX      XX      XX      XX      XX      XX      XX      XX      XX      XX       ;;F1  
+  grv   XX     XX      XX      XX      XX      XX      XX      XX      XX      XX      XX      XX   XX  ;;NUM 
+  tab  @adavin @amword @aexcel @arecut @ateams @ayoutu @awhats @asocia @a--obs @a1pass XX      XX   XX  ;;Q   
+  XX   @afindr @calibr @adisco @aforkl @achrom @aspoti @akitty @abrave @ayouts @achatg @asystm ret      ;;A   
+  lsft @a-zoom @anotes @acalen @aprevw @avival @aneovd @a-mail @awinap XX      XX      ▲       rsft     ;;Z   
+  fn    lctl lalt lmet                 spc                     rmet    ralt    ◀       ▼       ▶        ;;MOD 
 )
 
 (deflayer system
@@ -333,23 +136,6 @@
   fn    lctl lalt lmet                 XX                 rmet  ralt        ◀       ▼       ▶         ;;MOD
 )
 
-(defalias
-  ;; dismiss macos notifications
-  snoti (cmd open "btt://execute_assigned_actions_for_trigger/?uuid=92B63395-5930-463A-9301-57BA344D6981")
-  ;; Start video recording
-  sstar (cmd open "btt://execute_assigned_actions_for_trigger/?uuid=24E07831-252B-4EB6-B6C4-5E1CDB742BF9")
-  ;; Stop video recording
-  sstop (cmd open "btt://execute_assigned_actions_for_trigger/?uuid=762AF6E2-41EE-4B74-A2D3-9B96C3D777B5")
-  syaba (cmd sudo -u linkarzu bash -c "$HOME/github/dotfiles-latest/yabai/yabai_restart.sh")
-  sposi (cmd sudo -u linkarzu bash -c "$HOME/github/dotfiles-latest/yabai/positions/kitty-pos.sh")
-  ;; copy last kitty command kitty scrollback
-  scopy (macro @akitty 200 A-M-i 500 S-/ 20 \ . S-2 \ . ret 20 k 20 S-v 20 S-n 400 y)
-
-  ;; To live reload / hot reload the config:
-  ;; If kanata can’t parse the file, the previous configuration will continue to be used.
-  slrld (macro (cmd sudo -u linkarzu bash -c "~/github/dotfiles-latest/scripts/macos/mac/misc/550-kanataRestartNotif.sh") 500 lrld)
-)
-
 (deflayer letter-s
   ;;     a      s      d      f      g      h      j      k      l      ;      '
   XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX            ;;F1
@@ -358,19 +144,6 @@
   XX     XX     XX     @scopy XX     XX     XX     @sstar @sstop XX     XX     XX     XX            ;;A
   XX     XX     XX     XX     XX     XX     @snoti XX     XX     XX     XX     XX     XX            ;;Z
   XX    XX   XX     XX         XX             XX      XX         XX     XX     XX                   ;;MOD
-)
-
-(defalias
-  ysnor (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && yabai -m window --swap north")
-  yssou (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && yabai -m window --swap south")
-  yseas (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && yabai -m window --swap east")
-  yswes (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && yabai -m window --swap west")
-  yfnor (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && yabai -m window --focus north")
-  yfsou (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && yabai -m window --focus south")
-  yfeas (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && yabai -m window --focus east")
-  yfwes (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && yabai -m window --focus west")
-  ywrem (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && yabai -m window --close")
-  ysmir (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && yabai -m space --mirror y-axis")
 )
 
 (deflayer yabai-manage
@@ -383,25 +156,25 @@
   XX    XX   XX     XX         XX             XX      XX         XX     XX     XX                   ;;MOD
 )
 
+(deflayer navi
+  ;;     a      s       d       f       g       h       j       k       l       ;       '
+  esc    XX     XX      XX      XX      XX      XX      XX      XX      XX      XX      XX      XX
+  grv    XX     XX      XX      XX      XX      XX      XX      XX      XX      XX      XX      XX    del
+  @scamt @scam0 @scamw  @scamd  XX      XX      S-A-◀   S-A-▼   S-A-▲   S-A-▶   XX      XX      XX    XX
+  XX     @scam= @scam9  M-[     M-]     @scamg  ◀       ▼       ▲       ▶       @scam;  XX      XX
+  lsft   XX     XX      XX      XX      XX      XX      XX      XX      XX      XX      ▲       rsft
+  fn      lctl lalt lmet                  _                      rmet    ralt    ◀      ▼       ▶
+)
 
-(deflayer left-hand
+;; Use this template as a base to create new layers
+(deflayer template
   ;;     a      s      d      f      g      h      j      k      l      ;      '
   XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX            ;;F1
-  XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     bspc   ;;NUM
+  XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     ;;NUM
   XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     ;;Q
   XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX            ;;A
   XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX            ;;Z
   XX    XX   XX     XX         XX             XX      XX         XX     XX     XX                   ;;MOD
-)
-
-(deflayer navi
-  ;;   a      s       d       f       g       h       j       k       l       ;       '
-  esc  XX     XX      XX      XX      XX      XX      XX      XX      XX      XX      XX      XX
-  grv  XX     XX      XX      XX      XX      XX      XX      XX      XX      XX      XX      XX    del
-@scamt @scam0 @scamw  @scamd  XX      XX      S-A-◀   S-A-▼   S-A-▲   S-A-▶   XX      XX      XX    XX
-  XX   @scam= @scam9  M-[     M-]     @scamg  ◀       ▼       ▲       ▶       @scam;  XX      XX
-  lsft XX     XX      XX      XX      XX      XX      XX      XX      XX      XX      ▲       rsft
-  fn    lctl lalt lmet                  _                      rmet    ralt    ◀      ▼       ▶
 )
 
 (defchordsv2

@@ -1,0 +1,185 @@
+;; Video related to this file
+;; https://youtu.be/jvJ3f4HHiMY
+
+;; Kanata docs
+;; https://github.com/jtroo/kanata/blob/main/docs/config.adoc
+
+;; OS key code mappings
+;; https://github.com/jtroo/kanata/blob/main/parser/src/keys/mod.rs
+
+;; The user executing the command is the user that kanata was started with. 
+;; For example, if kanata was started by root, the command will be run by 
+;; the root user. If you need to execute as a different user, on Unix platforms 
+;; you can use sudo -u USER before the rest of your command to achieve this.
+
+(include mac-common.kbd)
+
+(defcfg
+  macos-dev-names-include (
+    "Glove80"
+    "Glove80 Left"
+  )
+
+  process-unmapped-keys yes
+  log-layer-changes no
+  danger-enable-cmd yes
+  concurrent-tap-hold yes
+
+  ;; When any non-chord activation happens, this timeout begins. Until this timeout expires
+  ;; all inputs will immediately skip chords processing and be processed by the active layer.
+  ;; chords-v2-min-idle 250
+)
+
+;; Variables
+(defvar
+ tap-higher 400
+ tap-time 300
+ hold-time 300
+ chord-time 60
+ subl-time 200
+ tmux-delay 40
+)
+
+;; Only one defsrc is allowed.
+;;
+;; defsrc defines the keys that will be intercepted by kanata. The order of the
+;; keys matches with deflayer declarations and all deflayer declarations must
+;; have the same number of keys as defsrc. Any keys not listed in defsrc will
+;; be passed straight to the operating system.
+(defsrc
+  esc    f1   f2   f3   f4   f5   f6   f7   f8   f9   f10  f11  f12
+  grv    1    2    3    4    5    6    7    8    9    0    -    =    bspc
+  tab    q    w    e    r    t    y    u    i    o    p    [    ]    \
+  caps   a    s    d    f    g    h    j    k    l    ;    '    ret
+  lsft   z    x    c    v    b    n    m    ,    .    /    ▲   rsft
+  fn   lctl  lalt lmet          spc         rmet ralt ◀    ▼    ▶
+)
+
+;; Main layer
+;; Set cmd on "d" due to cmd+r, cmd+f
+(deflayer main
+  ;;     a      s      d      f      g      h      j      k      l      ;      '
+  XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX
+  XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     @msymb
+  @mretu q      w      @mskit @mdail t      y      u      i      o      p      \      XX     \ 
+  @mnavi @mlctl @msyst @mlmet @mlalt @mtrik h      @mralt @mrmet @mmous @mrctl @mral2 @msubl
+  lsft   @mmtab @mmgrv @mcopy @mpast @maltk n      @mtcop ,      @mhome /      XX     rsft
+  XX    XX   XX   @msymb            spc             @msubl      XX         XX     XX     XX
+)
+
+(deflayer sublayers
+  ;;     a      s      d      f      g      h      j      k      l      ;      '
+  XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX            ;;F1
+  XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     @mapps ;;NUM
+  XX     XX     XX     XX     @mrayc @msess XX     XX     XX     @m-obs XX     XX     XX     XX     ;;Q
+  XX     XX     @mlets XX     XX     XX     XX     XX     XX     XX     XX     XX     XX            ;;A
+  XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX            ;;Z
+  XX    XX   XX @mapps         XX             XX      XX         XX     XX     XX                   ;;MOD
+)
+
+(deflayer sessions
+  ;;     a      s      d      f      g      h      j      k      l      ;      '
+  XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX        ;;F1  
+  XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX ;;NUM 
+  XX     XX     XX     @spriv @sdail XX     XX     @sobsi XX     XX     @scont XX     XX     XX ;;Q   
+  XX     XX     XX     XX     XX     XX     @shome @sdots @s-lua @sblog @sscri XX     XX        ;;A   
+  XX     XX     XX     XX     XX     XX     @sfind XX     XX     XX     XX     XX     XX        ;;Z   
+  XX    XX   XX   XX            XX             XX      XX         XX     XX     XX              ;;MOD 
+)
+
+(deflayer raycast
+  ;;     a      s      d      f      g      h      j      k      l      ;      '
+  XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX        ;;F1  
+  XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX ;;NUM 
+  XX     XX     XX     @remoj XX     XX     @rvide XX     XX     @rbrav XX     XX     XX     XX ;;Q   
+  XX     XX     XX     XX     XX     XX     @rspot @rrain @rgoog @rfile @rdriv XX     XX        ;;A   
+  XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX        ;;Z   
+  XX    XX   XX   XX            XX             XX      XX         XX     XX     XX              ;;MOD 
+)
+
+(deflayer symbols
+  XX   XX     XX      XX      XX      XX      XX      XX      XX      XX      XX      XX      XX
+  XX   XX     XX      XX      XX      XX      XX      XX      XX      XX      XX      XX      XX     XX
+  S--  S-1    S-2     S-3     S-4     S-5     S-6     S-7     S-8     S-9     S-0     -       XX     -
+  S-`  1      2       3       4       5       6       7       8       9       0       `       ret
+  S-=  S-,    S-.     S-/     [       ]       S-[     S-]     ,       .       /       XX      =
+  XX    XX   XX     XX         spc            ret      XX         XX     XX     XX                   ;;MOD
+)
+
+(deflayer obs-scenes
+  ;;     a      s      d      f      g      h      j      k      l      ;      '
+  XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX        ;;F1  
+  XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX ;;NUM 
+  XX     @ocag1 @ocag2 @ocag3 @ocag4 @ocag5 @oz-in @ozout @ogues XX     XX     XX     XX     XX ;;Q   
+  XX     @ogue1 @ogue2 @ogue3 @ogue4 @ogue5 @oghaf XX     @okeyb XX     XX     XX     XX        ;;A   
+  XX     @ozmai @ozkbd XX     @ofull @oback @ostar @omain XX     XX     XX     XX     XX        ;;Z   
+  XX    XX   XX   XX            XX             XX      XX         XX     XX     XX              ;;MOD 
+)
+
+;; apps
+(deflayer applications
+  ;;     a      s      d      f      g      h      j      k      l      ;      '
+  esc   XX     XX      XX      XX      XX      XX      XX      XX      XX      XX      XX      XX       ;;F1  
+  grv   XX     XX      XX      XX      XX      XX      XX      XX      XX      XX      XX      XX   XX  ;;NUM 
+  tab  @adavin @amword @aexcel @arecut @ateams @ayoutu @awhats @asocia @a--obs @a1pass XX      XX   XX  ;;Q   
+  XX   @afindr @calibr @adisco @aforkl @achrom @aspoti @akitty @abrave @ayouts @achatg @asystm ret      ;;A   
+  lsft @a-zoom @anotes @acalen @aprevw @avival @aneovd @a-mail @awinap XX      XX      ▲       rsft     ;;Z   
+  fn    lctl lalt lmet                 spc                     rmet    ralt    ◀       ▼       ▶        ;;MOD 
+)
+
+(deflayer system
+  ;;   a      s       d       f       g       h       j       k       l       ;       '
+  esc  XX     XX      XX      XX      XX      XX      XX      XX      XX      XX      XX      XX        ;;F1 
+  grv  XX     XX      XX      XX      XX      XX      XX      XX      XX      XX      XX      XX    XX  ;;NUM
+  tab  XX     XX      M-w     XX      @s-task prev    brdn    brup    next    ▶⏸      XX      XX    XX  ;;Q  
+  XX   @smute XX      @syabm  volu    @scolor M-S-[   @s-quak XX      M-S-]   XX      XX      ret       ;;A  
+  lsft M-C-q  XX      M--     vold    XX      @saircn @sairsw XX      XX      XX      ▲       rsft      ;;Z  
+  fn    lctl lalt lmet                 XX                 rmet  ralt        ◀       ▼       ▶         ;;MOD
+)
+
+(deflayer letter-s
+  ;;     a      s      d      f      g      h      j      k      l      ;      '
+  XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX            ;;F1
+  XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     bspc   ;;NUM
+  XX     XX     XX     XX     @slrld XX     @syaba @scam3 @scam2 XX     @sposi XX     XX     XX     ;;Q
+  XX     XX     XX     @scopy XX     XX     XX     @sstar @sstop XX     XX     XX     XX            ;;A
+  XX     XX     XX     XX     XX     XX     @snoti XX     XX     XX     XX     XX     XX            ;;Z
+  XX    XX   XX     XX         XX             XX      XX         XX     XX     XX                   ;;MOD
+)
+
+(deflayer yabai-manage
+  ;;     a      s      d      f      g      h      j      k      l      ;      '
+  XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX            ;;F1
+  XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     bspc   ;;NUM
+  XX     XX     XX     XX     @ywrem XX     @yswes @yssou @ysnor @yseas XX     XX     XX     XX     ;;Q
+  XX     XX     XX     XX     XX     XX     @yfwes @yfsou @yfnor @yfeas XX     XX     XX            ;;A
+  XX     XX     XX     XX     XX     XX     XX     @ysmir XX     XX     XX     XX     XX            ;;Z
+  XX    XX   XX     XX         XX             XX      XX         XX     XX     XX                   ;;MOD
+)
+
+(deflayer navi
+  ;;     a      s       d       f       g       h       j       k       l       ;       '
+  esc    XX     XX      XX      XX      XX      XX      XX      XX      XX      XX      XX      XX
+  grv    XX     XX      XX      XX      XX      XX      XX      XX      XX      XX      XX      XX    del
+  @scamt @scam0 @scamw  @scamd  XX      XX      S-A-◀   S-A-▼   S-A-▲   S-A-▶   XX      XX      XX    XX
+  XX     @scam= @scam9  M-[     M-]     @scamg  ◀       ▼       ▲       ▶       @scam;  XX      XX
+  lsft   XX     XX      XX      XX      XX      XX      XX      XX      XX      XX      ▲       rsft
+  fn      lctl lalt lmet                  _                      rmet    ralt    ◀      ▼       ▶
+)
+
+;; Use this template as a base to create new layers
+(deflayer template
+  ;;     a      s      d      f      g      h      j      k      l      ;      '
+  XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX            ;;F1
+  XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     ;;NUM
+  XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     ;;Q
+  XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX            ;;A
+  XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX            ;;Z
+  XX    XX   XX     XX         XX             XX      XX         XX     XX     XX                   ;;MOD
+)
+
+(defchordsv2
+  (spc f g) (macro M-(tab 20 tab)) $chord-time first-release () ;; switch to the third app
+  (spc caps) caps $chord-time first-release ()
+  (j k l) bspc $chord-time first-release ()
+)

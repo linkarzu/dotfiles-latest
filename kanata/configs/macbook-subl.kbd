@@ -7,7 +7,13 @@
 ;; OS key code mappings
 ;; https://github.com/jtroo/kanata/blob/main/parser/src/keys/mod.rs
 
+(include mac-common.kbd)
+
 (defcfg
+  macos-dev-names-include (
+    "Apple Internal Keyboard / Trackpad"
+  )
+
   process-unmapped-keys yes
   log-layer-changes no
   danger-enable-cmd yes

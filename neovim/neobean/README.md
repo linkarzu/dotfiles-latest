@@ -399,6 +399,24 @@ Do it in `~/github/dotfiles-latest/neovim/neobean/lua/plugins/core.lua`
 
 ### grug-far.nvim replacements
 
+- `\S` matches any **non-whitespace** character
+- `+` means: **One or more** of the preceding pattern
+-
+
+```regex
+\S+
+XX
+
+buffer-range=kanata/configs/glove80-subl.kbd:68:0-73:-1
+kanata/configs/glove80-subl.kbd
+  @adavin @amword @aexcel @arecut @ateams @ayoutu @awhats @asocia @a--obs @a1pass XX
+  XX XX XX XX XX XX XX XX XX XX XX
+  grv 1  2  3  4  5  6  7  8  9  0  -  =
+  XX XX  XX  XX  XX  XX  XX  XX  XX  XX  XX  XX  XX
+```
+
+---
+
 - Remember to use the `--multiline` flag
 - Make sure to include `spaces` in case a blank line has a space, otherwise you
   won't be able to match
@@ -416,6 +434,8 @@ Do it in `~/github/dotfiles-latest/neovim/neobean/lua/plugins/core.lua`
 <!-- prettier-ignore-end -->
 <!-- markdownlint-restore -->
 ```
+
+---
 
 - For this to work, just make sure to add a newline after `from` after pasting
   in the search bar for grug-far

@@ -97,7 +97,8 @@ create_symlink ~/github/dotfiles-latest/neovim/quarto-nvim-kickstarter/ ~/.confi
 create_symlink ~/github/dotfiles-latest/neovim/kickstart.nvim/ ~/.config/kickstart.nvim
 create_symlink ~/github/dotfiles-latest/neovim/lazyvim/ ~/.config/lazyvim
 create_symlink ~/github/dotfiles-latest/hammerspoon/ ~/.hammerspoon
-create_symlink ~/github/dotfiles-latest/karabiner/mxstbr/ ~/.config/karabiner
+# create_symlink ~/github/dotfiles-latest/karabiner/mxstbr/ ~/.config/karabiner
+create_symlink ~/github/dotfiles-latest/karabiner/ ~/.config/karabiner
 create_symlink ~/github/dotfiles-latest/sketchybar/felixkratz-linkarzu/ ~/.config/sketchybar
 create_symlink ~/github/dotfiles-latest/neovide/ ~/.config/neovide
 create_symlink ~/github/dotfiles-latest/ghostty/ ~/.config/ghostty

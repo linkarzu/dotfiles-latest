@@ -684,6 +684,10 @@ vim.keymap.set(
   { noremap = true, silent = true }
 )
 
+vim.keymap.set({ "n", "x" }, "<leader>sv", function()
+  require("grug-far").open({ visualSelectionUsage = "operate-within-range" })
+end, { desc = "grug-far: Search within range" })
+
 -- Replaces the word I'm currently on, opens a terminal so that I start typing the new word
 -- It replaces the word globally across the entire file
 vim.keymap.set(

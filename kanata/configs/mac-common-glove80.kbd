@@ -83,11 +83,11 @@
   ;; Other layers tap-hold-press
   ;; mapr configured for both the glove80 and the macbook keyboard
   ;; mappr (tap-hold-press $tap-time $hold-time ret (layer-toggle apps))
-  msymb (tap-hold-press $tap-time $hold-time bspc (layer-while-held symbols))
-  mnavi (tap-hold-press $tap-time $hold-time esc (layer-toggle navi))
+  msymb (tap-hold $tap-time $hold-time bspc (layer-while-held symbols))
+  ;; mnavi (tap-hold-press $tap-time $hold-time esc (layer-toggle navi))
 
   ;; Other layers tap-hold
-  msyst (tap-hold $tap-time $hold-time s (layer-toggle system))
+  ;; msyst (tap-hold $tap-time $hold-time s (layer-toggle system))
 
   ;; Multi
   ;; mhypr (tap-hold $tap-time $hold-time spc (multi lsft lctl lalt lmet)) ;; Hyper key
@@ -97,13 +97,13 @@
   ;; https://github.com/jtroo/kanata/discussions/1765
   ;; DO NOT USE THE SUBLAYERS IN A FREQUENTLY PRESSED KEY LIKE SPACEBAR
   ;; It made typing spaces a pain in the ass, enter is not pressed to often, so it works way better
-  msubl (tap-hold-press $subl-time $subl-time ret (layer-while-held sublayers))
+  ;; msubl (tap-hold-press $subl-time $subl-time ret (layer-while-held sublayers))
 
-  msess (tap-hold-press $subl-time $subl-time t (layer-while-held sessions))
-  mrayc (tap-hold-press $subl-time $subl-time r (layer-while-held raycast))
-  m-obs (tap-hold-press $subl-time $subl-time o (layer-while-held obs-scenes))
-  mapps (tap-hold-press $subl-time $subl-time bspc (layer-while-held applications))
-  mlets (tap-hold-press $subl-time $subl-time s (layer-while-held letter-s))
+  ;; msess (tap-hold-press $subl-time $subl-time t (layer-while-held sessions))
+  ;; mrayc (tap-hold-press $subl-time $subl-time r (layer-while-held raycast))
+  ;; m-obs (tap-hold-press $subl-time $subl-time o (layer-while-held obs-scenes))
+  ;; mapps (tap-hold-press $subl-time $subl-time bspc (layer-while-held applications))
+  ;; mlets (tap-hold-press $subl-time $subl-time s (layer-while-held letter-s))
 
   ;; Execute script
   ;; maltt (cmd open "btt://execute_assigned_actions_for_trigger/?uuid=F35EF770-FAA5-448A-957D-70BB449DEB0F")
@@ -147,9 +147,9 @@
 ;; Aliases for obs
 (defalias
   ;; lineid_obs_switchscene_main
-  omain (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py main-screen --no-auth")
+  omain (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py main-screen-live --no-auth")
   ;; lineid_obs_switchscene_guest
-  ogues (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py guests-solo --no-auth")
+  ogues (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py guests-solo-live --no-auth")
   ;; lineid_obs_switchscene_guest1
   ogue1 (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py guest1-0guest --no-auth")
   ;; lineid_obs_switchscene_guest2
@@ -194,7 +194,7 @@
   sairsw (cmd bash -c "/opt/homebrew/bin/SwitchAudioSource -s 'AirPods Pro'; /opt/homebrew/bin/SwitchAudioSource -t input -s 'AirPods Pro'") ;; Switch to airpods
   smute (cmd sudo -u linkarzu bash -c "~/github/dotfiles-latest/scripts/macos/mac/misc/200-micMute.sh")
 
-  syabm (tap-hold-press $subl-time $subl-time M-= (layer-while-held yabai-manage))
+  ;; syabm (tap-hold-press $subl-time $subl-time M-= (layer-while-held yabai-manage))
 )
 
 (defalias
@@ -226,4 +226,3 @@
   ywrem (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && yabai -m window --close")
   ysmir (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && yabai -m space --mirror y-axis")
 )
-

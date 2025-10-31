@@ -1,0 +1,64 @@
+# F14, F15 and F20 doesn't seem to like this
+
+# Applications
+shift + ctrl - f1 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" 'DaVinci Resolve'
+shift + ctrl - f2 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" 'Microsoft Word'
+shift + ctrl - f3 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" 'Microsoft Excel'
+shift + ctrl - f4 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" Recut
+shift + ctrl - f5 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" 'Microsoft Teams'
+shift + ctrl - f6 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" YouTube
+shift + ctrl - f7 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" 'WhatsApp Web'
+shift + ctrl - f8 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" socialstream
+shift + ctrl - f9 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" OBS
+shift + ctrl - f10 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" 1Password
+# shift + ctrl - f11 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" Spotify
+
+shift + ctrl - f12 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" Finder
+shift + ctrl - f13 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" 'E-book Viewer'
+ctrl + alt - f16 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" Discord
+ctrl + alt - f17 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" ForkLift
+shift + ctrl - f16 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" 'Google Chrome'
+shift + ctrl - f17 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" Spotify
+shift + ctrl - f18 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" kitty
+shift + ctrl - f19 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" 'Brave Browser'
+ctrl + alt - f18 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" YouTubeStudio
+ctrl + alt - f12 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" ChatGPT
+ctrl + alt - f13 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" 'System Settings'
+
+ctrl + alt - f1 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" zoom.us
+ctrl + alt - f2 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" Notes
+ctrl + alt - f3 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" Calendar
+ctrl + alt - f4 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" Preview
+ctrl + alt - f5 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" Vivaldi
+ctrl + alt - f6 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" Neovide
+ctrl + alt - f7 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" Mail
+ctrl + alt - f8 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" 'Windows App'
+# ctrl + alt - f9 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" Spotify
+# ctrl + alt - f10 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" Spotify
+# ctrl + alt - f11 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" Spotify
+
+# Tmux or kitty sessions
+#
+#  NOTE: Kitty assigns each instance a unique UNIX socket (/tmp/kitty-<PID>)
+# for remote control. External tools (like skhd) cannot talk to Kitty unless
+# they first detect that PID-suffixed socket and connect to it. The helper
+# script 550-skhdSession.sh handles this automatically.
+ctrl + cmd - f12 : $HOME/github/dotfiles-latest/scripts/macos/mac/misc/550-skhdSession.sh "$HOME/github/dotfiles-latest/kitty/sessions/dots-private.kitty-session"
+ctrl + cmd - f13 : $HOME/github/dotfiles-latest/scripts/macos/mac/misc/551-skhdDaily.sh
+ctrl + cmd - f17 : $HOME/github/dotfiles-latest/scripts/macos/mac/misc/550-skhdSession.sh "$HOME/github/dotfiles-latest/kitty/sessions/obsidian.kitty-session"
+# ctrl + cmd - f18
+# ctrl + alt - f19
+ctrl + cmd - f2 : $HOME/github/dotfiles-latest/scripts/macos/mac/misc/550-skhdSession.sh "$HOME/github/dotfiles-latest/kitty/sessions/home.kitty-session"
+ctrl + cmd - f3 : $HOME/github/dotfiles-latest/scripts/macos/mac/misc/550-skhdSession.sh "$HOME/github/dotfiles-latest/kitty/sessions/dotfiles.kitty-session"
+ctrl + cmd - f5 : $HOME/github/dotfiles-latest/scripts/macos/mac/misc/550-skhdSession.sh "$HOME/github/dotfiles-latest/kitty/sessions/blogpost.kitty-session"
+ctrl + cmd - f19 : $HOME/github/dotfiles-latest/scripts/macos/mac/misc/551-skhdDaily.sh
+cmd + alt - f1 : $HOME/github/dotfiles-latest/scripts/macos/mac/misc/550-skhdSession.sh "$HOME/github/dotfiles-latest/kitty/sessions/skitty.kitty-session"
+
+cmd + alt - f2 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/200-micMute.sh"
+cmd + alt - f3 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/555-skhdQatTask.sh"
+cmd + alt - f4 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/556-skhdQatColor.sh"
+# cmd + alt - f5 : @saircn
+cmd + alt - f6 : /Applications/kitty.app/Contents/MacOS/kitty @ --to "unix:$(ls /tmp/kitty-* 2>/dev/null | head -n1)" action launch --type=background kitten quick-access-terminal
+# cmd + alt - f7 : @sairsw
+cmd + alt - f8 : /Applications/kitty.app/Contents/MacOS/kitty @ --to "unix:$(ls /tmp/kitty-* 2>/dev/null | head -n1)" action goto_session -1
+# cmd + alt - f9 : tmux copy mode

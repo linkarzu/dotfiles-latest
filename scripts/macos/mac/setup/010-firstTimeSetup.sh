@@ -663,71 +663,71 @@ echo "Restarting karabiner process after created symlinks"
 # https://karabiner-elements.pqrs.org/docs/manual/operation/restart/
 launchctl kickstart -k gui/$(id -u)/org.pqrs.service.agent.karabiner_console_user_server
 
-# Make sure to change to the project directory
-cd ~/github/dotfiles-latest/karabiner/mxstbr
-
-# Installs the project dependencies. These dependencies are usually defined
-# in a package.json file in the root directory of the TypeScript project.
-# This is a one-time setup step unless the dependencies change.
-yarn install
-
-# Now compile the TypeScript code into a karabiner.json file based on the rules.ts file
-yarn run build
-
-# I need to run the 'yarn run watch' command when the computer starts
-# This command will keep running and watch for changes to your TypeScript files.
-# If any changes are detected, it will automatically rebuild the karabiner.json file.
-# Create and populate the LaunchAgent plist file
-echo
-echo -e "${boldPurple}>>>>>>>>>>>>>>>>>>>>>>>>>>${noColor}"
-echo "Creating and populating the LaunchAgent plist for Karabiner..."
-cat <<EOF >~/Library/LaunchAgents/com.linkarzu.karabiner.plist
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-  <dict>
-    <key>Label</key>
-    <string>com.linkarzu.karabiner</string>
-    <key>ProgramArguments</key>
-    <array>
-      <string>/opt/homebrew/bin/yarn</string>
-      <string>run</string>
-      <string>watch</string>
-    </array>
-    <key>RunAtLoad</key>
-    <true/>
-    <key>StandardOutPath</key>
-    <string>/tmp/karabiner_linkarzu.out.log</string>
-    <key>StandardErrorPath</key>
-    <string>/tmp/karabiner_linkarzu.err.log</string>
-    <key>WorkingDirectory</key>
-    <string>$HOME/github/dotfiles-latest/karabiner/mxstbr</string>
-    <key>EnvironmentVariables</key>
-    <dict>
-      <key>PATH</key>
-      <string>/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin</string>
-    </dict>
-  </dict>
-</plist>
-EOF
-
-# Load the LaunchAgent plist
-# This will run the 'yarn run watch' command
-echo
-echo -e "${boldPurple}>>>>>>>>>>>>>>>>>>>>>>>>>>${noColor}"
-echo "Loading LaunchAgent plist..."
-launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.linkarzu.karabiner.plist
-
-# Instructions for logs and unloading
-echo -e "
-To check the logs, use:
-cat /tmp/karabiner_linkarzu.out.log
-cat /tmp/karabiner_linkarzu.err.log
-
-To unload the task, use:
-launchctl bootout gui/$(id -u) ~/Library/LaunchAgents/com.linkarzu.karabiner.plist
-
-Then delete the plist file if necessary."
+# # Make sure to change to the project directory
+# cd ~/github/dotfiles-latest/karabiner/mxstbr
+#
+# # Installs the project dependencies. These dependencies are usually defined
+# # in a package.json file in the root directory of the TypeScript project.
+# # This is a one-time setup step unless the dependencies change.
+# yarn install
+#
+# # Now compile the TypeScript code into a karabiner.json file based on the rules.ts file
+# yarn run build
+#
+# # I need to run the 'yarn run watch' command when the computer starts
+# # This command will keep running and watch for changes to your TypeScript files.
+# # If any changes are detected, it will automatically rebuild the karabiner.json file.
+# # Create and populate the LaunchAgent plist file
+# echo
+# echo -e "${boldPurple}>>>>>>>>>>>>>>>>>>>>>>>>>>${noColor}"
+# echo "Creating and populating the LaunchAgent plist for Karabiner..."
+# cat <<EOF >~/Library/LaunchAgents/com.linkarzu.karabiner.plist
+# <?xml version="1.0" encoding="UTF-8"?>
+# <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+# <plist version="1.0">
+#   <dict>
+#     <key>Label</key>
+#     <string>com.linkarzu.karabiner</string>
+#     <key>ProgramArguments</key>
+#     <array>
+#       <string>/opt/homebrew/bin/yarn</string>
+#       <string>run</string>
+#       <string>watch</string>
+#     </array>
+#     <key>RunAtLoad</key>
+#     <true/>
+#     <key>StandardOutPath</key>
+#     <string>/tmp/karabiner_linkarzu.out.log</string>
+#     <key>StandardErrorPath</key>
+#     <string>/tmp/karabiner_linkarzu.err.log</string>
+#     <key>WorkingDirectory</key>
+#     <string>$HOME/github/dotfiles-latest/karabiner/mxstbr</string>
+#     <key>EnvironmentVariables</key>
+#     <dict>
+#       <key>PATH</key>
+#       <string>/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin</string>
+#     </dict>
+#   </dict>
+# </plist>
+# EOF
+#
+# # Load the LaunchAgent plist
+# # This will run the 'yarn run watch' command
+# echo
+# echo -e "${boldPurple}>>>>>>>>>>>>>>>>>>>>>>>>>>${noColor}"
+# echo "Loading LaunchAgent plist..."
+# launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.linkarzu.karabiner.plist
+#
+# # Instructions for logs and unloading
+# echo -e "
+# To check the logs, use:
+# cat /tmp/karabiner_linkarzu.out.log
+# cat /tmp/karabiner_linkarzu.err.log
+#
+# To unload the task, use:
+# launchctl bootout gui/$(id -u) ~/Library/LaunchAgents/com.linkarzu.karabiner.plist
+#
+# Then delete the plist file if necessary."
 
 echo
 echo "########################################################################"

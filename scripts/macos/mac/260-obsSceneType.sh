@@ -21,6 +21,7 @@ echo "13 - 5 guest livestream"
 read -rp "Enter number: " choice
 
 target_file="$HOME/github/dotfiles-latest/kanata/configs/mac-common.kbd"
+target_file2="$HOME/github/dotfiles-latest/skhd/skhdrc"
 
 # Determine new scene name
 case "$choice" in
@@ -158,10 +159,25 @@ sed -i '' "/lineid_obs_switchscene_cam_guest3/{n;s|\(switch_scene\.py \)[a-zA-Z0
 sed -i '' "/lineid_obs_switchscene_cam_guest4/{n;s|\(switch_scene\.py \)[a-zA-Z0-9\-]*|\1$guest_4_full|;}" "$target_file"
 sed -i '' "/lineid_obs_switchscene_cam_guest5/{n;s|\(switch_scene\.py \)[a-zA-Z0-9\-]*|\1$guest_5_full|;}" "$target_file"
 
+sed -i '' "/lineid_obs_switchscene_main/{n;s|\(switch_scene\.py \)[a-zA-Z0-9\-]*|\1$main_scene|;}" "$target_file2"
+sed -i '' "/lineid_obs_switchscene_guest/{n;s|\(switch_scene\.py \)[a-zA-Z0-9\-]*|\1$guest_scene|;}" "$target_file2"
+sed -i '' "/lineid_obs_switchscene_guest1/{n;s|\(switch_scene\.py \)[a-zA-Z0-9\-]*|\1$guest_1|;}" "$target_file2"
+sed -i '' "/lineid_obs_switchscene_guest2/{n;s|\(switch_scene\.py \)[a-zA-Z0-9\-]*|\1$guest_2|;}" "$target_file2"
+sed -i '' "/lineid_obs_switchscene_guest3/{n;s|\(switch_scene\.py \)[a-zA-Z0-9\-]*|\1$guest_3|;}" "$target_file2"
+sed -i '' "/lineid_obs_switchscene_guest4/{n;s|\(switch_scene\.py \)[a-zA-Z0-9\-]*|\1$guest_4|;}" "$target_file2"
+sed -i '' "/lineid_obs_switchscene_guest5/{n;s|\(switch_scene\.py \)[a-zA-Z0-9\-]*|\1$guest_5|;}" "$target_file2"
+sed -i '' "/lineid_obs_switchscene_cam_guest1/{n;s|\(switch_scene\.py \)[a-zA-Z0-9\-]*|\1$guest_1_full|;}" "$target_file2"
+sed -i '' "/lineid_obs_switchscene_cam_guest2/{n;s|\(switch_scene\.py \)[a-zA-Z0-9\-]*|\1$guest_2_full|;}" "$target_file2"
+sed -i '' "/lineid_obs_switchscene_cam_guest3/{n;s|\(switch_scene\.py \)[a-zA-Z0-9\-]*|\1$guest_3_full|;}" "$target_file2"
+sed -i '' "/lineid_obs_switchscene_cam_guest4/{n;s|\(switch_scene\.py \)[a-zA-Z0-9\-]*|\1$guest_4_full|;}" "$target_file2"
+sed -i '' "/lineid_obs_switchscene_cam_guest5/{n;s|\(switch_scene\.py \)[a-zA-Z0-9\-]*|\1$guest_5_full|;}" "$target_file2"
+
 echo "Replaced scene with '$main_scene' in $target_file"
+echo "Replaced scene with '$main_scene' in $target_file2"
 
 # Reload Kanata if the target file is a Kanata config
 if [[ "$target_file" == *kanata* ]]; then
   echo "Reloading Kanata via launchctl..."
   launchctl kickstart -k gui/$(id -u)/com.linkarzu.kanata
+  skhd --restart-service
 fi

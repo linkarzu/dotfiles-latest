@@ -52,10 +52,10 @@
 
 (defalias
   ;; Modifier keys
-  mlmet (tap-hold $tap-time $hold-time d lmet)
-  mrmet (tap-hold $tap-time $hold-time k rmet)
-  mlalt (tap-hold $tap-time $hold-time f lalt)
-  mralt (tap-hold $tap-time $hold-time j ralt)
+  mlmet (tap-hold $tap-time $hold-time f lmet)
+  mrmet (tap-hold $tap-time $hold-time j rmet)
+  mlalt (tap-hold $tap-time $hold-time d lalt)
+  mralt (tap-hold $tap-time $hold-time k ralt)
   mral2 (tap-hold $tap-time $hold-time ' ralt)
   mlctl (tap-hold $tap-time $hold-time a lctl)
   mrctl (tap-hold $tap-time $hold-time ; rctl)

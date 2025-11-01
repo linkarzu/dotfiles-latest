@@ -80,7 +80,7 @@
   ;;     a      s      d      f      g      h      j      k      l      ;      '
   XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX        ;;F1  
   XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX ;;NUM 
-  XX     XX     XX     @spriv @sdail XX     XX     @sobsi XX     XX     @scont XX     XX     XX ;;Q   
+  XX     XX     XX     @spriv @sdail XX     XX     @sobsi XX     @sglov @scont XX     XX     XX ;;Q   
   XX     XX     XX     XX     XX     XX     @shome @sdots @s-lua @sblog @sscri XX     XX        ;;A   
   XX     XX     XX     XX     XX     XX     @sfind XX     XX     XX     XX     XX     XX        ;;Z   
   XX    XX   XX   XX            XX             XX      XX         XX     XX     XX              ;;MOD 

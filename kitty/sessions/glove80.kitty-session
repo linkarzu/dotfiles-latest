@@ -1,0 +1,20 @@
+# # Create a new OS window
+# # Any definitions specified before the first new_os_window will apply to first OS window.
+# new_os_window
+# # Set the --class for the new OS window
+# os_window_class mywindow
+# # Change the OS window state to normal, fullscreen, maximized or minimized
+# os_window_state normal
+
+# This defines how new windows (split panes will be open)
+# https://sw.kovidgoyal.net/kitty/layouts/#arrange-windows
+layout tall
+
+cd ~/github/linkarzu-glove80
+
+# How to get the title from within kitty:
+# kitten @ ls | jq -r '.[] | select(.is_focused) | .tabs[] | select(.is_focused) | .windows[] | select(.is_focused) | .title'
+# launch --title "dotfiles"
+launch --title "glove80" /bin/zsh -i -c 'v'
+focus
+focus_os_window

@@ -47,7 +47,7 @@ ctrl + cmd - f12 : $HOME/github/dotfiles-latest/scripts/macos/mac/misc/550-skhdS
 ctrl + cmd - f13 : $HOME/github/dotfiles-latest/scripts/macos/mac/misc/551-skhdDaily.sh
 ctrl + cmd - f17 : $HOME/github/dotfiles-latest/scripts/macos/mac/misc/550-skhdSession.sh "$HOME/github/dotfiles-latest/kitty/sessions/obsidian.kitty-session"
 # ctrl + cmd - f18
-# ctrl + alt - f19
+ctrl + alt - f19 : $HOME/github/dotfiles-latest/scripts/macos/mac/misc/550-skhdSession.sh "$HOME/github/dotfiles-latest/kitty/sessions/glove80.kitty-session"
 ctrl + cmd - f2 : $HOME/github/dotfiles-latest/scripts/macos/mac/misc/550-skhdSession.sh "$HOME/github/dotfiles-latest/kitty/sessions/home.kitty-session"
 ctrl + cmd - f3 : $HOME/github/dotfiles-latest/scripts/macos/mac/misc/550-skhdSession.sh "$HOME/github/dotfiles-latest/kitty/sessions/dotfiles.kitty-session"
 ctrl + cmd - f5 : $HOME/github/dotfiles-latest/scripts/macos/mac/misc/550-skhdSession.sh "$HOME/github/dotfiles-latest/kitty/sessions/blogpost.kitty-session"
@@ -62,3 +62,73 @@ cmd + alt - f6 : /Applications/kitty.app/Contents/MacOS/kitty @ --to "unix:$(ls 
 # cmd + alt - f7 : @sairsw
 cmd + alt - f8 : /Applications/kitty.app/Contents/MacOS/kitty @ --to "unix:$(ls /tmp/kitty-* 2>/dev/null | head -n1)" action goto_session -1
 # cmd + alt - f9 : tmux copy mode
+
+# Raycast
+cmd + alt - f10 : open "raycast://extensions/raycast/emoji-symbols/search-emoji-symbols"
+cmd + alt - f18 : open "raycast://extensions/tonka3000/youtube/search-videos?arguments=%7B%22query%22%3A%22%22%7D"
+cmd + alt - f11 : open "raycast://extensions/mattisssa/spotify-player/search"
+cmd + alt - f12 : open "raycast://extensions/lardissone/raindrop-io/search"
+cmd + alt - f13 : open "raycast://extensions/mblode/google-search/index"
+cmd + alt - f16 : open "raycast://extensions/raycast/file-search/search-files"
+cmd + alt - f18 : open "raycast://extensions/vishaltelangre/google-drive/index"
+
+# letter-s
+shift + cmd - f5 : "$HOME/github/dotfiles-latest/yabai/yabai_restart.sh" 
+shift + cmd - f6 : osascript -e 'tell application "System Events" to keystroke "3" using {shift down, command down, option down, control down}'
+shift + cmd - f7 : osascript -e 'tell application "System Events" to keystroke "2" using {shift down, command down, option down, control down}'
+shift + cmd - f8 : "$HOME/github/dotfiles-latest/yabai/positions/kitty-pos.sh"
+shift + cmd - f9 : open "btt://execute_assigned_actions_for_trigger/?uuid=24E07831-252B-4EB6-B6C4-5E1CDB742BF9"
+shift + cmd - f10 : open "btt://execute_assigned_actions_for_trigger/?uuid=762AF6E2-41EE-4B74-A2D3-9B96C3D777B5"
+shift + cmd - f11 : open "btt://execute_assigned_actions_for_trigger/?uuid=92B63395-5930-463A-9301-57BA344D6981" 
+
+# OBS scenes
+# lineid_obs_switchscene_cam_guest1
+shift + alt - f1 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py cam-full-guest1 --no-auth"
+# shift + alt - f2 : 
+# shift + alt - f3 : 
+# shift + alt - f4 : 
+# shift + alt - f5 : 
+# shift + alt - f6 : 
+# shift + alt - f7 : 
+# lineid_obs_switchscene_guest
+shift + alt - f8 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py guests-all-notes-right-live --no-auth"
+# shift + alt - f9 : 
+# shift + alt - f10 : 
+# lineid_obs_switchscene_guest1
+shift + alt - f11 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py guest1-1guest-live --no-auth"
+# shift + alt - f12 : 
+# shift + alt - f13 : 
+# shift + alt - f16 : 
+# shift + alt - f17 : 
+# shift + alt - f18 : 
+# shift + alt - f19 : 
+# shift + alt - f19 : 
+# shift + cmd - f16 : 
+# shift + cmd - f17 : 
+# shift + cmd - f18 : 
+# shift + cmd - f19 : 
+# shift + alt + ctrl - f1 : 
+# shift + alt + ctrl - f2 : 
+# shift + alt + ctrl - f3 : 
+# shift + alt + ctrl - f4 : 
+# shift + alt + ctrl - f5 : 
+# lineid_obs_switchscene_main
+shift + alt + ctrl - f6 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py main-1-guest-live --no-auth"
+# shift + alt + ctrl - f7 : 
+# shift + alt + ctrl - f8 : 
+# shift + alt + ctrl - f9 : 
+
+# Yabai manage
+shift + alt + ctrl - f10 : yabai -m window --close
+shift + alt + ctrl - f11 : yabai -m window --swap west
+shift + alt + ctrl - f12 : yabai -m window --swap south
+shift + alt + ctrl - f13 : yabai -m window --swap north
+shift + alt + ctrl - f16 : yabai -m window --swap east
+shift + alt + ctrl - f17 : yabai -m window --focus west
+shift + alt + ctrl - f18 : yabai -m window --focus south
+shift + alt + ctrl - f19 : yabai -m window --focus north
+shift + alt + cmd - f1 : yabai -m window --focus east
+# shift + alt + cmd - f2 : 
+shift + alt + cmd - f3 : yabai -m space --mirror y-axis
+# shift + alt + cmd - f4 : 
+# shift + alt + cmd - f5 : 

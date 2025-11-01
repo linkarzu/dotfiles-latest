@@ -1,7 +1,7 @@
 {
   "LazyVim": { "branch": "main", "commit": "d72127eb936f7f05d88d4fc316bc7e89080d69d8" },
   "LuaSnip": { "branch": "master", "commit": "ccf25a5452b8697a823de3e5ecda63ed3d723b79" },
-  "SchemaStore.nvim": { "branch": "main", "commit": "f51d23917b6a09188154fa55566632f9e045444a" },
+  "SchemaStore.nvim": { "branch": "main", "commit": "09bc7137bcb13b903f7337ec2a86d8a7f55002d1" },
   "auto-save.nvim": { "branch": "main", "commit": "37c82fd548e3f5ffc2d9d020a65dac1044584f44" },
   "blink-cmp-dictionary": { "branch": "master", "commit": "944b3b215b01303672d4213758db7c5c5a1e3c92" },
   "blink-emoji.nvim": { "branch": "master", "commit": "066013e4c98a9318408ee3f1ca2dbcb6fa3e4c06" },

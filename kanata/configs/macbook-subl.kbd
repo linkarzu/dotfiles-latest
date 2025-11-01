@@ -140,8 +140,8 @@
   ;;     a      s      d      f      g      h      j      k      l      ;      '
   XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX            ;;F1
   XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     bspc   ;;NUM
-  XX     XX     XX     XX     @slrld XX     @syaba @scam3 @scam2 XX     @sposi XX     XX     XX     ;;Q
-  XX     XX     XX     @scopy XX     XX     XX     @sstar @sstop XX     XX     XX     XX            ;;A
+  XX     XX     XX     XX     @slrld XX     @syaba @scam3 @scam2 XX     XX     XX     XX     XX     ;;Q
+  XX     XX     XX     @scopy XX     XX     @sposi @sstar @sstop XX     XX     XX     XX            ;;A
   XX     XX     XX     XX     XX     XX     @snoti XX     XX     XX     XX     XX     XX            ;;Z
   XX    XX   XX     XX         XX             XX      XX         XX     XX     XX                   ;;MOD
 )

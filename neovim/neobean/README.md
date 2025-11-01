@@ -91,6 +91,7 @@
 - [image.nvim](#imagenvim)
   * [Install image.nvim](#install-imagenvim)
   * [Install luarocks (optional)](#install-luarocks-optional)
+- [Increase numbers in vertical visual mode](#increase-numbers-in-vertical-visual-mode)
 
 <!-- tocstop -->
 
@@ -1134,3 +1135,27 @@ magick
   `luarocks.nvim` one
 - Uncomment the lines at the top of the `plugins/image-nvim.lua` file
 - Just make sure they point to the right path
+
+## Increase numbers in vertical visual mode
+
+- Make your selection of the numbers you want to increase with `C+v`
+- Then press `g ctrl+a`
+
+```bash
+{Visual}g CTRL-A	Add [count] to the number or alphabetic character in
+			the highlighted text. If several lines are
+		        highlighted, each one will be incremented by an
+			additional [count] (so effectively creating a
+			[count] incrementing sequence).
+			For Example, if you have this list of numbers:
+				1. ~
+				1. ~
+				1. ~
+				1. ~
+			Move to the second "1." and Visually select three
+			lines, pressing g CTRL-A results in:
+				1. ~
+				2. ~
+				3. ~
+				4. ~
+```

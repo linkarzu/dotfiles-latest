@@ -13,25 +13,25 @@
 # Markdown heading 1 - color04
 linkarzu_color18=#002931
 # Markdown heading 2 - color02
-linkarzu_color19=#453f01
+linkarzu_color19=#1c1c1c
 # Markdown heading 3 - color03
-linkarzu_color20=#242424
+linkarzu_color20=#393939
 # Markdown heading 4 - color01
 linkarzu_color21=#736902
 # Markdown heading 5 - color05
-linkarzu_color22=#7a7a7a
+linkarzu_color22=#453f01
 # Markdown heading 6 - color08
-linkarzu_color23=#999999
+linkarzu_color23=#7b7b7b
 # Markdown heading foreground
 # usually set to color10 which is the terminal background
 linkarzu_color26=#000000
 
-linkarzu_color04=#ffffff
-linkarzu_color02=#cccccc
-linkarzu_color03=#999999
-linkarzu_color01=#666666
+linkarzu_color04=#667e83
+linkarzu_color02=#666666
+linkarzu_color03=#c2c2c2
+linkarzu_color01=#c0b004
 linkarzu_color05=#877c03
-linkarzu_color08=#c0b004
+linkarzu_color08=#ffffff
 linkarzu_color06=#c3f4fe
 
 # Colors to the right from https://www.colorhexa.com

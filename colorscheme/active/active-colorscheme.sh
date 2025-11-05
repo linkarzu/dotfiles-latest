@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# Filename: ~/github/dotfiles-latest/colorscheme/list/linkarzu-colors.sh
-# ~/github/dotfiles-latest/colorscheme/list/linkarzu-colors.sh
-
 # These files have to be executable
 
 # Lighter markdown headings
@@ -14,55 +11,55 @@
 # C (#37f499) becomes when darkened 4 steps to the right.
 #
 # Markdown heading 1 - color04
-linkarzu_color18=#2d244b
+linkarzu_color18=#002931
 # Markdown heading 2 - color02
-linkarzu_color19=#10492d
+linkarzu_color19=#1c1c1c
 # Markdown heading 3 - color03
-linkarzu_color20=#013e4a
+linkarzu_color20=#393939
 # Markdown heading 4 - color01
-linkarzu_color21=#4b314c
+linkarzu_color21=#736902
 # Markdown heading 5 - color05
-linkarzu_color22=#1e2b00
+linkarzu_color22=#453f01
 # Markdown heading 6 - color08
-linkarzu_color23=#2d1c08
+linkarzu_color23=#7b7b7b
 # Markdown heading foreground
 # usually set to color10 which is the terminal background
-linkarzu_color26=#0D1116
+linkarzu_color26=#000000
 
-linkarzu_color04=#987afb
-linkarzu_color02=#37f499
-linkarzu_color03=#04d1f9
-linkarzu_color01=#fca6ff
-linkarzu_color05=#9ad900
-linkarzu_color08=#e58f2a
-linkarzu_color06=#05ff23
+linkarzu_color04=#667e83
+linkarzu_color02=#666666
+linkarzu_color03=#c2c2c2
+linkarzu_color01=#c0b004
+linkarzu_color05=#877c03
+linkarzu_color08=#ffffff
+linkarzu_color06=#c3f4fe
 
 # Colors to the right from https://www.colorhexa.com
 # Terminal and neovim background
-linkarzu_color10=#0D1116
+linkarzu_color10=#000000
 # Lualine across, 1 color to the right of background
-linkarzu_color17=#141b22
+linkarzu_color17=#0a0a0a
 # Markdown codeblock, 2 to the right of background
-linkarzu_color07=#141b22
+linkarzu_color07=#141414
 # Background of inactive tmux pane, 3 to the right of background
-linkarzu_color25=#232e3b
+linkarzu_color25=#1f1f1f
 # line across cursor, 5 to the right of background
-linkarzu_color13=#232e3b
+linkarzu_color13=#333333
 # Tmux inactive windows, 7 colors to the right of background
-linkarzu_color15=#013e4a
+linkarzu_color15=#474747
 
 # Comments
-linkarzu_color09=#b7bfce
+linkarzu_color09=#8a96b1
 # Underline spellbad
-linkarzu_color11=#f16c75
+linkarzu_color11=#f8b4b8
 # Underline spellcap
-linkarzu_color12=#f1fc79
+linkarzu_color12=#fef9c6
 # Cursor and tmux windows text
 linkarzu_color14=#ffffff
 # Selected text
-linkarzu_color16=#e9b3fd
+linkarzu_color16=#0390ac
 # Cursor color
-linkarzu_color24=#f94dff
+linkarzu_color24=#04d1f9
 
 # Wallpaper for this colorscheme
-wallpaper="$HOME/Library/Mobile Documents/com~apple~CloudDocs/Images/wallpapers/official/skyrim-dragon-4.webp"
+wallpaper="$HOME/Library/Mobile Documents/com~apple~CloudDocs/Images/wallpapers/batman/batman3.png"

@@ -57,9 +57,9 @@ cmd + alt - f1 : $HOME/github/dotfiles-latest/scripts/macos/mac/misc/550-skhdSes
 cmd + alt - f2 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/200-micMute.sh"
 cmd + alt - f3 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/555-skhdQatTask.sh"
 cmd + alt - f4 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/556-skhdQatColor.sh"
-# cmd + alt - f5 : @saircn
+cmd + alt - f5 : open "btt://execute_assigned_actions_for_trigger/?uuid=9A1CFA49-416C-480E-9430-184D2DAEE1CA"
 cmd + alt - f6 : /Applications/kitty.app/Contents/MacOS/kitty @ --to "unix:$(ls /tmp/kitty-* 2>/dev/null | head -n1)" action launch --type=background kitten quick-access-terminal
-# cmd + alt - f7 : @sairsw
+cmd + alt - f7 : /bin/zsh -c "/opt/homebrew/bin/SwitchAudioSource -s 'AirPods Pro'; /opt/homebrew/bin/SwitchAudioSource -t input -s 'AirPods Pro'"
 cmd + alt - f8 : /Applications/kitty.app/Contents/MacOS/kitty @ --to "unix:$(ls /tmp/kitty-* 2>/dev/null | head -n1)" action goto_session -1
 # cmd + alt - f9 : tmux copy mode
 
@@ -83,7 +83,7 @@ shift + cmd - f11 : open "btt://execute_assigned_actions_for_trigger/?uuid=92B63
 
 # OBS scenes
 # lineid_obs_switchscene_cam_guest1
-shift + alt - f1 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py cam-full-guest1 --no-auth"
+shift + alt - f1 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py  --no-auth"
 # shift + alt - f2 : 
 # shift + alt - f3 : 
 # shift + alt - f4 : 
@@ -91,11 +91,11 @@ shift + alt - f1 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/mac
 # shift + alt - f6 : 
 # shift + alt - f7 : 
 # lineid_obs_switchscene_guest
-shift + alt - f8 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py guests-all-notes-right-live --no-auth"
+shift + alt - f8 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py guests-solo --no-auth"
 # shift + alt - f9 : 
 # shift + alt - f10 : 
 # lineid_obs_switchscene_guest1
-shift + alt - f11 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py guest1-1guest-live --no-auth"
+shift + alt - f11 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py guest1-0guest --no-auth"
 # shift + alt - f12 : 
 # shift + alt - f13 : 
 # shift + alt - f16 : 
@@ -107,13 +107,13 @@ shift + alt - f11 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/ma
 # shift + cmd - f17 : 
 # shift + cmd - f18 : 
 # shift + cmd - f19 : 
-# shift + alt + ctrl - f1 : 
+shift + alt + ctrl - f1 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py zoom-main-keyboard --no-auth"
 # shift + alt + ctrl - f2 : 
 # shift + alt + ctrl - f3 : 
 # shift + alt + ctrl - f4 : 
 # shift + alt + ctrl - f5 : 
 # lineid_obs_switchscene_main
-shift + alt + ctrl - f6 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py main-1-guest-live --no-auth"
+shift + alt + ctrl - f6 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py main-screen --no-auth"
 # shift + alt + ctrl - f7 : 
 # shift + alt + ctrl - f8 : 
 # shift + alt + ctrl - f9 : 

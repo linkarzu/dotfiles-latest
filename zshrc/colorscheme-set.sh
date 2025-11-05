@@ -334,14 +334,14 @@ if [ "$UPDATED" = true ]; then
 
   # Generate the ghostty config file
   generate_ghostty_config
-  osascript $HOME/github/dotfiles-latest/ghostty/reload-config.scpt
+  # osascript $HOME/github/dotfiles-latest/ghostty/reload-config.scpt
 
   generate_btop_config
 
   # Generate the Kitty configuration file
   generate_kitty_config
   # This reloads kitty config without closing and re-opening
-  kill -SIGUSR1 "$(pgrep -x kitty)"
+  # kill -SIGUSR1 "$(pgrep -x kitty)"
 
   # Set the wallpaper
   if [ -z "$wallpaper" ]; then

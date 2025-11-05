@@ -314,7 +314,6 @@ else
 fi
 
 yabai -m rule --add app="^.*$" space=desk1
-yabai -m rule --add app="^Ghostty$" space=desk2
 yabai -m rule --add app="^kitty$" space=desk3
 
 yabai -m rule --add app="^E-book Viewer$" space=desk4
@@ -337,6 +336,7 @@ yabai -m rule --add app="^Vivaldi$" space="$non_stream_space"
 yabai -m rule --add app="^Signal$" space="$non_stream_space"
 yabai -m rule --add app="^Google Photos$" space="$non_stream_space"
 yabai -m rule --add app="^Notes$" space="$non_stream_space"
+yabai -m rule --add app="^Ghostty$" space="$non_stream_space"
 
 # # exact title match
 # yabai -m rule --add app="^kitty$" title="^kitty:home$" space=desk3

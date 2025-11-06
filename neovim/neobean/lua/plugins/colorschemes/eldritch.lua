@@ -91,7 +91,11 @@ return {
         -- horizontal line that goes across where cursor is
         CursorLine = { bg = colors["linkarzu_color13"] },
 
+        -- Line number on the left
         LineNr = { fg = colors["linkarzu_color16"] },
+
+        -- Blink icon that shows in dictionary auto completions
+        BlinkCmpKindDict = { fg = colors["linkarzu_color16"] },
 
         -- Set cursor color, these will be called by the "guicursor" option in
         -- the options.lua file, which will be used by neovide

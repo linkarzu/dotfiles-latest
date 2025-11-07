@@ -62,4 +62,4 @@ linkarzu_color16=#0390ac
 linkarzu_color24=#04d1f9
 
 # Wallpaper for this colorscheme
-wallpaper="$HOME/Library/Mobile Documents/com~apple~CloudDocs/Images/wallpapers/batman/batman3.png"
+wallpaper="$HOME/Library/Mobile Documents/com~apple~CloudDocs/Images/wallpapers/batman/batman7.png"

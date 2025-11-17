@@ -75,7 +75,9 @@
   maltk (tap-hold $tap-time $hold-time b (macro @akitty 100 C-b $tmux-delay l)) ;; kitty alternate session
   mtcop (tap-hold $tap-time $hold-time m (macro @akitty 100 A-M-i)) ;; tmux copy mode / kitty scrollback
   mdail (tap-hold $tap-higher $tap-higher r (macro @akitty 100 C-b $tmux-delay i)) ;; daily note session
-  mskit (tap-hold $tap-higher $tap-higher e (macro @akitty 100 C-b $tmux-delay k)) ;; skitty-notes session
+  mskit (tap-hold $tap-higher $tap-higher t (macro @akitty 100 C-b $tmux-delay k)) ;; skitty-notes session
+  mtild (tap-hold $tap-time $hold-time e A-e)
+  menie (tap-hold $tap-time $hold-time n A-n)
   ;; mdail (tap-hold $tap-higher $tap-higher r (macro @akitty 100 A-M-a $tmux-delay n)) ;; daily note floating
   ;; mskit (tap-hold $tap-higher $tap-higher e (macro @akitty 100 A-M-a $tmux-delay s)) ;; skitty-notes floating
   mretu (tap-hold $tap-time $hold-time tab ret)
@@ -148,11 +150,11 @@
 ;; Aliases for obs
 (defalias
   ;; lineid_obs_switchscene_main
-  omain (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py main-1-guest-live --no-auth")
+  omain (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py main-screen --no-auth")
   ;; lineid_obs_switchscene_guest
-  ogues (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py guests-all-notes-right-live --no-auth")
+  ogues (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py guests-solo --no-auth")
   ;; lineid_obs_switchscene_guest1
-  ogue1 (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py guest1-1guest-live --no-auth")
+  ogue1 (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py guest1-0guest --no-auth")
   ;; lineid_obs_switchscene_guest2
   ogue2 (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py  --no-auth")
   ;; lineid_obs_switchscene_guest3
@@ -162,7 +164,7 @@
   ;; lineid_obs_switchscene_guest5
   ogue5 (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py  --no-auth")
   ;; lineid_obs_switchscene_cam_guest1
-  ocag1 (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py cam-full-guest1 --no-auth")
+  ocag1 (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py  --no-auth")
   ;; lineid_obs_switchscene_cam_guest2
   ocag2 (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py  --no-auth")
   ;; lineid_obs_switchscene_cam_guest3

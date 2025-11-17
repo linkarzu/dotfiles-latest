@@ -60,9 +60,9 @@
   ;;     a      s      d      f      g      h      j      k      l      ;      '
   XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX
   XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     @msymb
-  @mretu q      w      @mskit @mdail t      y      u      i      o      p      \      XX     \ 
+  @mretu q      w      @mtild @mdail @mskit y      u      i      o      p      \      XX     \ 
   @mnavi @mlctl @msyst @mlalt @mlmet @mtrik h      @mrmet @mralt @mmous @mrctl @mral2 @msubl
-  lsft   @mmtab @mmgrv @mcopy @mpast @maltk n      @mtcop ,      @mhome /      XX     rsft
+  lsft   @mmtab @mmgrv @mcopy @mpast @maltk @menie @mtcop ,      @mhome /      XX     rsft
   XX    XX   XX   @msymb            spc             @msubl      XX         XX     XX     XX
 )
 

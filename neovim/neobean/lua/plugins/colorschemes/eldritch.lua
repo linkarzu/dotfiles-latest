@@ -107,7 +107,10 @@ return {
         ["@markup.strong"] = { fg = colors["linkarzu_color24"], bold = true },
 
         -- Inline code in markdown
-        ["@markup.raw.markdown_inline"] = { fg = colors["linkarzu_color02"] },
+        -- For fiambre (some day I'll create a condition for this)
+        -- ["@markup.raw.markdown_inline"] = { fg = colors["linkarzu_color02"] },
+        -- For batman
+        ["@markup.raw.markdown_inline"] = { fg = colors["linkarzu_color01"] },
         -- Background color of markdown folds
         -- Folded = { bg = colors["linkarzu_color04"] },
         -- Set this to NONE when handling transparency in the terminal and not
@@ -198,6 +201,10 @@ return {
         WinBar2 = { fg = colors["linkarzu_color02"] },
         WinBar3 = { fg = colors["linkarzu_color24"], bold = true },
         -- StatusLine = { bg = colors["linkarzu_color10"] },
+
+        -- Harper and other diagnostic messages
+        DiagnosticVirtualTextHint = { bg = colors["linkarzu_color07"], fg = colors["linkarzu_color21"] },
+        DiagnosticVirtualTextWarn = { bg = colors["linkarzu_color07"], fg = colors["linkarzu_color05"] },
 
         DiagnosticInfo = { fg = colors["linkarzu_color03"] },
         DiagnosticHint = { fg = colors["linkarzu_color02"] },

@@ -299,6 +299,7 @@ non_stream_space="desk1"
 # Single display → desk1
 if [ "$display_count" -eq 1 ]; then
   non_stream_space="desk1"
+  bkp_terminal_space="desk2"
 else
   # Multiple displays, pick the display with the fewest spaces, take its first space
   first_space_index="$(
@@ -307,6 +308,7 @@ else
   )"
   # Build label deskN
   non_stream_space="desk${first_space_index}"
+  bkp_terminal_space="desk${first_space_index}"
   # Label that space
   yabai -m space "$first_space_index" --label "$non_stream_space"
   yabai -m config --space "$first_space_index" top_padding 8
@@ -336,7 +338,8 @@ yabai -m rule --add app="^Vivaldi$" space="$non_stream_space"
 yabai -m rule --add app="^Signal$" space="$non_stream_space"
 yabai -m rule --add app="^Google Photos$" space="$non_stream_space"
 yabai -m rule --add app="^Notes$" space="$non_stream_space"
-yabai -m rule --add app="^Ghostty$" space="$non_stream_space"
+
+yabai -m rule --add app="^Ghostty$" space="$bkp_terminal_space"
 
 # # exact title match
 # yabai -m rule --add app="^kitty$" title="^kitty:home$" space=desk3

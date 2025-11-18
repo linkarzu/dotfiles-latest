@@ -61,7 +61,9 @@ cmd + alt - f5 : open "btt://execute_assigned_actions_for_trigger/?uuid=9A1CFA49
 cmd + alt - f6 : /Applications/kitty.app/Contents/MacOS/kitty @ --to "unix:$(ls /tmp/kitty-* 2>/dev/null | head -n1)" action launch --type=background kitten quick-access-terminal
 cmd + alt - f7 : /bin/zsh -c "/opt/homebrew/bin/SwitchAudioSource -s 'AirPods Pro'; /opt/homebrew/bin/SwitchAudioSource -t input -s 'AirPods Pro'"
 cmd + alt - f8 : /Applications/kitty.app/Contents/MacOS/kitty @ --to "unix:$(ls /tmp/kitty-* 2>/dev/null | head -n1)" action goto_session -1
-# cmd + alt - f9 : tmux copy mode
+# Tmux copy mode (kitty scrollback)
+# I don't need to focus kitty or anything, I'm assuming I'll be on kitty already, so just send the keys
+cmd + alt - f9 : osascript -e 'tell application "System Events" to keystroke "i" using {command down, option down}'
 
 # Raycast
 cmd + alt - f10 : open "raycast://extensions/raycast/emoji-symbols/search-emoji-symbols"
@@ -132,3 +134,5 @@ shift + alt + cmd - f1 : yabai -m window --focus east
 shift + alt + cmd - f3 : yabai -m space --mirror y-axis
 # shift + alt + cmd - f4 : 
 # shift + alt + cmd - f5 : 
+# shift + alt + cmd - f6 : WINDOWS alt+tab
+# shift + alt + cmd - f7 : WINDOWS still undefined

@@ -60,8 +60,8 @@
   ;;     a      s      d      f      g      h      j      k      l      ;      '
   XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX
   XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     @msymb
-  @mretu q      w      @mtild @mdail @mskit y      u      i      o      p      \      XX     \ 
-  @mnavi @mlctl @msyst @mlalt @mlmet @mtrik h      @mrmet @mralt @mmous @mrctl @mral2 @msubl
+  @mretu q      @msyst @mtild @mdail @mskit y      u      i      @mmous p      \      XX     \ 
+  @mnavi @mlctl @mlsft @mlalt @mlmet @mtrik h      @mrmet @mralt @mrsft @mrctl @mral2 @msubl
   lsft   @mmtab @mmgrv @mcopy @mpast @maltk @menie @mtcop ,      @mhome /      XX     rsft
   XX    XX   XX   @msymb            spc             @msubl      XX         XX     XX     XX
 )
@@ -130,9 +130,9 @@
   ;;   a      s       d       f       g       h       j       k       l       ;       '
   esc  XX     XX      XX      XX      XX      XX      XX      XX      XX      XX      XX      XX        ;;F1 
   grv  XX     XX      XX      XX      XX      XX      XX      XX      XX      XX      XX      XX    XX  ;;NUM
-  tab  XX     XX      M-w     XX      @s-task prev    brdn    brup    next    ▶⏸      XX      XX    XX  ;;Q  
-  XX   @smute XX      @syabm  volu    @scolor M-S-[   @s-quak XX      M-S-]   XX      XX      ret       ;;A  
-  lsft M-C-q  XX      M--     vold    XX      @saircn @sairsw XX      XX      XX      ▲       rsft      ;;Z  
+  tab  @smute XX      volu    @syabm  @s-task prev    brdn    brup    next    ▶⏸      XX      XX    XX  ;;Q  
+  M-w  M-C-q  XX      vold    M--     @scolor M-S-[   @s-quak XX      M-S-]   XX      XX      ret       ;;A  
+  lsft XX     XX      XX      XX      XX      @saircn @sairsw XX      XX      XX      ▲       rsft      ;;Z  
   fn    lctl lalt lmet                 XX                 rmet  ralt        ◀       ▼       ▶         ;;MOD
 )
 
@@ -160,9 +160,9 @@
   ;;     a      s       d       f       g       h       j       k       l       ;       '
   esc    XX     XX      XX      XX      XX      XX      XX      XX      XX      XX      XX      XX
   grv    XX     XX      XX      XX      XX      XX      XX      XX      XX      XX      XX      XX    del
-  @scamt @scam0 @scamw  @scamd  XX      XX      S-A-◀   S-A-▼   S-A-▲   S-A-▶   XX      XX      XX    XX
+  @scatb @scam0 @scamw  @scamd  XX      @scamt  S-A-◀   S-A-▼   S-A-▲   S-A-▶   XX      XX      XX    XX
   XX     @scam= @scam9  M-[     M-]     @scamg  ◀       ▼       ▲       ▶       @scam;  XX      XX
-  lsft   XX     XX      XX      XX      XX      XX      XX      XX      XX      XX      ▲       rsft
+  lsft   XX     XX      XX      XX      @scamb  XX      XX      XX      XX      XX      ▲       rsft
   fn      lctl lalt lmet                  _                      rmet    ralt    ◀      ▼       ▶
 )
 

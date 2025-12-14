@@ -4,13 +4,15 @@
   scam6 S-C-A-M-6 ;; homerow
   scam0 S-C-A-M-0 ;; cleanshot capture area
   scam9 S-C-A-M-9 ;; cleanshot capture previous area
-  scamt S-C-A-M-tab ;; cleanshot capture history
+  scatb S-C-A-M-tab ;; cleanshot capture history
   scam= S-C-A-M-= ;; cleanshot capture history
   scamw S-C-A-M-w ;; paste app
   scamz S-C-A-M-z ;; mouseless app
   scamd S-C-A-M-d ;; presentify app
   scamg S-C-A-M-g ;; raycast
-  scam; S-C-A-M-; ;; raycast snippets
+  scam; S-C-A-M-; ;;
+  scamb S-C-A-M-b ;; raycast snippets
+  scamt S-C-A-M-t ;;
 )
 
 ;; applications aliases
@@ -59,11 +61,13 @@
   mral2 (tap-hold $tap-time $hold-time ' ralt)
   mlctl (tap-hold $tap-time $hold-time a lctl)
   mrctl (tap-hold $tap-time $hold-time ; rctl)
+  mlsft (tap-hold $tap-time $hold-time s lsft)
+  mrsft (tap-hold $tap-time $hold-time l rsft)
 
   ;; Double actions,.
   mtrik (tap-hold $tap-time $hold-time g C-z) ;; trickster
   mhome (tap-hold $tap-time $hold-time . @scam6) ;; homerow
-  mmous (tap-hold $tap-time $hold-time l @scamz) ;; mouseless
+  mmous (tap-hold $tap-time $hold-time o @scamz) ;; mouseless
   mcopy (tap-hold $tap-time $hold-time c M-c)
   ;; scopyntf (cmd sudo -u linkarzu bash -c "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/400-sketchybarNotif.sh Copied")
   ;; mcopy (tap-hold $tap-time $hold-time c (macro M-c 200 @scopyntf))
@@ -89,7 +93,7 @@
   mnavi (tap-hold-press $tap-time $hold-time esc (layer-toggle navi))
 
   ;; Other layers tap-hold
-  msyst (tap-hold $tap-time $hold-time s (layer-toggle system))
+  msyst (tap-hold $tap-time $hold-time w (layer-toggle system))
 
   ;; Multi
   ;; mhypr (tap-hold $tap-time $hold-time spc (multi lsft lctl lalt lmet)) ;; Hyper key

@@ -324,6 +324,7 @@ yabai -m rule --add app="^E-book Viewer$" space=desk4
 yabai -m config --space 4 right_padding 0
 
 yabai -m rule --add app="^socialstream$" space=desk5
+yabai -m rule --add app="^DaVinci Resolve$" space=desk6
 
 yabai -m rule --add app="^Discord$" space="$non_stream_space"
 yabai -m rule --add app="^Element$" space="$non_stream_space"

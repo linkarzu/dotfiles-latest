@@ -299,9 +299,19 @@ return {
         name = "Add TODO: item",
         desc = "Add TODO: item",
       }, {
-        t("<!-- TODO: "),
+        t("TODO: "),
         i(1),
-        t(" -->"),
+      })
+    )
+
+    table.insert(
+      snippets,
+      s({
+        trig = "vid",
+        name = "Add vid-id tag",
+        desc = "Add vid-id tag",
+      }, {
+        t("vid-id"),
       })
     )
 

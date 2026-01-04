@@ -436,7 +436,7 @@ return {
           "",
           "image:",
           "  path: ./../../assets/img/imgs/250117-thux-simple-bar-sketchybar.avif",
-          "date: '2025-",
+          "date: '2026-",
         }),
         i(3, ""),
         t({ " 06:10:00 +0000'" }),

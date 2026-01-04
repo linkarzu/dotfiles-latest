@@ -103,6 +103,34 @@ return {
         end,
         desc = "[P]Search for complete tasks",
       },
+      {
+        "<leader>ti",
+        function()
+          Snacks.picker.grep({
+            prompt = " ",
+            -- pass your desired search as a static pattern
+            search = "vid-id$",
+            -- we enable regex so the pattern is interpreted as a regex
+            regex = true,
+            -- no “live grep” needed here since we have a fixed pattern
+            live = false,
+            -- restrict search to the current working directory
+            dirs = { vim.fn.getcwd() },
+            -- include files ignored by .gitignore
+            args = { "--no-ignore" },
+            -- -- Start in normal mode
+            -- on_show = function()
+            --   vim.cmd.stopinsert()
+            -- end,
+            finder = "grep",
+            format = "file",
+            show_empty = true,
+            supports_live = false,
+            layout = "ivy",
+          })
+        end,
+        desc = "[P]Search for video ideas",
+      },
       -- -- List git branches with Snacks_picker to quickly switch to a new branch
       {
         "<M-b>",

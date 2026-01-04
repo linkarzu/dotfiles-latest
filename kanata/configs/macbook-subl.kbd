@@ -111,7 +111,7 @@
   XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX ;;NUM 
   XX     @ocag1 @ocag2 @ocag3 @ocag4 @ocag5 @oz-in @ozout @ogues XX     XX     XX     XX     XX ;;Q   
   XX     @ogue1 @ogue2 @ogue3 @ogue4 @ogue5 @oghaf XX     @okeyb XX     XX     XX     XX        ;;A   
-  XX     @ozmai @ozkbd XX     @ofull @oback @ostar @omain XX     XX     XX     XX     XX        ;;Z   
+  XX     @ozmai @ozkbd XX     @ofull @oback @ostar @omain @olink XX     XX     XX     XX        ;;Z   
   XX    XX   XX   XX            XX             XX      XX         XX     XX     XX              ;;MOD 
 )
 

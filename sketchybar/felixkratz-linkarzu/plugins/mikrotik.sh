@@ -24,7 +24,9 @@ ROUTER_OUTPUT=$(ssh mikrotik ":put (\"TRANSMITSPEED=\" . [/interface/monitor-tra
 TRANSMIT_SPEED=$(echo "$ROUTER_OUTPUT" | awk -F= '/^TRANSMITSPEED=/{print $2}')
 RECEIVE_SPEED=$(echo "$ROUTER_OUTPUT" | awk -F= '/^RECEIVESPEED=/{print $2}')
 MAINGATEWAY=$(echo "$ROUTER_OUTPUT" | awk -F= '/^MAINGATEWAY=/{print $2}')
+MAINGATEWAY="${MAINGATEWAY:0:1}"
 BACKGATEWAY=$(echo "$ROUTER_OUTPUT" | awk -F= '/^BACKGATEWAY=/{print $2}')
+BACKGATEWAY="${BACKGATEWAY:0:1}"
 MAINISP_STATUS=$(echo "$ROUTER_OUTPUT" | awk -F= '/^MAINISP=/{print $2}')
 BACKUPISP_STATUS=$(echo "$ROUTER_OUTPUT" | awk -F= '/^BACKUPISP=/{print $2}')
 # echo "TRANSMIT_SPEED=$TRANSMIT_SPEED" >>/tmp/mikrotik.sh.log
@@ -35,12 +37,17 @@ BACKUPISP_STATUS=$(echo "$ROUTER_OUTPUT" | awk -F= '/^BACKUPISP=/{print $2}')
 # echo "BACKUPISP_STATUS=$BACKUPISP_STATUS" >>/tmp/mikrotik.sh.log
 
 RECEIVE_SPEED_HUMAN=$(
-  awk -v b="$RECEIVE_SPEED" 'BEGIN{ if(b>=1e6) printf("%.1fM", b/1e6); else if(b>=1e3) printf("%.1fk", b/1e3); else printf("%db", b) }'
+  # Don't need decimals
+  awk -v b="$RECEIVE_SPEED" 'BEGIN{ if(b>=1e6) printf("%.0fM", b/1e6); else if(b>=1e3) printf("%.0fk", b/1e3); else printf("%db", b) }'
+  # awk -v b="$RECEIVE_SPEED" 'BEGIN{ if(b>=1e6) printf("%.1fM", b/1e6); else if(b>=1e3) printf("%.1fk", b/1e3); else printf("%db", b) }'
 )
 
 TRANSMIT_SPEED_HUMAN=$(
-  awk -v b="$TRANSMIT_SPEED" 'BEGIN{ if(b>=1e6) printf("%.1fM", b/1e6); else if(b>=1e3) printf("%.1fk", b/1e3); else printf("%db", b) }'
+  # Don't need decimals
+  awk -v b="$TRANSMIT_SPEED" 'BEGIN{ if(b>=1e6) printf("%.0fM", b/1e6); else if(b>=1e3) printf("%.0fk", b/1e3); else printf("%db", b) }'
+  # awk -v b="$TRANSMIT_SPEED" 'BEGIN{ if(b>=1e6) printf("%.1fM", b/1e6); else if(b>=1e3) printf("%.1fk", b/1e3); else printf("%db", b) }'
 )
+
 # echo "TRANSMIT_SPEED_HUMAN=$TRANSMIT_SPEED_HUMAN" >>/tmp/mikrotik.sh.log
 # echo "RECEIVE_SPEED_HUMAN=$RECEIVE_SPEED_HUMAN" >>/tmp/mikrotik.sh.log
 
@@ -54,7 +61,7 @@ fi
 
 if [ "$MAINISP_STATUS" = "UP" ]; then
   COLOR="$GREEN"
-  ISPS_STATUS="A:${MAINGATEWAY} B:${BACKGATEWAY_DISPLAY}$BACKUPISP_ARROW"
+  ISPS_STATUS="${MAINGATEWAY} ${BACKGATEWAY_DISPLAY}$BACKUPISP_ARROW"
   if [ "$BACKUPISP_STATUS" != "UP" ]; then
     COLOR="$YELLOW"
   fi
@@ -65,7 +72,7 @@ else
     RECEIVE_SPEED_HUMAN=0
     COLOR="$RED"
   fi
-  ISPS_STATUS="B:${BACKGATEWAY_DISPLAY}$BACKUPISP_ARROW"
+  ISPS_STATUS="${BACKGATEWAY_DISPLAY}$BACKUPISP_ARROW"
 fi
 
 sketchybar -m --set mikrotik \

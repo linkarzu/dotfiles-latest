@@ -280,3 +280,45 @@ if vim.fn.isdirectory(umg_root) == 1 then
     end,
   })
 end
+
+local group = vim.api.nvim_create_augroup("MyQMK", {})
+
+vim.api.nvim_create_autocmd("BufEnter", {
+  desc = "Format glove80",
+  group = group,
+  pattern = "*/linkarzu-glove80/config/glove80.keymap", -- this is a pattern to match the filepath of whatever board you wish to target
+  callback = function()
+    require("qmk").setup({
+      name = "LAYOUT_glove80",
+      variant = "zmk",
+      auto_format_pattern = "*/linkarzu-glove80/config/glove80.keymap",
+      layout = {
+        "x x x x x _ _ _ _ _ _ _ _ _ x x x x x",
+        "x x x x x x _ _ _ _ _ _ _ x x x x x x",
+        "x x x x x x _ _ _ _ _ _ _ x x x x x x",
+        "x x x x x x _ _ _ _ _ _ _ x x x x x x",
+        "x x x x x x x x x _ x x x x x x x x x",
+        "x x x x x _ x x x _ x x x _ x x x x x",
+      },
+    })
+  end,
+})
+
+vim.api.nvim_create_autocmd("BufEnter", {
+  desc = "Format toucan",
+  group = group,
+  pattern = "*/zmk-keyboard-toucan/config/toucan.keymap", -- this is a pattern to match the filepath of whatever board you wish to target
+  callback = function()
+    require("qmk").setup({
+      name = "LAYOUT_toucan",
+      variant = "zmk",
+      auto_format_pattern = "*/zmk-keyboard-toucan/config/toucan.keymap",
+      layout = {
+        "x x x x x x _ _ _ x x x x x x",
+        "x x x x x x _ _ _ x x x x x x",
+        "x x x x x x _ _ _ x x x x x x",
+        "_ _ _ _ x x x _ x x x _ _ _ _",
+      },
+    })
+  end,
+})

@@ -1,6 +1,2 @@
-[manager]
+[mgr]
 show_hidden = true
-
-# [preview]
-# ueberzug_offset = [0.5, 0.5, -0.5, -0.5]
-# ueberzug_scale  = 1

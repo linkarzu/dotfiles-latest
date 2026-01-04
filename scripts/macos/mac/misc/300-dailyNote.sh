@@ -70,8 +70,12 @@ if grep -Fq "${note_name}.md" "$kitty_sess_file"; then
   exit 0
 fi
 
-# # Build the exact launch command line with today's file path
-launch_cmd="launch --title \"${note_name}\" /bin/zsh -i -c 'export MD_HEADING_BG=transparent; NVIM_APPNAME=neobean nvim +norm\\\ G \"${full_path}\"'"
+# Build the exact launch command line with today's file path
+# The +cd below is used to change the :pwd within Neovim. I need to change it
+# when it starts so that I can search for tasks, video ideas, etc with snacks in
+# that directory
+launch_cmd="launch --title \"${note_name}\" /bin/zsh -i -c 'export MD_HEADING_BG=transparent; NVIM_APPNAME=neobean nvim +cd\\\ \"${main_note_dir}\" +norm\\\ G \"${full_path}\"'"
+# launch_cmd="launch --title \"${note_name}\" /bin/zsh -i -c 'export MD_HEADING_BG=transparent; NVIM_APPNAME=neobean nvim +norm\\\ G \"${full_path}\"'"
 
 # Safely update the lines below the marker comments in the kitty session file
 # - Replace the line after "# kitty_session_cd_line" with: cd $note_dir

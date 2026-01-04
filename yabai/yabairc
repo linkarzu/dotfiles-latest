@@ -308,9 +308,11 @@ else
   )"
   # Build label deskN
   non_stream_space="desk${first_space_index}"
-  bkp_terminal_space="desk${first_space_index}"
-  # Label that space
+  bkp_terminal_space="desk$((first_space_index + 1))"
+  # Label the spaces, if you don't this does NOT work
   yabai -m space "$first_space_index" --label "$non_stream_space"
+  yabai -m space "$((first_space_index + 1))" --label "$bkp_terminal_space"
+  #after labeling them we can reference them
   yabai -m config --space "$first_space_index" top_padding 8
   yabai -m config --space "$first_space_index" right_padding 0
 fi

@@ -115,6 +115,7 @@ vim.keymap.set({ "n", "v", "i" }, "<M-d>", function()
 end, { desc = "Dismiss All" })
 
 -- HACK: Manage Markdown tasks in Neovim similar to Obsidian | Telescope to List Completed and Pending Tasks
+-- NOTE: This has been moved to the snacks plugin config
 -- https://youtu.be/59hvZl077hM
 --
 -- -- Iterate through incomplete tasks in telescope
@@ -139,6 +140,7 @@ end, { desc = "Dismiss All" })
 -- end, { desc = "[P]Search for incomplete tasks" })
 
 -- HACK: Manage Markdown tasks in Neovim similar to Obsidian | Telescope to List Completed and Pending Tasks
+-- NOTE: This has been moved to the snacks plugin config
 -- https://youtu.be/59hvZl077hM
 --
 -- -- Iterate throuth completed tasks in telescope lamw25wmal

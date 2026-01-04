@@ -203,8 +203,11 @@ return {
         -- StatusLine = { bg = colors["linkarzu_color10"] },
 
         -- Harper and other diagnostic messages
-        DiagnosticVirtualTextHint = { bg = colors["linkarzu_color07"], fg = colors["linkarzu_color21"] },
-        DiagnosticVirtualTextWarn = { bg = colors["linkarzu_color07"], fg = colors["linkarzu_color05"] },
+        DiagnosticVirtualTextError = { bg = colors["linkarzu_color11"], fg = colors["linkarzu_color10"] },
+        DiagnosticVirtualTextWarn = { bg = colors["linkarzu_color21"], fg = colors["linkarzu_color10"] },
+        DiagnosticVirtualTextInfo = { bg = colors["linkarzu_color18"], fg = colors["linkarzu_color10"] },
+        DiagnosticVirtualTextHint = { bg = colors["linkarzu_color02"], fg = colors["linkarzu_color10"] },
+        DiagnosticVirtualTextOk = { bg = colors["linkarzu_color16"], fg = colors["linkarzu_color10"] },
 
         DiagnosticInfo = { fg = colors["linkarzu_color03"] },
         DiagnosticHint = { fg = colors["linkarzu_color02"] },

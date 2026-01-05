@@ -158,6 +158,15 @@ source "$ITEM_DIR/notification.sh"
 
 ###############################################################################
 
+# I want SketchyBar to be hidden when certain apps are focused
+# Add this here and also created the toggle.sh file
+# https://github.com/FelixKratz/SketchyBar/discussions/349#discussioncomment-5535282
+sketchybar --add item toggler left \
+  --set toggler drawing=off \
+  updates=on \
+  script="$PLUGIN_DIR/toggle.sh" \
+  --subscribe toggler front_app_switched
+
 sketchybar --hotload on
 
 # Forcing all item scripts to run (never do this outside of sketchybarrc)

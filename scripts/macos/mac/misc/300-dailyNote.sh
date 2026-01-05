@@ -37,7 +37,10 @@ fi
 # Create the daily note if it does not already exist
 if [ ! -f "$full_path" ]; then
   cat <<EOF >"$full_path"
-# Contents
+
+# ${note_name}
+
+## Contents
 
 <!-- toc -->
 
@@ -46,6 +49,7 @@ if [ ! -f "$full_path" ]; then
 <!-- tocstop -->
 
 ## Daily note
+
 EOF
 fi
 

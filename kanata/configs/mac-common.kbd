@@ -130,6 +130,7 @@
   sdots (macro @akitty 300 C-b $tmux-delay d)
   sblog (macro @akitty 300 C-b $tmux-delay b)
   sobsi (macro @akitty 100 C-b $tmux-delay o)
+  snetb (macro @akitty 100 C-b $tmux-delay n)
   spriv (macro @akitty 100 C-b $tmux-delay p)
   sdail (macro @akitty 100 C-b $tmux-delay i)
   scont (macro @aghost 100 C-b $tmux-delay C-y) ;; containerdata_nfs

@@ -308,10 +308,26 @@ return {
       snippets,
       s({
         trig = "vid",
-        name = "Add vid-id tag",
-        desc = "Add vid-id tag",
+        name = "Add Vid-Id tag",
+        desc = "Add Vid-Id tag",
       }, {
-        t("vid-id"),
+        t("Vid-Id"),
+      })
+    )
+
+    -- Paste clipboard contents in link section, move cursor to ()
+    table.insert(
+      snippets,
+      s({
+        trig = "typl",
+        name = "typst link with clipboard",
+        desc = "typst link with clipboard",
+      }, {
+        t('#link("'),
+        f(clipboard, {}),
+        t('")['),
+        i(1),
+        t("]"),
       })
     )
 
@@ -630,6 +646,46 @@ return {
     )
 
     ls.add_snippets("markdown", snippets)
+    -- Make Typst inherit Markdown snippets
+    ls.filetype_extend("typst", { "markdown" })
+
+    -- #####################################################################
+    --                         typst
+    -- #####################################################################
+
+    ls.add_snippets("typst", {
+      s({
+        trig = "typquote",
+        name = "Quote block",
+        desc = "Typst quote with attribution",
+      }, {
+        t({ '#quote(attribution: "' }),
+        i(1),
+        t({ '")[', "  " }),
+        i(2),
+        t({ "", "  #v(4pt)", "]" }),
+      }),
+
+      s({
+        trig = "typwarn",
+        name = "Warning block",
+        desc = "Typst warning callout",
+      }, {
+        t({ "#warning[", "  " }),
+        i(1),
+        t({ "", "  #v(4pt)", "]" }),
+      }),
+
+      s({
+        trig = "typsol",
+        name = "Solution block",
+        desc = "Typst solution callout",
+      }, {
+        t({ "#solution[", "  " }),
+        i(1),
+        t({ "", "  #v(4pt)", "]" }),
+      }),
+    })
 
     -- #####################################################################
     --                         all the filetypes

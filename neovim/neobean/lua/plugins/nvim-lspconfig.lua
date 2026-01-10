@@ -28,7 +28,7 @@ return {
       -- ~/github/dotfiles-latest/neovim/neobean/lua/config/autocmds.lua
       harper_ls = {
         enabled = true,
-        filetypes = { "markdown" },
+        filetypes = { "markdown", "typst" },
         settings = {
           ["harper-ls"] = {
             userDictPath = "~/github/dotfiles-latest/neovim/neobean/spell/en.utf-8.add",

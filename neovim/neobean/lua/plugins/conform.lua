@@ -14,6 +14,14 @@ vim.api.nvim_create_autocmd({ "FocusLost", "BufLeave" }, {
   pattern = "*",
   callback = function(args)
     local buf = args.buf or vim.api.nvim_get_current_buf()
+    -- Don't format mini.files buffers
+    -- tinymist panics when it receives a minifiles:// URI during formatting
+    if vim.bo[buf].filetype == "minifiles" then
+      return
+    end
+    if vim.api.nvim_buf_get_name(buf):match("^minifiles://") then
+      return
+    end
     -- Only format if the current mode is normal mode
     -- Only format if autoformat is enabled for the current buffer (if
     -- autoformat disabled globally the buffers inherits it, see :LazyFormatInfo)
@@ -35,6 +43,74 @@ return {
   "stevearc/conform.nvim",
   optional = true,
   opts = {
+    formatters = {
+      ["prettypst"] = {
+        prepend_args = { "--use-configuration" },
+      },
+      ["typstyle"] = {
+        prepend_args = { "--wrap-text" },
+      },
+      ["codeblock_blankline"] = {
+        command = "perl",
+        args = {
+          "-0777",
+          "-pe",
+          -- Add 1 blank line right after the opening fence, and 1 blank line
+          -- right before the closing fence
+          [[s/^(\s*```[^\n]*)\n(?!\n)/$1\n\n/gm; s/(?<!\n)\n(?=^\s*```\s*$)/\n\n/gm;]],
+        },
+        stdin = true,
+      },
+      ["codeblock_remove_opening_blank"] = {
+        command = "perl",
+        args = {
+          "-0777",
+          "-pe",
+          [[
+my @lines = split(/\n/, $_, -1);
+my $in = 0;
+my $drop_next_blank = 0;
+my @out;
+
+for my $line (@lines) {
+  if (!$in) {
+    if ($line =~ /^\s*```/) {
+      $in = 1;
+      $drop_next_blank = 1;
+      push @out, $line;
+      next;
+    }
+    push @out, $line;
+    next;
+  }
+
+  if ($line =~ /^\s*```\s*$/) {
+    # Remove ONE blank line right above the closing fence (only if it exists)
+    if (@out && $out[-1] =~ /^\s*$/) {
+      pop @out;
+    }
+    $in = 0;
+    $drop_next_blank = 0;
+    push @out, $line;
+    next;
+  }
+
+  # Remove ONE blank line right after the opening fence (only if it exists)
+  if ($drop_next_blank && $line =~ /^\s*$/) {
+    $drop_next_blank = 0;
+    next;
+  }
+
+  $drop_next_blank = 0;
+  push @out, $line;
+}
+
+$_ = join("\n", @out);
+]],
+        },
+        stdin = true,
+      },
+    },
     formatters_by_ft = {
       -- I was having issues formatting .templ files, all the lines were aligned
       -- to the left.
@@ -50,6 +126,17 @@ return {
       -- root of my dots, I was getting the error [LSP][ruff] timeout
       python = { "ruff_format" },
       -- php = { nil },
+
+      -- sqeeze_blanks is a conform formatter that removes extra blank lines. So
+      -- below, first the typstyle formatter is ran, then the sqeeze_blanks one
+      --
+      -- codeblock_blankline adds a single blank line right after the opening
+      -- triple backticks in code blocks (example: ```bash), so the content starts
+      -- separated from the fence for better readability
+      -- typst = { "typstyle", "squeeze_blanks", "codeblock_blankline", lsp_format = "never" },
+      typst = { "typstyle", "squeeze_blanks", "codeblock_remove_opening_blank", lsp_format = "never" },
+      -- typst = { "typstyle", lsp_format = "prefer" },
+      -- typst = { "prettypst" },
     },
   },
 }

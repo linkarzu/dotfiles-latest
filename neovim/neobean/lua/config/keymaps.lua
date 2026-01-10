@@ -3121,6 +3121,19 @@ function _G.markdown_foldexpr()
   return "="
 end
 
+function _G.typst_foldexpr()
+  local lnum = vim.v.lnum
+  local line = vim.fn.getline(lnum)
+  local heading = line:match("^(=+)%s")
+  if heading then
+    local level = #heading
+    if level >= 1 and level <= 6 then
+      return ">" .. level
+    end
+  end
+  return "="
+end
+
 local function set_markdown_folding()
   vim.opt_local.foldmethod = "expr"
   vim.opt_local.foldexpr = "v:lua.markdown_foldexpr()"
@@ -3143,10 +3156,21 @@ local function set_markdown_folding()
   vim.b.frontmatter_end = frontmatter_end
 end
 
+local function set_typst_folding()
+  vim.opt_local.foldmethod = "expr"
+  vim.opt_local.foldexpr = "v:lua.typst_foldexpr()"
+  vim.opt_local.foldlevel = 99
+end
+
 -- Use autocommand to apply only to markdown files
 vim.api.nvim_create_autocmd("FileType", {
   pattern = "markdown",
   callback = set_markdown_folding,
+})
+
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "typst",
+  callback = set_typst_folding,
 })
 
 -- Function to fold all headings of a specific level
@@ -3158,22 +3182,39 @@ local function fold_headings_of_level(level)
   for line = 1, total_lines do
     -- Get the content of the current line
     local line_content = vim.fn.getline(line)
-    -- "^" -> Ensures the match is at the start of the line
-    -- string.rep("#", level) -> Creates a string with 'level' number of "#" characters
-    -- "%s" -> Matches any whitespace character after the "#" characters
-    -- So this will match `## `, `### `, `#### ` for example, which are markdown headings
-    if line_content:match("^" .. string.rep("#", level) .. "%s") then
-      -- Move the cursor to the current line without adding to jumplist
-      vim.cmd(string.format("keepjumps call cursor(%d, 1)", line))
-      -- Check if the current line has a fold level > 0
-      local current_foldlevel = vim.fn.foldlevel(line)
-      if current_foldlevel > 0 then
-        -- Fold the heading if it matches the level
-        if vim.fn.foldclosed(line) == -1 then
-          vim.cmd("normal! za")
+    if vim.bo.filetype == "typst" then
+      if line_content:match("^" .. string.rep("=", level) .. "%s") then
+        -- Move the cursor to the current line without adding to jumplist
+        vim.cmd(string.format("keepjumps call cursor(%d, 1)", line))
+        -- Check if the current line has a fold level > 0
+        local current_foldlevel = vim.fn.foldlevel(line)
+        if current_foldlevel > 0 then
+          -- Fold the heading if it matches the level
+          if vim.fn.foldclosed(line) == -1 then
+            vim.cmd("normal! za")
+          end
+          -- else
+          --   vim.notify("No fold at line " .. line, vim.log.levels.WARN)
         end
-        -- else
-        --   vim.notify("No fold at line " .. line, vim.log.levels.WARN)
+      end
+    else
+      -- "^" -> Ensures the match is at the start of the line
+      -- string.rep("#", level) -> Creates a string with 'level' number of "#" characters
+      -- "%s" -> Matches any whitespace character after the "#" characters
+      -- So this will match `## `, `### `, `#### ` for example, which are markdown headings
+      if line_content:match("^" .. string.rep("#", level) .. "%s") then
+        -- Move the cursor to the current line without adding to jumplist
+        vim.cmd(string.format("keepjumps call cursor(%d, 1)", line))
+        -- Check if the current line has a fold level > 0
+        local current_foldlevel = vim.fn.foldlevel(line)
+        if current_foldlevel > 0 then
+          -- Fold the heading if it matches the level
+          if vim.fn.foldclosed(line) == -1 then
+            vim.cmd("normal! za")
+          end
+          -- else
+          --   vim.notify("No fold at line " .. line, vim.log.levels.WARN)
+        end
       end
     end
   end
@@ -3561,7 +3602,14 @@ vim.keymap.set({ "n", "v" }, "gk", function()
   -- `\\+` - Match one or more occurrences of prev element (#)
   -- `\\s` - Match exactly one whitespace character following the hashes
   -- `.*` - Match any characters (except newline) following the space
-  -- `$` - Match extends to end of line
+  -- vim.cmd("silent! ?^##\\+\\s.*$")
+  local ft = vim.bo.filetype
+  if ft == "typst" then
+    vim.cmd("silent! ?^==\\+\\s.*$")
+    -- Clear the search highlight
+    vim.cmd("nohlsearch")
+    return
+  end -- `$` - Match extends to end of line
   vim.cmd("silent! ?^##\\+\\s.*$")
   -- Clear the search highlight
   vim.cmd("nohlsearch")
@@ -3584,6 +3632,13 @@ vim.keymap.set({ "n", "v" }, "gj", function()
   -- `\\s` - Match exactly one whitespace character following the hashes
   -- `.*` - Match any characters (except newline) following the space
   -- `$` - Match extends to end of line
+  local ft = vim.bo.filetype
+  if ft == "typst" then
+    vim.cmd("silent! /^==\\+\\s.*$")
+    -- Clear the search highlight
+    vim.cmd("nohlsearch")
+    return
+  end
   vim.cmd("silent! /^##\\+\\s.*$")
   -- Clear the search highlight
   vim.cmd("nohlsearch")

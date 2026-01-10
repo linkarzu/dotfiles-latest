@@ -94,6 +94,17 @@ return {
 
     -- filetype specific options
     filetypes = {
+      typst = {
+        url_encode_path = true, ---@type boolean
+
+        -- Use :pwd (cwd) as the base for dir_path
+        relative_to_current_file = false, ---@type boolean
+
+        dir_path = "assets/img/imgs",
+
+        extension = "webp",
+        process_cmd = "convert - -quality 75 webp:-",
+      },
       markdown = {
         -- encode spaces and special characters in file path
         url_encode_path = true, ---@type boolean

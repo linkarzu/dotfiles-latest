@@ -246,6 +246,12 @@ return {
         TelescopeNormal = { fg = colors["linkarzu_color14"], bg = colors["linkarzu_color10"] },
         TelescopeMultiSelection = { fg = colors["linkarzu_color02"], bg = colors["linkarzu_color10"] },
         TelescopeSelection = { fg = colors["linkarzu_color14"], bg = colors["linkarzu_color13"] },
+
+        ["@markup.heading.1.typst"] = { fg = colors["linkarzu_color04"], bg = colors["linkarzu_color18"] },
+        ["@markup.heading.2.typst"] = { fg = colors["linkarzu_color02"], bg = colors["linkarzu_color19"] },
+        ["@markup.heading.3.typst"] = { fg = colors["linkarzu_color03"], bg = colors["linkarzu_color20"] },
+        ["@markup.heading.4.typst"] = { fg = colors["linkarzu_color01"], bg = colors["linkarzu_color21"] },
+        ["@markup.heading.5.typst"] = { fg = colors["linkarzu_color05"], bg = colors["linkarzu_color22"] },
       }
 
       -- Apply all highlight definitions at once

@@ -32,7 +32,7 @@ linkarzu_color03=#d1d1d1
 linkarzu_color01=#d4b000
 linkarzu_color05=#997f00
 linkarzu_color08=#ffffff
-linkarzu_color06=#c3f4fe
+linkarzu_color06=#027085
 
 # Colors to the right from https://www.colorhexa.com
 # Terminal and neovim background

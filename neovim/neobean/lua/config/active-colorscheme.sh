@@ -11,26 +11,26 @@
 # C (#37f499) becomes when darkened 4 steps to the right.
 #
 # Markdown heading 1 - color04
-linkarzu_color18=#002931
+linkarzu_color18=#494949
 # Markdown heading 2 - color02
-linkarzu_color19=#1c1c1c
+linkarzu_color19=#2a2a2a
 # Markdown heading 3 - color03
-linkarzu_color20=#393939
+linkarzu_color20=#1a1a1a
 # Markdown heading 4 - color01
-linkarzu_color21=#736902
+linkarzu_color21=#7f6900
 # Markdown heading 5 - color05
-linkarzu_color22=#453f01
+linkarzu_color22=#5b4c00
 # Markdown heading 6 - color08
-linkarzu_color23=#7b7b7b
+linkarzu_color23=#999999
 # Markdown heading foreground
 # usually set to color10 which is the terminal background
 linkarzu_color26=#000000
 
-linkarzu_color04=#667e83
-linkarzu_color02=#666666
-linkarzu_color03=#c2c2c2
-linkarzu_color01=#c0b004
-linkarzu_color05=#877c03
+linkarzu_color04=#b2b2b2
+linkarzu_color02=#939393
+linkarzu_color03=#d1d1d1
+linkarzu_color01=#d4b000
+linkarzu_color05=#997f00
 linkarzu_color08=#ffffff
 linkarzu_color06=#c3f4fe
 
@@ -49,11 +49,11 @@ linkarzu_color13=#333333
 linkarzu_color15=#474747
 
 # Comments
-linkarzu_color09=#8a96b1
+linkarzu_color09=#5c5c5c
 # Underline spellbad
-linkarzu_color11=#f8b4b8
+linkarzu_color11=#ff7676
 # Underline spellcap
-linkarzu_color12=#fef9c6
+linkarzu_color12=#b7a54c
 # Cursor and tmux windows text
 linkarzu_color14=#ffffff
 # Selected text

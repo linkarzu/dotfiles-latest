@@ -46,6 +46,7 @@ ctrl + alt - f8 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switc
 ctrl + cmd - f12 : $HOME/github/dotfiles-latest/scripts/macos/mac/misc/550-skhdSession.sh "$HOME/github/dotfiles-latest/kitty/sessions/dots-private.kitty-session"
 ctrl + cmd - f13 : $HOME/github/dotfiles-latest/scripts/macos/mac/misc/551-skhdDaily.sh
 ctrl + cmd - f17 : $HOME/github/dotfiles-latest/scripts/macos/mac/misc/550-skhdSession.sh "$HOME/github/dotfiles-latest/kitty/sessions/obsidian.kitty-session"
+ctrl + cmd - f18 : $HOME/github/dotfiles-latest/scripts/macos/mac/misc/550-skhdSession.sh "$HOME/github/dotfiles-latest/kitty/sessions/networking.kitty-session"
 # ctrl + cmd - f18
 ctrl + alt - f19 : $HOME/github/dotfiles-latest/scripts/macos/mac/misc/550-skhdSession.sh "$HOME/github/dotfiles-latest/kitty/sessions/glove80.kitty-session"
 ctrl + cmd - f2 : $HOME/github/dotfiles-latest/scripts/macos/mac/misc/550-skhdSession.sh "$HOME/github/dotfiles-latest/kitty/sessions/home.kitty-session"

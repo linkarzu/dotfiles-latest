@@ -156,6 +156,23 @@ return {
       })
     end
 
+    -- Helper function to create code block snippets
+    local function create_code_block_typst(lang)
+      return s({
+        trig = lang,
+        name = "Codeblock",
+        desc = lang .. " codeblock",
+      }, {
+        t({ "#codly(header: [*" }),
+        i(1),
+        t({ "*])", "" }),
+        t({ "```" .. lang, "" }),
+        i(2),
+        -- f(clipboard, {}),
+        t({ "", "```" }),
+      })
+    end
+
     -- Define languages for code blocks
     local languages = {
       "txt",
@@ -186,6 +203,12 @@ return {
 
     for _, lang in ipairs(languages) do
       table.insert(snippets, create_code_block_snippet(lang))
+    end
+
+    local codeblocks_typst = {}
+
+    for _, lang in ipairs(languages) do
+      table.insert(codeblocks_typst, create_code_block_typst(lang))
     end
 
     table.insert(
@@ -312,22 +335,6 @@ return {
         desc = "Add Vid-Id tag",
       }, {
         t("Vid-Id"),
-      })
-    )
-
-    -- Paste clipboard contents in link section, move cursor to ()
-    table.insert(
-      snippets,
-      s({
-        trig = "typl",
-        name = "typst link with clipboard",
-        desc = "typst link with clipboard",
-      }, {
-        t('#link("'),
-        f(clipboard, {}),
-        t('")['),
-        i(1),
-        t("]"),
       })
     )
 
@@ -646,8 +653,11 @@ return {
     )
 
     ls.add_snippets("markdown", snippets)
-    -- Make Typst inherit Markdown snippets
-    ls.filetype_extend("typst", { "markdown" })
+
+    ls.add_snippets("typst", codeblocks_typst)
+
+    -- -- Make Typst inherit Markdown snippets
+    -- ls.filetype_extend("typst", { "markdown" })
 
     -- #####################################################################
     --                         typst
@@ -684,6 +694,19 @@ return {
         t({ "#solution[", "  " }),
         i(1),
         t({ "", "  #v(4pt)", "]" }),
+      }),
+
+      -- Paste clipboard contents in link section, move cursor to ()
+      s({
+        trig = "typl",
+        name = "typst link with clipboard",
+        desc = "typst link with clipboard",
+      }, {
+        t('#link("'),
+        f(clipboard, {}),
+        t('")['),
+        i(1),
+        t("]"),
       }),
     })
 

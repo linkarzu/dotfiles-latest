@@ -33,12 +33,32 @@ return {
           if view then
             view:jump()
           end
+          local target_name = vim.api.nvim_buf_get_name(0)
+          local target_tick = vim.api.nvim_buf_get_changedtick(0)
           vim.schedule(function()
             vim.lsp.buf.code_action()
             -- Go back to the Trouble window (bottom) if it still exists
             if trouble_win and vim.api.nvim_win_is_valid(trouble_win) then
               vim.api.nvim_set_current_win(trouble_win)
             end
+            -- Wait until the file changes, then save it (by filename)
+            local tries = 0
+            local function save_if_changed()
+              tries = tries + 1
+              local bufnr = vim.fn.bufnr(target_name, false)
+              if bufnr ~= -1 and vim.api.nvim_buf_is_valid(bufnr) then
+                if vim.api.nvim_buf_get_changedtick(bufnr) ~= target_tick or vim.bo[bufnr].modified then
+                  vim.api.nvim_buf_call(bufnr, function()
+                    vim.cmd("silent! update")
+                  end)
+                  return
+                end
+              end
+              if tries < 120 then
+                vim.defer_fn(save_if_changed, 150)
+              end
+            end
+            vim.defer_fn(save_if_changed, 150)
           end)
         end,
       },

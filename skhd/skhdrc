@@ -136,8 +136,15 @@ shift + alt + cmd - f3 : yabai -m space --mirror y-axis
 # shift + alt + cmd - f6 : WINDOWS alt+tab
 # shift + alt + cmd - f7 : WINDOWS still undefined
 
-shift + alt - f9 : /bin/zsh -c  "python3 $HOME/github/dotfiles-private/scripts/macos/mac/obs/set-transform/py/set-transform-properties.py main-screen cam-iphone-gsh-border -1020 150 1489 838"
-shift + alt - f10 : /bin/zsh -c "python3 $HOME/github/dotfiles-private/scripts/macos/mac/obs/set-transform/py/set-transform-properties.py main-screen cam-iphone-gsh-border 1071 150 1489 838"
-shift + alt + cmd - f8 : /bin/zsh -c "python3 $HOME/github/dotfiles-private/scripts/macos/mac/obs/set-transform/py/set-transform-properties.py main-screen cam-iphone-gsh-border -1020 810 1489 838"
-shift + alt + cmd - f9 : /bin/zsh -c "python3 $HOME/github/dotfiles-private/scripts/macos/mac/obs/set-transform/py/set-transform-properties.py main-screen cam-iphone-gsh-border 1071 810 1489 838"
+# python3 set-transform.py 'obs scene' 'source' pos-x pos-y width height
+
+shift + alt - f9 : /bin/zsh -c  "python3 $HOME/github/dotfiles-private/scripts/macos/mac/obs/set-transform/py/set-transform-properties.py main-screen cam-iphone-gsh-border -1020 150 1489"
+shift + alt - f10 : /bin/zsh -c "python3 $HOME/github/dotfiles-private/scripts/macos/mac/obs/set-transform/py/set-transform-properties.py main-screen cam-iphone-gsh-border 1071 150 1489"
+shift + alt + cmd - f8 : /bin/zsh -c "python3 $HOME/github/dotfiles-private/scripts/macos/mac/obs/set-transform/py/set-transform-properties.py main-screen cam-iphone-gsh-border -1020 810 1489"
+shift + alt + cmd - f9 : /bin/zsh -c "python3 $HOME/github/dotfiles-private/scripts/macos/mac/obs/set-transform/py/set-transform-properties.py main-screen cam-iphone-gsh-border 1071 810 1489"
+
+# shift + alt - f9 : /bin/zsh -c  "python3 $HOME/github/dotfiles-private/scripts/macos/mac/obs/set-transform/py/set-transform-properties.py main-screen cam-iphone-gsh-border -541 159 800"
+# shift + alt - f10 : /bin/zsh -c "python3 $HOME/github/dotfiles-private/scripts/macos/mac/obs/set-transform/py/set-transform-properties.py main-screen cam-iphone-gsh-border 1739 159 800"
+# shift + alt + cmd - f8 : /bin/zsh -c "python3 $HOME/github/dotfiles-private/scripts/macos/mac/obs/set-transform/py/set-transform-properties.py main-screen cam-iphone-gsh-border -541 1070 800"
+# shift + alt + cmd - f9 : /bin/zsh -c "python3 $HOME/github/dotfiles-private/scripts/macos/mac/obs/set-transform/py/set-transform-properties.py main-screen cam-iphone-gsh-border 1739 1070 800"
 

@@ -104,6 +104,12 @@ return {
 
         extension = "webp",
         process_cmd = "convert - -quality 75 webp:-",
+        template = [[
+#figure(
+  image("$FILE_PATH"),
+  caption: [$CURSOR],
+) <fig-$LABEL>
+    ]], ---@type string | fun(context: table): string
       },
       markdown = {
         -- encode spaces and special characters in file path

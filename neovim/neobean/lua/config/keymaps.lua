@@ -252,7 +252,7 @@ vim.keymap.set("n", "<leader>uk", '<cmd>lua require("kubectl").toggle()<cr>', { 
 -- -- use kj to exit insert mode
 -- -- I auto save with
 -- --  ~/github/dotfiles-latest/neovim/neobean/lua/plugins/auto-save.lua
-vim.keymap.set("i", "kj", "<ESC>", { desc = "[P]Exit insert mode with kj" })
+-- vim.keymap.set("i", "kj", "<ESC>", { desc = "[P]Exit insert mode with kj" })
 
 -- -- An alternative way of saving (autosave)
 -- -- Auto saving when exiting insert mode with `kj`
@@ -275,8 +275,8 @@ vim.keymap.set("i", "kj", "<ESC>", { desc = "[P]Exit insert mode with kj" })
 
 -- use gh to move to the beginning of the line in normal mode
 -- use gl to move to the end of the line in normal mode
-vim.keymap.set({ "n", "v" }, "gh", "^", { desc = "[P]Go to the beginning line" })
-vim.keymap.set({ "n", "v" }, "gl", "$", { desc = "[P]go to the end of the line" })
+-- vim.keymap.set({ "n", "v" }, "gh", "^", { desc = "[P]Go to the beginning line" })
+-- vim.keymap.set({ "n", "v" }, "gl", "$", { desc = "[P]go to the end of the line" })
 --
 -- I'm switching from gh to H and gl to L so that I can also use the same
 -- bindings in tmux copy mode, because I can't use gh and gl there, I tried
@@ -1840,6 +1840,10 @@ vim.keymap.set("n", "<leader>id", function()
     local line = vim.api.nvim_get_current_line()
     local image_pattern = "%[.-%]%((.-)%)"
     local _, _, image_path = string.find(line, image_pattern)
+    if not image_path then
+      local typst_pattern = '#?image%(%s*"([^"]+)"'
+      _, _, image_path = string.find(line, typst_pattern)
+    end
     return image_path
   end
   local image_path = get_image_path()
@@ -2368,7 +2372,7 @@ vim.keymap.set("n", "<M-x>", function()
   local timestamp = os.date("%y%m%d-%H%M")
   -- local timestamp = os.date("%y%m%d")
   -- NOTE: Customize the heading and its level
-  local tasks_heading = "## Completed tasks"
+  local tasks_heading = "## Completed Tasks"
   -- Save the view to preserve folds
   vim.cmd("mkview")
   local api = vim.api

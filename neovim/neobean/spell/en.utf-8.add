@@ -22,6 +22,9 @@
 #zing
 ACL
 ASA
+ASAs
+ASAv
+ASDM
 Adderall
 Adib
 AkwinS
@@ -29,6 +32,7 @@ AlDente
 Alpern
 Anotherguest3
 Ansible
+AnyConnect
 AppImages
 ApplicationSet
 ApplicationSets
@@ -47,6 +51,7 @@ Blais
 Bluesky
 Bourne
 Brewfile
+Broadcom
 Brodie
 Bruh
 Brundin
@@ -82,6 +87,7 @@ DistroTube
 Dom0
 EOF
 EPUB
+ESXi
 Eligere
 Elmedia
 Escuintla
@@ -122,7 +128,6 @@ Homelabbing
 Hyprland
 IDEs
 IGP
-IOS
 ISPs
 ImageMagick
 Izquierdo
@@ -193,6 +198,7 @@ NetBeans
 Nikolov
 NixOS
 NordVPN
+Npcap
 NvChad
 OS
 OVIwrite
@@ -206,6 +212,7 @@ P3
 PR
 PRs
 PVE
+PVHVM
 PWA
 PWAs
 PagerDuty
@@ -215,7 +222,9 @@ Primeagen's
 ProseWrap
 Prot
 Pulltube
+QEMU
 Quetzaltenango
+RO
 RW
 Rapha
 Raycast
@@ -223,8 +232,10 @@ Redistributable
 S
 SDP
 SHell
+SMB
 SMP
 SRE
+SRs
 SSDP
 SSHing
 STONITH
@@ -233,18 +244,22 @@ Sesh
 Shasten
 Siem
 Solano
+SolarPutty
+Solarwinds
 Sonoma
 Stallman
 StarCraft
 SteerMouse
 Sylvan
 TODO
+TechnicalBackground
 Terraform
 ThePrimeagen
 ThePrimeagen's
 Theena
 Thinkpads
 Thorsten
+TigerVNC
 TikTok
 Tinland
 ToolBox
@@ -266,12 +281,15 @@ VLSM
 VM
 VM's
 VMs
+VMware
 VNC
 VRF
 Vanilli
 VictoriaMetrics
 Vimothée
+VirtIO
 VirtualBox
+VirtualBox's
 WAN14
 WM
 Wacom
@@ -281,7 +299,9 @@ WezTerm
 WhatSapp
 WhySoSerious
 WikiLinks
+WinPcap
 X11
+XCP3
 XOA
 XTNCTR
 XenServer
@@ -401,6 +421,7 @@ entrypoint
 env
 epson
 epwalsh
+error
 etc
 eth0
 excalidraw
@@ -518,13 +539,14 @@ livestream
 livestreams
 localhost
 localnets
+loopback
 lspconfig
 lua
 lualine
 lukas
 m4xshen
 mAh
-macos
+macOS
 macvlan
 mariadb
 markdown
@@ -591,6 +613,7 @@ prereqs
 presentify
 prettier's
 prettierrc
+pri
 primeagen
 prometheus
 proxmox
@@ -609,6 +632,7 @@ setapp
 shada
 shader
 shaders
+show
 sketchybar
 skhd
 skitty
@@ -651,6 +675,7 @@ toc
 tocstop
 tokisuno
 tokyonight
+toolset
 trackpad
 trackpads
 traefik
@@ -658,6 +683,7 @@ treesitter
 tryklack
 tuca
 tucanazo
+typ
 typst
 typstyle
 uebersicht's
@@ -670,6 +696,7 @@ undercurls
 unencrypted
 unix
 unixporn
+unregistering
 untoggle
 untoggled
 url
@@ -694,12 +721,15 @@ websockets
 whitespace
 wifi
 wildcard
+wolf4tb
 www
 xD
 xcode
 xcp
+xcp1
 xen
 xo
+xvda
 xz
 yabai
 yabairc
@@ -713,3 +743,4 @@ zoxide
 zsh
 zshrc
 
+PVHVM

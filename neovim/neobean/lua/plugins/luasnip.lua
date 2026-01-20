@@ -164,10 +164,10 @@ return {
         desc = lang .. " codeblock",
       }, {
         t({ "#codly(header: [*" }),
-        i(1),
+        i(2),
         t({ "*])", "" }),
         t({ "```" .. lang, "" }),
-        i(2),
+        i(1),
         -- f(clipboard, {}),
         t({ "", "```" }),
       })

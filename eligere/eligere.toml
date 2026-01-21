@@ -42,6 +42,13 @@ domains  = [
 ]
 
 [[browsers]]
+name     = "Microsoft Edge"
+shortcut = "3"
+domains  = [
+  "service-now.com",
+]
+  
+[[browsers]]
 name     = "Vivaldi"
 shortcut = "4"
 domains  = [

@@ -33,7 +33,9 @@ return {
           ["harper-ls"] = {
             userDictPath = "~/github/dotfiles-latest/neovim/neobean/spell/en.utf-8.add",
             linters = {
-              ToDoHyphen = false,
+              -- Disabling ToDoHyphen because of
+              -- https://github.com/Automattic/harper/issues/1573#issuecomment-3777776431
+              -- -- ToDoHyphen = false,
               -- SentenceCapitalization = true,
               -- SpellCheck = true,
             },

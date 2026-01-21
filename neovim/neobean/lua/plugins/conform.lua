@@ -10,6 +10,7 @@
 -- https://github.com/stevearc/conform.nvim/blob/master/README.md#setup
 -- "FocusLost" used when switching from skitty-notes
 -- "BufLeave" is used when switching between 2 buffers
+
 vim.api.nvim_create_autocmd({ "FocusLost", "BufLeave" }, {
   pattern = "*",
   callback = function(args)
@@ -110,21 +111,39 @@ $_ = join("\n", @out);
         },
         stdin = true,
       },
+      ["markdown-toc"] = {
+        condition = function(_, ctx)
+          for _, line in ipairs(vim.api.nvim_buf_get_lines(ctx.buf, 0, -1, false)) do
+            if line:find("<!%-%- toc %-%->") then
+              return true
+            end
+          end
+        end,
+      },
+      ["markdownlint-cli2"] = {
+        condition = function(_, ctx)
+          local diag = vim.tbl_filter(function(d)
+            return d.source == "markdownlint"
+          end, vim.diagnostic.get(ctx.buf))
+          return #diag > 0
+        end,
+      },
     },
     formatters_by_ft = {
-      -- I was having issues formatting .templ files, all the lines were aligned
-      -- to the left.
-      -- When I ran :ConformInfo I noticed that 2 formatters showed up:
-      -- "LSP: html, templ"
-      -- But none showed as `ready` This fixed that issue and now templ files
-      -- are formatted correctly and :ConformInfo shows:
-      -- "LSP: html, templ"
-      -- "templ ready (templ) /Users/linkarzu/.local/share/neobean/mason/bin/templ"
-      templ = { "templ" },
+      -- -- I was having issues formatting .templ files, all the lines were aligned
+      -- -- to the left.
+      -- -- When I ran :ConformInfo I noticed that 2 formatters showed up:
+      -- -- "LSP: html, templ"
+      -- -- But none showed as `ready` This fixed that issue and now templ files
+      -- -- are formatted correctly and :ConformInfo shows:
+      -- -- "LSP: html, templ"
+      -- -- "templ ready (templ) /Users/linkarzu/.local/share/neobean/mason/bin/templ"
+      -- templ = { "templ" },
+
       -- Not sure why I couldn't make ruff work, so I'll use ruff_format instead
       -- it didn't work even if I added the pyproject.toml in the project or
       -- root of my dots, I was getting the error [LSP][ruff] timeout
-      python = { "ruff_format" },
+      ["python"] = { "ruff_format" },
       -- php = { nil },
 
       -- sqeeze_blanks is a conform formatter that removes extra blank lines. So
@@ -134,9 +153,11 @@ $_ = join("\n", @out);
       -- triple backticks in code blocks (example: ```bash), so the content starts
       -- separated from the fence for better readability
       -- typst = { "typstyle", "squeeze_blanks", "codeblock_blankline", lsp_format = "never" },
-      typst = { "typstyle", "squeeze_blanks", "codeblock_remove_opening_blank", lsp_format = "never" },
+      ["typst"] = { "typstyle", "squeeze_blanks", "codeblock_remove_opening_blank", lsp_format = "never" },
       -- typst = { "typstyle", lsp_format = "prefer" },
       -- typst = { "prettypst" },
+      ["markdown"] = { "prettier", "markdownlint-cli2", "markdown-toc" },
+      ["markdown.mdx"] = { "prettier", "markdownlint-cli2", "markdown-toc" },
     },
   },
 }

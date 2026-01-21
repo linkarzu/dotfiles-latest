@@ -21,7 +21,7 @@ require("lazy").setup({
     -- machines, if you don't want that, comment them here and then manually
     -- enable them on each machine under :LazyExtras
     { import = "lazyvim.plugins.extras.lang.yaml" },
-    { import = "lazyvim.plugins.extras.formatting.prettier" },
+    -- { import = "lazyvim.plugins.extras.formatting.prettier" },
     { import = "lazyvim.plugins.extras.editor.harpoon2" },
     { import = "lazyvim.plugins.extras.editor.mini-diff" },
     { import = "lazyvim.plugins.extras.editor.snacks_picker" },

@@ -46,6 +46,7 @@ name     = "Microsoft Edge"
 shortcut = "3"
 domains  = [
   "service-now.com",
+  "sharepoint.com",
 ]
   
 [[browsers]]

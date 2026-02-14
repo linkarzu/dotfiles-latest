@@ -304,6 +304,20 @@ vim.keymap.set("v", "gl", "$h", { desc = "[P]Go to the end of the line" })
 -- vim.keymap.set({ "n", "i" }, "<C-k>", navigate_window("k"), { desc = "Go to Upper Window", remap = false })
 -- vim.keymap.set({ "n", "i" }, "<C-l>", navigate_window("l"), { desc = "Go to Right Window", remap = false })
 
+vim.keymap.set(
+  { "n", "v" },
+  "<Leader>wl",
+  "<cmd>vertical resize +5<cr>",
+  { desc = "[P]Increase window width", remap = false }
+)
+
+vim.keymap.set(
+  { "n", "v" },
+  "<Leader>wh",
+  "<cmd>vertical resize -5<cr>",
+  { desc = "[P]Increase window width", remap = false }
+)
+
 -- -- yank selected text into system clipboard
 -- -- Vim/Neovim has two clipboards: unnamed register (default) and system clipboard.
 -- --

@@ -70,7 +70,7 @@
   ;;     a      s      d      f      g      h      j      k      l      ;      '
   XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX            ;;F1
   XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     @mapps ;;NUM
-  XX     XX     XX     XX     @mrayc @msess XX     XX     XX     @m-obs XX     XX     XX     XX     ;;Q
+  XX     XX     @mwork XX     @mrayc @msess XX     XX     XX     @m-obs XX     XX     XX     XX     ;;Q
   XX     XX     @mlets XX     XX     XX     XX     XX     XX     XX     XX     XX     XX            ;;A
   XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX            ;;Z
   XX    XX   XX @mapps         XX             XX      XX         XX     XX     XX                   ;;MOD
@@ -80,7 +80,7 @@
   ;;     a      s      d      f      g      h      j      k      l      ;      '
   XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX        ;;F1  
   XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX ;;NUM 
-  XX     XX     XX     @spriv @sdail XX     XX     @sobsi @snetb @sglov @scont XX     XX     XX ;;Q   
+  XX     XX     @swork @spriv @sdail XX     XX     @sobsi @snetb @sglov @scont XX     XX     XX ;;Q   
   XX     XX     XX     XX     XX     XX     @shome @sdots @s-lua @sblog @sscri XX     XX        ;;A   
   XX     XX     XX     XX     XX     XX     @sfind XX     XX     XX     XX     XX     XX        ;;Z   
   XX    XX   XX   XX            XX             XX      XX         XX     XX     XX              ;;MOD 
@@ -145,6 +145,17 @@
   XX     XX     XX     XX     XX     XX     @snoti XX     XX     XX     XX     XX     XX            ;;Z
   XX    XX   XX     XX         XX             XX      XX         XX     XX     XX                   ;;MOD
 )
+
+(deflayer work
+  ;;     a      s      d      f      g      h      j      k      l      ;      '
+  XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX            ;;F1
+  XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     XX     bspc   ;;NUM
+  XX     XX     XX     XX     XX     XX     XX     XX     XX     @aobsi XX     XX     XX     XX     ;;Q
+  XX     XX     XX     XX     XX     XX     XX     XX     @aedge XX     XX     XX     XX            ;;A
+  XX     XX     XX     XX     XX     XX     XX     @aoutl XX     XX     XX     XX     XX            ;;Z
+  XX    XX   XX     XX         XX             XX      XX         XX     XX     XX                   ;;MOD
+)
+
 
 (deflayer yabai-manage
   ;;     a      s      d      f      g      h      j      k      l      ;      '

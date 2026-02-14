@@ -40,9 +40,13 @@ M.setup = function(opts)
         local curr_entry = mini_files.get_fs_entry()
         if curr_entry then
           local path = curr_entry.path
+          local safe_path = path:gsub([[\]], [[\\]]):gsub([["]], [[\"]])
           -- Build the osascript command to copy the file or directory to the clipboard
-          local cmd = string.format([[osascript -e 'set the clipboard to POSIX file "%s"' ]], path)
-          local result = vim.fn.system(cmd)
+          local result = vim.fn.system({
+            "osascript",
+            "-e",
+            string.format([[tell application "Finder" to set the clipboard to (POSIX file "%s")]], safe_path),
+          })
           if vim.v.shell_error ~= 0 then
             vim.notify("Copy failed: " .. result, vim.log.levels.ERROR)
           else
@@ -90,10 +94,11 @@ M.setup = function(opts)
         end
       end, { buffer = buf_id, noremap = true, silent = true, desc = "[P]Zip and copy to clipboard" })
 
-      -- Paste the current file or directory from the system clipboard into the current directory in mini.files
-      -- NOTE: This works only on macOS
+      -- Paste a file or directory from the macOS system clipboard into the current mini.files directory
+      -- NOTE: We intentionally avoid pbpaste here; Finder-style "copied files" are stored as alias / NSFilenamesPboardType,
+      -- and pbpaste often returns empty for those. We also avoid NSPasteboardURLReadingFileURLsOnlyKey because it errored
+      -- in osascript on this setup during debugging.
       vim.keymap.set("n", keymaps.paste_from_clipboard, function()
-        -- vim.notify("Starting the paste operation...", vim.log.levels.INFO)
         if not mini_files then
           vim.notify("mini.files module not loaded.", vim.log.levels.ERROR)
           return
@@ -105,28 +110,40 @@ M.setup = function(opts)
         end
         local curr_dir = curr_entry.fs_type == "directory" and curr_entry.path
           or vim.fn.fnamemodify(curr_entry.path, ":h") -- Use parent directory if entry is a file
-        -- vim.notify("Current directory: " .. curr_dir, vim.log.levels.INFO)
         local script = [[
-            tell application "System Events"
+            use framework "AppKit"
+            on run
+              -- 1) Clipboard as alias covers "copy file" done via Finder-style entries (including our mini.files copy).
               try
                 set theFile to the clipboard as alias
-                set posixPath to POSIX path of theFile
-                return posixPath
-              on error
-                return "error"
+                return POSIX path of theFile
               end try
-            end tell
+              -- 2) NSFilenamesPboardType covers multi-file copies; coerce to list to avoid AppleScriptObjC ocid errors.
+              set pb to current application's NSPasteboard's generalPasteboard()
+              try
+                set filesList to (pb's propertyListForType:"NSFilenamesPboardType") as list
+                if filesList is not missing value then
+                  if (count of filesList) > 0 then return (item 1 of filesList) as text
+                end if
+              end try
+              -- 3) Fallback for some apps: file URL stored as a string type.
+              try
+                set u to pb's stringForType:"public.file-url"
+                if u is not missing value then
+                  set nsurl to current application's NSURL's URLWithString:u
+                  if nsurl is not missing value then return (nsurl's path()) as text
+                end if
+              end try
+              return "error"
+            end run
           ]]
-        local output = vim.fn.system("osascript -e " .. vim.fn.shellescape(script)) -- Execute AppleScript command
-        if vim.v.shell_error ~= 0 or output:find("error") then
+        local output = vim.fn.system({ "osascript", "-e", script }) -- Execute AppleScript command
+        output = tostring(output):gsub("%s+$", "")
+        if vim.v.shell_error ~= 0 or output == "error" or output == "" then
           vim.notify("Clipboard does not contain a valid file or directory.", vim.log.levels.WARN)
           return
         end
-        local source_path = output:gsub("%s+$", "") -- Trim whitespace from clipboard output
-        if source_path == "" then
-          vim.notify("Clipboard is empty or invalid.", vim.log.levels.WARN)
-          return
-        end
+        local source_path = output
         local dest_path = curr_dir .. "/" .. vim.fn.fnamemodify(source_path, ":t") -- Destination path in current directory
         local copy_cmd = vim.fn.isdirectory(source_path) == 1 and { "cp", "-R", source_path, dest_path }
           or { "cp", source_path, dest_path } -- Construct copy command
@@ -135,7 +152,6 @@ M.setup = function(opts)
           vim.notify("Paste operation failed: " .. result, vim.log.levels.ERROR)
           return
         end
-        -- vim.notify("Pasted " .. source_path .. " to " .. dest_path, vim.log.levels.INFO)
         mini_files.synchronize() -- Refresh mini.files to show updated directory content
         vim.notify("Pasted successfully.", vim.log.levels.INFO)
       end, { buffer = buf_id, noremap = true, silent = true, desc = "[P]Paste from clipboard" })

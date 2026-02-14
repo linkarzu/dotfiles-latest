@@ -4084,6 +4084,29 @@ end, { desc = "Decrease headings in visual selection" })
 --                       End of markdown section
 -- ############################################################################
 
+-- Convert current markdown buffer to a .docx using pandoc
+-- Assumes pandoc is installed and available in PATH (brew install pandoc)
+vim.keymap.set("n", "<leader>mcw", function()
+  -- Save first so pandoc exports the latest content
+  vim.cmd("write")
+  local md = vim.fn.expand("%:p")
+  if md == "" then
+    print("No file name")
+    return
+  end
+  local docx = vim.fn.expand("%:p:r") .. ".docx"
+  local cmd = { "pandoc", md, "-o", docx }
+  vim.fn.jobstart(cmd, {
+    on_exit = function(_, code)
+      if code == 0 then
+        print("Wrote " .. docx)
+      else
+        print("pandoc failed (exit " .. code .. ")")
+      end
+    end,
+  })
+end, { desc = "[P]Markdown convert to word" })
+
 -- Marks keep coming back even after deleting them, this deletes them all
 -- This deletes all marks in the current buffer, including lowercase, uppercase, and numbered marks
 -- Fix should be applied on April 2024

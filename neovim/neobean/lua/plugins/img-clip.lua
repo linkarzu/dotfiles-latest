@@ -97,17 +97,34 @@ return {
       typst = {
         url_encode_path = true, ---@type boolean
 
-        -- Use :pwd (cwd) as the base for dir_path
-        relative_to_current_file = false, ---@type boolean
+        -- If your current Neovim working directory (:pwd) is inside ~/github/net-book,
+        -- return false so the plugin does NOT place images relative to the current file.
+        -- That makes it use the cwd as the base, so "assets/img/imgs" works from the repo root.
+        -- If you're outside that repo, return true so images are stored relative to the current file.
+        relative_to_current_file = function()
+          local cwd = vim.loop.cwd() or vim.fn.getcwd()
+          local net_book = vim.fn.expand("~/github/net-book")
+          return not vim.startswith(cwd, net_book)
+        end, ---@type boolean
 
-        dir_path = "assets/img/imgs",
+        -- Choose the image output directory based on where you're working:
+        -- - Inside ~/github/net-book: always use the repo's assets/img/imgs folder.
+        -- - Anywhere else: create/use a folder next to the current file named "<filename>-img".
+        dir_path = function()
+          local cwd = vim.loop.cwd() or vim.fn.getcwd()
+          local net_book = vim.fn.expand("~/github/net-book")
+          if vim.startswith(cwd, net_book) then
+            return "assets/img/imgs"
+          end
+          return vim.fn.expand("%:t:r") .. "-img"
+        end,
 
         extension = "webp",
         process_cmd = "convert - -quality 75 webp:-",
         template = [[
 #figure(
   image("$FILE_PATH"),
-  caption: [$CURSOR],
+  caption: $CURSOR[],
 ) <fig-$LABEL>
     ]], ---@type string | fun(context: table): string
       },

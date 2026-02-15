@@ -131,7 +131,7 @@ source "$ITEM_DIR/dnd.sh"
 
 # Shows github notifications via gh cli, mine aren't working properly
 # `gh api notifications` shows nothing but `gh status` does
-source "$ITEM_DIR/github.sh"
+# source "$ITEM_DIR/github.sh"
 
 # Shows the SSID you're connected to, and the IP address assigned
 source "$ITEM_DIR/wifi.sh"

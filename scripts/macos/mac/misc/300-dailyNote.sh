@@ -39,14 +39,6 @@ if [ ! -f "$full_path" ]; then
   cat <<EOF >"$full_path"
 # ${note_name}
 
-## Contents
-
-<!-- toc -->
-
-- [Daily Note](#daily-note)
-
-<!-- tocstop -->
-
 ## Daily Note
 
 EOF

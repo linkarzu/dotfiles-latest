@@ -32,6 +32,8 @@ return {
       -- I installed markdown-toc as I use to to automatically create and upate
       -- the TOC at the top of each file
       -- vim.list_extend(opts.ensure_installed, { "markdownlint-cli2", "marksman", "markdown-toc" })
+
+      "markdown-oxide",
     })
   end,
 }

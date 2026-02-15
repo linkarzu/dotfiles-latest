@@ -322,10 +322,10 @@ if [ "$UPDATED" = true ]; then
   # Source the active colorscheme to load variables
   source "$active_file"
 
-  # Set the tmux colors
-  $HOME/github/dotfiles-latest/tmux/tools/linkarzu/set_tmux_colors.sh
-  tmux source-file ~/.tmux.conf
-  echo "Tmux colors set and tmux configuration reloaded."
+  # # Set the tmux colors
+  # $HOME/github/dotfiles-latest/tmux/tools/linkarzu/set_tmux_colors.sh
+  # tmux source-file ~/.tmux.conf
+  # echo "Tmux colors set and tmux configuration reloaded."
 
   # Set sketchybar colors
   sketchybar --reload

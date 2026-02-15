@@ -46,7 +46,6 @@ return {
       -- -- Iterate through incomplete tasks in Snacks_picker
       {
         -- -- You can confirm in your teminal lamw26wmal with:
-        -- -- rg "^\s*-\s\[ \]" test-markdown.md
         "<leader>tt",
         function()
           Snacks.picker.grep({
@@ -59,6 +58,8 @@ return {
             live = false,
             -- restrict search to the current working directory
             dirs = { vim.fn.getcwd() },
+            -- I want to filter this to only show markdown files
+            glob = "*.md",
             -- include files ignored by .gitignore
             args = { "--no-ignore" },
             -- Start in normal mode
@@ -81,7 +82,8 @@ return {
           Snacks.picker.grep({
             prompt = " ",
             -- pass your desired search as a static pattern
-            search = "^\\s*- \\[x\\] `done:",
+            -- search = "^\\s*- \\[x\\] `done:",
+            search = "^\\s*- \\[[xX]\\](?: `done:)?",
             -- we enable regex so the pattern is interpreted as a regex
             regex = true,
             -- no “live grep” needed here since we have a fixed pattern

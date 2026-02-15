@@ -43,7 +43,6 @@ Auphonic
 Automattic
 BGP
 BSP
-Backlinks
 BeardedSpice
 BetterDisplay
 BetterTouchTool
@@ -53,10 +52,10 @@ Bourne
 Brewfile
 Broadcom
 Brodie
-Bruh
 Brundin
 CCNA
 CCNP
+CIDR
 CachyOS
 Calibre
 Caltech
@@ -90,6 +89,7 @@ EPUB
 ESXi
 Eligere
 Elmedia
+Epomaker
 Escuintla
 FOMO
 FQDN
@@ -177,6 +177,7 @@ MacBook
 MacBooks
 Macau
 MagicDuck
+MariaDB
 Matt
 McAfee
 MeanderingProgrammer
@@ -197,6 +198,7 @@ NTP
 NetBeans
 Nikolov
 NixOS
+Nmap
 NordVPN
 Npcap
 NvChad
@@ -237,6 +239,7 @@ SMP
 SRE
 SRs
 SSDP
+SSH
 SSHing
 STONITH
 Schrock
@@ -284,6 +287,8 @@ VMs
 VMware
 VNC
 VRF
+VTPM
+VTY
 Vanilli
 VictoriaMetrics
 Vimothée
@@ -338,12 +343,15 @@ autocompletions
 avif
 awk
 backend
+backlinks
+bash
 beekeeb
 bind9
 blogpost
 bluetooth
 bolds
 brewfiles
+bruh
 btop
 bufexplorer
 bulletpoint
@@ -369,6 +377,7 @@ cmd
 cmp
 codeblock
 codeblocks
+codelens
 codly
 collab
 colorscheme
@@ -548,7 +557,6 @@ m4xshen
 mAh
 macOS
 macvlan
-mariadb
 markdown
 markdownlint
 md
@@ -585,6 +593,7 @@ noice
 normie
 normies
 npm
+numpad
 nutz
 nvim
 obsidianites
@@ -644,6 +653,7 @@ src
 sshonizer
 stackoverflow
 starship
+subinterfaces
 sublayers
 submodule
 subnets
@@ -743,5 +753,6 @@ zoxide
 zsh
 zshrc
 
-PVHVM
-Nmap
+numpad
+Neogit
+Lazygit

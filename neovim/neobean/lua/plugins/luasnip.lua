@@ -673,7 +673,7 @@ return {
         i(1),
         t({ '")[', "  " }),
         i(2),
-        t({ "", "  #v(4pt)", "]" }),
+        t({ "", "]" }),
       }),
 
       s({
@@ -683,17 +683,29 @@ return {
       }, {
         t({ "#warning[", "  " }),
         i(1),
-        t({ "", "  #v(4pt)", "]" }),
+        t({ "", "]" }),
       }),
 
       s({
-        trig = "typsol",
-        name = "Solution block",
-        desc = "Typst solution callout",
+        trig = "typconcept",
+        name = "Concept block",
+        desc = "Typst concept callout",
       }, {
-        t({ "#solution[", "  " }),
+        t({ "#concept(title: [" }),
         i(1),
-        t({ "", "  #v(4pt)", "]" }),
+        t({ "])[", "  - " }),
+        i(2),
+        t({ "", "]" }),
+      }),
+
+      s({
+        trig = "typquest",
+        name = "Question block",
+        desc = "Typst question callout",
+      }, {
+        t({ "#questions[", "  - " }),
+        i(1),
+        t({ "", "]" }),
       }),
 
       -- Paste clipboard contents in link section, move cursor to ()

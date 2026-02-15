@@ -69,7 +69,7 @@ return {
             format = "file",
             show_empty = true,
             supports_live = false,
-            layout = "ivy",
+            layout = "ivy_split",
           })
         end,
         desc = "[P]Search for incomplete tasks",

@@ -33,7 +33,7 @@ ctrl + alt - f5 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switc
 ctrl + alt - f6 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" Neovide
 ctrl + alt - f7 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" Mail
 ctrl + alt - f8 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" 'Windows App'
-# ctrl + alt - f9 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" Spotify
+ctrl + alt - f9 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" 'Microsoft Outlook'
 # ctrl + alt - f10 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" Spotify
 # ctrl + alt - f11 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" Spotify
 
@@ -94,7 +94,7 @@ shift + alt - f4 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/mac
 # shift + alt - f6 : 
 # shift + alt - f7 : 
 # lineid_obs_switchscene_guest
-shift + alt - f8 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py guests-solo --no-auth"
+shift + alt - f8 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py guests-solo-live --no-auth"
 # lineid_obs_switchscene_guest1
 shift + alt - f11 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py guest1-0guest --no-auth"
 shift + alt - f12 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py guest2-4guest-live --no-auth"
@@ -114,7 +114,7 @@ shift + alt + ctrl - f1 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scri
 # shift + alt + ctrl - f4 : 
 # shift + alt + ctrl - f5 : 
 # lineid_obs_switchscene_main
-shift + alt + ctrl - f6 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py main-screen --no-auth"
+shift + alt + ctrl - f6 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py main-screen-live --no-auth"
 shift + alt + ctrl - f7 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py cam-iphone --no-auth"
 # shift + alt + ctrl - f8 : 
 # shift + alt + ctrl - f9 : 
@@ -148,3 +148,12 @@ shift + alt + cmd - f9 : /bin/zsh -c "python3 $HOME/github/dotfiles-private/scri
 # shift + alt + cmd - f8 : /bin/zsh -c "python3 $HOME/github/dotfiles-private/scripts/macos/mac/obs/set-transform/py/set-transform-properties.py main-screen cam-iphone-gsh-border -541 1070 800"
 # shift + alt + cmd - f9 : /bin/zsh -c "python3 $HOME/github/dotfiles-private/scripts/macos/mac/obs/set-transform/py/set-transform-properties.py main-screen cam-iphone-gsh-border 1739 1070 800"
 
+shift + alt + cmd - f10 : $HOME/github/dotfiles-latest/scripts/macos/mac/misc/550-skhdSession.sh "$HOME/github/dotfiles-private/work/2026/work.kitty-session"
+
+shift + alt + cmd - f11 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" 'Microsoft Edge'
+shift + alt + cmd - f12 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" 'Obsidian'
+shift + alt + cmd - f13 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" 'Microsoft Outlook'
+# shift + alt + cmd - f16 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" 'Microsoft Edge'
+# shift + alt + cmd - f17 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" 'Microsoft Edge'
+# shift + alt + cmd - f18 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" 'Microsoft Edge'
+# shift + alt + cmd - f19 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" 'Microsoft Edge'

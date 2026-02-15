@@ -23,6 +23,25 @@ return {
     },
 
     servers = {
+      marksman = {
+        enabled = false,
+      },
+      markdown_oxide = {
+        -- Ensure that dynamicRegistration is enabled
+        -- This allows the LS to take into account actions like Create Unresolved File, etc
+        capabilities = vim.tbl_deep_extend(
+          "force",
+          vim.lsp.protocol.make_client_capabilities(),
+          require("blink.cmp").get_lsp_capabilities(),
+          {
+            workspace = {
+              didChangeWatchedFiles = {
+                dynamicRegistration = true,
+              },
+            },
+          }
+        ),
+      },
       -- https://www.reddit.com/r/neovim/comments/1j7ookn/comment/mgysste/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button
       -- The hover window configuration for the diagnostics is done in lamw26wmal
       -- ~/github/dotfiles-latest/neovim/neobean/lua/config/autocmds.lua

@@ -1,12 +1,28 @@
 #!/usr/bin/env bash
 
-# Filename: ~/github/dotfiles-latest/kitty/scripts/kitty-list-tabs.sh
+# Filename: ~/github/dotfiles-latest/kitty/scripts/kitty-list-sessions.sh
 # Shows open kitty tab titles in fzf and switches using `action goto_session`
-# Called from outside kitty (skhd, scripts, etc)
+# Adds a vim-like "mode":
+# - Normal mode (default): j/k move, d closes, enter opens, i enters insert mode, esc quits
+# - Insert mode: type to filter, enter opens, esc returns to normal mode
 
 set -euo pipefail
 
+set_cursor_block() {
+  # DECSCUSR: steady block
+  printf '\e[2 q' >/dev/tty
+}
+
+set_cursor_bar() {
+  # DECSCUSR: steady bar
+  printf '\e[6 q' >/dev/tty
+}
+
+# Always restore to bar on exit
+trap 'set_cursor_bar' EXIT
+
 kitty_bin="/Applications/kitty.app/Contents/MacOS/kitty"
+sessions_dir="$HOME/github/dotfiles-latest/kitty/sessions"
 
 # Requirements
 if ! command -v fzf >/dev/null 2>&1; then
@@ -32,22 +48,33 @@ if [[ -z "${sock:-}" ]]; then
   exit 1
 fi
 
-tabs_tsv="$(
-  "$kitty_bin" @ --to "unix:${sock}" ls 2>/dev/null | jq -r '
-    .[].tabs[]
-    | [(.title|tostring), (.is_focused|tostring)]
-    | @tsv
-  ' | sort -u
-)"
+session_id_for_title() {
+  local title="${1:-}"
+  local file="${sessions_dir}/${title}.kitty-session"
 
-if [[ -z "${tabs_tsv:-}" ]]; then
-  echo "No tabs found."
-  exit 1
-fi
+  if [[ -f "$file" ]]; then
+    printf "%s" "$file"
+    return 0
+  fi
 
-# Format menu as:
-# raw_title<TAB>pretty_display
-menu_lines="$(
+  printf "%s" "$title"
+}
+
+build_menu_lines() {
+  local tabs_tsv=""
+  tabs_tsv="$(
+    "$kitty_bin" @ --to "unix:${sock}" ls 2>/dev/null | jq -r '
+      .[].tabs[]
+      | [(.title|tostring), (.is_focused|tostring)]
+      | @tsv
+    ' | sort -u
+  )"
+
+  if [[ -z "${tabs_tsv:-}" ]]; then
+    return 1
+  fi
+
+  # raw_title<TAB>pretty_display
   printf "%s\n" "$tabs_tsv" | awk -F'\t' '{
     title=$1
     focused=$2
@@ -57,26 +84,134 @@ menu_lines="$(
       printf "%s\t          %s\n", title, title
     }
   }'
-)"
+}
 
-selected_line="$(
-  printf "%s\n" "$menu_lines" |
-    fzf --ansi --height=100% --reverse \
-      --header="Select a kitty tab/session (Esc to cancel)" \
-      --prompt="Kitty > " \
-      --no-multi \
-      --with-nth=2..
-)"
+mode="normal"
 
-# User cancelled
-if [[ -z "${selected_line:-}" ]]; then
+while true; do
+  menu_lines="$(build_menu_lines || true)"
+  if [[ -z "${menu_lines:-}" ]]; then
+    echo "No tabs found."
+    exit 1
+  fi
+
+  fzf_out=""
+  fzf_rc=0
+
+  if [[ "$mode" == "normal" ]]; then
+    # Normal mode:
+    # - Search disabled (typing doesn't filter)
+    # - j/k move
+    # - d closes session
+    # - enter opens session
+    # - i enters insert mode
+    # - esc quits
+    # - --no-clear avoids a visible screen "flash"
+    #   - We exit one fzf instance and immediately start another when switching modes
+    #   - Prevents fzf from clearing/restoring the screen on exit
+    set_cursor_block
+    set +e
+    fzf_out="$(
+      printf "%s\n" "$menu_lines" |
+        fzf --ansi --height=100% --reverse \
+          --header="Normal: j/k move, d close, enter open, i insert, esc quit" \
+          --prompt="Kitty > " \
+          --no-multi --disabled \
+          --with-nth=2.. \
+          --expect=enter,d,i,esc \
+          --bind 'j:down,k:up' \
+          --bind 'enter:accept,d:accept,i:accept' \
+          --bind 'esc:abort' \
+          --no-clear \
+          --bind 'start:execute-silent(printf "\033[2 q" > /dev/tty)'
+
+    )"
+    fzf_rc=$?
+    set -e
+  else
+    # Insert mode:
+    # - Search enabled (type to filter)
+    # - enter opens session
+    # - esc returns to normal mode
+    # - --no-clear avoids a visible screen "flash"
+    #   - We exit one fzf instance and immediately start another when switching modes
+    #   - Prevents fzf from clearing/restoring the screen on exit
+
+    set_cursor_bar
+    set +e
+    fzf_out="$(
+      printf "%s\n" "$menu_lines" |
+        fzf --ansi --height=100% --reverse \
+          --header="Insert: type to filter, enter open, esc normal" \
+          --prompt="Kitty (insert) > " \
+          --no-multi \
+          --with-nth=2.. \
+          --expect=enter,esc \
+          --bind 'enter:accept' \
+          --bind 'esc:abort' \
+          --no-clear \
+          --bind 'start:execute-silent(printf "\033[6 q" > /dev/tty)'
+    )"
+    fzf_rc=$?
+    set -e
+  fi
+
+  # If fzf aborted and gave no output, treat it like "esc"
+  if [[ $fzf_rc -ne 0 && -z "${fzf_out:-}" ]]; then
+    key="esc"
+    sel=""
+  else
+    key="$(printf "%s\n" "$fzf_out" | head -n1)"
+    sel="$(printf "%s\n" "$fzf_out" | sed -n '2p' || true)"
+  fi
+
+  # Selection line is: raw_title<TAB>pretty_display
+  selected_title=""
+  if [[ -n "${sel:-}" ]]; then
+    selected_title="$(printf "%s" "$sel" | awk -F'\t' '{print $1}')"
+  fi
+
+  if [[ "$mode" == "insert" && "$key" == "esc" ]]; then
+    mode="normal"
+    continue
+  fi
+
+  if [[ "$mode" == "normal" && "$key" == "esc" ]]; then
+    exit 0
+  fi
+
+  if [[ "$mode" == "normal" && "$key" == "i" ]]; then
+    mode="insert"
+    continue
+  fi
+
+  if [[ -z "${selected_title:-}" ]]; then
+    # Nothing selected (likely esc)
+    if [[ "$mode" == "normal" ]]; then
+      exit 0
+    fi
+    mode="normal"
+    continue
+  fi
+
+  if [[ "$mode" == "normal" && "$key" == "d" ]]; then
+    session_id="$(session_id_for_title "$selected_title")"
+    "$kitty_bin" @ --to "unix:${sock}" action close_session "$session_id" >/dev/null 2>&1 || true
+    continue
+  fi
+
+  if [[ "$key" == "enter" ]]; then
+    "$kitty_bin" @ --to "unix:${sock}" action goto_session "$selected_title"
+    exit 0
+  fi
+
+  # Fallback behavior:
+  # - In insert mode, abort returns here -> go back to normal
+  # - In normal mode, unknown key -> exit
+  if [[ "$mode" == "insert" ]]; then
+    mode="normal"
+    continue
+  fi
+
   exit 0
-fi
-
-selected_title="$(printf "%s" "$selected_line" | awk -F'\t' '{print $1}')"
-if [[ -z "${selected_title:-}" ]]; then
-  exit 0
-fi
-
-# Switch using goto_session (will jump to existing session/tab if it exists)
-"$kitty_bin" @ --to "unix:${sock}" action goto_session "$selected_title"
+done

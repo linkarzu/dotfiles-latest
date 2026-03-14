@@ -63,7 +63,7 @@ return {
     opts.windows = vim.tbl_deep_extend("force", opts.windows or {}, {
       preview = true,
       width_focus = 30,
-      width_preview = 80,
+      width_preview = 70,
     })
 
     opts.options = vim.tbl_deep_extend("force", opts.options or {}, {

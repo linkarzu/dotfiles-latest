@@ -9,6 +9,11 @@
 # To get the names of all the running applications
 # yabai -m query --windows | jq -r '.[].app'
 
+# To see if there's errors with your yabai config:
+# cat /tmp/yabai_linkarzu.err.log
+# To see debug (echo) commands in this file:
+# cat /tmp/yabai_linkarzu.out.log
+
 # Load all the variables I need from the yabai_env.sh file
 source "$HOME/github/dotfiles-latest/yabai/yabai_env.sh"
 
@@ -18,10 +23,10 @@ source "$HOME/github/dotfiles-latest/yabai/yabai_env.sh"
 yabai -m signal --add event=dock_did_restart action="sudo yabai --load-sa"
 sudo yabai --load-sa
 
-# In order to prevent simple-bar freezing upon yabai restart, you'll need to add
-# this line at the start of your .yabairc file
-# https://www.jeantinland.com/toolbox/simple-bar/documentation/installation/#update-your-yabai-config
-osascript -e 'tell application id "tracesOf.Uebersicht" to refresh'
+# # In order to prevent simple-bar freezing upon yabai restart, you'll need to add
+# # this line at the start of your .yabairc file
+# # https://www.jeantinland.com/toolbox/simple-bar/documentation/installation/#update-your-yabai-config
+# osascript -e 'tell application id "tracesOf.Uebersicht" to refresh'
 
 ###############################################################################
 #                              Excluded apps
@@ -81,6 +86,17 @@ if command -v sketchybar &>/dev/null; then
     yabai -m config left_padding 3
     yabai -m config right_padding 230
   elif [[ "$display_resolution" == *"2560 x 1440"* ]]; then
+    # This is for the 720p res in BetterDisplay
+    # # yabai -m config top_padding 39
+    # lineid_asus_monitor_top_pad
+    yabai -m config top_padding 42
+    # lineid_asus_monitor_bottom_pad
+    yabai -m config bottom_padding 3
+    # lineid_asus_monitor_left_pad
+    yabai -m config left_padding 3
+    # lineid_asus_monitor_right_pad
+    yabai -m config right_padding 3
+  elif [[ "$display_resolution" == *"1920 x 1440"* ]]; then
     # This is for the 720p res in BetterDisplay
     # # yabai -m config top_padding 39
     # lineid_asus_monitor_top_pad
@@ -191,7 +207,7 @@ yabai -m rule --add app=".*" sub-layer=normal
 # be a nightmare to use iStat Menus
 # Update: Fuck iStat Menus, neverd used it anyway. I need for my mouse to follow
 # trickster
-yabai -m config mouse_follows_focus on
+# yabai -m config mouse_follows_focus on
 
 # I don't understand what this does, I've enabled and disabled it in the past,
 # and still don't get it
@@ -233,22 +249,20 @@ yabai -m signal --add event=window_focused action="sketchybar --trigger window_f
 ###############################################################################
 
 yabai -m config \
+  external_bar off:40:0 \
+  menubar_opacity 1.0 \
+  mouse_follows_focus on \
   focus_follows_mouse off \
+  display_arrangement_order default \
   window_origin_display default \
   window_placement second_child \
+  window_insertion_point focused \
   window_zoom_persist on \
   window_shadow off \
-  window_animation_duration 2 \
-  window_animation_frame_rate 120 \
+  window_animation_duration 0.0 \
+  window_animation_easing ease_out_circ \
   window_opacity_duration 0.0 \
   insert_feedback_color 0xffd75f5f \
-  active_window_border_color 0xff775759 \
-  normal_window_border_color 0xff555555 \
-  window_border_width 4 \
-  window_border_radius 12 \
-  window_border_blur off \
-  window_border_hidpi on \
-  window_border off \
   split_ratio 0.50 \
   split_type auto \
   auto_balance off \
@@ -313,8 +327,10 @@ else
   yabai -m space "$first_space_index" --label "$non_stream_space"
   yabai -m space "$((first_space_index + 1))" --label "$bkp_terminal_space"
   #after labeling them we can reference them
-  yabai -m config --space "$first_space_index" top_padding 8
-  yabai -m config --space "$first_space_index" right_padding 0
+  yabai -m config --space "$first_space_index" top_padding 42
+  yabai -m config --space "$first_space_index" right_padding 2
+  yabai -m config --space "$bkp_terminal_space" top_padding 9
+  yabai -m config --space "$bkp_terminal_space" right_padding 2
 fi
 
 yabai -m rule --add app="^.*$" space=desk1
@@ -361,3 +377,5 @@ yabai -m signal --add event=space_changed action="$HOME/github/dotfiles-latest/y
 # Otherwise yabai takes care of management and I couldnt resize apps like
 # packet tracer for example
 yabai -m rule --apply
+
+echo "Linkarzu yabai configuration loaded.."

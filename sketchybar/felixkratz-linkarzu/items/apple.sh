@@ -8,7 +8,7 @@ apple_logo=(
   icon.font="$FONT:Black:16.0"
   # Here you can change the icon color
   icon.color=$GREEN
-  padding_right=15
+  padding_right=10
   label.drawing=off
   click_script="$POPUP_CLICK_SCRIPT"
   popup.height=35

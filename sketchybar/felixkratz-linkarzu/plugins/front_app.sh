@@ -7,5 +7,6 @@ if [ "$SENDER" = "front_app_switched" ]; then
   #   ~/github/dotfiles-latest/sketchybar/felixkratz-linkarzu/plugins/kitty_name.sh
   #   exit 0
   # fi
-  sketchybar --set $NAME label="$INFO" icon.background.image="app.$INFO"
+  # sketchybar --set $NAME label="$INFO" icon.background.image="app.$INFO"
+  sketchybar --set $NAME label="" label.drawing=off icon.background.image="app.$INFO"
 fi

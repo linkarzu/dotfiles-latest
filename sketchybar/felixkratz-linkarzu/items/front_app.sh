@@ -3,6 +3,8 @@
 #Filename: ~/github/dotfiles-latest/sketchybar/felixkratz/items/front_app.sh
 
 front_app=(
+  icon.padding_left=15
+  icon.padding_right=20
   label.padding_left=4
   label.padding_right=10
   # Using "JetBrainsMono Nerd Font"

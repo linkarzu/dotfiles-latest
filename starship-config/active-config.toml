@@ -6,7 +6,6 @@ $hostname\
 $time\
 $all\
 $directory
-$kubernetes
 $character
 """
 
@@ -33,7 +32,7 @@ time_format = '%y/%m/%d'
 # For this to show up correctly, you need to have cluster access
 # So your ~/.kube/config needs to be configured on the local machine
 [kubernetes]
-disabled = false
+disabled = true
 # context = user@cluster
 # format = '[$user@$cluster \($namespace\)](#9ad900) '
 # format = '[$cluster \($namespace\)](#9ad900) '

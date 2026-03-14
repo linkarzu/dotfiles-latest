@@ -336,6 +336,18 @@ end
 
 vim.keymap.set({ "n", "v" }, "<leader>y", [["+y]], { desc = "[P]Yank to system clipboard" })
 
+-- Auto-yank visual selection to the system clipboard on mouse release
+-- NOTE: This requires Neovim to receive mouse events (so `mouse` must include visual mode)
+-- NOTE: LazyVim already enables `opt.mouse = "a"` (mouse mode), so we don't set it here
+-- https://stackoverflow.com/questions/79585797/how-to-copy-on-mouse-selection-in-neovim
+vim.keymap.set("v", "<LeftRelease>", [["+ygv]], { silent = true, desc = "[P]Mouse select -> yank to system clipboard" })
+vim.keymap.set(
+  "v",
+  "<2-LeftRelease>",
+  [["+ygv]],
+  { silent = true, desc = "[P]Mouse select (double) -> yank to system clipboard" }
+)
+
 -- HACK: Paste unformatted text from Neovim to Slack, Discord, Word or any other app
 -- https://youtu.be/S3drTCO7Ct4
 --

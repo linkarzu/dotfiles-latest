@@ -164,6 +164,7 @@ return {
             format = "file",
             show_empty = true,
             supports_live = true,
+            exclude = { "*.xlsx", "*.txt" },
             -- In case you want to override the layout for this keymap
             -- layout = "vscode",
           })

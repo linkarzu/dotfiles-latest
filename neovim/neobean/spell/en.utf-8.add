@@ -128,6 +128,7 @@ Homelabbing
 Hyprland
 IDEs
 IGP
+IPs
 ISPs
 ImageMagick
 Izquierdo
@@ -157,8 +158,8 @@ LastPass
 Lazar
 LazyExtra
 LazyExtras
-LazyGit
 LazyVim
+Lazygit
 Lightyear
 LinuxRenaissance
 Logitech
@@ -195,6 +196,7 @@ MySQL
 NAS
 NOC
 NTP
+Neogit
 NetBeans
 Nikolov
 NixOS
@@ -276,7 +278,6 @@ Ubersicht's
 Udemy
 Uebersicht
 Untoggling
-VE
 VIRUSTOTAL
 VLAN
 VLANs
@@ -483,6 +484,7 @@ homerow
 hostname
 hostnames
 how
+htop
 hwvirt
 hypervisor
 hypervisors
@@ -712,6 +714,7 @@ untoggled
 url
 v1
 v2
+ve
 venv
 vfstype
 vid
@@ -753,6 +756,4 @@ zoxide
 zsh
 zshrc
 
-numpad
-Neogit
-Lazygit
+Canva

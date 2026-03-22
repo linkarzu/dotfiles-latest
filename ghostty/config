@@ -145,7 +145,7 @@ window-padding-x = 4,2
 window-padding-y = 6,0
 
 font-family = "JetBrainsMono Nerd Font"
-font-size = 15
+font-size = 25
 
 # Valid values:
 # 

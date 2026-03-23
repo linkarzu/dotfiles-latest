@@ -109,8 +109,8 @@ shift + alt - f16 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/ma
 # shift + cmd - f16 : 
 # shift + cmd - f17 : 
 # shift + cmd - f18 : 
-# shift + cmd - f19 : 
-shift + alt + ctrl - f1 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py zoom-main-keyboard --no-auth"
+shift + cmd - f19 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py zoom-main-keyboard --no-auth"
+shift + alt + ctrl - f1 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py zoom-main-keyboard-w-app --no-auth"
 # shift + alt + ctrl - f2 : 
 # shift + alt + ctrl - f3 : 
 # shift + alt + ctrl - f4 : 

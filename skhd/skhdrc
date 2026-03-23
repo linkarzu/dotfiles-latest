@@ -131,10 +131,11 @@ shift + alt + ctrl - f17 : yabai -m window --focus west
 shift + alt + ctrl - f18 : yabai -m window --focus south
 shift + alt + ctrl - f19 : yabai -m window --focus north
 shift + alt + cmd - f1 : yabai -m window --focus east
-# shift + alt + cmd - f2 : 
-shift + alt + cmd - f3 : yabai -m space --mirror y-axis
-# shift + alt + cmd - f4 : 
-# shift + alt + cmd - f5 : 
+shift + alt + cmd - f2 : yabai -m window --display next; yabai -m display --focus prev; yabai -m window --focus mouse
+shift + alt + cmd - f3 : yabai -m window --space prev; yabai -m space --focus prev
+shift + alt + cmd - f4 : yabai -m window --space next; yabai -m space --focus next
+shift + alt + cmd - f5 : yabai -m window --display prev; yabai -m display --focus prev; yabai -m window --focus mouse
+# shift + alt + cmd - f3 : yabai -m space --mirror y-axis
 # shift + alt + cmd - f6 : WINDOWS alt+tab
 # shift + alt + cmd - f7 : WINDOWS still undefined
 

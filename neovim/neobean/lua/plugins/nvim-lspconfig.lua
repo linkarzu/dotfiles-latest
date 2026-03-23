@@ -26,6 +26,7 @@ return {
       marksman = {
         enabled = false,
       },
+      -- markdown-oxide
       markdown_oxide = {
         -- Ensure that dynamicRegistration is enabled
         -- This allows the LS to take into account actions like Create Unresolved File, etc

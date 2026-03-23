@@ -33,6 +33,7 @@ return {
       -- the TOC at the top of each file
       -- vim.list_extend(opts.ensure_installed, { "markdownlint-cli2", "marksman", "markdown-toc" })
 
+      -- https://github.com/Feel-ix-343/markdown-oxide
       "markdown-oxide",
     })
   end,

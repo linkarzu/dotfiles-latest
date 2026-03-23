@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Filename: ~/github/dotfiles-latest/kitty/scripts/kitty-list-sessions.sh
-# Shows open kitty tab titles in fzf and switches using `action goto_session`
+# Shows zoxide temp session files in fzf and switches using goto_session
 # Adds a vim-like "mode":
 # - Normal mode (default): j/k move, d closes, enter opens, i enters insert mode, esc quits
 # - Insert mode: type to filter, enter opens, esc returns to normal mode
@@ -22,18 +22,12 @@ set_cursor_bar() {
 trap 'set_cursor_bar' EXIT
 
 kitty_bin="/Applications/kitty.app/Contents/MacOS/kitty"
-sessions_dir="$HOME/github/dotfiles-latest/kitty/sessions"
+zoxide_sessions_dir="/tmp/kitty-zoxide-sessions"
 
 # Requirements
 if ! command -v fzf >/dev/null 2>&1; then
   echo "fzf is not installed or not in PATH."
   echo "Install (brew): brew install fzf"
-  exit 1
-fi
-
-if ! command -v jq >/dev/null 2>&1; then
-  echo "jq is not installed or not in PATH."
-  echo "Install (brew): brew install jq"
   exit 1
 fi
 
@@ -48,42 +42,34 @@ if [[ -z "${sock:-}" ]]; then
   exit 1
 fi
 
-session_id_for_title() {
-  local title="${1:-}"
-  local file="${sessions_dir}/${title}.kitty-session"
-
-  if [[ -f "$file" ]]; then
-    printf "%s" "$file"
-    return 0
-  fi
-
-  printf "%s" "$title"
-}
-
 build_menu_lines() {
-  local tabs_tsv=""
-  tabs_tsv="$(
-    "$kitty_bin" @ --to "unix:${sock}" ls 2>/dev/null | jq -r '
-      .[].tabs[]
-      | [(.title|tostring), (.is_focused|tostring)]
-      | @tsv
-    ' | sort -u
-  )"
+  local found=0
+  local file=""
+  local base=""
+  local name=""
+  local session_path=""
+  local display_path=""
 
-  if [[ -z "${tabs_tsv:-}" ]]; then
+  shopt -s nullglob
+  for file in "$zoxide_sessions_dir"/*.kitty-session; do
+    found=1
+    session_path="$(awk '/^cd /{sub(/^cd[[:space:]]+/, ""); print; exit}' "$file" 2>/dev/null || true)"
+    if [[ -n "${session_path:-}" ]]; then
+      name="$(basename "$session_path")"
+      display_path="$session_path"
+      if [[ -n "${HOME:-}" && "$display_path" == "$HOME"* ]]; then
+        display_path="~${display_path#"$HOME"}"
+      fi
+      printf "%s\t%s  %s\n" "$file" "$name" "$display_path"
+    else
+      printf "%s\t%s\n" "$file" "$name"
+    fi
+  done
+  shopt -u nullglob
+
+  if [[ $found -eq 0 ]]; then
     return 1
   fi
-
-  # raw_title<TAB>pretty_display
-  printf "%s\n" "$tabs_tsv" | awk -F'\t' '{
-    title=$1
-    focused=$2
-    if (focused == "true") {
-      printf "%s\t\033[31m[current]\033[0m %s\n", title, title
-    } else {
-      printf "%s\t          %s\n", title, title
-    }
-  }'
 }
 
 mode="normal"
@@ -91,7 +77,7 @@ mode="normal"
 while true; do
   menu_lines="$(build_menu_lines || true)"
   if [[ -z "${menu_lines:-}" ]]; then
-    echo "No tabs found."
+    echo "No zoxide sessions found."
     exit 1
   fi
 
@@ -165,7 +151,7 @@ while true; do
     sel="$(printf "%s\n" "$fzf_out" | sed -n '2p' || true)"
   fi
 
-  # Selection line is: raw_title<TAB>pretty_display
+  # Selection line is: session_file<TAB>pretty_display
   selected_title=""
   if [[ -n "${sel:-}" ]]; then
     selected_title="$(printf "%s" "$sel" | awk -F'\t' '{print $1}')"
@@ -195,8 +181,8 @@ while true; do
   fi
 
   if [[ "$mode" == "normal" && "$key" == "d" ]]; then
-    session_id="$(session_id_for_title "$selected_title")"
-    "$kitty_bin" @ --to "unix:${sock}" action close_session "$session_id" >/dev/null 2>&1 || true
+    "$kitty_bin" @ --to "unix:${sock}" action close_session "$selected_title" >/dev/null 2>&1 || true
+    rm -f "$selected_title"
     continue
   fi
 

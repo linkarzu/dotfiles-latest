@@ -14,8 +14,56 @@
 # osascript -e 'tell application "System Events" to keystroke "1"'
 # sleep 0.3
 
+mode="${DAILY_NOTE_MODE:-${1:-personal}}"
+
+personal_note_template=$(
+  cat <<'EOF'
+## Daily Note
+EOF
+)
+
+work_note_template=$(
+  cat <<'EOF'
+## WORK DAILY NOTE
+
+## Incomplete Tasks
+
+```tasks
+not done
+# short mode
+hide task count
+hide tags
+group by function task.tags
+```
+
+## Completed Tasks
+
+```tasks
+done
+hide task count
+hide tags
+group by function task.tags
+```
+EOF
+)
+
 # Specify below the directory in which you want to create your daily note
-main_note_dir=~/github/obsidian_main/250-daily
+if [ "$mode" = "work" ]; then
+  work_env_file="$HOME/github/dotfiles-private/work/work-env.sh"
+  if [ ! -f "$work_env_file" ]; then
+    echo "Missing work env file: $work_env_file" >>/tmp/300-dailyNote-debug.log
+    exit 1
+  fi
+  # shellcheck disable=SC1090
+  source "$work_env_file"
+  main_note_dir="$WORK_DAILY_NOTE_DIR"
+  kitty_sess_file="$WORK_DAILY_KITTY_SESSION_FILE"
+  note_template="$work_note_template"
+else
+  main_note_dir="$HOME/github/obsidian_main/250-daily"
+  kitty_sess_file="$HOME/github/dotfiles-latest/kitty/sessions/daily.kitty-session"
+  note_template="$personal_note_template"
+fi
 
 # Get current date components
 current_year=$(date +"%Y")
@@ -39,7 +87,7 @@ if [ ! -f "$full_path" ]; then
   cat <<EOF >"$full_path"
 # ${note_name}
 
-## Daily Note
+${note_template}
 
 EOF
 fi
@@ -47,8 +95,6 @@ fi
 ###############################################################################
 #                      Daily note with Kitty Sessions
 ###############################################################################
-
-kitty_sess_file="$HOME/github/dotfiles-latest/kitty/sessions/daily.kitty-session"
 
 # # If a kitty window with today's title already exists, focus it and exit
 # if kitten @ ls | jq -e --arg t "^${note_name}$" '.[] | .tabs[] | .windows[] | select(.title|test($t))' >/dev/null; then
@@ -83,7 +129,7 @@ awk -v dir="$note_dir" -v launch="$launch_cmd" '
 
 # If we make it to this point, the kitty session file was updated, so we'll
 # close the session and then open it, in case yesterday's session is still open
-kitten @ action close_session "$HOME/github/dotfiles-latest/kitty/sessions/daily.kitty-session"
+kitten @ action close_session "$kitty_sess_file"
 kitten @ action goto_session "$kitty_sess_file"
 
 ###############################################################################

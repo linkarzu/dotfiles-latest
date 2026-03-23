@@ -117,37 +117,11 @@ if command -v sketchybar &>/dev/null; then
     yabai -m config left_padding 3
     # lineid_asus_monitor_right_pad
     yabai -m config right_padding 3
-    # # For videos thumbnails
-    # yabai -m config top_padding 400
-    # yabai -m config bottom_padding 20
-    # yabai -m config left_padding 500
-    # yabai -m config right_padding 100
-
-    # For youtube thumbnails
-    # yabai -m config right_padding 500
-
-    # For youtube posts and neomemes
-    # yabai -m config right_padding 800
-
-    # For shorts
-    # yabai -m config bottom_padding 400
   fi
 else
   yabai -m config top_padding 02
   yabai -m config bottom_padding 00
 fi
-
-###############################################################################
-#                                 Paddings
-###############################################################################
-
-# Top padding for felixkratz sketchybar
-# yabai -m config top_padding 39
-# Top padding for default sketchybar
-# yabai -m config top_padding 25
-# yabai -m config bottom_padding 05
-# yabai -m config left_padding 180
-# yabai -m config right_padding 05
 
 ###############################################################################
 #                               Transparency
@@ -304,33 +278,86 @@ yabai -m space 8 --label desk8
 yabai -m space 9 --label desk9
 yabai -m space 10 --label desk10
 
-# When more than 1 display, I always want the non_stream_space to be the first
-# space on the display with less spaces. I move all my sensitive aps there
+# With 2 displays, use the non-main display for both non_stream_space and
+# bkp_terminal_space using its first and second spaces.
+# With 3 displays, use the left non-main display for non_stream_space and the
+# right non-main display for bkp_terminal_space.
 displays_json="$(yabai -m query --displays)"
 display_count="$(echo "$displays_json" | jq 'length')"
 # Default target
 non_stream_space="desk1"
+projector_preview_space="desk3"
 # Single display → desk1
 if [ "$display_count" -eq 1 ]; then
   non_stream_space="desk1"
   bkp_terminal_space="desk2"
-else
-  # Multiple displays, pick the display with the fewest spaces, take its first space
-  first_space_index="$(
+elif [ "$display_count" -eq 2 ]; then
+  # With 2 displays, use the non-main display (the one with fewer spaces)
+  secondary_display_spaces="$(
     echo "$displays_json" |
-      jq 'min_by(.spaces | length) | .spaces[0]'
+      jq 'min_by(.spaces | length) | .spaces'
   )"
+  first_space_index="$(echo "$secondary_display_spaces" | jq '.[0]')"
+  second_space_index="$(echo "$secondary_display_spaces" | jq '.[1]')"
   # Build label deskN
   non_stream_space="desk${first_space_index}"
-  bkp_terminal_space="desk$((first_space_index + 1))"
+  bkp_terminal_space="desk${second_space_index}"
   # Label the spaces, if you don't this does NOT work
   yabai -m space "$first_space_index" --label "$non_stream_space"
-  yabai -m space "$((first_space_index + 1))" --label "$bkp_terminal_space"
+  yabai -m space "$second_space_index" --label "$bkp_terminal_space"
   #after labeling them we can reference them
-  yabai -m config --space "$first_space_index" top_padding 42
+  yabai -m config --space "$first_space_index" top_padding 9
   yabai -m config --space "$first_space_index" right_padding 2
-  yabai -m config --space "$bkp_terminal_space" top_padding 9
-  yabai -m config --space "$bkp_terminal_space" right_padding 2
+  yabai -m config --space "$second_space_index" top_padding 9
+  yabai -m config --space "$second_space_index" right_padding 2
+elif [ "$display_count" -eq 3 ]; then
+  # With 3 displays, first find the main display (the one with the most spaces)
+  main_display_id="$(
+    echo "$displays_json" |
+      jq 'max_by(.spaces | length) | .id'
+  )"
+  # Exclude the main display, then use frame.x to determine left and right
+  left_display_spaces="$(
+    echo "$displays_json" |
+      jq --argjson main_display_id "$main_display_id" '
+        map(select(.id != $main_display_id))
+        | sort_by(.frame.x)
+        | .[0].spaces
+      '
+  )"
+  right_display_spaces="$(
+    echo "$displays_json" |
+      jq --argjson main_display_id "$main_display_id" '
+        map(select(.id != $main_display_id))
+        | sort_by(.frame.x)
+        | .[1].spaces
+      '
+  )"
+  left_space_index="$(echo "$left_display_spaces" | jq '.[0]')"
+  left_second_space_index="$(echo "$left_display_spaces" | jq '.[1]')"
+  right_space_index="$(echo "$right_display_spaces" | jq '.[0]')"
+  right_second_space_index="$(echo "$right_display_spaces" | jq '.[1]')"
+  # Build label deskN
+  non_stream_space="desk${left_space_index}"
+  bkp_terminal_space="desk${right_space_index}"
+  projector_preview_space="desk${right_second_space_index}"
+
+  # socialstream_preview_space="desk${left_second_space_index}"
+  # # If wanna move chat to main screen, comment above and uncomnmnent below
+  socialstream_preview_space="5"
+
+  # Label the spaces, if you don't this does NOT work
+  yabai -m space "$left_space_index" --label "$non_stream_space"
+  yabai -m space "$right_space_index" --label "$bkp_terminal_space"
+  yabai -m space "$right_second_space_index" --label "$projector_preview_space"
+  yabai -m space "$left_second_space_index" --label "$socialstream_preview_space" --layout bsp
+  # after labeling them we can reference them
+  yabai -m config --space "$left_space_index" top_padding 42
+  yabai -m config --space "$left_space_index" right_padding 2
+  yabai -m config --space "$right_space_index" top_padding 9
+  yabai -m config --space "$right_space_index" right_padding 2
+  yabai -m config --space "$right_second_space_index" top_padding 9
+  yabai -m config --space "$right_second_space_index" right_padding 2
 fi
 
 yabai -m rule --add app="^.*$" space=desk1
@@ -339,7 +366,8 @@ yabai -m rule --add app="^kitty$" space=desk3
 yabai -m rule --add app="^E-book Viewer$" space=desk4
 yabai -m config --space 4 right_padding 0
 
-yabai -m rule --add app="^socialstream$" space=desk5
+yabai -m rule --add app="^socialstream$" space="$socialstream_preview_space"
+
 yabai -m rule --add app="^DaVinci Resolve$" space=desk6
 yabai -m rule --add app="^VirtualBox$" space=desk6
 yabai -m rule --add app="^Electron$" space=desk6
@@ -348,9 +376,10 @@ yabai -m rule --add app="^Discord$" space="$non_stream_space"
 yabai -m rule --add app="^Element$" space="$non_stream_space"
 yabai -m rule --add app="^WhatsApp Web$" space="$non_stream_space"
 yabai -m rule --add app="^OBS Studio$" space="$non_stream_space"
+yabai -m rule --add app="^OBS Studio$" title="^Projector - Preview$" space="$projector_preview_space"
 yabai -m rule --add app="^Mail$" space="$non_stream_space"
 yabai -m rule --add app="^1Password$" space="$non_stream_space"
-yabai -m rule --add app="^YouTubeStudio$" space="$non_stream_space"
+yabai -m rule --add app="^YouTubeStudio$" space=desk1
 yabai -m rule --add app="^Calendar$" space="$non_stream_space"
 yabai -m rule --add app="^Google Chrome$" space="$non_stream_space"
 yabai -m rule --add app="^Microsoft Teams$" space="$non_stream_space"
@@ -359,6 +388,7 @@ yabai -m rule --add app="^ChatGPT$" space="$non_stream_space"
 yabai -m rule --add app="^Signal$" space="$non_stream_space"
 yabai -m rule --add app="^Google Photos$" space="$non_stream_space"
 yabai -m rule --add app="^Notes$" space="$non_stream_space"
+yabai -m rule --add app="^Telegram$" space="$non_stream_space"
 
 yabai -m rule --add app="^Ghostty$" space="$bkp_terminal_space"
 

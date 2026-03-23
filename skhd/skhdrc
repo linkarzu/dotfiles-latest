@@ -30,7 +30,7 @@ ctrl + alt - f2 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switc
 ctrl + alt - f3 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" Calendar
 ctrl + alt - f4 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" Preview
 ctrl + alt - f5 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" Vivaldi
-ctrl + alt - f6 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" Neovide
+ctrl + alt - f6 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" Ghostty
 ctrl + alt - f7 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" Mail
 ctrl + alt - f8 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" 'Windows App'
 ctrl + alt - f9 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" 'Microsoft Outlook'

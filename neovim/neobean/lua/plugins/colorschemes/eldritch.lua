@@ -166,6 +166,9 @@ return {
         NvimTreeNormal = { bg = colors["linkarzu_color10"] },
         TroubleNormal = { bg = colors["linkarzu_color10"] },
 
+        NeogitChangeModified = { bg = colors["linkarzu_color18"], fg = colors["linkarzu_color04"] },
+        NeogitSectionHeader = { bg = colors["linkarzu_color20"], fg = colors["linkarzu_color03"] },
+
         NoiceCmdlinePopupBorder = { fg = colors["linkarzu_color10"] },
         NoiceCmdlinePopupTitle = { fg = colors["linkarzu_color10"] },
         NoiceCmdlinePopupBorderFilter = { fg = colors["linkarzu_color10"] },

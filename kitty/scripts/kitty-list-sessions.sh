@@ -125,11 +125,6 @@ build_menu_lines() {
     if (home != "" && index(path, home) == 1) {
       path = "~" substr(path, length(home) + 1)
     }
-    if (session_name ~ /^zoxide__/) {
-      n=split(path, parts, "/")
-      display_name=parts[n]
-      if (display_name == "") display_name=session_name
-    }
     idx=NR
     if (os_focused == "true" && tab_focused == "true") {
       name_color=current_color

@@ -9,10 +9,16 @@ set -euo pipefail
 kitty_bin="/Applications/kitty.app/Contents/MacOS/kitty"
 script_path="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)/$(basename -- "${BASH_SOURCE[0]}")"
 work_env_file="$HOME/github/dotfiles-private/work/work-env.sh"
+colorscheme_file="$HOME/github/dotfiles-latest/colorscheme/active/active-colorscheme.sh"
 
 if [[ -f "$work_env_file" ]]; then
   # shellcheck disable=SC1090
   source "$work_env_file"
+fi
+
+if [[ -f "$colorscheme_file" ]]; then
+  # shellcheck disable=SC1090
+  source "$colorscheme_file"
 fi
 
 require_cmd() {
@@ -73,6 +79,24 @@ if [[ -n "${work_main_dir:-}" ]]; then
   work_main_dir="$(normalize_path "$work_main_dir")"
 fi
 
+hex="${linkarzu_color03#\#}"
+r=$((16#${hex:0:2}))
+g=$((16#${hex:2:2}))
+b=$((16#${hex:4:2}))
+base_color="\033[38;2;${r};${g};${b}m"
+reset_color="\033[0m"
+
+fzf_colors="bg:${linkarzu_color10},fg:${linkarzu_color14}"
+fzf_colors+=",hl:${linkarzu_color03},hl+:${linkarzu_color03}"
+fzf_colors+=",info:${linkarzu_color09},header:${linkarzu_color09}"
+fzf_colors+=",prompt:${linkarzu_color02}"
+fzf_colors+=",pointer:${linkarzu_color11}"
+fzf_colors+=",marker:${linkarzu_color12}"
+fzf_colors+=",spinner:${linkarzu_color13}"
+fzf_colors+=",fg+:${linkarzu_color14}"
+fzf_colors+=",bg+:${linkarzu_color13}"
+fzf_colors+=",gutter:${linkarzu_color10}"
+
 hash_path() {
   local p="$1"
   if command -v shasum >/dev/null 2>&1; then
@@ -108,13 +132,13 @@ PY
 
 print_menu_lines() {
   local query="${1:-}"
-  zoxide query -l 2>/dev/null | awk -v OFS='\t' -v work_dir="${work_main_dir}" '{
+  zoxide query -l 2>/dev/null | awk -v OFS='\t' -v work_dir="${work_main_dir}" -v color="${base_color}" -v reset="${reset_color}" '{
     path=$0
     if (work_dir != "" && (path == work_dir || index(path, work_dir "/") == 1)) next
     n=split(path, parts, "/")
     base=parts[n]
     if (base == "") base=path
-    printf "%s\t%s  %s\n", path, base, path
+    printf "%s\t%s%s%s  %s\n", path, color, base, reset, path
   }'
 }
 
@@ -159,18 +183,19 @@ EOF
 }
 
 set +e
+printf '\033[2J\033[H'
 fzf_out="$(
-  fzf --ansi --height=10 --reverse \
+  fzf --ansi --height=20 --reverse \
     --header="Type to filter, enter open, esc quit" \
-    --prompt="Zoxide > " \
+    --prompt="Create New Kitty Session (zoxide) > " \
     --no-multi \
     --with-nth=2.. \
     --expect=enter,esc \
     --bind 'enter:accept' \
     --bind 'esc:abort' \
-    --no-clear \
     --bind "start:reload:${script_path} --reload \"{q}\"" \
-    --bind "change:reload:${script_path} --reload \"{q}\""
+    --bind "change:reload:${script_path} --reload \"{q}\"" \
+    ${fzf_colors:+--color="$fzf_colors"}
 )"
 fzf_rc=$?
 set -e

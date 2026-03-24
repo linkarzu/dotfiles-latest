@@ -3,6 +3,10 @@
 # Filename: ~/github/dotfiles-latest/kitty/scripts/kitty-zoxide-session.sh
 # Select a zoxide entry and switch to an existing kitty session,
 # or create it if it doesn't exist.
+#
+# Also supports SSH host entries from ~/.ssh/config (and Include files).
+# SSH entries are shown with a "ssh-" prefix to make them easy to filter
+# and are treated as SSH targets (not zoxide directories).
 
 set -euo pipefail
 
@@ -140,6 +144,117 @@ print_menu_lines() {
     if (base == "") base=path
     printf "%s\t%s%s%s  %s\n", path, color, base, reset, path
   }'
+
+  # SSH entries are not zoxide paths: they are parsed from ~/.ssh/config
+  # (including Include files) and displayed with a ssh- prefix.
+  print_ssh_menu_lines
+}
+
+collect_ssh_config_files() {
+  local root_config="$HOME/.ssh/config"
+  local file=""
+  local line=""
+  local includes=""
+  local pattern=""
+  local match=""
+  local queue=()
+  local files=()
+  local processed="|"
+  local old_nullglob=""
+  local debug_log="/tmp/kitty-zoxide-ssh-debug.log"
+
+  if [[ ! -f "$root_config" ]]; then
+    printf '%s\n' "collect_ssh_config_files: missing $root_config" >>"$debug_log"
+    return 0
+  fi
+
+  queue+=("$root_config")
+  printf '%s\n' "collect_ssh_config_files: start $root_config" >>"$debug_log"
+
+  old_nullglob="$(shopt -p nullglob || true)"
+  shopt -s nullglob
+
+  while ((${#queue[@]})); do
+    file="${queue[0]}"
+    queue=("${queue[@]:1}")
+
+    case "$processed" in
+    *"|${file}|"*)
+      continue
+      ;;
+    esac
+
+    processed+="${file}|"
+    if [[ ! -f "$file" ]]; then
+      printf '%s\n' "collect_ssh_config_files: skip missing $file" >>"$debug_log"
+      continue
+    fi
+
+    files+=("$file")
+    printf '%s\n' "collect_ssh_config_files: add $file" >>"$debug_log"
+
+    while IFS= read -r line || [[ -n "$line" ]]; do
+      line="${line%%#*}"
+      if [[ "$line" =~ ^[[:space:]]*Include[[:space:]]+(.+) ]]; then
+        includes="${BASH_REMATCH[1]}"
+        for pattern in $includes; do
+          pattern="${pattern/#~/$HOME}"
+          for match in $pattern; do
+            if [[ -f "$match" ]]; then
+              queue+=("$match")
+              printf '%s\n' "collect_ssh_config_files: include $match" >>"$debug_log"
+            fi
+          done
+        done
+      fi
+    done <"$file"
+  done
+
+  eval "$old_nullglob"
+
+  printf "%s\n" "${files[@]}"
+}
+
+print_ssh_menu_lines() {
+  local config_files=()
+  local host=""
+  local label=""
+  local debug_log="/tmp/kitty-zoxide-ssh-debug.log"
+
+  printf '%s\n' "print_ssh_menu_lines: start" >>"$debug_log"
+
+  while IFS= read -r host; do
+    config_files+=("$host")
+  done < <(collect_ssh_config_files)
+
+  if ((${#config_files[@]} == 0)); then
+    printf '%s\n' "print_ssh_menu_lines: no config files" >>"$debug_log"
+    return 0
+  fi
+
+  printf '%s\n' "print_ssh_menu_lines: files ${config_files[*]}" >>"$debug_log"
+
+  # Extract only concrete host names (no wildcards or negations).
+  while IFS= read -r host; do
+    [[ -z "$host" ]] && continue
+    label="ssh-${host}"
+    printf "%s\t%b%s%b\n" "ssh:${host}" "${base_color}" "$label" "${reset_color}"
+    printf '%s\n' "print_ssh_menu_lines: host $host" >>"$debug_log"
+  done < <(
+    awk '
+      {
+        sub(/[ \t]*#.*/, "")
+        if (tolower($1) == "host") {
+          for (i = 2; i <= NF; i++) {
+            h = $i
+            if (h ~ /^[!]/) continue
+            if (h ~ /[\\*?]/) continue
+            print h
+          }
+        }
+      }
+    ' "${config_files[@]}" | sort -u
+  )
 }
 
 if [[ "${1:-}" == "--reload" ]]; then
@@ -147,7 +262,7 @@ if [[ "${1:-}" == "--reload" ]]; then
   exit 0
 fi
 
-focus_or_launch() {
+focus_or_launch_dir() {
   local selected_path="$1"
   local selected_real=""
   local base=""
@@ -182,12 +297,34 @@ EOF
   "$kitty_bin" @ --to "unix:${sock}" action goto_session "$session_file"
 }
 
+focus_or_launch_ssh() {
+  local host="$1"
+  local safe_host=""
+  local session_dir="/tmp/kitty-zoxide-sessions"
+  local session_file=""
+
+  safe_host="$(printf "%s" "$host" | tr -cs 'A-Za-z0-9._-' '_')"
+
+  mkdir -p "$session_dir"
+  session_file="${session_dir}/ssh-${safe_host}.kitty-session"
+
+  # SSH sessions intentionally skip zoxide path logic and just run ssh <host>.
+  cat >"$session_file" <<EOF
+layout tall
+launch --title "ssh-${host}" ssh ${host}
+focus
+focus_os_window
+EOF
+
+  "$kitty_bin" @ --to "unix:${sock}" action goto_session "$session_file"
+}
+
 set +e
 printf '\033[2J\033[H'
 fzf_out="$(
   fzf --ansi --height=20 --reverse \
     --header="Type to filter, enter open, esc quit" \
-    --prompt="Create New Kitty Session (zoxide) > " \
+    --prompt="Create New Kitty Session (zoxide + ssh) > " \
     --no-multi \
     --with-nth=2.. \
     --expect=enter,esc \
@@ -219,4 +356,8 @@ if [[ -z "${selected_path:-}" ]]; then
   exit 0
 fi
 
-focus_or_launch "$selected_path"
+if [[ "$selected_path" == ssh:* ]]; then
+  focus_or_launch_ssh "${selected_path#ssh:}"
+else
+  focus_or_launch_dir "$selected_path"
+fi

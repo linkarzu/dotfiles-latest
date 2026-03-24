@@ -134,6 +134,39 @@ PY
   printf "%s" "$p"
 }
 
+session_exists() {
+  local name="$1"
+  "$kitty_bin" @ --to "unix:${sock}" ls 2>/dev/null | jq -e --arg name "$name" '
+    any(.[]?.tabs[]?.windows[]?; .session_name == $name)
+  ' >/dev/null
+}
+
+find_session_by_path() {
+  local target="$1"
+  local name=""
+  local pwd=""
+  local real=""
+
+  while IFS=$'\t' read -r name pwd; do
+    [[ -z "$name" || -z "$pwd" ]] && continue
+    [[ ! -d "$pwd" ]] && continue
+    real="$(normalize_path "$pwd")"
+    if [[ "$real" == "$target" ]]; then
+      printf "%s" "$name"
+      return 0
+    fi
+  done < <(
+    "$kitty_bin" @ --to "unix:${sock}" ls 2>/dev/null | jq -r '
+      .[]?.tabs[]?.windows[]?
+      | select(.session_name != null and .session_name != "")
+      | [(.session_name|tostring), (.env.PWD // .cwd // "")]
+      | @tsv
+    '
+  )
+
+  return 1
+}
+
 print_menu_lines() {
   local query="${1:-}"
   zoxide query -l 2>/dev/null | awk -v OFS='\t' -v work_dir="${work_main_dir}" -v color="${base_color}" -v reset="${reset_color}" '{
@@ -268,6 +301,9 @@ focus_or_launch_dir() {
   local base=""
   local safe_base=""
   local hash=""
+  local short_name=""
+  local session_name=""
+  local existing_session=""
   local session_dir="/tmp/kitty-zoxide-sessions"
   local session_file=""
 
@@ -278,13 +314,24 @@ focus_or_launch_dir() {
 
   selected_real="$(normalize_path "$selected_path")"
 
+  existing_session="$(find_session_by_path "$selected_real" || true)"
+  if [[ -n "$existing_session" ]]; then
+    "$kitty_bin" @ --to "unix:${sock}" action goto_session "$existing_session"
+    return 0
+  fi
+
   base="$(basename "$selected_path")"
   safe_base="$(printf "%s" "$base" | tr -cs 'A-Za-z0-9._-' '_')"
   hash="$(hash_path "$selected_real")"
-  hash="${hash:0:8}"
+  hash="${hash:0:4}"
+  short_name="z-${safe_base}"
+  session_name="$short_name"
+  if session_exists "$short_name"; then
+    session_name="${short_name}-${hash}"
+  fi
 
   mkdir -p "$session_dir"
-  session_file="${session_dir}/zoxide__${safe_base}__${hash}.kitty-session"
+  session_file="${session_dir}/${session_name}.kitty-session"
 
   cat >"$session_file" <<EOF
 layout tall

@@ -141,6 +141,11 @@ session_exists() {
   ' >/dev/null
 }
 
+bump_zoxide_score() {
+  local path="$1"
+  zoxide add -- "$path" >/dev/null 2>&1 || true
+}
+
 find_session_by_path() {
   local target="$1"
   local name=""
@@ -316,6 +321,7 @@ focus_or_launch_dir() {
 
   existing_session="$(find_session_by_path "$selected_real" || true)"
   if [[ -n "$existing_session" ]]; then
+    bump_zoxide_score "$selected_real"
     "$kitty_bin" @ --to "unix:${sock}" action goto_session "$existing_session"
     return 0
   fi
@@ -342,6 +348,7 @@ focus_os_window
 EOF
 
   "$kitty_bin" @ --to "unix:${sock}" action goto_session "$session_file"
+  bump_zoxide_score "$selected_real"
 }
 
 focus_or_launch_ssh() {
@@ -374,6 +381,8 @@ fzf_out="$(
     --prompt="Create New Kitty Session (zoxide + ssh) > " \
     --no-multi \
     --with-nth=2.. \
+    --no-sort \
+    --tiebreak=index \
     --expect=enter,esc \
     --bind 'enter:accept' \
     --bind 'esc:abort' \

@@ -8,6 +8,8 @@
 
 set -euo pipefail
 
+default_mode="insert"
+
 set_cursor_block() {
   # DECSCUSR: steady block
   printf '\e[2 q' >/dev/tty
@@ -22,6 +24,37 @@ set_cursor_bar() {
 trap 'set_cursor_bar' EXIT
 
 kitty_bin="/Applications/kitty.app/Contents/MacOS/kitty"
+colorscheme_file="$HOME/github/dotfiles-latest/colorscheme/active/active-colorscheme.sh"
+
+if [[ -f "$colorscheme_file" ]]; then
+  # shellcheck disable=SC1090
+  source "$colorscheme_file"
+fi
+
+hex_base="${linkarzu_color03#\#}"
+base_r=$((16#${hex_base:0:2}))
+base_g=$((16#${hex_base:2:2}))
+base_b=$((16#${hex_base:4:2}))
+base_color="\033[38;2;${base_r};${base_g};${base_b}m"
+
+hex_current="${linkarzu_color02#\#}"
+current_r=$((16#${hex_current:0:2}))
+current_g=$((16#${hex_current:2:2}))
+current_b=$((16#${hex_current:4:2}))
+current_color="\033[38;2;${current_r};${current_g};${current_b}m"
+
+reset_color="\033[0m"
+
+fzf_colors="bg:${linkarzu_color10},fg:${linkarzu_color14}"
+fzf_colors+=",hl:${linkarzu_color03},hl+:${linkarzu_color03}"
+fzf_colors+=",info:${linkarzu_color09},header:${linkarzu_color09}"
+fzf_colors+=",prompt:${linkarzu_color02}"
+fzf_colors+=",pointer:${linkarzu_color11}"
+fzf_colors+=",marker:${linkarzu_color12}"
+fzf_colors+=",spinner:${linkarzu_color13}"
+fzf_colors+=",fg+:${linkarzu_color14}"
+fzf_colors+=",bg+:${linkarzu_color13}"
+fzf_colors+=",gutter:${linkarzu_color10}"
 
 # Requirements
 if ! command -v fzf >/dev/null 2>&1; then
@@ -83,7 +116,7 @@ build_menu_lines() {
   fi
 
   # idx<TAB>session_name<TAB>pretty_display
-  printf "%s\n" "$sessions_tsv" | awk -F'\t' -v home="${HOME}" '{
+  printf "%s\n" "$sessions_tsv" | awk -F'\t' -v home="${HOME}" -v base_color="${base_color}" -v current_color="${current_color}" -v reset_color="${reset_color}" '{
     session_name=$1
     os_focused=$2
     tab_focused=$3
@@ -99,15 +132,16 @@ build_menu_lines() {
     }
     idx=NR
     if (os_focused == "true" && tab_focused == "true") {
-      printf "%d\t%s\t\033[31m[current]\033[0m %s  %s\n", idx, session_name, display_name, path
+      name_color=current_color
     } else {
-      printf "%d\t%s\t          %s  %s\n", idx, session_name, display_name, path
+      name_color=base_color
     }
+    printf "%d\t%s\t%s%s%s  %s\n", idx, session_name, name_color, display_name, reset_color, path
   }'
 }
 
 # Set the startup mode
-mode="normal"
+mode="$default_mode"
 fzf_start_pos=""
 
 while true; do
@@ -147,7 +181,7 @@ while true; do
       printf "%s\n" "$menu_lines" |
         fzf --ansi --height=100% --reverse \
           --header="Normal: j/k move, d close, enter open, i insert, esc quit" \
-          --prompt="Kitty > " \
+          --prompt="List Open Kitty Sessions > " \
           --no-multi --disabled \
           --with-nth=3.. \
           --expect=enter,d,i,esc \
@@ -155,6 +189,7 @@ while true; do
           --bind 'enter:accept,d:accept,i:accept' \
           --bind 'esc:abort' \
           --no-clear \
+          --color="$fzf_colors" \
           ${fzf_start_pos_opt[@]+"${fzf_start_pos_opt[@]}"}
 
     )"
@@ -176,13 +211,14 @@ while true; do
       printf "%s\n" "$menu_lines" |
         fzf --ansi --height=100% --reverse \
           --header="Insert: type to filter, enter open, esc normal" \
-          --prompt="Kitty > " \
+          --prompt="List Open Kitty Sessions > " \
           --no-multi \
           --with-nth=3.. \
           --expect=enter,esc \
           --bind 'enter:accept' \
           --bind 'esc:abort' \
-          --no-clear
+          --no-clear \
+          --color="$fzf_colors"
     )"
     fzf_rc=$?
     set -e

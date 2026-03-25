@@ -336,6 +336,24 @@ end
 
 vim.keymap.set({ "n", "v" }, "<leader>y", [["+y]], { desc = "[P]Yank to system clipboard" })
 
+-- Copy current file to system clipboard as Finder file object (macOS)
+vim.keymap.set("n", "<space>Y", function()
+  local path = vim.api.nvim_buf_get_name(0)
+  local safe_path = path:gsub([[\]], [[\\]]):gsub([["]], [[\"]])
+  -- Build the osascript command to copy the file to the clipboard
+  local result = vim.fn.system({
+    "osascript",
+    "-e",
+    string.format([[tell application "Finder" to set the clipboard to (POSIX file "%s")]], safe_path),
+  })
+  if vim.v.shell_error ~= 0 then
+    vim.notify("Copy failed: " .. result, vim.log.levels.ERROR)
+  else
+    vim.notify(vim.fn.fnamemodify(path, ":t"), vim.log.levels.INFO)
+    vim.notify("Copied to system clipboard", vim.log.levels.INFO)
+  end
+end, { desc = "[P]Copy current file to clipboard" })
+
 -- Auto-yank visual selection to the system clipboard on mouse release
 -- NOTE: This requires Neovim to receive mouse events (so `mouse` must include visual mode)
 -- NOTE: LazyVim already enables `opt.mouse = "a"` (mouse mode), so we don't set it here

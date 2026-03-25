@@ -6,11 +6,17 @@
 
 # Path to the directory containing the scripts
 SCRIPTS_DIR="$HOME/github/dotfiles-latest/scripts/macos/mac"
+fzf_colors_file="$HOME/github/dotfiles-latest/colorscheme/active/active-fzf-colors.sh"
 
 # Ensure fzf is installed
 if ! command -v fzf &>/dev/null; then
   echo "fzf is not installed. Please install it first."
   exit 1
+fi
+
+if [[ -f "$fzf_colors_file" ]]; then
+  # shellcheck disable=SC1090
+  source "$fzf_colors_file"
 fi
 
 # List available scripts
@@ -23,7 +29,7 @@ if [ ${#schemes[@]} -eq 0 ]; then
 fi
 
 # Use fzf to select a script
-selected_script=$(printf "%s\n" "${schemes[@]}" | fzf --height=100% --reverse --header="Type or move using arrows" --prompt="Select a script to execute > ")
+selected_script=$(printf "%s\n" "${schemes[@]}" | fzf --height=100% --reverse --header="Type or move using arrows" --prompt="Select a script to execute > " ${linkarzu_fzf_colors:+--color="$linkarzu_fzf_colors"})
 
 # Check if a selection was made
 if [ -z "$selected_script" ]; then

@@ -7,11 +7,17 @@ COLORSCHEME_DIR=~/github/dotfiles-latest/colorscheme/list
 
 # Path to the colorscheme-set.sh script
 COLORSCHEME_SET_SCRIPT=~/github/dotfiles-latest/zshrc/colorscheme-set.sh
+FZF_COLORS_FILE=~/github/dotfiles-latest/colorscheme/active/active-fzf-colors.sh
 
 # Ensure fzf is installed
 if ! command -v fzf &>/dev/null; then
   echo "fzf is not installed. Please install it first."
   exit 1
+fi
+
+if [[ -f "$FZF_COLORS_FILE" ]]; then
+  # shellcheck disable=SC1090
+  source "$FZF_COLORS_FILE"
 fi
 
 # List available color scheme scripts
@@ -24,7 +30,7 @@ if [ ${#schemes[@]} -eq 0 ]; then
 fi
 
 # Use fzf to select a scheme
-selected_scheme=$(printf "%s\n" "${schemes[@]}" | fzf --height=100% --reverse --header="Type or move using arrows" --prompt="Select a colorscheme > ")
+selected_scheme=$(printf "%s\n" "${schemes[@]}" | fzf --height=100% --reverse --header="Type or move using arrows" --prompt="Select a colorscheme > " ${linkarzu_fzf_colors:+--color="$linkarzu_fzf_colors"})
 
 # Check if a selection was made
 if [ -z "$selected_scheme" ]; then

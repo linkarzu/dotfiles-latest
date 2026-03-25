@@ -40,7 +40,7 @@ linkarzu_color06=#9deefd
 
 # Colors to the right from https://www.colorhexa.com
 # Terminal and neovim background
-linkarzu_color10=#0D1116
+linkarzu_color10=#000000
 # Lualine across, 1 color to the right of background
 linkarzu_color17=#141b22
 # Markdown codeblock, 2 to the right of background
@@ -66,4 +66,5 @@ linkarzu_color16=#ccfce5
 linkarzu_color24=#06743f
 
 # Wallpaper for this colorscheme
-wallpaper="$HOME/Library/Mobile Documents/com~apple~CloudDocs/Images/wallpapers/official/minty-lemon.jpg"
+# wallpaper="$HOME/Library/Mobile Documents/com~apple~CloudDocs/Images/wallpapers/official/minty-lemon.jpg"
+wallpaper="$HOME/Library/Mobile Documents/com~apple~CloudDocs/Images/wallpapers/batman/batman-darker.png"

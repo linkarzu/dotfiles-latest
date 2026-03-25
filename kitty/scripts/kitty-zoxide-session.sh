@@ -14,6 +14,7 @@ kitty_bin="/Applications/kitty.app/Contents/MacOS/kitty"
 script_path="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)/$(basename -- "${BASH_SOURCE[0]}")"
 work_env_file="$HOME/github/dotfiles-private/work/work-env.sh"
 colorscheme_file="$HOME/github/dotfiles-latest/colorscheme/active/active-colorscheme.sh"
+fzf_colors_file="$HOME/github/dotfiles-latest/colorscheme/active/active-fzf-colors.sh"
 
 if [[ -f "$work_env_file" ]]; then
   # shellcheck disable=SC1090
@@ -23,6 +24,11 @@ fi
 if [[ -f "$colorscheme_file" ]]; then
   # shellcheck disable=SC1090
   source "$colorscheme_file"
+fi
+
+if [[ -f "$fzf_colors_file" ]]; then
+  # shellcheck disable=SC1090
+  source "$fzf_colors_file"
 fi
 
 require_cmd() {
@@ -90,16 +96,6 @@ b=$((16#${hex:4:2}))
 base_color="\033[38;2;${r};${g};${b}m"
 reset_color="\033[0m"
 
-fzf_colors="bg:${linkarzu_color10},fg:${linkarzu_color14}"
-fzf_colors+=",hl:${linkarzu_color03},hl+:${linkarzu_color03}"
-fzf_colors+=",info:${linkarzu_color09},header:${linkarzu_color09}"
-fzf_colors+=",prompt:${linkarzu_color02}"
-fzf_colors+=",pointer:${linkarzu_color11}"
-fzf_colors+=",marker:${linkarzu_color12}"
-fzf_colors+=",spinner:${linkarzu_color13}"
-fzf_colors+=",fg+:${linkarzu_color14}"
-fzf_colors+=",bg+:${linkarzu_color13}"
-fzf_colors+=",gutter:${linkarzu_color10}"
 
 hash_path() {
   local p="$1"
@@ -388,7 +384,7 @@ fzf_out="$(
     --bind 'esc:abort' \
     --bind "start:reload:${script_path} --reload \"{q}\"" \
     --bind "change:reload:${script_path} --reload \"{q}\"" \
-    ${fzf_colors:+--color="$fzf_colors"}
+    ${linkarzu_fzf_colors:+--color="$linkarzu_fzf_colors"}
 )"
 fzf_rc=$?
 set -e

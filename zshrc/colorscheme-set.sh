@@ -404,7 +404,16 @@ if [ "$UPDATED" = true ]; then
   if [ -z "$wallpaper" ]; then
     wallpaper="$HOME/Library/Mobile Documents/com~apple~CloudDocs/Images/wallpapers/official/skyrim-dragon-4.webp"
   fi
-  set_wallpaper_all_spaces_yabai "$wallpaper"
+  wallpaper_cache="$HOME/github/dotfiles-latest/colorscheme/active/active-wallpaper"
+  last_wallpaper=""
+  if [ -f "$wallpaper_cache" ]; then
+    last_wallpaper="$(cat "$wallpaper_cache")"
+  fi
+
+  if [ "$wallpaper" != "$last_wallpaper" ]; then
+    set_wallpaper_all_spaces_yabai "$wallpaper"
+    printf '%s' "$wallpaper" >"$wallpaper_cache"
+  fi
 
   # Also restart yabai for my skitty-notes colors
   ~/github/dotfiles-latest/yabai/yabai_restart.sh

@@ -17,9 +17,9 @@ linkarzu_color19=#2a2a2a
 # Markdown heading 3 - color03
 linkarzu_color20=#1a1a1a
 # Markdown heading 4 - color01
-linkarzu_color21=#7f6900
+linkarzu_color21=#645313
 # Markdown heading 5 - color05
-linkarzu_color22=#5b4c00
+linkarzu_color22=#2f363d
 # Markdown heading 6 - color08
 linkarzu_color23=#999999
 # Markdown heading foreground
@@ -29,8 +29,8 @@ linkarzu_color26=#000000
 linkarzu_color04=#b2b2b2
 linkarzu_color02=#939393
 linkarzu_color03=#d1d1d1
-linkarzu_color01=#d4b000
-linkarzu_color05=#997f00
+linkarzu_color01=#a88a1f
+linkarzu_color05=#4f5b66
 linkarzu_color08=#ffffff
 linkarzu_color06=#027085
 
@@ -49,7 +49,7 @@ linkarzu_color13=#333333
 linkarzu_color15=#474747
 
 # Comments
-linkarzu_color09=#5c5c5c
+linkarzu_color09=#5f7f89
 # Underline spellbad
 linkarzu_color11=#ff7676
 # Underline spellcap
@@ -62,4 +62,4 @@ linkarzu_color16=#0390ac
 linkarzu_color24=#04d1f9
 
 # Wallpaper for this colorscheme
-wallpaper="$HOME/Library/Mobile Documents/com~apple~CloudDocs/Images/wallpapers/batman/batman7.png"
+wallpaper="$HOME/Library/Mobile Documents/com~apple~CloudDocs/Images/wallpapers/batman/batman-darker.png"

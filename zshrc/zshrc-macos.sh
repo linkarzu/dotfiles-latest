@@ -1,3 +1,24 @@
+# This below compiles my Downloads Folder Action AppleScript into a .scpt file
+# and places it where macOS expects Folder Action Scripts to live.
+#
+# NOTE: We compile into /Library (system-wide), so this needs sudo once.
+# NOTE: We keep the source in dotfiles for easy editing/versioning, and only
+#       generate the compiled .scpt if it's missing.
+# NOTE: One-time setup: after the file is compiled, go to Finder, right click
+# Downloads -> "Services -> Folder Actions Setup", enable folder actions, and
+# add the script on the right. You do NOT need to redo this when the script is
+# recompiled in place; only if the script is deleted/renamed or Folder Actions
+# are disabled.
+FA_SOURCE="$HOME/github/dotfiles-latest/scripts/macos/mac/applescript/download-to-clipboard.applescript"
+FA_TARGET_DIR="/Library/Scripts/Folder Action Scripts"
+FA_TARGET_SCPT="$FA_TARGET_DIR/download-to-clipboard.scpt"
+if [ ! -f "$FA_TARGET_SCPT" ] || [ "$FA_SOURCE" -nt "$FA_TARGET_SCPT" ]; then
+  echo "Compiling Folder Action script to: $FA_TARGET_SCPT"
+  sudo mkdir -p "$FA_TARGET_DIR"
+  sudo osacompile -o "$FA_TARGET_SCPT" "$FA_SOURCE"
+  echo "Compiled: $FA_TARGET_SCPT"
+fi
+
 # This below is to automate the process of creating the
 # com.linkarzu.autoPushGithub.plist file which will run every X seconds and
 # automaticaly push changes to some github repos

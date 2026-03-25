@@ -14,18 +14,18 @@
 # C (#37f499) becomes when darkened 4 steps to the right.
 #
 # Markdown heading 1 - color04
-linkarzu_color18=#00a94f
+linkarzu_color18=#0f3d21
 # Markdown heading 2 - color02
-linkarzu_color19=#00b85a
+linkarzu_color19=#124726
 # Markdown heading 3 - color03
-linkarzu_color20=#33c26b
+linkarzu_color20=#18522d
 # Markdown heading 4 - color01
-linkarzu_color21=#52d97a
+linkarzu_color21=#1d5c33
 # Markdown heading 5 - color05
-linkarzu_color22=#19c463
+linkarzu_color22=#226739
 # Markdown heading 6 - color08
 # Also inactive tmux window, make it 6 darker to the right
-linkarzu_color23=#0b5e33
+linkarzu_color23=#0a2615
 # Markdown heading foreground
 # usually set to color10 which is the terminal background
 linkarzu_color26=#000000

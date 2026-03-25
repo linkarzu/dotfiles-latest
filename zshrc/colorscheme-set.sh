@@ -308,6 +308,9 @@ EOF
   echo "Starship configuration updated at '$starship_conf_file'."
 }
 
+# macOS only applies System Events wallpaper changes to the current space,
+# and setting it that way disables the "Show on all Spaces" toggle on Sequoia.
+# This cycles through all spaces via yabai to force wallpaper updates everywhere.
 set_wallpaper_all_spaces_yabai() {
   local wp="$1"
 
@@ -356,6 +359,12 @@ set_wallpaper_all_spaces_yabai() {
   return 0
 }
 
+# set_wallpaper_system_events() {
+#   # Not used: setting via System Events disables "Show on all Spaces" in Sequoia.
+#   local wp="$1"
+#   osascript -e 'tell application "System Events" to set picture of current desktop to POSIX file "'"$wp"'"'
+# }
+
 # If there's an update, replace the active colorscheme and perform necessary actions
 if [ "$UPDATED" = true ]; then
   echo "Updating active colorscheme to '$colorscheme_profile'."
@@ -395,16 +404,7 @@ if [ "$UPDATED" = true ]; then
   if [ -z "$wallpaper" ]; then
     wallpaper="$HOME/Library/Mobile Documents/com~apple~CloudDocs/Images/wallpapers/official/skyrim-dragon-4.webp"
   fi
-  if ! set_wallpaper_all_spaces_yabai "$wallpaper"; then
-    osascript -e '
-    tell application "System Events"
-        set wp to POSIX file "'"$wallpaper"'"
-        repeat with d in (every desktop)
-            set picture of d to wp
-            delay 0.1
-        end repeat
-    end tell'
-  fi
+  set_wallpaper_all_spaces_yabai "$wallpaper"
 
   # Also restart yabai for my skitty-notes colors
   ~/github/dotfiles-latest/yabai/yabai_restart.sh

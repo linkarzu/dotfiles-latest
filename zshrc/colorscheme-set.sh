@@ -308,6 +308,54 @@ EOF
   echo "Starship configuration updated at '$starship_conf_file'."
 }
 
+set_wallpaper_all_spaces_yabai() {
+  local wp="$1"
+
+  if ! command -v yabai >/dev/null 2>&1; then
+    return 1
+  fi
+
+  local current_json
+  local spaces_json
+  current_json="$(yabai -m query --spaces --space 2>/dev/null || true)"
+  spaces_json="$(yabai -m query --spaces 2>/dev/null || true)"
+
+  if [ -z "$current_json" ] || [ -z "$spaces_json" ]; then
+    return 1
+  fi
+
+  local current_space
+  current_space="$(
+    printf '%s' "$current_json" | /usr/bin/python3 -c 'import json,sys; data=json.load(sys.stdin); print(data.get("index", ""))' 2>/dev/null || true
+  )"
+
+  if [ -z "$current_space" ]; then
+    return 1
+  fi
+
+  local spaces
+  spaces="$(
+    printf '%s' "$spaces_json" | /usr/bin/python3 -c 'import json,sys; data=json.load(sys.stdin); print(" ".join(str(space.get("index", "")) for space in data if space.get("index")))' 2>/dev/null || true
+  )"
+
+  if [ -z "$spaces" ]; then
+    return 1
+  fi
+
+  for space in $spaces; do
+    yabai -m space --focus "$space"
+    sleep 0.2
+    osascript -e 'tell application "System Events" to set picture of current desktop to POSIX file "'"$wp"'"'
+    sleep 0.1
+  done
+
+  if [ -n "$current_space" ]; then
+    yabai -m space --focus "$current_space"
+  fi
+
+  return 0
+}
+
 # If there's an update, replace the active colorscheme and perform necessary actions
 if [ "$UPDATED" = true ]; then
   echo "Updating active colorscheme to '$colorscheme_profile'."
@@ -347,12 +395,16 @@ if [ "$UPDATED" = true ]; then
   if [ -z "$wallpaper" ]; then
     wallpaper="$HOME/Library/Mobile Documents/com~apple~CloudDocs/Images/wallpapers/official/skyrim-dragon-4.webp"
   fi
-  osascript -e '
-  tell application "System Events"
-      repeat with d in desktops
-          set picture of d to "'"$wallpaper"'"
-      end repeat
-  end tell'
+  if ! set_wallpaper_all_spaces_yabai "$wallpaper"; then
+    osascript -e '
+    tell application "System Events"
+        set wp to POSIX file "'"$wallpaper"'"
+        repeat with d in (every desktop)
+            set picture of d to wp
+            delay 0.1
+        end repeat
+    end tell'
+  fi
 
   # Also restart yabai for my skitty-notes colors
   ~/github/dotfiles-latest/yabai/yabai_restart.sh

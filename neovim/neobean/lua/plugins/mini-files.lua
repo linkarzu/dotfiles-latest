@@ -55,6 +55,7 @@ return {
       zip_and_copy = "<space>yz",
       paste_from_clipboard = "<space>p",
       copy_path = "<M-c>",
+      open_with_default_app = "O",
       -- Don't use "i" as it conflicts wit insert mode
       preview_image = "<space>i",
       preview_image_popup = "<M-i>",

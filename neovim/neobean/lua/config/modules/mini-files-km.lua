@@ -172,6 +172,16 @@ M.setup = function(opts)
         end
       end, { buffer = buf_id, noremap = true, silent = true, desc = "[P]Copy relative path to clipboard" })
 
+      -- Open the selected file or directory with the default macOS app
+      vim.keymap.set("n", keymaps.open_with_default_app, function()
+        local curr_entry = mini_files.get_fs_entry()
+        if curr_entry then
+          vim.system({ "open", curr_entry.path }, { stdout = false, stderr = false })
+        else
+          vim.notify("No file or directory selected", vim.log.levels.WARN)
+        end
+      end, { buffer = buf_id, noremap = true, silent = true, desc = "[P]Open with default app" })
+
       -- Preview the selected image in macOS Quick Look
       --
       -- NOTE: This is for macOS, to preview in a neovim popup see below

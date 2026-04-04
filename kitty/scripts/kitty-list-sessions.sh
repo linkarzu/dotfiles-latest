@@ -89,25 +89,34 @@ build_menu_lines() {
         | $os.tabs[] as $tab
         | $tab.windows[]?
         | select(.session_name != null and .session_name != "")
-        | {
-            session_name: .session_name,
-            pwd: (.env.PWD // .cwd),
-            os_focused: ($os.is_focused // false),
-            tab_focused: ($tab.is_focused // false)
-          }
-      ]
+          | {
+              session_name: .session_name,
+              pwd: (.env.PWD // .cwd),
+              os_focused: ($os.is_focused // false),
+              tab_focused: ($tab.is_focused // false),
+              last_focused_at: (.last_focused_at // 0)
+            }
+        ]
+      # Sort sessions by recency using Kitty-provided window last_focused_at
+      # See: https://github.com/kovidgoyal/kitty/issues/9799
       | sort_by(.session_name)
       | group_by(.session_name)
-      | map(
-          if (map(.os_focused and .tab_focused) | any) then
-            (map(select(.os_focused and .tab_focused)) | .[0])
-          else
-            .[0]
-          end
-        )
-      | .[]
-      | [(.session_name|tostring), (.os_focused|tostring), (.tab_focused|tostring), (.pwd|tostring)]
-      | @tsv
+      | map({
+          session_last_focused_at: (map(.last_focused_at) | max),
+          pick: (
+            if (map(.os_focused and .tab_focused) | any) then
+              (map(select(.os_focused and .tab_focused)) | .[0])
+            else
+              .[0]
+            end
+          )
+        })
+      | map(.pick + {session_last_focused_at: .session_last_focused_at})
+      # Most recent sessions first, then name for stable ordering
+      | sort_by(-.session_last_focused_at, .session_name)
+        | .[]
+        | [(.session_name|tostring), (.os_focused|tostring), (.tab_focused|tostring), (.pwd|tostring)]
+        | @tsv
     '
   )"
 

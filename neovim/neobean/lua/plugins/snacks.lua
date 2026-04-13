@@ -62,10 +62,10 @@ return {
             glob = "*.md",
             -- include files ignored by .gitignore
             args = { "--no-ignore" },
-            -- Start in normal mode
-            on_show = function()
-              vim.cmd.stopinsert()
-            end,
+            -- -- Start in normal mode
+            -- on_show = function()
+            --   vim.cmd.stopinsert()
+            -- end,
             finder = "grep",
             format = "file",
             show_empty = true,

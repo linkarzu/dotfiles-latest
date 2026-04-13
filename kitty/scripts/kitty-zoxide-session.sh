@@ -96,7 +96,6 @@ b=$((16#${hex:4:2}))
 base_color="\033[38;2;${r};${g};${b}m"
 reset_color="\033[0m"
 
-
 hash_path() {
   local p="$1"
   if command -v shasum >/dev/null 2>&1; then

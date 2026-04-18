@@ -301,7 +301,9 @@ elif [ "$display_count" -eq 2 ]; then
   second_space_index="$(echo "$secondary_display_spaces" | jq '.[1]')"
   # Build label deskN
   non_stream_space="desk${first_space_index}"
+  projector_preview_space="desk${first_space_index}"
   bkp_terminal_space="desk${second_space_index}"
+  socialstream_preview_space="desk5"
   # Label the spaces, if you don't this does NOT work
   yabai -m space "$first_space_index" --label "$non_stream_space"
   yabai -m space "$second_space_index" --label "$bkp_terminal_space"
@@ -378,6 +380,8 @@ yabai -m rule --add app="^WhatsApp Web$" space="$non_stream_space"
 yabai -m rule --add app="^OBS Studio$" space="$non_stream_space"
 yabai -m rule --add app="^OBS Studio$" title="^Projector - Preview$" space="$projector_preview_space"
 yabai -m rule --add app="^Mail$" space="$non_stream_space"
+yabai -m rule --add app="^Microsoft Outlook$" space="$non_stream_space"
+yabai -m rule --add app="^Microsoft Edge$" space="$non_stream_space"
 yabai -m rule --add app="^1Password$" space="$non_stream_space"
 yabai -m rule --add app="^YouTubeStudio$" space=desk1
 yabai -m rule --add app="^Calendar$" space="$non_stream_space"

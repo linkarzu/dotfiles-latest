@@ -20,6 +20,7 @@
 #rincipe
 #upermán
 #zing
+107227/!
 ACL
 ASA
 ASAs
@@ -246,6 +247,7 @@ SRs
 SSDP
 SSH
 SSHing
+SSRS
 STONITH
 Schrock
 Sesh
@@ -562,6 +564,7 @@ m4xshen
 mAh
 macOS
 macvlan
+marc
 markdown
 markdownlint
 md

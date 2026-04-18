@@ -371,7 +371,7 @@ EOF
 set +e
 printf '\033[2J\033[H'
 fzf_out="$(
-  fzf --ansi --height=20 --reverse \
+  fzf --exact --ansi --height=20 --reverse \
     --header="Type to filter, enter open, esc quit" \
     --prompt="Create New Kitty Session (zoxide + ssh) > " \
     --no-multi \

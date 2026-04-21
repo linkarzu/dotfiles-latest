@@ -160,6 +160,25 @@ return {
         "<leader><space>",
         function()
           Snacks.picker.files({
+            -- Test sorting by most recently modified file first.
+            -- `mtime` is computed per item in `transform`, then used by `sort.fields`.
+            transform = function(item)
+              local file = item.file
+              if type(file) ~= "string" then
+                return item
+              end
+
+              local uv = vim.uv or vim.loop
+              local cwd = item.cwd
+              ---@type string
+              local path = (type(cwd) == "string" and (cwd .. "/" .. file)) or file
+              local stat = uv.fs_stat(path)
+              item.mtime = (stat and stat.mtime and stat.mtime.sec) or 0
+              return item
+            end,
+            sort = {
+              fields = { "mtime:desc", "score:desc", "#text", "idx" },
+            },
             finder = "files",
             format = "file",
             show_empty = true,

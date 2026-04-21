@@ -82,22 +82,38 @@ export MAGENTA=0xff${linkarzu_color01#\#}
 export GREY=0xff${linkarzu_color09#\#}
 export TRANSPARENT=0x00000000
 export BG0=0xff${linkarzu_color10#\#}
-export BG0O50=0x80${linkarzu_color10#\#}
-export BG0O60=0x99${linkarzu_color10#\#}
-export BG0O70=0xb2${linkarzu_color10#\#}
-export BG0O80=0xcc${linkarzu_color10#\#}
+export BG005=0x0d${linkarzu_color10#\#}
+export BG010=0x1a${linkarzu_color10#\#}
+export BG015=0x26${linkarzu_color10#\#}
+export BG020=0x33${linkarzu_color10#\#}
+export BG025=0x40${linkarzu_color10#\#}
+export BG030=0x4d${linkarzu_color10#\#}
+export BG035=0x59${linkarzu_color10#\#}
+export BG040=0x66${linkarzu_color10#\#}
+export BG045=0x73${linkarzu_color10#\#}
+export BG050=0x80${linkarzu_color10#\#}
+export BG055=0x8c${linkarzu_color10#\#}
+export BG060=0x99${linkarzu_color10#\#}
+export BG065=0xa6${linkarzu_color10#\#}
+export BG070=0xb3${linkarzu_color10#\#}
+export BG075=0xbf${linkarzu_color10#\#}
+export BG080=0xcc${linkarzu_color10#\#}
+export BG085=0xd9${linkarzu_color10#\#}
+export BG090=0xe6${linkarzu_color10#\#}
+export BG095=0xf2${linkarzu_color10#\#}
+export BG100=0xff${linkarzu_color10#\#}
 # export BG0O85=0xD91e1e2e
 # export BG0O85=0xD9212337
 # This sets the color of the bar
-# Eldritch dark
-export BG0O85=0x55${linkarzu_color10#\#}
+# # Eldritch dark
+# export BG085=0x55${linkarzu_color10#\#}
 # Eldritch light
 # export BG0O85=0xCF212337
 export BG1=0x60${linkarzu_color13#\#}
 export BG2=0x60${linkarzu_color07#\#}
 
 # General bar colors
-export BAR_COLOR=$BG0O85
+export BAR_COLOR=$BG080
 export BAR_BORDER_COLOR=$BG2
 export BACKGROUND_1=$BG1
 export BACKGROUND_2=$BG2

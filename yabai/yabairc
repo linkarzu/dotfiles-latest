@@ -371,6 +371,7 @@ yabai -m config --space 4 right_padding 0
 yabai -m rule --add app="^socialstream$" space="$socialstream_preview_space"
 
 yabai -m rule --add app="^DaVinci Resolve$" space=desk6
+yabai -m rule --add app="^Logic Pro$" space=desk7
 yabai -m rule --add app="^VirtualBox$" space=desk6
 yabai -m rule --add app="^Electron$" space=desk6
 
@@ -402,6 +403,8 @@ yabai -m rule --add app="^Ghostty$" space="$bkp_terminal_space"
 # yabai -m rule --add app="^kitty$" title="^kitty:obsidian$" space=desk4
 # yabai -m rule --add app="^kitty$" title="^kitty:blogpost$" space=desk4
 
+# I use this with JankyBorders
+# brew install borders
 yabai -m signal --add event=window_focused action="$HOME/github/dotfiles-latest/yabai/update_border_color.sh"
 yabai -m signal --add event=space_changed action="$HOME/github/dotfiles-latest/yabai/update_border_color.sh"
 

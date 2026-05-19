@@ -22,6 +22,11 @@ read -rp "Enter number: " choice
 
 target_file="$HOME/github/dotfiles-latest/kanata/configs/mac-common.kbd"
 target_file2="$HOME/github/dotfiles-latest/skhd/skhdrc"
+toggle_filter_script="$HOME/github/dotfiles-private/scripts/macos/mac/obs/toggle-effect-filter/py/toggle-scene-filter.py"
+
+set_source_record_filter() {
+  python3 "$toggle_filter_script" "$1" "Source Record" "$2"
+}
 
 # Determine new scene name
 case "$choice" in
@@ -142,6 +147,19 @@ case "$choice" in
 *)
   echo "Invalid choice. Only 1 and 3 are supported right now."
   exit 1
+  ;;
+esac
+
+case "$choice" in
+1 | 2)
+  set_source_record_filter "cam-main" on
+  set_source_record_filter "zoom-main-keyboard-w-app" on
+  set_source_record_filter "cam-guest1-cam" off
+  ;;
+3 | 4)
+  set_source_record_filter "cam-main" on
+  set_source_record_filter "zoom-main-keyboard-w-app" off
+  set_source_record_filter "cam-guest1-cam" on
   ;;
 esac
 

@@ -2322,6 +2322,205 @@ vim.keymap.set(
   { desc = "[P]Delete newlines in selected text (join)" }
 )
 
+-- Convert an IPv4 address to an integer so subnet math stays simple.
+local subnet_hover_focus_id = "subnet_hover"
+
+-- Convert an IPv4 address to an integer so subnet math stays simple.
+local function ip_to_int(ip_str)
+  local a, b, c, d = ip_str:match("^(%d+)%.(%d+)%.(%d+)%.(%d+)$")
+  a, b, c, d = tonumber(a), tonumber(b), tonumber(c), tonumber(d)
+  if not a or not b or not c or not d then
+    return nil
+  end
+  if a > 255 or b > 255 or c > 255 or d > 255 then
+    return nil
+  end
+  return (((a * 256 + b) * 256 + c) * 256 + d)
+end
+
+-- Convert the integer representation back to a dotted IPv4 string.
+local function int_to_ip(num)
+  local bit = bit or bit32
+  local a = bit.band(bit.rshift(num, 24), 0xFF)
+  local b = bit.band(bit.rshift(num, 16), 0xFF)
+  local c = bit.band(bit.rshift(num, 8), 0xFF)
+  local d = bit.band(num, 0xFF)
+  return table.concat({ a, b, c, d }, ".")
+end
+
+-- Parse and validate a CIDR string like 10.10.10.1/24.
+local function parse_cidr(cidr_text)
+  local ip, prefix = cidr_text:match("^(%d+%.%d+%.%d+%.%d+)%/(%d+)$")
+  if not ip or not prefix then
+    return nil, "No CIDR found"
+  end
+
+  local ip_int = ip_to_int(ip)
+  if not ip_int then
+    return nil, "No CIDR found"
+  end
+
+  local prefix_num = tonumber(prefix)
+  if not prefix_num or prefix_num < 0 or prefix_num > 32 then
+    return nil, "Invalid CIDR prefix"
+  end
+
+  return {
+    ip = ip,
+    ip_int = ip_int,
+    prefix = prefix_num,
+    cidr = cidr_text,
+  }
+end
+
+-- Calculate subnet details once so both mappings can reuse the same values.
+local function get_subnet_info(cidr_text)
+  local cidr, err = parse_cidr(cidr_text)
+  if not cidr then
+    return nil, err
+  end
+
+  local bit = bit or bit32
+  local mask = cidr.prefix == 0 and 0 or bit.band(bit.lshift(0xFFFFFFFF, 32 - cidr.prefix), 0xFFFFFFFF)
+  local network = bit.band(cidr.ip_int, mask)
+  local broadcast = bit.bor(network, bit.band(bit.bnot(mask), 0xFFFFFFFF))
+
+  local first_host = network
+  local last_host = broadcast
+  local usable_hosts = broadcast - network + 1
+
+  -- Follow RFC-style handling for point-to-point and host routes.
+  if cidr.prefix < 31 then
+    first_host = network + 1
+    last_host = broadcast - 1
+    usable_hosts = math.max(broadcast - network - 1, 0)
+  end
+
+  return {
+    cidr = cidr.cidr,
+    prefix = cidr.prefix,
+    network = network,
+    broadcast = broadcast,
+    mask = mask,
+    first_host = first_host,
+    last_host = last_host,
+    usable_hosts = usable_hosts,
+  }
+end
+
+-- Reuse the same subnet math for future networks with the current prefix.
+local function get_subnet_info_from_network(network, prefix)
+  return get_subnet_info(string.format("%s/%d", int_to_ip(network), prefix))
+end
+
+-- Show the next 5 same-size subnets as: CIDR first_usable-last_usable.
+local function get_next_subnet_lines(subnet)
+  local next_subnet_lines = { "", "Next 5 subnets:" }
+  local subnet_size = 2 ^ (32 - subnet.prefix)
+  local next_subnets = {}
+  local max_cidr_len = 0
+
+  for i = 1, 5 do
+    local next_network = subnet.network + (subnet_size * i)
+    local next_subnet = get_subnet_info_from_network(next_network, subnet.prefix)
+    local cidr = string.format("%s/%d", int_to_ip(next_subnet.network), next_subnet.prefix)
+    local range = string.format("%s-%s", int_to_ip(next_subnet.first_host), int_to_ip(next_subnet.last_host))
+
+    max_cidr_len = math.max(max_cidr_len, #cidr)
+    next_subnets[#next_subnets + 1] = {
+      cidr = cidr,
+      range = range,
+    }
+  end
+
+  -- Pad shorter CIDRs so every range starts in the same column.
+  for _, next_subnet in ipairs(next_subnets) do
+    next_subnet_lines[#next_subnet_lines + 1] =
+      string.format("%-" .. max_cidr_len .. "s %s", next_subnet.cidr, next_subnet.range)
+  end
+
+  return next_subnet_lines
+end
+
+-- Grab the exact token under the cursor, using spaces as the boundaries.
+local function get_token_under_cursor()
+  local line = vim.api.nvim_get_current_line()
+  if line == "" then
+    return nil
+  end
+
+  local col = vim.api.nvim_win_get_cursor(0)[2] + 1
+  col = math.min(col, #line)
+
+  if line:sub(col, col):match("%s") then
+    return nil
+  end
+
+  local start_col = col
+  while start_col > 1 and not line:sub(start_col - 1, start_col - 1):match("%s") do
+    start_col = start_col - 1
+  end
+
+  local end_col = col
+  while end_col < #line and not line:sub(end_col + 1, end_col + 1):match("%s") do
+    end_col = end_col + 1
+  end
+
+  return line:sub(start_col, end_col)
+end
+
+-- Show subnet information in the same hover-style popup used by LSP docs.
+local function show_subnet_popup(cidr_text)
+  local subnet, err = get_subnet_info(cidr_text)
+  if not subnet then
+    local msg = err == "Invalid CIDR prefix" and "Invalid CIDR prefix" or "No CIDR found under cursor"
+    vim.notify(msg, vim.log.levels.WARN)
+    return
+  end
+
+  local popup_lines = {
+    string.format("%s-%s", int_to_ip(subnet.first_host), int_to_ip(subnet.last_host)),
+    int_to_ip(subnet.mask),
+    string.format("Usable hosts: %d", subnet.usable_hosts),
+  }
+
+  vim.list_extend(popup_lines, get_next_subnet_lines(subnet))
+
+  vim.lsp.util.open_floating_preview(popup_lines, "markdown", {
+    border = "rounded",
+    focus_id = subnet_hover_focus_id,
+  })
+end
+
+-- Visual mode usage:
+-- 1. Select a CIDR like 10.110.167.0/24
+-- 2. Press <space>mS
+-- 3. Copies "- RANGE <network> - <broadcast>" to the clipboard
+vim.keymap.set("v", "<space>mS", function()
+  local start_row, start_col = unpack(vim.fn.getpos("'<"), 2, 3)
+  local end_row, end_col = unpack(vim.fn.getpos("'>"), 2, 3)
+  local lines = vim.api.nvim_buf_get_lines(0, start_row - 1, end_row, false)
+  local selected_text = table.concat(lines, "\n"):sub(start_col, #lines == 1 and end_col or -1)
+
+  local subnet, err = get_subnet_info(selected_text)
+  if not subnet then
+    if err == "Invalid CIDR prefix" then
+      vim.notify("Invalid CIDR prefix", vim.log.levels.WARN)
+      return
+    end
+    vim.notify("No CIDR found in selection", vim.log.levels.WARN)
+    return
+  end
+
+  local output = string.format("- RANGE %s - %s", int_to_ip(subnet.network), int_to_ip(subnet.broadcast))
+  vim.fn.setreg("+", output)
+  vim.notify("Subnet range copied to clipboard", vim.log.levels.INFO)
+end, { desc = "[P]Markdown: copy subnet range" })
+
+vim.keymap.set("n", "<space>mS", function()
+  show_subnet_popup(get_token_under_cursor())
+end, { desc = "[P]Markdown: show subnet info" })
+
 -- -- In visual mode, delete all newlines within selected text
 -- -- I like keeping my bulletpoints one after the next, sometimes formatting gets
 -- -- in the way and they mess up, so this allows me to select all of them and just

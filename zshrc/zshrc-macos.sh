@@ -271,6 +271,7 @@ alias v='NVIM_APPNAME=neobean nvim'
 alias vq='NVIM_APPNAME=quarto-nvim-kickstarter nvim'
 alias vk='NVIM_APPNAME=kickstart.nvim nvim'
 alias vl='NVIM_APPNAME=lazyvim nvim'
+alias o='opencode --agent plan'
 # I'm also leaving this "nvim" alias, which points to the "nvim" APPNAME, but
 # that APPNAME in fact points to my "neobean" config in the symlinks section
 # If I don't do this, my daily note doesn't work

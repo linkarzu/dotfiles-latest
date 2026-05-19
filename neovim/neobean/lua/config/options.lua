@@ -159,14 +159,15 @@ else
     end
     -- Shorten only when there are more than shorten_if_more_than directories
     if #parts > shorten_if_more_than then
-      local first = parts[1]
-      local last_four = table.concat({
+      local last_six = table.concat({
+        parts[#parts - 5],
+        parts[#parts - 4],
         parts[#parts - 3],
         parts[#parts - 2],
         parts[#parts - 1],
         parts[#parts],
       }, "/")
-      return prefix .. first .. "/../" .. last_four
+      return "../" .. last_six
     end
 
     -- Re-attach the prefix when no shortening is needed

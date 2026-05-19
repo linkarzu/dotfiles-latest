@@ -109,6 +109,7 @@ create_symlink ~/github/dotfiles-latest/fastfetch/ ~/.config/fastfetch
 create_symlink ~/github/dotfiles-latest/sesh ~/.config/sesh
 create_symlink ~/github/dotfiles-latest/aerospace ~/.config/aerospace
 create_symlink ~/github/dotfiles-latest/kitty ~/.config/kitty
+create_symlink ~/github/dotfiles-latest/opencode ~/.config/opencode
 create_symlink ~/github/dotfiles-latest/skhd ~/.config/skhd
 
 # # This is on the other repo where I keep my ssh config files

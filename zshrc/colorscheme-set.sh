@@ -19,9 +19,63 @@ fi
 
 colorscheme_profile="$1"
 
+persist_colorscheme_profile() {
+  local vars_file="$HOME/github/dotfiles-latest/colorscheme/colorscheme-vars.sh"
+
+  if [ ! -f "$vars_file" ]; then
+    return 0
+  fi
+
+  local tmp_file
+  local status_file
+  local changed
+
+  tmp_file="$(mktemp "${vars_file}.tmp.XXXXXX")"
+  status_file="$(mktemp "${vars_file}.status.XXXXXX")"
+
+  awk -v new_value="$colorscheme_profile" -v status_file="$status_file" '
+    BEGIN { found = 0; changed = 0 }
+    {
+      line = $0
+      trimmed = line
+      sub(/^[ \t]+/, "", trimmed)
+      if (!found && trimmed ~ /^colorscheme_profile=/) {
+        found = 1
+        desired = "colorscheme_profile=\"" new_value "\""
+        if (line != desired) { changed = 1 }
+        print desired
+        next
+      }
+      print line
+    }
+    END {
+      if (!found) {
+        desired = "colorscheme_profile=\"" new_value "\""
+        print desired
+        changed = 1
+      }
+      printf "%d\n", changed > status_file
+    }
+  ' "$vars_file" >"$tmp_file"
+
+  if [ -f "$status_file" ]; then
+    read -r changed <"$status_file"
+  fi
+
+  if [ "$changed" = "1" ]; then
+    mv "$tmp_file" "$vars_file"
+  else
+    rm -f "$tmp_file"
+  fi
+
+  rm -f "$status_file"
+}
+
 # Define paths
 colorscheme_file="$HOME/github/dotfiles-latest/colorscheme/list/$colorscheme_profile"
 active_file="$HOME/github/dotfiles-latest/colorscheme/active/active-colorscheme.sh"
+
+persist_colorscheme_profile
 
 # Check if the colorscheme file exists
 if [ ! -f "$colorscheme_file" ]; then
@@ -244,7 +298,6 @@ format = """
 \$time\\
 \$all\\
 \$directory
-\$kubernetes
 \$character
 """
 
@@ -271,7 +324,7 @@ time_format = '%y/%m/%d'
 # For this to show up correctly, you need to have cluster access
 # So your ~/.kube/config needs to be configured on the local machine
 [kubernetes]
-disabled = false
+disabled = true
 # context = user@cluster
 # format = '[\$user@\$cluster \(\$namespace\)](${linkarzu_color05}) '
 # format = '[\$cluster \(\$namespace\)](${linkarzu_color05}) '

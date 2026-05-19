@@ -11,6 +11,44 @@
 -- resolve it
 -- https://github.com/folke/snacks.nvim/issues/812
 
+local function normalize_path(path)
+  if type(path) ~= "string" or path == "" then
+    return nil
+  end
+  local expanded = vim.fn.expand(path)
+  local resolved = vim.uv.fs_realpath(expanded)
+  return resolved or vim.fs.normalize(expanded)
+end
+
+local function get_work_main_dir()
+  local work_env_file = vim.fn.expand("~/github/dotfiles-private/work/work-env.sh")
+  if vim.fn.filereadable(work_env_file) == 0 then
+    return nil
+  end
+  local lines = vim.fn.readfile(work_env_file)
+  for _, line in ipairs(lines) do
+    local value = line:match("^%s*export%s+WORK_MAIN_DIR=(.+)%s*$")
+    if value then
+      value = value:gsub('^"(.*)"$', "%1")
+      value = value:gsub("^'(.*)'$", "%1")
+      value = value:gsub("%$HOME", vim.env.HOME or "")
+      return normalize_path(value)
+    end
+  end
+end
+
+local function is_work_tree(path)
+  local cwd = normalize_path(path)
+  local work_main_dir = get_work_main_dir()
+  if not cwd or not work_main_dir then
+    return false
+  end
+  return cwd == work_main_dir or vim.startswith(cwd, work_main_dir .. "/")
+end
+
+local default_sort_fields = { "score:desc", "mtime:desc", "#text", "idx" }
+local work_sort_fields = { "#text", "mtime:desc", "score:desc", "idx" }
+
 return {
   {
     "folke/snacks.nvim",
@@ -159,6 +197,11 @@ return {
       {
         "<leader><space>",
         function()
+          local cwd = vim.fn.getcwd()
+          local sort_fields = default_sort_fields
+          if is_work_tree(cwd) then
+            sort_fields = work_sort_fields
+          end
           Snacks.picker.files({
             -- Test sorting by most recently modified file first.
             -- `mtime` is computed per item in `transform`, then used by `sort.fields`.
@@ -167,17 +210,16 @@ return {
               if type(file) ~= "string" then
                 return item
               end
-
               local uv = vim.uv or vim.loop
-              local cwd = item.cwd
+              local item_cwd = item.cwd
               ---@type string
-              local path = (type(cwd) == "string" and (cwd .. "/" .. file)) or file
+              local path = (type(item_cwd) == "string" and (item_cwd .. "/" .. file)) or file
               local stat = uv.fs_stat(path)
               item.mtime = (stat and stat.mtime and stat.mtime.sec) or 0
               return item
             end,
             sort = {
-              fields = { "mtime:desc", "score:desc", "#text", "idx" },
+              fields = sort_fields,
             },
             finder = "files",
             format = "file",

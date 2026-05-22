@@ -109,10 +109,10 @@ vim.keymap.set({ "n", "v", "i" }, "<M-h>", function()
   require("noice").cmd("all")
 end, { desc = "[P]Noice History" })
 
--- Dismiss noice notifications
-vim.keymap.set({ "n", "v", "i" }, "<M-d>", function()
-  require("noice").cmd("dismiss")
-end, { desc = "Dismiss All" })
+-- -- Dismiss noice notifications
+-- vim.keymap.set({ "n", "v", "i" }, "<M-d>", function()
+--   require("noice").cmd("dismiss")
+-- end, { desc = "Dismiss All" })
 
 -- HACK: Manage Markdown tasks in Neovim similar to Obsidian | Telescope to List Completed and Pending Tasks
 -- NOTE: This has been moved to the snacks plugin config

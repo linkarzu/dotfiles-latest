@@ -2598,6 +2598,115 @@ vim.keymap.set("n", "<leader>md", function()
   vim.api.nvim_buf_set_lines(current_buffer, start_row, end_row + 1, false, new_lines)
 end, { desc = "[P]Toggle bullet point (dash)" })
 
+local function find_markdown_bullet_chunk(lines, start_line)
+  local total_lines = #lines
+  if start_line < 0 or start_line >= total_lines then
+    return nil
+  end
+  while start_line > 0 do
+    local line_text = lines[start_line + 1]
+    if line_text == "" or line_text:match("^%s*%-") then
+      break
+    end
+    start_line = start_line - 1
+  end
+  if lines[start_line + 1] == "" and start_line < (total_lines - 1) then
+    start_line = start_line + 1
+  end
+  local bullet_line = lines[start_line + 1]
+  if not bullet_line then
+    return nil
+  end
+  local bullet_prefix = bullet_line:match("^(%s*%- )")
+  if not bullet_prefix then
+    return nil
+  end
+  local chunk_start = start_line
+  local chunk_end = start_line
+  while chunk_end + 1 < total_lines do
+    local next_line = lines[chunk_end + 2]
+    if next_line == "" or next_line:match("^%s*%-") then
+      break
+    end
+    chunk_end = chunk_end + 1
+  end
+  return chunk_start, chunk_end, bullet_prefix
+end
+
+local function toggle_markdown_bullet_strikethrough(lines, chunk_start, chunk_end, bullet_prefix)
+  local first_content = lines[chunk_start + 1]:sub(#bullet_prefix + 1)
+  local last_line = lines[chunk_end + 1]
+  if first_content:sub(1, 1) == "~" and last_line:sub(-1) == "~" then
+    if chunk_start == chunk_end then
+      lines[chunk_start + 1] = bullet_prefix .. first_content:sub(2, -2)
+    else
+      lines[chunk_start + 1] = bullet_prefix .. first_content:sub(2)
+      lines[chunk_end + 1] = last_line:sub(1, -2)
+    end
+    return "removed"
+  end
+  lines[chunk_start + 1] = bullet_prefix .. "~" .. first_content
+  lines[chunk_end + 1] = lines[chunk_end + 1] .. "~"
+  return "added"
+end
+
+-- Toggle strikethrough for the bullet/task chunk under the cursor.
+vim.keymap.set("n", "<M-d>", function()
+  vim.cmd("mkview")
+  local api = vim.api
+  local buf = api.nvim_get_current_buf()
+  local cursor_pos = vim.api.nvim_win_get_cursor(0)
+  local lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
+  local chunk_start, chunk_end, bullet_prefix = find_markdown_bullet_chunk(lines, cursor_pos[1] - 1)
+  if not chunk_start then
+    print("Not a bullet: no action taken.")
+    vim.cmd("loadview")
+    return
+  end
+  local action = toggle_markdown_bullet_strikethrough(lines, chunk_start, chunk_end, bullet_prefix)
+  vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
+  vim.notify(
+    action == "removed" and "Removed bullet strikethrough" or "Added bullet strikethrough",
+    vim.log.levels.INFO
+  )
+  vim.cmd("silent update")
+  vim.cmd("loadview")
+end, { desc = "[P]Toggle bullet strikethrough" })
+
+-- Toggle strikethrough for each selected bullet/task chunk.
+vim.keymap.set("v", "<M-d>", function()
+  vim.cmd("mkview")
+  local api = vim.api
+  local buf = api.nvim_get_current_buf()
+  local lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
+  local start_line = vim.fn.line("v") - 1
+  local end_line = vim.fn.line(".") - 1
+  if start_line > end_line then
+    start_line, end_line = end_line, start_line
+  end
+  local changed = 0
+  local line_idx = start_line
+  while line_idx <= end_line and line_idx < #lines do
+    local chunk_start, chunk_end, bullet_prefix = find_markdown_bullet_chunk(lines, line_idx)
+    if chunk_start and chunk_start <= end_line and chunk_end >= start_line then
+      toggle_markdown_bullet_strikethrough(lines, chunk_start, chunk_end, bullet_prefix)
+      changed = changed + 1
+      line_idx = chunk_end + 1
+    else
+      line_idx = line_idx + 1
+    end
+  end
+  if changed == 0 then
+    print("No bullets found in selection: no action taken.")
+    vim.cmd("loadview")
+    return
+  end
+  vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
+  vim.notify("Toggled " .. changed .. " bullet strikethrough" .. (changed == 1 and "" or "s"), vim.log.levels.INFO)
+  vim.cmd("silent update")
+  vim.cmd("loadview")
+end, { desc = "[P]Toggle selected bullet strikethroughs" })
+
 -- HACK: Manage Markdown tasks in Neovim similar to Obsidian | Telescope to List Completed and Pending Tasks
 -- https://youtu.be/59hvZl077hM
 --

@@ -193,44 +193,53 @@ return {
         end,
         desc = "Keymaps",
       },
-      -- File picker
+      -- -- File picker
+      -- {
+      --   "<leader><space>",
+      --   function()
+      --     local cwd = vim.fn.getcwd()
+      --     local sort_fields = default_sort_fields
+      --     if is_work_tree(cwd) then
+      --       sort_fields = work_sort_fields
+      --     end
+      --     Snacks.picker.files({
+      --       -- Test sorting by most recently modified file first.
+      --       -- `mtime` is computed per item in `transform`, then used by `sort.fields`.
+      --       transform = function(item)
+      --         local file = item.file
+      --         if type(file) ~= "string" then
+      --           return item
+      --         end
+      --         local uv = vim.uv or vim.loop
+      --         local item_cwd = item.cwd
+      --         ---@type string
+      --         local path = (type(item_cwd) == "string" and (item_cwd .. "/" .. file)) or file
+      --         local stat = uv.fs_stat(path)
+      --         item.mtime = (stat and stat.mtime and stat.mtime.sec) or 0
+      --         return item
+      --       end,
+      --       sort = {
+      --         fields = sort_fields,
+      --       },
+      --       finder = "files",
+      --       format = "file",
+      --       show_empty = true,
+      --       supports_live = true,
+      --       exclude = { "*.xlsx", "*.txt" },
+      --       -- In case you want to override the layout for this keymap
+      --       -- layout = "vscode",
+      --     })
+      --   end,
+      --   desc = "Find Files",
+      -- },
+      -- -- I'm duplicating this keymap as I want to keep my origginal code in case
+      -- -- I decidee to come back to snacks
+      -- { "<leader><space>", false },
       {
         "<leader><space>",
         function()
-          local cwd = vim.fn.getcwd()
-          local sort_fields = default_sort_fields
-          if is_work_tree(cwd) then
-            sort_fields = work_sort_fields
-          end
-          Snacks.picker.files({
-            -- Test sorting by most recently modified file first.
-            -- `mtime` is computed per item in `transform`, then used by `sort.fields`.
-            transform = function(item)
-              local file = item.file
-              if type(file) ~= "string" then
-                return item
-              end
-              local uv = vim.uv or vim.loop
-              local item_cwd = item.cwd
-              ---@type string
-              local path = (type(item_cwd) == "string" and (item_cwd .. "/" .. file)) or file
-              local stat = uv.fs_stat(path)
-              item.mtime = (stat and stat.mtime and stat.mtime.sec) or 0
-              return item
-            end,
-            sort = {
-              fields = sort_fields,
-            },
-            finder = "files",
-            format = "file",
-            show_empty = true,
-            supports_live = true,
-            exclude = { "*.xlsx", "*.txt" },
-            -- In case you want to override the layout for this keymap
-            -- layout = "vscode",
-          })
+          Snacks.picker.smart({})
         end,
-        desc = "Find Files",
       },
       -- Navigate my buffers
       {

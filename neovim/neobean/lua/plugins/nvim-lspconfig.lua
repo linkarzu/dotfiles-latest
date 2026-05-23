@@ -23,6 +23,38 @@ return {
     },
 
     servers = {
+      ["*"] = {
+        keys = {
+          {
+            "<leader>cr",
+            function()
+              local group = vim.api.nvim_create_augroup("LinkarzuSaveAfterLspRename", { clear = true })
+              -- LSP rename updates references in other buffers but does not save them.
+              -- Autosave usually keeps unrelated files clean, so after rename completes,
+              -- write all modified buffers to avoid quit prompts for each updated note.
+              local autocmd
+              autocmd = vim.api.nvim_create_autocmd("LspRequest", {
+                group = group,
+                callback = function(ev)
+                  local request = ev.data and ev.data.request
+                  if not request or request.method ~= "textDocument/rename" or request.type ~= "complete" then
+                    return
+                  end
+                  if autocmd then
+                    pcall(vim.api.nvim_del_autocmd, autocmd)
+                  end
+                  vim.schedule(function()
+                    vim.cmd("silent! wall")
+                  end)
+                end,
+              })
+              vim.lsp.buf.rename()
+            end,
+            desc = "Rename",
+            has = "rename",
+          },
+        },
+      },
       marksman = {
         enabled = false,
       },

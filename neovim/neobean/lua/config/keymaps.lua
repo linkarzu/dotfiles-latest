@@ -3302,6 +3302,8 @@ local function set_markdown_folding()
   vim.opt_local.foldmethod = "expr"
   vim.opt_local.foldexpr = "v:lua.markdown_foldexpr()"
   vim.opt_local.foldlevel = 99
+  -- Keep folded headings rendered as the real heading line so EOL codelens stays visible.
+  vim.opt_local.foldtext = ""
 
   -- Detect frontmatter closing line
   local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)

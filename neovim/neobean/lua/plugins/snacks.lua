@@ -109,6 +109,38 @@ return {
             show_empty = true,
             supports_live = false,
             layout = "ivy_split",
+            actions = {
+              task_done = function(picker, item)
+                picker:norm(function()
+                  item = item or picker:current()
+                  local path = item and Snacks.picker.util.path(item)
+                  local line = item and item.pos and item.pos[1]
+                  if not path or not line then
+                    vim.notify("No task selected", vim.log.levels.WARN)
+                    return
+                  end
+                  local changed = require("config.modules.markdown_tasks").toggle_done({
+                    file = path,
+                    line = line,
+                  })
+                  if changed then
+                    picker:refresh()
+                  end
+                end)
+              end,
+            },
+            win = {
+              input = {
+                keys = {
+                  ["<M-x>"] = { "task_done", mode = { "n", "i" } },
+                },
+              },
+              list = {
+                keys = {
+                  ["<M-x>"] = "task_done",
+                },
+              },
+            },
           })
         end,
         desc = "[P]Search for incomplete tasks",

@@ -15,6 +15,9 @@ return {
       prompt_position = "top",
       height = 1,
       width = 1,
+      -- 'middle_number' | 'middle' | 'end' | 'start'
+      path_shorten_strategy = "start",
+      flex = false,
     },
   },
   lazy = false, -- the plugin lazy-initialises itself
@@ -26,6 +29,13 @@ return {
       end,
       desc = "FFFind files",
     },
+    -- {
+    --   "<leader><space>",
+    --   function()
+    --     require("fff").find_files()
+    --   end,
+    --   desc = "FFFind files",
+    -- },
     {
       "fg",
       function()

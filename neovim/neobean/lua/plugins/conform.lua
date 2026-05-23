@@ -128,6 +128,22 @@ $_ = join("\n", @out);
           return #diag > 0
         end,
       },
+      -- Leave a blank line at the very top and also bottom of markdown files
+      ["markdown_boundary_newlines"] = {
+        command = "perl",
+        args = {
+          "-0777",
+          "-pe",
+          [[
+s/\A\n+//;
+if ($_ !~ /\A---[ \t]*\n/) {
+  $_ = "\n" . $_;
+}
+s/\n*\z/\n\n/;
+]],
+        },
+        stdin = true,
+      },
     },
     formatters_by_ft = {
       -- -- I was having issues formatting .templ files, all the lines were aligned
@@ -156,8 +172,8 @@ $_ = join("\n", @out);
       ["typst"] = { "typstyle", "squeeze_blanks", "codeblock_remove_opening_blank", lsp_format = "never" },
       -- typst = { "typstyle", lsp_format = "prefer" },
       -- typst = { "prettypst" },
-      ["markdown"] = { "prettier", "markdownlint-cli2", "markdown-toc" },
-      ["markdown.mdx"] = { "prettier", "markdownlint-cli2", "markdown-toc" },
+      ["markdown"] = { "prettier", "markdownlint-cli2", "markdown-toc", "markdown_boundary_newlines" },
+      ["markdown.mdx"] = { "prettier", "markdownlint-cli2", "markdown-toc", "markdown_boundary_newlines" },
     },
   },
 }

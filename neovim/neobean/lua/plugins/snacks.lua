@@ -48,6 +48,19 @@ end
 
 local default_sort_fields = { "score:desc", "mtime:desc", "#text", "idx" }
 local work_sort_fields = { "#text", "mtime:desc", "score:desc", "idx" }
+local modified_sort_fields = { "mtime:desc" }
+
+local function add_mtime(item)
+  local file = item.file
+  if type(file) ~= "string" then
+    return item
+  end
+  local uv = vim.uv or vim.loop
+  local path = (type(item.cwd) == "string" and (item.cwd .. "/" .. file)) or file
+  local stat = uv.fs_stat(path)
+  item.mtime = (stat and stat.mtime and stat.mtime.sec) or 0
+  return item
+end
 
 return {
   {
@@ -168,6 +181,13 @@ return {
             end,
             finder = "grep",
             format = "file",
+            transform = add_mtime,
+            matcher = {
+              sort_empty = true,
+            },
+            sort = {
+              fields = modified_sort_fields,
+            },
             show_empty = true,
             supports_live = false,
             layout = "ivy",

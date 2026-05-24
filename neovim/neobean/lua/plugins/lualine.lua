@@ -33,7 +33,8 @@ local cache = {
 vim.api.nvim_create_autocmd({ "BufEnter", "FocusGained" }, {
   callback = function()
     -- Update git branch
-    cache.branch = vim.fn.system("git rev-parse --abbrev-ref HEAD"):gsub("\n", "")
+    local branch = vim.fn.system("git rev-parse --abbrev-ref HEAD 2>/dev/null"):gsub("\n", "")
+    cache.branch = vim.v.shell_error == 0 and branch or "not in a github repo"
     cache.branch_color = (cache.branch == "live") and { fg = colors["linkarzu_color11"], gui = "bold" } or nil
     -- Update commit hash only for dotfiles-latest repo
     local git_dir = vim.fn.system("git rev-parse --git-dir 2>/dev/null"):gsub("\n", "")
@@ -198,8 +199,8 @@ return {
       opts.sections.lualine_b = {
         {
           function()
-            -- Return branch name and commit hash if available
-            return cache.branch .. (cache.commit_hash ~= "" and " " .. cache.commit_hash or "")
+            -- Return branch name only
+            return cache.branch
           end,
           color = function()
             -- Use the cached branch color directly

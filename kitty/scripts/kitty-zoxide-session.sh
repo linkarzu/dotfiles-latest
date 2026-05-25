@@ -50,7 +50,7 @@ if [[ ! -x "$kitty_bin" ]]; then
   exit 1
 fi
 
-sock="$(ls /tmp/kitty-* 2>/dev/null | head -n1 || true)"
+sock="$($HOME/github/dotfiles-latest/scripts/macos/mac/misc/549-kittyMainSocket.sh || true)"
 if [[ -z "${sock:-}" ]]; then
   echo "No kitty sockets found in /tmp (kitty not running, or remote control not available)."
   exit 1

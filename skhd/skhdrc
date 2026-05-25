@@ -39,13 +39,12 @@ ctrl + alt - f9 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switc
 
 # Tmux or kitty sessions
 #
-#  NOTE: Kitty assigns each instance a unique UNIX socket (/tmp/kitty-<PID>)
-# for remote control. External tools (like skhd) cannot talk to Kitty unless
-# they first detect that PID-suffixed socket and connect to it. The helper
-# script 550-skhdSession.sh handles this automatically.
+#  NOTE: Kitty and QAT windows each create a /tmp/kitty-<PID> socket. External
+# tools must target the main kitty socket, otherwise sessions can open inside a
+# floating QAT window. 550-skhdSession.sh handles this automatically.
 ctrl + cmd - f12 : $HOME/github/dotfiles-latest/scripts/macos/mac/misc/550-skhdSession.sh "$HOME/github/dotfiles-latest/kitty/sessions/dots-private.kitty-session"
 # ctrl + cmd - f13 : $HOME/github/dotfiles-latest/scripts/macos/mac/misc/551-skhdDaily.sh
-ctrl + cmd - f13 : /Applications/kitty.app/Contents/MacOS/kitty @ --to "unix:$(ls /tmp/kitty-* 2>/dev/null | head -n1)" action launch_session_select
+ctrl + cmd - f13 : /Applications/kitty.app/Contents/MacOS/kitty @ --to "unix:$($HOME/github/dotfiles-latest/scripts/macos/mac/misc/549-kittyMainSocket.sh)" action launch_session_select
 ctrl + cmd - f17 : $HOME/github/dotfiles-latest/scripts/macos/mac/misc/550-skhdSession.sh "$HOME/github/dotfiles-latest/kitty/sessions/obsidian.kitty-session"
 ctrl + cmd - f18 : $HOME/github/dotfiles-latest/scripts/macos/mac/misc/550-skhdSession.sh "$HOME/github/dotfiles-latest/kitty/sessions/networking.kitty-session"
 # ctrl + cmd - f18
@@ -54,7 +53,7 @@ ctrl + alt - f19 : $HOME/github/dotfiles-latest/scripts/macos/mac/misc/550-skhdS
 ctrl + cmd - f2 : $HOME/github/dotfiles-latest/scripts/macos/mac/misc/550-skhdSession.sh "$HOME/github/dotfiles-latest/kitty/sessions/home.kitty-session"
 ctrl + cmd - f3 : $HOME/github/dotfiles-latest/scripts/macos/mac/misc/550-skhdSession.sh "$HOME/github/dotfiles-latest/kitty/sessions/dotfiles.kitty-session"
 ctrl + cmd - f5 : $HOME/github/dotfiles-latest/scripts/macos/mac/misc/550-skhdSession.sh "$HOME/github/dotfiles-latest/kitty/sessions/blogpost.kitty-session"
-ctrl + cmd - f7 : /Applications/kitty.app/Contents/MacOS/kitty @ --to "unix:$(ls /tmp/kitty-* 2>/dev/null | head -n1)" action launch_zoxide_session
+ctrl + cmd - f7 : /Applications/kitty.app/Contents/MacOS/kitty @ --to "unix:$($HOME/github/dotfiles-latest/scripts/macos/mac/misc/549-kittyMainSocket.sh)" action launch_zoxide_session
 ctrl + cmd - f19 : $HOME/github/dotfiles-latest/scripts/macos/mac/misc/551-skhdDaily.sh
 # cmd + alt - f1 : $HOME/github/dotfiles-latest/scripts/macos/mac/misc/550-skhdSession.sh "$HOME/github/dotfiles-latest/kitty/sessions/skitty.kitty-session"
 cmd + alt - f1 : $HOME/github/dotfiles-latest/scripts/macos/mac/misc/552-skhdDailyWork.sh
@@ -63,9 +62,9 @@ cmd + alt - f2 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/200-micMut
 cmd + alt - f3 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/555-skhdQatTask.sh"
 cmd + alt - f4 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/556-skhdQatColor.sh"
 cmd + alt - f5 : open "btt://execute_assigned_actions_for_trigger/?uuid=9A1CFA49-416C-480E-9430-184D2DAEE1CA"
-cmd + alt - f6 : /Applications/kitty.app/Contents/MacOS/kitty @ --to "unix:$(ls /tmp/kitty-* 2>/dev/null | head -n1)" action launch --type=background kitten quick-access-terminal
+cmd + alt - f6 : /Applications/kitty.app/Contents/MacOS/kitty @ --to "unix:$($HOME/github/dotfiles-latest/scripts/macos/mac/misc/549-kittyMainSocket.sh)" action launch --type=background kitten quick-access-terminal
 cmd + alt - f7 : /bin/zsh -c "/opt/homebrew/bin/SwitchAudioSource -s 'AirPods Pro'; /opt/homebrew/bin/SwitchAudioSource -t input -s 'AirPods Pro'"
-cmd + alt - f8 : /Applications/kitty.app/Contents/MacOS/kitty @ --to "unix:$(ls /tmp/kitty-* 2>/dev/null | head -n1)" action goto_session -1
+cmd + alt - f8 : /Applications/kitty.app/Contents/MacOS/kitty @ --to "unix:$($HOME/github/dotfiles-latest/scripts/macos/mac/misc/549-kittyMainSocket.sh)" action goto_session -1
 # Tmux copy mode (kitty scrollback)
 # I don't need to focus kitty or anything, I'm assuming I'll be on kitty already, so just send the keys
 cmd + alt - f9 : osascript -e 'tell application "System Events" to keystroke "i" using {command down, option down}'
@@ -93,7 +92,7 @@ shift + cmd - f11 : open "btt://execute_assigned_actions_for_trigger/?uuid=92B63
 
 # OBS scenes
 # lineid_obs_switchscene_cam_guest1
-shift + alt - f1 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py cam-full-guest1 --no-auth"
+shift + alt - f1 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py  --no-auth"
 shift + alt - f2 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py cam-full-guest2 --no-auth"
 shift + alt - f3 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py cam-full-guest3 --no-auth"
 shift + alt - f4 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py cam-full-guest4 --no-auth"
@@ -101,9 +100,9 @@ shift + alt - f4 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/mac
 # shift + alt - f6 : 
 # shift + alt - f7 : 
 # lineid_obs_switchscene_guest
-shift + alt - f8 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py guests-all-notes-right-live --no-auth"
+shift + alt - f8 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py guests-solo-keyboard --no-auth"
 # lineid_obs_switchscene_guest1
-shift + alt - f11 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py guest1-1guest-live --no-auth"
+shift + alt - f11 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py  --no-auth"
 shift + alt - f12 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py guest2-4guest-live --no-auth"
 shift + alt - f13 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py guest3-4guest-live --no-auth"
 shift + alt - f16 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py guest4-4guest-live --no-auth"
@@ -121,7 +120,7 @@ shift + alt + ctrl - f1 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scri
 shift + alt + ctrl - f4 : "$HOME/github/dotfiles-private/scripts/macos/mac/obs/toggle-effect-filter/py/toggle-guest-shaders.sh"
 # shift + alt + ctrl - f5 : 
 # lineid_obs_switchscene_main
-shift + alt + ctrl - f6 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py main-1-guest-live --no-auth"
+shift + alt + ctrl - f6 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py main-screen-keyboard --no-auth"
 shift + alt + ctrl - f7 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py cam-main --no-auth"
 # shift + alt + ctrl - f8 : 
 # shift + alt + ctrl - f9 : 

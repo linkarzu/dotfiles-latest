@@ -2,7 +2,10 @@
 
 set -euo pipefail
 
-bookmarks_file="$HOME/github/dotfiles-latest/bookmarks/bookmarks.tsv"
+bookmarks_files=(
+  "$HOME/github/dotfiles-latest/bookmarks/bookmarks.tsv"
+  "$HOME/github/dotfiles-private/bookmarks/bookmarks.tsv"
+)
 fzf_colors_file="$HOME/github/dotfiles-latest/colorscheme/active/active-fzf-colors.sh"
 qat_config="$HOME/github/dotfiles-latest/kitty/quick-access-terminal-center.conf"
 kitty_bin="/Applications/kitty.app/Contents/MacOS/kitty"
@@ -53,14 +56,33 @@ launch_bookmarks_qat() {
 }
 
 if [[ "${1:-}" == "--pick" ]]; then
+  bookmark_reload_cmd='query={q}; if [[ ${#query} -ge 3 ]]; then for bookmarks_file in'
+  fzf_args=(
+    --height=100%
+    --reverse
+    --delimiter=$'\t'
+    --with-nth=1
+    --header="Type at least 3 characters to search bookmarks"
+    --prompt="Open bookmark > "
+  )
+  has_bookmarks=false
+
   if ! command -v fzf >/dev/null 2>&1; then
     echo "fzf is not installed."
     read -r -p "Press enter to close. "
     exit 1
   fi
 
-  if [[ ! -s "$bookmarks_file" ]]; then
-    echo "No bookmarks found in $bookmarks_file."
+  for bookmarks_file in "${bookmarks_files[@]}"; do
+    if [[ -s "$bookmarks_file" ]]; then
+      has_bookmarks=true
+      break
+    fi
+  done
+
+  if [[ "$has_bookmarks" == false ]]; then
+    echo "No bookmarks found in:"
+    printf '  %s\n' "${bookmarks_files[@]}"
     read -r -p "Press enter to close. "
     exit 1
   fi
@@ -70,10 +92,21 @@ if [[ "${1:-}" == "--pick" ]]; then
     source "$fzf_colors_file"
   fi
 
+  for bookmarks_file in "${bookmarks_files[@]}"; do
+    printf -v quoted_bookmarks_file '%q' "$bookmarks_file"
+    bookmark_reload_cmd+=" $quoted_bookmarks_file"
+  done
+  bookmark_reload_cmd+='; do [[ -s "$bookmarks_file" ]] && cat "$bookmarks_file"; done; fi'
+  fzf_args+=(--bind "change:reload($bookmark_reload_cmd)")
+
+  if [[ -n "${linkarzu_fzf_colors:-}" ]]; then
+    fzf_args+=(--color="$linkarzu_fzf_colors")
+  fi
+
   while true; do
     # Keep this process alive after every action. When the QAT process stays
     # alive, kitty only toggles visibility instead of cold-starting a new panel.
-    if ! selected=$(fzf --height=100% --reverse --delimiter=$'\t' --with-nth=1 --header="Type to search bookmarks" --prompt="Open bookmark > " ${linkarzu_fzf_colors:+--color="$linkarzu_fzf_colors"} <"$bookmarks_file"); then
+    if ! selected=$(: | fzf "${fzf_args[@]}"); then
       # Esc makes fzf exit non-zero. Treat it as "hide and rearm" so the next
       # keypress shows an already-running picker instead of starting from cold.
       toggle_bookmarks_qat

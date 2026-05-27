@@ -20,8 +20,8 @@ local mini_files_git = require("config.modules.mini-files-git")
 -- Disable preview on the following file extensions
 -- When in a huge work related folder that has hundreds of excel files all over
 -- the place, mini.files would lag when I hovered over .xlsx files, weird thing
--- is that it also happened with .txt files, so disavling preview for those as
--- well
+-- is that it also happened with .txt files, so disavling preview for those as well
+-- Problematic files live in a cloud service, like onedrive, could that be it?
 local preview_blocklist_exts = {
   ods = true,
   xls = true,
@@ -29,6 +29,7 @@ local preview_blocklist_exts = {
   xlsm = true,
   xlsx = true,
   txt = true,
+  env = true,
 }
 local function is_preview_blocked_path(path)
   if type(path) ~= "string" then

@@ -81,6 +81,20 @@ return {
       harper_ls = {
         enabled = true,
         filetypes = { "markdown", "typst" },
+        root_dir = function(bufnr, on_dir)
+          local umg_root = vim.fs.normalize(vim.fn.expand("~/github/obsidian_main/075-umg"))
+          local path = vim.api.nvim_buf_get_name(bufnr)
+          if path ~= "" then
+            path = vim.fs.normalize(path)
+            if vim.bo[bufnr].filetype == "markdown" and (path == umg_root or vim.startswith(path, umg_root .. "/")) then
+              return
+            end
+          end
+          local root = vim.fs.root(bufnr, { ".harper-dictionary.txt", ".git" })
+          if root then
+            on_dir(root)
+          end
+        end,
         settings = {
           ["harper-ls"] = {
             userDictPath = "~/github/dotfiles-latest/neovim/neobean/spell/en.utf-8.add",

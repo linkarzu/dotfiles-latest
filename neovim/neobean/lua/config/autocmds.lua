@@ -190,6 +190,29 @@ vim.api.nvim_create_autocmd("FileType", {
   end,
 })
 
+-- Spanish-only notes default to Spanish spelling.
+local spanish_spell_root = vim.fn.fnamemodify(vim.fn.expand("~/github/obsidian_main/075-umg"), ":p"):gsub("/$", "")
+local function set_spanish_spell_for_path(bufnr)
+  local buf_name = vim.api.nvim_buf_get_name(bufnr)
+  if buf_name == "" then
+    return
+  end
+
+  local file_path = vim.fn.fnamemodify(buf_name, ":p")
+  if file_path:find(spanish_spell_root .. "/", 1, true) == 1 then
+    vim.opt_local.spell = true
+    vim.opt_local.spelllang = "es"
+  end
+end
+
+vim.api.nvim_create_autocmd({ "BufEnter", "BufReadPost", "BufNewFile" }, {
+  group = augroup("spanish_spell_paths"),
+  callback = function(event)
+    set_spanish_spell_for_path(event.buf)
+  end,
+})
+set_spanish_spell_for_path(0)
+
 -- -- Show LSP diagnostics (inlay hints) in a hover window / popup lamw26wmal
 -- -- https://github.com/neovim/nvim-lspconfig/wiki/UI-Customization#show-line-diagnostics-automatically-in-hover-window
 -- -- https://www.reddit.com/r/neovim/comments/1168p97/how_can_i_make_lspconfig_wrap_around_these_hints/

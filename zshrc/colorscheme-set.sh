@@ -292,10 +292,12 @@ generate_starship_config() {
   cat >"$starship_conf_file" <<EOF
 # This will show the time on a 2nd line
 # Add a "\\" at the end of an item, if you want the next item to show on the same line
+# U+E000 is the custom Linkarzu Logo glyph in ./logo-font/LinkarzuLogo-Regular.ttf
 format = """
 \$username\\
 \$hostname\\
 \$time\\
+[\\uE000 ](${linkarzu_color02} bold)\\
 \$all\\
 \$directory
 \$character
@@ -315,7 +317,7 @@ disabled = true
 [time]
 style = '${linkarzu_color04} bold'
 disabled = false
-format = '[\[\$time\]](\$style) '
+format = '[\[\$time\]](\$style)'
 # https://docs.rs/chrono/0.4.7/chrono/format/strftime/index.html
 # %T	00:34:60	Hour-minute-second format. Same to %H:%M:%S.
 # time_format = '%y/%m/%d %T'

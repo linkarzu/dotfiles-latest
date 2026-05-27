@@ -145,6 +145,7 @@ window-padding-x = 4,2
 window-padding-y = 6,0
 
 font-family = "JetBrainsMono Nerd Font"
+font-codepoint-map = U+E000=Linkarzu Logo
 font-size = 25
 
 # Valid values:

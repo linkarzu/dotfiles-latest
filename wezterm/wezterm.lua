@@ -115,7 +115,10 @@ config = {
 
 	-- https://wezfurlong.org/wezterm/config/lua/wezterm/font.html
 	-- font = wezterm.font("JetBrainsMono Nerd Font", { weight = "Bold" }),
-	font = wezterm.font("JetBrainsMono Nerd Font"),
+	font = wezterm.font_with_fallback({
+		"JetBrainsMono Nerd Font",
+		"Linkarzu Logo",
+	}),
 	-- font_size = 14.5,
 	font_size = 15,
 

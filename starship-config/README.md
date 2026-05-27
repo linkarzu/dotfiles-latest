@@ -49,3 +49,20 @@ If you're using `~/.zshrc`
 ```bash
 echo "export STARSHIP_CONFIG=~/github/dotfiles-latest/starship-config/starship.toml" >> ~/.zshrc
 ```
+
+# Custom logo glyph
+
+The active config uses a private glyph at `U+E000` for the Linkarzu logo. The generated assets live in `logo-font/`.
+
+Install the generated font on macOS:
+
+```bash
+cp ~/github/dotfiles-latest/starship-config/logo-font/LinkarzuLogo-Regular.ttf ~/Library/Fonts/
+```
+
+Rebuild the font after changing `logo-font/linkarzu-logo.svg`:
+
+```bash
+brew install potrace fontforge
+fontforge -lang=py -script ~/github/dotfiles-latest/starship-config/logo-font/build-logo-font.py ~/github/dotfiles-latest/starship-config/logo-font/linkarzu-logo.svg ~/github/dotfiles-latest/starship-config/logo-font/LinkarzuLogo-Regular.ttf
+```

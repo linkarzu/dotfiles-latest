@@ -992,11 +992,12 @@ M.tmux_pane_function = function(dir)
     vim.fn.system("tmux send-keys Escape i")
   end
 end
--- If I execute the function without an argument, it will open the dir where the
--- current file lives
-vim.keymap.set({ "n", "v", "i" }, "<M-t>", function()
-  M.tmux_pane_function()
-end, { desc = "[P]Terminal on tmux pane" })
+-- -- I don't use tmux anymore, so disabling this keymap as I'll use it elsewhere
+-- -- If I execute the function without an argument, it will open the dir where the
+-- -- current file lives
+-- vim.keymap.set({ "n", "v", "i" }, "<M-t>", function()
+--   M.tmux_pane_function()
+-- end, { desc = "[P]Terminal on tmux pane" })
 
 -- -- Open a tmux pane on the right in bash, in the same directory as the current file
 -- -- Opening it in bash because it's faster, I don't have to run my .zshrc file,
@@ -3007,7 +3008,7 @@ end, { desc = "[P]BOLD toggle bold markers" })
 -- Crate task or checkbox lamw26wmal
 -- These are marked with <leader>x using bullets.vim
 -- I used <C-l> before, but that is used for pane navigation
-vim.keymap.set({ "n", "i" }, "<M-l>", function()
+vim.keymap.set({ "n", "i" }, "<M-t>", function()
   -- Get the current line/row/column
   local cursor_pos = vim.api.nvim_win_get_cursor(0)
   local row, _ = cursor_pos[1], cursor_pos[2]

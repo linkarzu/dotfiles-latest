@@ -19,8 +19,8 @@ set_kitty_font_size() {
   fi
 }
 
-sed -i '' 's/^font_size .*/font_size 18/' "$kitty_conf"
-set_kitty_font_size 18
+sed -i '' 's/^font_size .*/font_size 20/' "$kitty_conf"
+set_kitty_font_size 20
 
 osascript -e 'display notification "Started" with title "Recording started 🟢"'
 

@@ -3,42 +3,71 @@
 --
 -- https://github.com/stevearc/conform.nvim
 
--- Auto-format when focus is lost or I leave the buffer
--- Useful if on skitty-notes or a regular buffer and switch somewhere else the
--- formatting doesn't stay all messed up
--- I found this autocmd example in the readme
--- https://github.com/stevearc/conform.nvim/blob/master/README.md#setup
--- "FocusLost" used when switching from skitty-notes
--- "BufLeave" is used when switching between 2 buffers
+-- Relationship with auto-save.nvim:
+-- LazyVim normally formats through conform.nvim on BufWritePre. auto-save.nvim
+-- saves from events like BufLeave and explicitly calls LazyVim.format() before
+-- writing, because nested BufWritePre formatting is skipped in that path. Keep
+-- save-on-leave behavior in auto-save.lua; keep formatter definitions and
+-- formatter-specific safety guards here.
+-- In other words: conform.nvim does not decide when to save. auto-save.nvim
+-- decides when a save should happen, then calls LazyVim formatting, which calls
+-- conform.nvim with the formatter rules configured in this file.
 
-vim.api.nvim_create_autocmd({ "FocusLost", "BufLeave" }, {
-  pattern = "*",
+local conform_group = vim.api.nvim_create_augroup("linkarzu_conform", { clear = true })
+
+-- Keep mini.files out of LazyVim/conform formatting. Auto-save skips these
+-- buffers too, but this protects any other formatting path because tinymist can
+-- panic when it receives a minifiles:// URI.
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "minifiles",
+  group = conform_group,
   callback = function(args)
-    local buf = args.buf or vim.api.nvim_get_current_buf()
-    -- Don't format mini.files buffers
-    -- tinymist panics when it receives a minifiles:// URI during formatting
-    if vim.bo[buf].filetype == "minifiles" then
-      return
-    end
-    if vim.api.nvim_buf_get_name(buf):match("^minifiles://") then
-      return
-    end
-    -- Only format if the current mode is normal mode
-    -- Only format if autoformat is enabled for the current buffer (if
-    -- autoformat disabled globally the buffers inherits it, see :LazyFormatInfo)
-    if LazyVim.format.enabled(buf) and vim.fn.mode() == "n" then
-      -- Add a small delay to the formatting so it doesn’t interfere with
-      -- CopilotChat’s or grug-far buffer initialization, this helps me to not
-      -- get errors when using the "BufLeave" event above, if not using
-      -- "BufLeave" the delay is not needed
-      vim.defer_fn(function()
-        if vim.api.nvim_buf_is_valid(buf) then
-          require("conform").format({ bufnr = buf })
-        end
-      end, 100)
-    end
+    vim.b[args.buf].autoformat = false
   end,
 })
+
+-- This custom BufLeave/FocusLost formatter is disabled because auto-save.nvim
+-- now writes on those events, and that write triggers LazyVim's BufWritePre
+-- formatting through conform.nvim. Keeping this delayed formatter caused a
+-- second format after auto-save had already written the file, leaving the
+-- buffer modified after switching with `:e #` / alternate-buffer keymaps.
+--
+-- -- Auto-format when focus is lost or I leave the buffer
+-- -- Useful if on skitty-notes or a regular buffer and switch somewhere else the
+-- -- formatting doesn't stay all messed up
+-- -- I found this autocmd example in the readme
+-- -- https://github.com/stevearc/conform.nvim/blob/master/README.md#setup
+-- -- "FocusLost" used when switching from skitty-notes
+-- -- "BufLeave" is used when switching between 2 buffers
+--
+-- vim.api.nvim_create_autocmd({ "FocusLost", "BufLeave" }, {
+--   pattern = "*",
+--   callback = function(args)
+--     local buf = args.buf or vim.api.nvim_get_current_buf()
+--     -- Don't format mini.files buffers
+--     -- tinymist panics when it receives a minifiles:// URI during formatting
+--     if vim.bo[buf].filetype == "minifiles" then
+--       return
+--     end
+--     if vim.api.nvim_buf_get_name(buf):match("^minifiles://") then
+--       return
+--     end
+--     -- Only format if the current mode is normal mode
+--     -- Only format if autoformat is enabled for the current buffer (if
+--     -- autoformat disabled globally the buffers inherits it, see :LazyFormatInfo)
+--     if LazyVim.format.enabled(buf) and vim.fn.mode() == "n" then
+--       -- Add a small delay to the formatting so it doesn’t interfere with
+--       -- CopilotChat’s or grug-far buffer initialization, this helps me to not
+--       -- get errors when using the "BufLeave" event above, if not using
+--       -- "BufLeave" the delay is not needed
+--       vim.defer_fn(function()
+--         if vim.api.nvim_buf_is_valid(buf) then
+--           require("conform").format({ bufnr = buf })
+--         end
+--       end, 100)
+--     end
+--   end,
+-- })
 
 return {
   "stevearc/conform.nvim",

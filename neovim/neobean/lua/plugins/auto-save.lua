@@ -15,13 +15,74 @@
 -- So make sure you're using the right plugin, which is okuuva/auto-save.nvim
 -- https://github.com/pocco81/auto-save.nvim/issues/70
 
+-- Relationship with conform.nvim:
+-- auto-save.nvim owns save-on-leave behavior for buffers, windows, command-line
+-- entry, focus loss, etc. Because those saves often happen from non-nested
+-- autocmds like BufLeave, Neovim can skip the normal BufWritePre formatting
+-- path. The AutoSaveWritePre hook below explicitly calls LazyVim.format(),
+-- which routes through conform.nvim, before auto-save writes the file.
+-- In other words: when I leave a buffer/window or enter `:`, `/`, or `?`,
+-- auto-save.nvim starts the save. Right before writing, auto-save.nvim asks
+-- LazyVim to format the buffer, and LazyVim uses conform.nvim to do it.
+
 -- Autocommand for printing the autosaved message
 local group = vim.api.nvim_create_augroup("autosave", {})
+local autosave_blocked = {
+  visual = false,
+  flash_jump = false,
+  snacks_input = false,
+  snacks_picker_input = false,
+}
+local autosave_format_restore = {}
+
+local function restore_autoformat(buf)
+  local restore = autosave_format_restore[buf]
+  if restore == nil then
+    return
+  end
+
+  autosave_format_restore[buf] = nil
+  if vim.api.nvim_buf_is_valid(buf) then
+    vim.b[buf].autoformat = restore.autoformat
+  end
+end
+
+-- auto-save.nvim writes from events like BufLeave/FocusLost. Neovim does not
+-- run nested BufWritePre autocmds from those callbacks, so LazyVim's normal
+-- format-on-save path would be skipped. Format explicitly before auto-save's
+-- write, then temporarily disable LazyVim autoformat for that write to avoid a
+-- duplicate format when BufWritePre does run outside nested autocmd contexts.
+vim.api.nvim_create_autocmd("User", {
+  pattern = "AutoSaveWritePre",
+  group = group,
+  callback = function(opts)
+    local buf = opts.data and opts.data.saved_buffer
+    if buf == nil or not vim.api.nvim_buf_is_valid(buf) or not vim.api.nvim_buf_is_loaded(buf) then
+      return
+    end
+    if LazyVim == nil or LazyVim.format == nil then
+      return
+    end
+
+    local ok = pcall(function()
+      LazyVim.format({ buf = buf })
+    end)
+    if not ok then
+      return
+    end
+
+    autosave_format_restore[buf] = { autoformat = vim.b[buf].autoformat }
+    vim.b[buf].autoformat = false
+  end,
+})
+
 vim.api.nvim_create_autocmd("User", {
   pattern = "AutoSaveWritePost",
   group = group,
   callback = function(opts)
-    if opts.data.saved_buffer ~= nil then
+    local buf = opts.data and opts.data.saved_buffer
+    if buf ~= nil then
+      restore_autoformat(buf)
       -- print("AutoSaved at " .. vim.fn.strftime("%H:%M:%S"))
       print("AutoSaved")
     end
@@ -39,6 +100,7 @@ vim.api.nvim_create_autocmd("ModeChanged", {
   pattern = { "*:[vV\x16]*" },
   callback = function()
     vim.api.nvim_exec_autocmds("User", { pattern = "VisualEnter" })
+    autosave_blocked.visual = true
     -- print("VisualEnter")
   end,
 })
@@ -47,6 +109,7 @@ vim.api.nvim_create_autocmd("ModeChanged", {
   group = visual_event_group,
   pattern = { "[vV\x16]*:*" },
   callback = function()
+    autosave_blocked.visual = false
     vim.api.nvim_exec_autocmds("User", { pattern = "VisualLeave" })
     -- print("VisualLeave")
   end,
@@ -58,12 +121,20 @@ local original_jump = flash.jump
 
 flash.jump = function(opts)
   vim.api.nvim_exec_autocmds("User", { pattern = "FlashJumpStart" })
+  autosave_blocked.flash_jump = true
   -- print("flash.nvim enter")
 
-  original_jump(opts)
+  local results = { pcall(original_jump, opts) }
 
+  autosave_blocked.flash_jump = false
   vim.api.nvim_exec_autocmds("User", { pattern = "FlashJumpEnd" })
   -- print("flash.nvim leave")
+
+  if not results[1] then
+    error(results[2], 0)
+  end
+  table.remove(results, 1)
+  return unpack(results)
 end
 
 -- Disable auto-save when entering a snacks_input buffer
@@ -72,6 +143,7 @@ vim.api.nvim_create_autocmd("FileType", {
   group = group,
   callback = function()
     vim.api.nvim_exec_autocmds("User", { pattern = "SnacksInputEnter" })
+    autosave_blocked.snacks_input = true
     -- print("snacks input enter")
   end,
 })
@@ -83,18 +155,20 @@ vim.api.nvim_create_autocmd("BufLeave", {
   callback = function(opts)
     local ft = vim.bo[opts.buf].filetype
     if ft == "snacks_input" then
+      autosave_blocked.snacks_input = false
       vim.api.nvim_exec_autocmds("User", { pattern = "SnacksInputLeave" })
       -- print("snacks input leave")
     end
   end,
 })
 
--- Disable auto-save when entering a snacks_input buffer
+-- Disable auto-save when entering a snacks_picker_input buffer
 vim.api.nvim_create_autocmd("FileType", {
   pattern = "snacks_picker_input",
   group = group,
   callback = function()
     vim.api.nvim_exec_autocmds("User", { pattern = "SnacksPickerInputEnter" })
+    autosave_blocked.snacks_picker_input = true
     -- print("snacks picker input enter")
   end,
 })
@@ -106,6 +180,7 @@ vim.api.nvim_create_autocmd("BufLeave", {
   callback = function(opts)
     local ft = vim.bo[opts.buf].filetype
     if ft == "snacks_picker_input" then
+      autosave_blocked.snacks_picker_input = false
       vim.api.nvim_exec_autocmds("User", { pattern = "SnacksPickerInputLeave" })
       -- print("snacks picker input leave")
     end
@@ -155,7 +230,7 @@ return {
     "okuuva/auto-save.nvim",
     enabled = true,
     cmd = "ASToggle", -- optional for lazy loading on command
-    event = { "InsertLeave", "TextChanged" }, -- optional for lazy loading on trigger events
+    event = "VeryLazy", -- load early so the first window/buffer switch can autosave
     opts = {
       enabled = true, -- start auto-save when the plugin is loaded (i.e. when your package manager loads it)
       trigger_events = { -- See :h events
@@ -164,7 +239,15 @@ return {
         -- -- that's autoformatting stuff if on insert mode and following a tutorial
         -- -- Re-enabling this to only save if NOT in insert mode in the condition below
         -- immediate_save = { nil },
-        immediate_save = { "BufLeave", "FocusLost", "QuitPre", "VimSuspend" }, -- vim events that trigger an immediate save
+        immediate_save = { -- vim events that trigger an immediate save
+          "BufLeave",
+          "WinLeave",
+          "WinNewPre",
+          { "CmdlineEnter", pattern = { ":", "/", "\\?" } },
+          "FocusLost",
+          "QuitPre",
+          "VimSuspend",
+        },
         -- vim events that trigger a deferred save (saves after `debounce_delay`)
         defer_save = {
           "InsertLeave",
@@ -187,13 +270,28 @@ return {
       -- return false: if it's not ok to be saved
       -- if set to `nil` then no specific condition is applied
       condition = function(buf)
+        if
+          autosave_blocked.visual
+          or autosave_blocked.flash_jump
+          or autosave_blocked.snacks_input
+          or autosave_blocked.snacks_picker_input
+        then
+          return false
+        end
+
         -- Do not save when I'm in insert mode
-        -- Do NOT ADD VISUAL MODE HERE or the cancel_deferred_save wont' work
+        -- Do not add a direct visual mode check here or cancel_deferred_save won't work
         -- If I STAY in insert mode and switch to another app, like YouTube to
         -- take notes, the BufLeave or FocusLost immediate_save will be ignored
         -- and the save will not be triggered
         local mode = vim.fn.mode()
         if mode == "i" then
+          return false
+        end
+
+        -- Do not try to autosave prompt, terminal, file picker, or explorer buffers.
+        local buftype = vim.bo[buf].buftype
+        if buftype ~= "" then
           return false
         end
 
@@ -205,7 +303,13 @@ return {
         -- I make a change, and a SQL query executed
         -- Run `:set filetype?` on a dadbod query to make sure of the filetype
         local filetype = vim.bo[buf].filetype
-        if filetype == "harpoon" or filetype == "mysql" then
+        if
+          filetype == "harpoon"
+          or filetype == "mysql"
+          or filetype == "minifiles"
+          or filetype == "snacks_input"
+          or filetype == "snacks_picker_input"
+        then
           return false
         end
 
@@ -220,6 +324,9 @@ return {
       -- Do not execute autocmds when saving
       -- If you set noautocmd = true, autosave won't trigger an auto format
       -- https://github.com/okuuva/auto-save.nvim/issues/55
+      -- Keep this false so non-format save autocmds still run. Formatting is
+      -- handled explicitly by AutoSaveWritePre above because auto-save's writes
+      -- often happen inside non-nested autocmds where BufWritePre is skipped.
       noautocmd = false,
       lockmarks = false, -- lock marks when saving, see `:h lockmarks` for more details
       -- delay after which a pending save is executed (default 1000)

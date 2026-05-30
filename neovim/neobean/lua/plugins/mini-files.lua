@@ -372,6 +372,10 @@ return {
       -- To get this dir run :echo stdpath('data')
       -- ~/.local/share/neobean/mini.files/trash
       permanent_delete = false,
+      -- markdown-oxide v0.25.10 advertises file-operation filters with
+      -- `scheme = null`; Neovim decodes that as vim.NIL and mini.files crashes
+      -- while checking the scheme during synchronize().
+      lsp_timeout = 0,
     })
     return opts
   end,

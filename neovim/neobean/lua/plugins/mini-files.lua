@@ -30,6 +30,7 @@ local preview_blocklist_exts = {
   xlsx = true,
   txt = true,
   env = true,
+  pdf = true,
 }
 local function is_preview_blocked_path(path)
   if type(path) ~= "string" then
@@ -83,20 +84,33 @@ local function setup_conditional_preview(opts)
     disabled_preview.buf = nil
     disabled_preview.win = nil
   end
-  local function center_line(text, width)
-    local padding = math.max(math.floor((width - vim.fn.strdisplaywidth(text)) / 2), 0)
-    return string.rep(" ", padding) .. text
+  local function format_stat_time(time)
+    if not time or not time.sec then
+      return "Unavailable"
+    end
+    return os.date("%Y-%m-%d %H:%M:%S", time.sec)
+  end
+  local function wrap_line(text, width)
+    if width <= 0 then
+      return { text }
+    end
+    local lines = {}
+    local rest = text
+    while vim.fn.strdisplaywidth(rest) > width do
+      table.insert(lines, rest:sub(1, width))
+      rest = rest:sub(width + 1)
+    end
+    table.insert(lines, rest)
+    return lines
   end
   local function disabled_preview_lines(entry, width, height)
-    local name = entry.name or vim.fn.fnamemodify(entry.path, ":t")
-    local content = height <= 1 and { center_line("PREVIEW DISABLED", width) }
-      or height == 2 and { center_line("PREVIEW DISABLED", width), center_line(name, width) }
-      or {
-        "",
-        center_line("PREVIEW DISABLED", width),
-        "",
-        center_line(name, width),
-      }
+    local path = vim.fn.fnamemodify(entry.path, ":p")
+    local stat = vim.loop.fs_stat(path)
+    local content = {
+      "Modified: " .. format_stat_time(stat and stat.mtime),
+      "",
+    }
+    vim.list_extend(content, wrap_line(path, width))
     local lines = {}
     for _ = 1, math.max(math.floor((height - #content) / 2), 0) do
       table.insert(lines, "")
@@ -126,6 +140,8 @@ local function setup_conditional_preview(opts)
     local preview_config = vim.api.nvim_win_get_config(preview_win)
     local width = vim.api.nvim_win_get_width(preview_win)
     local height = vim.api.nvim_win_get_height(preview_win)
+    local lines = disabled_preview_lines(entry, width, height)
+    height = math.max(height, #lines)
     if not disabled_preview.buf or not vim.api.nvim_buf_is_valid(disabled_preview.buf) then
       disabled_preview.buf = vim.api.nvim_create_buf(false, true)
       vim.bo[disabled_preview.buf].bufhidden = "wipe"
@@ -134,7 +150,7 @@ local function setup_conditional_preview(opts)
       vim.bo[disabled_preview.buf].swapfile = false
     end
     vim.bo[disabled_preview.buf].modifiable = true
-    vim.api.nvim_buf_set_lines(disabled_preview.buf, 0, -1, false, disabled_preview_lines(entry, width, height))
+    vim.api.nvim_buf_set_lines(disabled_preview.buf, 0, -1, false, lines)
     vim.bo[disabled_preview.buf].modifiable = false
     local win_config = vim.tbl_deep_extend("force", preview_config, {
       focusable = false,

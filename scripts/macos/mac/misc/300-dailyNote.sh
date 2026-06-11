@@ -56,10 +56,12 @@ if [ "$mode" = "work" ]; then
   fi
   # shellcheck disable=SC1090
   source "$work_env_file"
+  main_repo_dir="$WORK_OBSIDIAN_DIR"
   main_note_dir="$WORK_DAILY_NOTE_DIR"
   kitty_sess_file="$WORK_DAILY_KITTY_SESSION_FILE"
   note_template="$work_note_template"
 else
+  main_repo_dir="$HOME/github/obsidian_main"
   main_note_dir="$HOME/github/obsidian_main/250-daily"
   kitty_sess_file="$HOME/github/dotfiles-latest/kitty/sessions/daily.kitty-session"
   note_template="$personal_note_template"
@@ -115,7 +117,7 @@ fi
 # The +cd below is used to change the :pwd within Neovim. I need to change it
 # when it starts so that I can search for tasks, video ideas, etc with snacks in
 # that directory
-launch_cmd="launch --title \"${note_name}\" /bin/zsh -i -c 'export MD_HEADING_BG=transparent; NVIM_APPNAME=neobean nvim +cd\\\ \"${main_note_dir}\" +norm\\\ G \"${full_path}\"'"
+launch_cmd="launch --title \"${note_name}\" /bin/zsh -i -c 'export MD_HEADING_BG=transparent; NVIM_APPNAME=neobean nvim +cd\\\ \"${main_repo_dir}\" +norm\\\ G \"${full_path}\"'"
 # launch_cmd="launch --title \"${note_name}\" /bin/zsh -i -c 'export MD_HEADING_BG=transparent; NVIM_APPNAME=neobean nvim +norm\\\ G \"${full_path}\"'"
 
 # Safely update the lines below the marker comments in the kitty session file

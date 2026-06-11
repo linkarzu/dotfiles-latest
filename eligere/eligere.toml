@@ -1,22 +1,22 @@
 # Filter the list of presented browser by the fact if a browser is already opened
-# More information: https://eligere.dev/docs/config/configuration/#useonlyrunningbrowsers
+# More information: https://github.com/RomanVolkov/eligere_app/tree/main/docs/config.md#useonlyrunningbrowsers
 useOnlyRunningBrowsers = false
 
 # Removing some tracking attributes from URLs
-# More information: https://eligere.dev/docs/config/configuration/#striptrackingattributes
+# More information: https://github.com/RomanVolkov/eligere_app/tree/main/docs/config.md#striptrackingattributes
 stripTrackingAttributes = true
 
 # Resolves the final URL that is hidden under shorten URL
-# More information and how to combine with other features: https://eligere.dev/docs/config/configuration/#expandShortenURLs
+# More information and how to combine with other features: https://github.com/RomanVolkov/eligere_app/tree/main/docs/config.md#expandShortenURLs
 # Disabled this as one of my SAML logins wasn't opening in the right browser
 expandShortenURLs = false
 
 # Number of seconds to make a browser the default one temporary
-# Mope information: https://eligere.dev/docs/config/configuration/#pinningseconds
+# Mope information: https://github.com/RomanVolkov/eligere_app/tree/main/docs/config.md#pinningseconds
 pinningSeconds = 30
 
 # Level of verbosity for .eligere.log for troubleshooting
-# More information: https://eligere.dev/docs/config/configuration/#loglevel
+# More information: https://github.com/RomanVolkov/eligere_app/tree/main/docs/config.md#loglevel
 logLevel = "warning"
 
 [[browsers]]
@@ -24,8 +24,8 @@ logLevel = "warning"
 name = "Safari"
 shortcut = "s"
 # Eligere can map all links for "apps" applications to this browser configuration.
-# Mor information: https://eligere.dev/docs/config/configuration/#apps---optional
-apps = ["Messages"]
+# Mor information: https://github.com/RomanVolkov/eligere_app/tree/main/docs/config.md#apps---optional
+apps = ["Messages", "Mail", "WhatsApp Web"]
 domains = ["apple.com"]
 
 [[browsers]]

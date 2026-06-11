@@ -3880,23 +3880,75 @@ local function insert_heading_and_date(level)
   -- vim.api.nvim_win_set_cursor(0, { row, #heading })
 end
 
+local personal_daily_note_dir = vim.fn.expand("~/github/obsidian_main/250-daily")
+
+local function normalize_daily_note_path(path)
+  if type(path) ~= "string" or path == "" then
+    return nil
+  end
+  local expanded = vim.fn.expand(path)
+  local resolved = vim.uv.fs_realpath(expanded)
+  return (resolved or vim.fs.normalize(expanded)):gsub("/$", "")
+end
+
+local function read_work_env_path(name)
+  if not name:match("^WORK_[A-Z0-9_]+$") then
+    return nil
+  end
+
+  local work_env_file = vim.fn.expand("~/github/dotfiles-private/work/work-env.sh")
+  if vim.fn.filereadable(work_env_file) == 0 then
+    return nil
+  end
+
+  local command = string.format(
+    "source %s >/dev/null 2>&1 && print -r -- ${%s}",
+    vim.fn.shellescape(work_env_file),
+    name
+  )
+  local output = vim.fn.systemlist({ "/bin/zsh", "-lc", command })
+  if vim.v.shell_error ~= 0 or not output[1] or output[1] == "" then
+    return nil
+  end
+
+  return normalize_daily_note_path(output[1])
+end
+
+local function is_inside_path(path, root)
+  local normalized_path = normalize_daily_note_path(path)
+  local normalized_root = normalize_daily_note_path(root)
+  if not normalized_path or not normalized_root then
+    return false
+  end
+  return normalized_path == normalized_root or vim.startswith(normalized_path, normalized_root .. "/")
+end
+
+local function daily_note_dir_for_gt()
+  local work_daily_note_dir = read_work_env_path("WORK_DAILY_NOTE_DIR")
+  local work_main_dir = read_work_env_path("WORK_MAIN_DIR")
+  local cwd = vim.fn.getcwd()
+  if work_daily_note_dir and (is_inside_path(cwd, work_daily_note_dir) or is_inside_path(cwd, work_main_dir)) then
+    return work_daily_note_dir
+  end
+  return personal_daily_note_dir
+end
+
 -- parse date line and generate file path components for the daily note
-local function parse_date_line(date_line)
-  local home = os.getenv("HOME")
+local function parse_date_line(date_line, daily_note_dir)
   local year, month, day, weekday = date_line:match("%[%[(%d+)%-(%d+)%-(%d+)%-(%w+)%]%]")
   if not (year and month and day and weekday) then
     print("No valid date found in the line")
     return nil
   end
   local month_abbr = os.date("%b", os.time({ year = year, month = month, day = day }))
-  local note_dir = string.format("%s/github/obsidian_main/250-daily/%s/%s-%s", home, year, month, month_abbr)
+  local note_dir = string.format("%s/%s/%s-%s", daily_note_dir or personal_daily_note_dir, year, month, month_abbr)
   local note_name = string.format("%s-%s-%s-%s.md", year, month, day, weekday)
   return note_dir, note_name
 end
 
 -- get the full path of the daily note
-local function get_daily_note_path(date_line)
-  local note_dir, note_name = parse_date_line(date_line)
+local function get_daily_note_path(date_line, daily_note_dir)
+  local note_dir, note_name = parse_date_line(date_line, daily_note_dir)
   if not note_dir or not note_name then
     return nil
   end
@@ -3907,8 +3959,8 @@ end
 -- Create or find a daily note based on a date line format and open it in Neovim
 -- This is used in obsidian markdown files that have the "Link to non-existent
 -- document" warning
-local function create_daily_note(date_line)
-  local full_path = get_daily_note_path(date_line)
+local function create_daily_note(date_line, daily_note_dir)
+  local full_path = get_daily_note_path(date_line, daily_note_dir)
   if not full_path then
     return
   end
@@ -3919,7 +3971,8 @@ local function create_daily_note(date_line)
   if vim.fn.filereadable(full_path) == 0 then
     local file = io.open(full_path, "w")
     if file then
-      file:write("# Contents\n\n<!-- toc -->\n\n- [Daily note](#daily-note)\n\n<!-- tocstop -->\n\n## Daily note\n")
+      local note_name = vim.fn.fnamemodify(full_path, ":t:r")
+      file:write(string.format("# %s\n\n## Daily Note\n\n", note_name))
       file:close()
       vim.cmd("edit " .. vim.fn.fnameescape(full_path))
       vim.cmd("bd!")
@@ -3936,12 +3989,12 @@ local function create_daily_note(date_line)
 end
 
 -- Function to switch to the daily note or create it if it does not exist
-local function switch_to_daily_note(date_line)
-  local full_path = get_daily_note_path(date_line)
+local function switch_to_daily_note(date_line, daily_note_dir)
+  local full_path = get_daily_note_path(date_line, daily_note_dir)
   if not full_path then
     return
   end
-  create_daily_note(date_line)
+  create_daily_note(date_line, daily_note_dir)
   vim.cmd("edit " .. vim.fn.fnameescape(full_path))
 end
 
@@ -3953,7 +4006,7 @@ end
 vim.keymap.set("n", "gt", function()
   local current_line = vim.api.nvim_get_current_line()
   local date_line = current_line:match("%[%[%d+%-%d+%-%d+%-%w+%]%]") or ("[[" .. os.date("%Y-%m-%d-%A") .. "]]")
-  switch_to_daily_note(date_line)
+  switch_to_daily_note(date_line, daily_note_dir_for_gt())
 end, { desc = "[P]Go to or create daily note" })
 
 -- These create the the markdown heading

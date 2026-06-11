@@ -2,6 +2,20 @@
 
 set -euo pipefail
 
+# NOTE: Reset after editing this file with this command in the terminal:
+# pkill -f 'kitty-quick-access.*--instance-group=bookmarks'
+#
+# The bookmark picker intentionally stays alive in the while loop below so QAT
+# can toggle quickly. Restarting those processes makes it load file changes.
+#
+# Add a bookmark set by putting multiple URLs on one tab-separated line in a
+# bookmarks.tsv file:
+# group name<TAB>https://first.example<TAB>https://second.example
+#
+# This script is for macOS and opens URLs with `open`. Linux usage will need a
+# different URL opener or desktop-specific handling, so you'll have to figure
+# that out
+
 bookmarks_files=(
   "$HOME/github/dotfiles-latest/bookmarks/bookmarks.tsv"
   "$HOME/github/dotfiles-private/bookmarks/bookmarks.tsv"
@@ -113,17 +127,26 @@ if [[ "${1:-}" == "--pick" ]]; then
       continue
     fi
 
-    IFS=$'\t' read -r _name url <<<"$selected"
+    bookmark_fields=()
+    urls=()
+    IFS=$'\t' read -r -a bookmark_fields <<<"$selected"
 
-    if [[ -z "${url:-}" ]]; then
-      echo "Invalid bookmark: $selected"
+    for url in "${bookmark_fields[@]:1}"; do
+      [[ -n "$url" ]] && urls+=("$url")
+    done
+
+    if [[ ${#urls[@]} -eq 0 ]]; then
+      echo "Invalid bookmark or set: $selected"
       read -r -p "Press enter to continue. "
       toggle_bookmarks_qat
       continue
     fi
 
     toggle_bookmarks_qat
-    open "$url"
+    for i in "${!urls[@]}"; do
+      open "${urls[$i]}"
+      [[ $i -lt $((${#urls[@]} - 1)) ]] && sleep 0.3
+    done
   done
 fi
 

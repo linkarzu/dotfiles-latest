@@ -5,10 +5,10 @@ gui:
     selectedLineBgColor:
       # - "#314154"
       - "#013e4a"
-# Keybindings
-keybinding:
-  universal:
-    quit: <esc>
+# # Keybindings
+# keybinding:
+#   universal:
+#     quit: <esc>
 os:
   # # This allows me to open Neovide when press "e" to edit a file in lazygit, it
   # # works when I'm inside neovim

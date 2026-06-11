@@ -8,7 +8,9 @@
       "/opt/homebrew/share/nvim": "allow",
       "/opt/homebrew/share/nvim/**": "allow",
       "/opt/homebrew/Cellar/neovim": "allow",
-      "/opt/homebrew/Cellar/neovim/**": "allow"
+      "/opt/homebrew/Cellar/neovim/**": "allow",
+      "/Library/Application Support/Blackmagic Design/DaVinci Resolve/Developer/Scripting": "allow",
+      "/Library/Application Support/Blackmagic Design/DaVinci Resolve/Developer/Scripting/**": "allow"
     }
   }
 }

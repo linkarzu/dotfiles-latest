@@ -153,13 +153,27 @@ esac
 case "$choice" in
 1 | 2)
   set_source_record_filter "cam-main" on
-  set_source_record_filter "zoom-main-keyboard-w-app" on
+  set_source_record_filter "zoom-main-keyboard-w-app" off
+  set_source_record_filter "zoom-main-keyboard" on
+  set_source_record_filter "main-screen-alone" on
   set_source_record_filter "cam-guest1-cam" off
+  set_source_record_filter "guests-all-notes-right-live" off
   ;;
 3 | 4)
   set_source_record_filter "cam-main" on
   set_source_record_filter "zoom-main-keyboard-w-app" off
+  set_source_record_filter "zoom-main-keyboard" off
+  set_source_record_filter "main-screen-alone" off
   set_source_record_filter "cam-guest1-cam" on
+  set_source_record_filter "guests-all-notes-right-live" off
+  ;;
+11)
+  set_source_record_filter "cam-main" on
+  set_source_record_filter "zoom-main-keyboard-w-app" off
+  set_source_record_filter "zoom-main-keyboard" on
+  set_source_record_filter "main-screen-alone" on
+  set_source_record_filter "cam-guest1-cam" off
+  set_source_record_filter "guests-all-notes-right-live" off
   ;;
 esac
 

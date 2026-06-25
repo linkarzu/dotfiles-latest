@@ -3,10 +3,10 @@ return {
   {
     "arnamak/stay-centered.nvim",
     enabled = vim.g.scrollback_mode ~= "neobean" and vim.g.simpler_scrollback ~= "deeznuts",
-    opts = function()
+    config = function()
       require("stay-centered").setup({
-        -- Add any configurations here, like skip_filetypes if needed
-        -- skip_filetypes = {"lua", "typescript"},
+        -- Snacks dashboard manages its own cursor placement, so don't recenter it.
+        skip_filetypes = { "snacks_dashboard" },
       })
       -- Define the keymap to toggle the stay-centered plugin
       -- I had to move this keymap here inside, otherwise the plugin started

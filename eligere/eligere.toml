@@ -29,9 +29,15 @@ apps = ["Messages", "Mail", "WhatsApp Web"]
 domains = ["apple.com"]
 
 [[browsers]]
-default  = true
+default  = false
 name     = "Brave Browser"
 shortcut = "1"
+
+[[browsers]]
+default  = true
+name     = "Helium"
+shortcut = "5"
+
 
 [[browsers]]
 name     = "Google Chrome"
@@ -48,9 +54,9 @@ domains  = [
   "service-now.com",
   "sharepoint.com",
 ]
-  
+
 [[browsers]]
-name     = "Vivaldi"
+name     = "Brave Browser"
 shortcut = "4"
 domains  = [
   "instructure.com",

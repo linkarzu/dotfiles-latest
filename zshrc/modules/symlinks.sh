@@ -18,6 +18,7 @@ mkdir -p ~/.config/sesh
 mkdir -p ~/.config/eligere
 mkdir -p ~/.config/aerospace
 mkdir -p ~/.config/skhd
+mkdir -p ~/.config/emacs
 
 # Create the symlinks I normally use
 # ~/.config dir holds nvim, neofetch, alacritty configs
@@ -111,6 +112,7 @@ create_symlink ~/github/dotfiles-latest/aerospace ~/.config/aerospace
 create_symlink ~/github/dotfiles-latest/kitty ~/.config/kitty
 create_symlink ~/github/dotfiles-latest/opencode ~/.config/opencode
 create_symlink ~/github/dotfiles-latest/skhd ~/.config/skhd
+create_symlink ~/github/dotfiles-latest/emacs ~/.config/emacs
 
 # # This is on the other repo where I keep my ssh config files
 # I commented this as I don't have access to this repo in all the hosts

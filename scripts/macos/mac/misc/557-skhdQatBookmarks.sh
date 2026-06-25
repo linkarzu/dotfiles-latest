@@ -145,7 +145,7 @@ if [[ "${1:-}" == "--pick" ]]; then
     toggle_bookmarks_qat
     for i in "${!urls[@]}"; do
       open "${urls[$i]}"
-      [[ $i -lt $((${#urls[@]} - 1)) ]] && sleep 0.3
+      [[ $i -lt $((${#urls[@]} - 1)) ]] && sleep 1
     done
   done
 fi

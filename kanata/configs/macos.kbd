@@ -288,7 +288,7 @@
   ;; lineid_obs_switchscene_main
   (spc o m) (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py main-1-guest-live --no-auth") $chord-time first-release ()
   ;; lineid_obs_switchscene_guest
-  (spc o i) (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py guests-all-notes-right-live --no-auth") $chord-time first-release ()
+  (spc o i) (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py all-guests-1guest-live --no-auth") $chord-time first-release ()
   ;; lineid_obs_switchscene_guest1
   (spc o a) (cmd sudo -u linkarzu bash -c "export PATH=/opt/homebrew/bin:$PATH && python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py guest1-1guest-live --no-auth") $chord-time first-release ()
   ;; lineid_obs_switchscene_guest2

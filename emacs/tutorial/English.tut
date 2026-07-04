@@ -1,4 +1,4 @@
-9746
+14650
 50
 Emacs tutorial.  See end for copying conditions.
 
@@ -332,6 +332,7 @@ screen column.
 
 >> Insert text until you reach the right margin, and keep on inserting.
    You'll see a continuation line appear.
+insert text here, ligma bballs, chat is usesless, they don't really help me, richad stallman, if you
 
 >> Use <DEL>s to delete the text until the line fits on one screen
    line again.  The continuation line goes away.
@@ -355,6 +356,7 @@ key does more than simply inserting the relevant character) "electric".
 
 >> Here is an example of <Return> being electric.
    Type <Return> at the end of this line.
+   
 
 You should see that after inserting the Newline, Emacs inserts spaces
 so that the cursor moves under the "T" of "Type".
@@ -364,6 +366,7 @@ this includes text characters.  Repeating a text character inserts
 it several times.
 
 >> Try that now -- type C-u 8 * to insert ********.
+********
 
 You've now learned the most basic way of typing something in
 Emacs and correcting errors.  You can delete by words or lines
@@ -371,7 +374,7 @@ as well.  Here is a summary of the delete operations:
 
 	<DEL>        Delete the character just before the cursor
 	C-d   	     Delete the next character after the cursor
-
+testing this below
 	M-<DEL>      Kill the word immediately before the cursor
 	M-d	     Kill the next word after the cursor
 

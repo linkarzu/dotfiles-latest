@@ -39,17 +39,17 @@ linkarzu_color06=#05ff23
 
 # Colors to the right from https://www.colorhexa.com
 # Terminal and neovim background
-linkarzu_color10=#0D1116
+linkarzu_color10=#0a0a0a
 # Lualine across, 1 color to the right of background
-linkarzu_color17=#141b22
+linkarzu_color17=#141414
 # Markdown codeblock, 2 to the right of background
-linkarzu_color07=#141b22
+linkarzu_color07=#1f1f1f
 # Background of inactive tmux pane, 3 to the right of background
-linkarzu_color25=#232e3b
+linkarzu_color25=#292929
 # line across cursor, 5 to the right of background
-linkarzu_color13=#232e3b
+linkarzu_color13=#3d3d3d
 # Tmux inactive windows, 7 colors to the right of background
-linkarzu_color15=#013e4a
+linkarzu_color15=#525252
 
 # Comments
 linkarzu_color09=#b7bfce

@@ -37,6 +37,16 @@ fi
 VALIDATED_MIC_NAME=$(echo "$MAIN_MIC_NAME" | iconv -f UTF-8 -t UTF-8//IGNORE)
 # echo "VALIDATED_MIC_NAME=$VALIDATED_MIC_NAME" >>/tmp/mic.sh.log
 
+# Show the first word of the current output device below the mic label.
+CURRENT_OUTPUT=$(SwitchAudioSource -t output -c)
+OUTPUT_NAME=$(echo "$CURRENT_OUTPUT" | awk '{print $1}')
+VALIDATED_OUTPUT_NAME=$(echo "$OUTPUT_NAME" | iconv -f UTF-8 -t UTF-8//IGNORE)
+if [[ "$OUTPUT_NAME" != "$VALIDATED_OUTPUT_NAME" || -z "$OUTPUT_NAME" ]]; then
+  OUTPUT_LABEL=""
+else
+  OUTPUT_LABEL="$VALIDATED_OUTPUT_NAME"
+fi
+
 # I'll be using this in ~/github/dotfiles-latest/scripts/macos/mac/misc/200-micMute.sh
 # That file will have something like "Yeti" or "AirPods"
 echo "$VALIDATED_MIC_NAME" >"$MIC_NAME_FILE"
@@ -47,6 +57,10 @@ MIC_VOLUME=$(osascript -e 'input volume of (get volume settings)')
 
 MIC_LABEL="$MAIN_MIC_NAME-$MIC_VOLUME"
 # echo "MIC_LABEL=$MIC_LABEL" >>/tmp/mic.sh.log
+
+# The output label is a zero-width overlay item, so move it left from the end of
+# the mic label. These values match the current 12pt/8pt monospace-ish fonts.
+OUTPUT_PADDING_LEFT=$((-((${#MIC_LABEL} * 7 + ${#OUTPUT_LABEL} * 5) / 2 + 5)))
 
 # This comes from an exported variable
 # echo "MIC_LEVEL=$MIC_LEVEL" >>/tmp/mic.sh.log
@@ -79,3 +93,5 @@ else
     fi
   fi
 fi
+
+sketchybar -m --set mic.output label="$OUTPUT_LABEL" padding_left="$OUTPUT_PADDING_LEFT"

@@ -392,7 +392,7 @@ yabai -m rule --add app="^Logic Pro$" space=desk7
 yabai -m rule --add app="^VirtualBox$" space=desk6
 yabai -m rule --add app="^Electron$" space=desk6
 
-yabai -m rule --add app="^Discord$" space="$non_stream_space"
+# yabai -m rule --add app="^Discord$" space="$non_stream_space"
 yabai -m rule --add app="^Element$" space="$non_stream_space"
 yabai -m rule --add app="^WhatsApp Web$" space="$non_stream_space"
 yabai -m rule --add app="^OBS Studio$" space="$non_stream_space"

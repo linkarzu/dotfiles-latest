@@ -13,3 +13,5 @@
 (load-theme 'tango-dark)
 
 (setq inhibit-startup-message t)
+
+(setq mouse-drag-copy-region t)

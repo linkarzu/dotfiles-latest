@@ -271,10 +271,16 @@ return {
       -- if set to `nil` then no specific condition is applied
       condition = function(buf)
         if
-          autosave_blocked.visual
-          or autosave_blocked.flash_jump
-          or autosave_blocked.snacks_input
-          or autosave_blocked.snacks_picker_input
+          autosave_blocked.visual or autosave_blocked.flash_jump
+          -- -- Do not globally block autosave while a Snacks input/picker input is
+          -- -- active. Opening Snacks windows, like the <leader>tt todo picker,
+          -- -- can set these flags before auto-save writes the real file we just
+          -- -- left. The filetype checks below still prevent auto-save from
+          -- -- writing the Snacks input buffers themselves. Re-enable these two
+          -- -- lines only if you specifically need all autosaves paused while
+          -- -- typing inside Snacks input UIs.
+          -- or autosave_blocked.snacks_input
+          -- or autosave_blocked.snacks_picker_input
         then
           return false
         end

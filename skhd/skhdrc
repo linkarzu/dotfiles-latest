@@ -3,7 +3,8 @@
 # Applications
 shift + ctrl - f1 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" 'DaVinci Resolve'
 shift + ctrl - f2 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" 'Microsoft Word'
-shift + ctrl - f3 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" 'Element'
+# shift + ctrl - f3 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" 'Element'
+shift + ctrl - f3 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" 'Emacs'
 shift + ctrl - f4 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" Canva
 shift + ctrl - f5 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" 'Microsoft Teams'
 shift + ctrl - f6 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" YouTube
@@ -21,16 +22,19 @@ shift + ctrl - f16 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-sw
 # shift + ctrl - f17 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" Spotify
 shift + ctrl - f17 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" GNS3
 shift + ctrl - f18 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" kitty
-shift + ctrl - f19 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" 'Brave Browser'
+# shift + ctrl - f19 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" 'Brave Browser'
+shift + ctrl - f19 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" 'Helium'
 ctrl + alt - f18 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" YouTubeStudio
 ctrl + alt - f12 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" ChatGPT
 ctrl + alt - f13 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" 'System Settings'
 
-ctrl + alt - f1 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" zoom.us
+# ctrl + alt - f1 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" zoom.us
+ctrl + alt - f1 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" Element
 ctrl + alt - f2 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" Notes
 ctrl + alt - f3 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" Calendar
 ctrl + alt - f4 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" Preview
-ctrl + alt - f5 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" Vivaldi
+# ctrl + alt - f5 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" Vivaldi
+ctrl + alt - f5 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" 'Brave Browser'
 ctrl + alt - f6 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" Ghostty
 ctrl + alt - f7 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" Mail
 ctrl + alt - f8 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" 'Windows App'
@@ -54,7 +58,8 @@ ctrl + alt - f19 : $HOME/github/dotfiles-latest/scripts/macos/mac/misc/550-skhdS
 ctrl + cmd - f2 : $HOME/github/dotfiles-latest/scripts/macos/mac/misc/550-skhdSession.sh "$HOME/github/dotfiles-latest/kitty/sessions/home.kitty-session"
 ctrl + cmd - f3 : $HOME/github/dotfiles-latest/scripts/macos/mac/misc/550-skhdSession.sh "$HOME/github/dotfiles-latest/kitty/sessions/dotfiles.kitty-session"
 ctrl + cmd - f5 : $HOME/github/dotfiles-latest/scripts/macos/mac/misc/550-skhdSession.sh "$HOME/github/dotfiles-latest/kitty/sessions/blogpost.kitty-session"
-ctrl + cmd - f7 : /Applications/kitty.app/Contents/MacOS/kitty @ --to "unix:$($HOME/github/dotfiles-latest/scripts/macos/mac/misc/549-kittyMainSocket.sh)" action launch_zoxide_session
+ctrl + cmd - f7 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/558-skhdQatZoxide.sh"
+# ctrl + cmd - f7 : /Applications/kitty.app/Contents/MacOS/kitty @ --to "unix:$($HOME/github/dotfiles-latest/scripts/macos/mac/misc/549-kittyMainSocket.sh)" action launch_zoxide_session
 ctrl + cmd - f19 : $HOME/github/dotfiles-latest/scripts/macos/mac/misc/551-skhdDaily.sh
 # cmd + alt - f1 : $HOME/github/dotfiles-latest/scripts/macos/mac/misc/550-skhdSession.sh "$HOME/github/dotfiles-latest/kitty/sessions/skitty.kitty-session"
 cmd + alt - f1 : $HOME/github/dotfiles-latest/scripts/macos/mac/misc/552-skhdDailyWork.sh
@@ -93,18 +98,20 @@ shift + cmd - f11 : open "btt://execute_assigned_actions_for_trigger/?uuid=92B63
 
 # OBS scenes
 # lineid_obs_switchscene_cam_guest1
-shift + alt - f1 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py cam-full-guest1 --no-auth"
-shift + alt - f2 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py cam-full-guest2 --no-auth"
+shift + alt - f1 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py  --no-auth"
+# lineid_obs_switchscene_cam_guest2
+shift + alt - f2 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py  --no-auth"
 shift + alt - f3 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py cam-full-guest3 --no-auth"
 shift + alt - f4 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py cam-full-guest4 --no-auth"
 # shift + alt - f5 : 
 # shift + alt - f6 : 
 # shift + alt - f7 : 
 # lineid_obs_switchscene_guest
-shift + alt - f8 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py guests-all-notes-right-live --no-auth"
+shift + alt - f8 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py all-guests-live --no-auth"
 # lineid_obs_switchscene_guest1
-shift + alt - f11 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py guest1-1guest-live --no-auth"
-shift + alt - f12 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py guest2-4guest-live --no-auth"
+shift + alt - f11 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py guest1-0guest --no-auth"
+# lineid_obs_switchscene_guest2
+shift + alt - f12 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py  --no-auth"
 shift + alt - f13 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py guest3-4guest-live --no-auth"
 shift + alt - f16 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py guest4-4guest-live --no-auth"
 # shift + alt - f17 : 
@@ -114,17 +121,18 @@ shift + alt - f16 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/ma
 # shift + cmd - f16 : 
 # shift + cmd - f17 : 
 # shift + cmd - f18 : 
-shift + cmd - f19 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py zoom-main-keyboard --no-auth"
+shift + cmd - f19 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py main-keyboard --no-auth"
 shift + alt + ctrl - f1 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py zoom-main-keyboard-w-app --no-auth"
 # shift + alt + ctrl - f2 : 
 # shift + alt + ctrl - f3 : 
 shift + alt + ctrl - f4 : "$HOME/github/dotfiles-private/scripts/macos/mac/obs/toggle-effect-filter/py/toggle-guest-shaders.sh"
 # shift + alt + ctrl - f5 : 
 # lineid_obs_switchscene_main
-shift + alt + ctrl - f6 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py main-1-guest-live --no-auth"
-shift + alt + ctrl - f7 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py cam-main --no-auth"
+shift + alt + ctrl - f6 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py screen-main-live --no-auth"
+shift + alt + ctrl - f7 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py cam-main-chat --no-auth"
 # shift + alt + ctrl - f8 : 
 # shift + alt + ctrl - f9 : 
+shift + ctrl + alt + cmd - z : /bin/zsh -c "python3 $HOME/github/dotfiles-private/scripts/macos/mac/obs/censor-beep/py/play-censor-beep.py --input 91-censor-beep"
 
 # Yabai manage
 shift + alt + ctrl - f10 : yabai -m window --close

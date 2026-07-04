@@ -75,7 +75,36 @@ else
   ISPS_STATUS="${BACKGATEWAY_DISPLAY}$BACKUPISP_ARROW"
 fi
 
+DOWNLOAD_LABEL=" ${RECEIVE_SPEED_HUMAN}"
+UPLOAD_LABEL=" ${TRANSMIT_SPEED_HUMAN}"
+
+# The speed labels share one column. The download item owns the width and the
+# zero-width upload item moves back to the start of that reserved column.
+SPEED_CHAR_WIDTH=5
+DOWNLOAD_LABEL_WIDTH=$((${#DOWNLOAD_LABEL} * SPEED_CHAR_WIDTH))
+UPLOAD_LABEL_WIDTH=$((${#UPLOAD_LABEL} * SPEED_CHAR_WIDTH))
+SPEED_COLUMN_WIDTH=$DOWNLOAD_LABEL_WIDTH
+if [ $UPLOAD_LABEL_WIDTH -gt $SPEED_COLUMN_WIDTH ]; then
+  SPEED_COLUMN_WIDTH=$UPLOAD_LABEL_WIDTH
+fi
+
+# Increase this value to add more space between the speed column and the next item.
+SPEED_COLUMN_PADDING_RIGHT=5
+
+DOWNLOAD_PADDING_RIGHT=$((SPEED_COLUMN_WIDTH - DOWNLOAD_LABEL_WIDTH + SPEED_COLUMN_PADDING_RIGHT))
+UPLOAD_PADDING_LEFT=$((-(SPEED_COLUMN_WIDTH + SPEED_COLUMN_PADDING_RIGHT)))
+
 sketchybar -m --set mikrotik \
-  label="${ISPS_STATUS}  ${RECEIVE_SPEED_HUMAN}  ${TRANSMIT_SPEED_HUMAN}" \
+  label="${ISPS_STATUS}" \
   icon= icon.color="$COLOR" \
+  label.color="$COLOR" \
+  \
+  --set mikrotik.download \
+  label="$DOWNLOAD_LABEL" \
+  padding_right="$DOWNLOAD_PADDING_RIGHT" \
+  label.color="$COLOR" \
+  \
+  --set mikrotik.upload \
+  label="$UPLOAD_LABEL" \
+  padding_left="$UPLOAD_PADDING_LEFT" \
   label.color="$COLOR"

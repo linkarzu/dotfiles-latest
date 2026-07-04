@@ -30,43 +30,49 @@ set_source_record_filter() {
 
 # Determine new scene name
 case "$choice" in
+# echo "1 - Solo"
 1)
   main_scene="main-screen"
   guest_scene="guests-solo"
   guest_1="guest1-0guest"
   ;;
+# echo "2 - Solo livestream"
 2)
-  main_scene="main-screen-live"
-  guest_scene="guests-solo-live"
+  main_scene="screen-main-live"
+  guest_scene="all-guests-live"
   guest_1="guest1-0guest"
   ;;
+# echo "3 - 1 guest"
 3)
   main_scene="main-1-guest"
   guest_scene="guests-all-notes-right"
   guest_1="guest1-1guest"
   guest_1_full="cam-full-guest1"
   ;;
+# echo "4 - 1 guest livestream"
 4)
   main_scene="main-1-guest-live"
-  guest_scene="guests-all-notes-right-live"
+  guest_scene="all-guests-1guest-live"
   guest_1="guest1-1guest-live"
   guest_1_full="cam-full-guest1"
   ;;
+# echo "5 - 2 guest"
 5)
   main_scene="main-2-guest"
   guest_scene="guests2-all-notes-right"
-  guest_1="guest1-2guest"
-  guest_2="guest2-2guest"
+  guest_1="screen-guest1"
+  guest_2="screen-guest2"
   guest_1_full="cam-full-guest1"
   guest_2_full="cam-full-guest2"
   ;;
+# echo "6 - 2 guest livestream"
 6)
-  main_scene="main-2-guest-live"
-  guest_scene="guests2-all-notes-right-live"
-  guest_1="guest1-2guest-live"
-  guest_2="guest2-2guest-live"
-  guest_1_full="cam-full-guest1"
-  guest_2_full="cam-full-guest2"
+  main_scene="screen-main-live"
+  guest_scene="all-guests-live"
+  guest_1="screen-guest1-live"
+  guest_2="screen-guest2-live"
+  guest_1_full="cam-guest1-live"
+  guest_2_full="cam-guest2-live"
   ;;
 7)
   main_scene="main-3-guest"
@@ -151,29 +157,37 @@ case "$choice" in
 esac
 
 case "$choice" in
+# Solo
 1 | 2)
-  set_source_record_filter "cam-main" on
-  set_source_record_filter "zoom-main-keyboard-w-app" off
-  set_source_record_filter "zoom-main-keyboard" on
-  set_source_record_filter "main-screen-alone" on
-  set_source_record_filter "cam-guest1-cam" off
-  set_source_record_filter "guests-all-notes-right-live" off
+  set_source_record_filter "cam-guest1-live" off
+  set_source_record_filter "cam-guest2-live" off
+  set_source_record_filter "cam-guest3-live" off
+  set_source_record_filter "cam-guest4-live" off
+  set_source_record_filter "cam-main-chat" on
   ;;
+# 1 guest
 3 | 4)
-  set_source_record_filter "cam-main" on
-  set_source_record_filter "zoom-main-keyboard-w-app" off
-  set_source_record_filter "zoom-main-keyboard" off
-  set_source_record_filter "main-screen-alone" off
-  set_source_record_filter "cam-guest1-cam" on
-  set_source_record_filter "guests-all-notes-right-live" off
+  set_source_record_filter "cam-guest1-live" on
+  set_source_record_filter "cam-guest2-live" off
+  set_source_record_filter "cam-guest3-live" off
+  set_source_record_filter "cam-guest4-live" off
+  set_source_record_filter "cam-main-chat" on
+  ;;
+# echo "5 - 2 guest"
+# echo "6 - 2 guest livestream"
+5 | 6)
+  set_source_record_filter "cam-guest1-live" on
+  set_source_record_filter "cam-guest2-live" on
+  set_source_record_filter "cam-guest3-live" off
+  set_source_record_filter "cam-guest4-live" off
+  set_source_record_filter "cam-main-chat" on
   ;;
 11)
-  set_source_record_filter "cam-main" on
-  set_source_record_filter "zoom-main-keyboard-w-app" off
-  set_source_record_filter "zoom-main-keyboard" on
-  set_source_record_filter "main-screen-alone" on
-  set_source_record_filter "cam-guest1-cam" off
-  set_source_record_filter "guests-all-notes-right-live" off
+  set_source_record_filter "cam-guest1-live" off
+  set_source_record_filter "cam-guest2-live" off
+  set_source_record_filter "cam-guest3-live" off
+  set_source_record_filter "cam-guest4-live" off
+  set_source_record_filter "cam-main-chat" off
   ;;
 esac
 

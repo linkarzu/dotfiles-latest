@@ -73,6 +73,13 @@ create_symlink() {
     fi
   fi
 
+  # Force mode: overwrite any existing real target instead of backing it up.
+  # Enabled by exporting DOTFILES_SYMLINK_FORCE=1 (the macOS bootstrap does this).
+  if [ "${DOTFILES_SYMLINK_FORCE:-0}" = "1" ] && [ -e "$target_path" ] && [ ! -L "$target_path" ]; then
+    echo -e "${boldYellow}Force-overwriting existing '$target_path' (no backup)${noColor}"
+    rm -rf "$target_path"
+  fi
+
   # Backup the target if it's not a symlink and backup is needed
   if [ -e "$target_path" ] && [ ! -L "$target_path" ] && [ "$backup_needed" = true ]; then
     local backup_path="${target_path}_backup_$(date +%Y%m%d%H%M%S)"

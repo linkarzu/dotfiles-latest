@@ -35,9 +35,8 @@ fi
 
 export PATH="$HOME/.local/bin:$PATH"
 export PATH="$HOME/.npm-global/bin:$PATH"
-export PATH="/home/bulutcan/.npm-global/bin:$PATH"
 
-# fzf
+# fzf display defaults (shared across OSes)
 export FZF_DEFAULT_OPTS="
   --height=40%
   --layout=reverse
@@ -45,18 +44,11 @@ export FZF_DEFAULT_OPTS="
   --inline-info
 "
 
-# zoxide
+# zoxide fzf window options
+# NOTE: zoxide itself is initialized per-OS in zshrc-macos.sh / zshrc-linux.sh,
+# and SSH keys are added there too, so no init/ssh-agent lines live here.
 export _ZO_FZF_OPTS="
   --height=40%
   --layout=reverse
   --border
 "
-
-eval "$(zoxide init zsh --cmd cd)"
-
-# Dotfiles Automation
-alias dot-save='/home/bulutcan/dotfiles/save.sh'
-
-# Ensure SSH Agent is active
-eval $(ssh-agent -s) > /dev/null
-ssh-add ~/.ssh/id_ed25519 > /dev/null 2>&1

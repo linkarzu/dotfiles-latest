@@ -1,0 +1,77 @@
+# Brewfile — macOS package manifest for dotfiles-latest
+# Applied by scripts/macos/mac/bootstrap.sh via: brew bundle --file=brew/Brewfile
+#
+# This mirrors the pacman list in scripts/linux/arch/bootstrap.sh, adapted to
+# Homebrew. Linux-only entries (base-devel, gcc/clang/lldb, wl-clipboard,
+# xclip, openssh, noto-fonts, ttf-*) are dropped: on macOS the compiler
+# toolchain comes from the Xcode Command Line Tools, and Nerd Fonts are
+# installed as casks below.
+
+# ---------------------------------------------------------------------------
+# Core CLI tools
+# ---------------------------------------------------------------------------
+brew "neovim"
+brew "tmux"
+brew "fzf"
+brew "zoxide"
+brew "ripgrep"
+brew "fd"
+brew "bat"
+brew "eza"
+brew "git"
+brew "git-delta"
+brew "gh"
+brew "jq"
+brew "lazygit"
+brew "sesh"
+brew "starship"
+brew "yazi"
+brew "fastfetch"
+brew "btop"
+brew "wget"
+brew "coreutils"
+
+# ---------------------------------------------------------------------------
+# Languages / toolchains
+# ---------------------------------------------------------------------------
+brew "node"
+brew "go"
+brew "rustup"
+brew "python"
+brew "lua"
+brew "luarocks"
+brew "make"
+brew "cmake"
+
+# ---------------------------------------------------------------------------
+# Formatters / linters (used by nvim + shell)
+# ---------------------------------------------------------------------------
+brew "stylua"
+brew "shfmt"
+brew "shellcheck"
+
+# ---------------------------------------------------------------------------
+# Shell (zsh + plugins sourced from $(brew --prefix) in zshrc-macos.sh)
+# ---------------------------------------------------------------------------
+brew "zsh"
+brew "zsh-vi-mode"
+brew "zsh-autosuggestions"
+
+# ---------------------------------------------------------------------------
+# GUI apps + Nerd Fonts (casks)
+# ---------------------------------------------------------------------------
+cask "ghostty"
+cask "kitty"
+cask "visual-studio-code"
+cask "neovide"
+cask "font-jetbrains-mono-nerd-font"
+cask "font-meslo-lg-nerd-font"
+
+# ---------------------------------------------------------------------------
+# Optional — mirrors optional_pacman_packages in the Arch bootstrap.
+# Uncomment what you want; kept off by default to keep installs lean.
+# ---------------------------------------------------------------------------
+# brew "kubernetes-cli"
+# brew "helm"
+# brew "kubectx"
+# cask "docker"

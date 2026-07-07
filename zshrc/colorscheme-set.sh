@@ -372,10 +372,6 @@ if [ "$UPDATED" = true ]; then
   # Replace the contents of active-colorscheme.sh
   cp "$colorscheme_file" "$active_file"
 
-  # I want to copy the colorscheme_file to my neobean config for folks that
-  # don't use my colorscheme selector
-  cp "$colorscheme_file" "$HOME/github/dotfiles-latest/neovim/neobean/lua/config/active-colorscheme.sh"
-
   # Source the active colorscheme to load variables
   source "$active_file"
 
@@ -384,8 +380,8 @@ if [ "$UPDATED" = true ]; then
   # tmux source-file ~/.tmux.conf
   # echo "Tmux colors set and tmux configuration reloaded."
 
-  # Set sketchybar colors
-  sketchybar --reload
+  # Set sketchybar colors (only if sketchybar is installed)
+  command -v sketchybar &>/dev/null && sketchybar --reload
 
   generate_starship_config
 

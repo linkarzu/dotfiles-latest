@@ -11,6 +11,7 @@
 # Core CLI tools
 # ---------------------------------------------------------------------------
 brew "neovim"
+brew "tree-sitter-cli"
 brew "tmux"
 brew "fzf"
 brew "zoxide"
@@ -63,7 +64,7 @@ brew "zsh-autosuggestions"
 cask "ghostty"
 cask "kitty"
 cask "visual-studio-code"
-cask "neovide"
+cask "neovide-app"
 cask "font-jetbrains-mono-nerd-font"
 cask "font-meslo-lg-nerd-font"
 

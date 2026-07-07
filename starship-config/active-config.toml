@@ -1,66 +1,101 @@
-# This will show the time on a 2nd line
-# Add a "\" at the end of an item, if you want the next item to show on the same line
+"$schema" = 'https://starship.rs/config-schema.json'
+
 format = """
-$username\
-$hostname\
+[░▒▓](#a3aed2)\
+$os\
+[](bg:#769ff0 fg:#a3aed2)\
+$directory\
+[](fg:#769ff0 bg:#394260)\
+$git_branch\
+$git_status\
+[](fg:#394260 bg:#212736)\
+$nodejs\
+$bun\
+$rust\
+$golang\
+$php\
+[](fg:#212736 bg:#1d2230)\
 $time\
-$all\
-$directory
-$character
-"""
-
-[character]
-success_symbol = '[❯❯❯❯](#37f499 bold)'
-error_symbol = '[XXXX](#f16c75 bold)'
-vicmd_symbol = '[❮❮❮❮](#987afb bold)'
-
-[battery]
-disabled = true
-
-[gcloud]
-disabled = true
-
-[time]
-style = '#987afb bold'
-disabled = false
-format = '[\[$time\]]($style) '
-# https://docs.rs/chrono/0.4.7/chrono/format/strftime/index.html
-# %T	00:34:60	Hour-minute-second format. Same to %H:%M:%S.
-# time_format = '%y/%m/%d %T'
-time_format = '%y/%m/%d'
-
-# For this to show up correctly, you need to have cluster access
-# So your ~/.kube/config needs to be configured on the local machine
-[kubernetes]
-disabled = true
-# context = user@cluster
-# format = '[$user@$cluster \($namespace\)](#9ad900) '
-# format = '[$cluster \($namespace\)](#9ad900) '
-# Apply separate colors for cluster and namespace
-format = '[$cluster](#9ad900 bold) [$namespace](#37f499 bold) '
-# format = 'on [⛵ ($user on )($cluster in )$context \($namespace\)](dimmed green) '
-# Only dirs that have this file inside will show the kubernetes prompt
-# detect_files = ['900-detectkubernetes.sh']
-# detect_env_vars = ['STAR_USE_KUBE']
-# contexts = [
-#   { context_pattern = "dev.local.cluster.k8s", style = "green", symbol = "💔 " },
-# ]
-
-[username]
-style_user = '#987afb bold'
-style_root = 'white bold'
-format = '[$user]($style).@.'
-show_always = true
-
-[hostname]
-ssh_only = true
-format = '(white bold)[$hostname](#37f499 bold)'
+[ ](fg:#1d2230)\
+\n$character"""
 
 [directory]
-style = '#04d1f9 bold'
-truncation_length = 0
-truncate_to_repo = false
+style = "fg:#e3e5e5 bg:#769ff0"
+format = "[ $path ]($style)"
+truncation_length = 3
+truncation_symbol = "…/"
 
-[ruby]
-detect_variables = []
-detect_files = ['Gemfile', '.ruby-version']
+[directory.substitutions]
+"Documents" = "󰈙 "
+"Downloads" = " "
+"Music" = " "
+"Pictures" = " "
+
+[git_branch]
+symbol = ""
+style = "bg:#394260"
+format = '[[ $symbol $branch ](fg:#769ff0 bg:#394260)]($style)'
+
+[git_status]
+style = "bg:#394260"
+format = '[[($all_status$ahead_behind )](fg:#769ff0 bg:#394260)]($style)'
+
+[nodejs]
+symbol = ""
+style = "bg:#212736"
+format = '[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)'
+
+[bun]
+symbol = ""
+style = "bg:#212736"
+format = '[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)'
+
+[rust]
+symbol = ""
+style = "bg:#212736"
+format = '[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)'
+
+[golang]
+symbol = ""
+style = "bg:#212736"
+format = '[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)'
+
+[php]
+symbol = ""
+style = "bg:#212736"
+format = '[[ $symbol ($version) ](fg:#769ff0 bg:#212736)]($style)'
+
+[time]
+disabled = false
+time_format = "%R" # Hour:Minute Format
+style = "bg:#1d2230"
+format = '[[  $time ](fg:#a0a9cb bg:#1d2230)]($style)'
+
+[os]
+style = "bg:#a3aed2 fg:#090c0c"
+format = "[ $symbol ]($style)"
+disabled = false
+
+[os.symbols]
+Windows = "󰍲"
+Ubuntu = "󰕈"
+SUSE = ""
+Raspbian = "󰐿"
+Mint = "󰣭"
+Macos = "󰀵"
+Manjaro = ""
+Linux = "󰌽"
+Gentoo = "󰣨"
+Fedora = "󰣛"
+Alpine = ""
+Amazon = ""
+Android = ""
+AOSC = ""
+Arch = "󰣇"
+Artix = "󰣇"
+EndeavourOS = ""
+CentOS = ""
+Debian = "󰣚"
+Redhat = "󱄛"
+RedHatEnterprise = "󱄛"
+Pop = ""

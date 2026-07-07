@@ -106,33 +106,6 @@ if command -v bat &>/dev/null; then
 fi
 
 #############################################################################
-#                        zsh-vi-mode
-#############################################################################
-# https://github.com/jeffreytse/zsh-vi-mode
-if [ -f "$(brew --prefix)/opt/zsh-vi-mode/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh" ]; then
-  source "$(brew --prefix)/opt/zsh-vi-mode/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh"
-
-  # Remap escape to `kj`
-  ZVM_VI_ESCAPE_BINDKEY=kj
-  ZVM_VI_INSERT_ESCAPE_BINDKEY=$ZVM_VI_ESCAPE_BINDKEY
-  ZVM_VI_VISUAL_ESCAPE_BINDKEY=$ZVM_VI_ESCAPE_BINDKEY
-  ZVM_VI_OPPEND_ESCAPE_BINDKEY=$ZVM_VI_ESCAPE_BINDKEY
-
-  # Cursor styles per mode
-  ZVM_INSERT_MODE_CURSOR=$ZVM_CURSOR_BEAM
-  ZVM_NORMAL_MODE_CURSOR=$ZVM_CURSOR_BLOCK
-  ZVM_OPPEND_MODE_CURSOR=$ZVM_CURSOR_UNDERLINE
-
-  function zvm_after_lazy_keybindings() {
-    zvm_bindkey vicmd 'gh' beginning-of-line
-    zvm_bindkey vicmd 'gl' end-of-line
-  }
-
-  # zsh-vi-mode overrides the ctrl-r binding; give it back to fzf after init
-  zvm_after_init_commands+=('command -v fzf &>/dev/null && source <(fzf --zsh) 2>/dev/null')
-fi
-
-#############################################################################
 #                        zsh-autosuggestions
 #############################################################################
 # https://github.com/zsh-users/zsh-autosuggestions  (right arrow to accept)
@@ -172,4 +145,35 @@ unset _key
 # Anything host-specific that should NOT live in the public dotfiles
 if [ -f "$HOME/.zshrc_local/env-setup.sh" ]; then
   source "$HOME/.zshrc_local/env-setup.sh"
+fi
+
+#############################################################################
+#                        zsh-vi-mode
+#############################################################################
+# https://github.com/jeffreytse/zsh-vi-mode
+# NOTE: must be sourced LAST. It hooks the same ZLE widgets (zle-line-init,
+# zle-keymap-select) that starship and other plugins use to redraw the
+# prompt; loading it earlier lets it clobber those hooks instead of
+# chaining to them, which breaks the starship prompt.
+if [ -f "$(brew --prefix)/opt/zsh-vi-mode/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh" ]; then
+  source "$(brew --prefix)/opt/zsh-vi-mode/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh"
+
+  # Remap escape to `kj`
+  ZVM_VI_ESCAPE_BINDKEY=kj
+  ZVM_VI_INSERT_ESCAPE_BINDKEY=$ZVM_VI_ESCAPE_BINDKEY
+  ZVM_VI_VISUAL_ESCAPE_BINDKEY=$ZVM_VI_ESCAPE_BINDKEY
+  ZVM_VI_OPPEND_ESCAPE_BINDKEY=$ZVM_VI_ESCAPE_BINDKEY
+
+  # Cursor styles per mode
+  ZVM_INSERT_MODE_CURSOR=$ZVM_CURSOR_BEAM
+  ZVM_NORMAL_MODE_CURSOR=$ZVM_CURSOR_BLOCK
+  ZVM_OPPEND_MODE_CURSOR=$ZVM_CURSOR_UNDERLINE
+
+  function zvm_after_lazy_keybindings() {
+    zvm_bindkey vicmd 'gh' beginning-of-line
+    zvm_bindkey vicmd 'gl' end-of-line
+  }
+
+  # zsh-vi-mode overrides the ctrl-r binding; give it back to fzf after init
+  zvm_after_init_commands+=('command -v fzf &>/dev/null && source <(fzf --zsh) 2>/dev/null')
 fi

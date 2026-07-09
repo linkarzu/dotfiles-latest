@@ -349,6 +349,25 @@ vim.api.nvim_create_autocmd("BufEnter", {
   end,
 })
 
+vim.api.nvim_create_autocmd("BufEnter", {
+  desc = "Format corne-min",
+  group = group,
+  pattern = "*/zmk-corne-min/config/corne_min.keymap", -- this is a pattern to match the filepath of whatever board you wish to target
+  callback = function()
+    require("qmk").setup({
+      name = "LAYOUT_cornemin",
+      variant = "zmk",
+      auto_format_pattern = "*/zmk-corne-min/config/corne_min.keymap",
+      layout = {
+        "x x x x x x _ _ _ x x x x x x",
+        "x x x x x x _ _ _ x x x x x x",
+        "x x x x x x _ _ _ x x x x x x",
+        "_ _ _ _ x x x _ x x x _ _ _ _",
+      },
+    })
+  end,
+})
+
 -- -- In case you want to disable spell
 -- vim.api.nvim_create_autocmd("FileType", {
 --   group = augroup("wrap_spell"),

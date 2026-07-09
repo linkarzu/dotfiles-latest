@@ -117,8 +117,15 @@ return {
             -- on_show = function()
             --   vim.cmd.stopinsert()
             -- end,
+            sort = {
+              fields = modified_sort_fields,
+            },
             finder = "grep",
             format = "file",
+            transform = add_mtime,
+            matcher = {
+              sort_empty = true,
+            },
             show_empty = true,
             supports_live = false,
             layout = "ivy_split",

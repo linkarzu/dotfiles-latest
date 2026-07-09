@@ -93,16 +93,8 @@ def switch_scene(scene_name):
         print(f"Error: {str(e)}")
 
 
-# This is just to load my SketchyBar colors file
-def get_color_from_shell(var_name, colors_file):
-    command = f'source "{colors_file}" && echo "${{{var_name}}}"'
-    result = subprocess.run(
-        ["zsh", "-c", command],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        text=True,
-    )
-    return result.stdout.strip() if result.returncode == 0 else None
+def trigger_sketchybar_update():
+    subprocess.run(["sketchybar", "--trigger", "custom_text_update"])
 
 
 if __name__ == "__main__":
@@ -123,26 +115,5 @@ if __name__ == "__main__":
         with open(banner_file, "w") as f:
             f.write(scene_name)
 
-        # Load BLUE from your sketchybar colors file
-        colors_file = os.path.expanduser(
-            "~/github/dotfiles-latest/sketchybar/felixkratz-linkarzu/colors.sh"
-        )
-        color1 = get_color_from_shell("BLUE", colors_file)
-        color2 = get_color_from_shell("RED", colors_file)
-
-        color = color1 if scene_name == "main-screen" else color2
-
-        # Update SketchyBar item immediately
-        subprocess.run(
-            [
-                "sketchybar",
-                "-m",
-                "--set",
-                "custom_text",
-                f"label={scene_name}",
-                "icon=",
-                f"icon.color={color}",
-                f"label.color={color}",
-                "icon.drawing=on",
-            ]
-        )
+        # Let the SketchyBar plugin compute colors, padding, and stream time.
+        trigger_sketchybar_update()

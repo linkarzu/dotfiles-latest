@@ -19,6 +19,11 @@ stop=(
   label="Stop"
 )
 
+custom=(
+  click_script="sketchybar --set timer popup.drawing=toggle ; ${PLUGIN_DIR}/custom_timer.sh"
+  label="Custom"
+)
+
 preset0=(
   click_script="sketchybar --set timer popup.drawing=toggle ; python3 ${PLUGIN_DIR}/timer.py timer 60"
   label="1 min"
@@ -81,6 +86,8 @@ sketchybar --add item timer left \
   --set timer.stopwatch "${stopwatch[@]}" \
   --add item timer.stop popup.timer \
   --set timer.stop "${stop[@]}" \
+  --add item timer.custom popup.timer \
+  --set timer.custom "${custom[@]}" \
   --add item timer.preset0 popup.timer \
   --set timer.preset0 "${preset0[@]}" \
   --add item timer.preset1 popup.timer \

@@ -4066,6 +4066,11 @@ local function current_file_date()
   return y, m, d
 end
 
+local function current_daily_note_dir()
+  local full_path = vim.fn.expand("%:p")
+  return full_path:match("^(.*)/%d%d%d%d/%d%d%-%a+/%d%d%d%d%-%d%d%-%d%d%-%w+%.md$")
+end
+
 -- Create N consecutive daily notes, starting tomorrow
 local function create_next_n_days(n)
   local y, m, d = current_file_date()
@@ -4073,9 +4078,14 @@ local function create_next_n_days(n)
     vim.api.nvim_echo({ { "Current file is not a valid daily note filename", "ErrorMsg" } }, false, {})
     return
   end
-  local base_ts = os.time({ year = y, month = m, day = d })
+  local daily_note_dir = current_daily_note_dir()
+  if not daily_note_dir then
+    vim.api.nvim_echo({ { "Current file is not in a valid daily note directory", "ErrorMsg" } }, false, {})
+    return
+  end
+
   for i = 1, n do
-    local t = os.date("*t", base_ts + 86400 * i)
+    local t = os.date("*t", os.time({ year = y, month = m, day = tonumber(d) + i }))
     local link = string.format(
       "[[%04d-%02d-%02d-%s]]",
       t.year,
@@ -4083,7 +4093,7 @@ local function create_next_n_days(n)
       t.day,
       os.date("%A", os.time({ year = t.year, month = t.month, day = t.day }))
     )
-    create_daily_note(link)
+    create_daily_note(link, daily_note_dir)
   end
 end
 

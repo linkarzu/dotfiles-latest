@@ -51,10 +51,10 @@ case "$choice" in
   ;;
 # echo "4 - 1 guest livestream"
 4)
-  main_scene="main-1-guest-live"
-  guest_scene="all-guests-1guest-live"
-  guest_1="guest1-1guest-live"
-  guest_1_full="cam-full-guest1"
+  main_scene="screen-main-live"
+  guest_scene="all-guests-live"
+  guest_1="screen-guest1-live"
+  guest_1_full="cam-guest1-live"
   ;;
 # echo "5 - 2 guest"
 5)

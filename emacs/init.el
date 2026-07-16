@@ -9,7 +9,7 @@
 
 (setq visible-bell nil) ;; Set up the visible bell
 
-(set-face-attribute 'default nil :font "JetBrainsMono Nerd Font" :height 150)
+(set-face-attribute 'default nil :family "JetBrainsMono Nerd Font" :height 175)
 
 (load-theme 'modus-vivendi)
 ;(load-theme 'tango-dark)
@@ -22,6 +22,14 @@
   :ensure t
   :config
   (vertico-mode 1))
+
+(use-package org
+  :ensure nil
+  :config
+  (set-face-attribute 'org-level-1 nil :height 1.75 :foreground 'unspecified)
+  (set-face-attribute 'org-level-2 nil :height 1.25 :foreground 'unspecified)
+  (setq org-directory "~/github/org-public/")
+  (setq org-agenda-files (list org-directory)))
 
 (use-package marginalia
   :ensure t

@@ -83,7 +83,9 @@ restart_kitty
 
 $HOME/github/dotfiles-latest/yabai/yabai_restart.sh
 
-sleep 5
+sleep 10
 
 kitty_id=$(yabai -m query --windows | jq -r '.[] | select(.app == "kitty") | .id' | head -n 1)
 [[ -n "$kitty_id" ]] && yabai -m window --focus "$kitty_id" || true
+
+python3 "$dotfiles_dir/sketchybar/felixkratz-linkarzu/plugins/timer.py" sequence Sit:1800,Stand:600 >/dev/null 2>&1 &

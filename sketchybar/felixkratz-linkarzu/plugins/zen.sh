@@ -6,6 +6,8 @@
 zen_on() {
   sketchybar --set apple.logo drawing=on \
     --set '/cpu.*/' drawing=on \
+    --set '/ram.*/' drawing=on \
+    --set '/swap.*/' drawing=on \
     --set calendar icon.drawing=on \
     --set battery drawing=on \
     --set mic drawing=on \
@@ -23,6 +25,8 @@ zen_on() {
 zen_off() {
   sketchybar --set apple.logo drawing=on \
     --set '/cpu.*/' drawing=on \
+    --set '/ram.*/' drawing=on \
+    --set '/swap.*/' drawing=on \
     --set calendar icon.drawing=on \
     --set battery drawing=on \
     --set mic drawing=on \

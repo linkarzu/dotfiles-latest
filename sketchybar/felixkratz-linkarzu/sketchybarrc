@@ -147,6 +147,9 @@ source "$ITEM_DIR/volume.sh"
 # CPU usage indicator
 source "$ITEM_DIR/cpu.sh"
 
+# RAM and swap usage indicator
+source "$ITEM_DIR/ram.sh"
+
 source "$ITEM_DIR/timer.sh"
 
 ###############################################################################

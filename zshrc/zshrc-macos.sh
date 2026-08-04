@@ -65,6 +65,9 @@ if ! launchctl list | grep -q "com.linkarzu.autoPushGithub"; then
   echo "$PLIST_PATH loaded."
 fi
 
+# Disabled: keep the cleanup configuration for possible future re-enabling,
+# but do not create or load its LaunchAgent during shell startup.
+: <<'TMUX_CLEANUP_DISABLED'
 # Automate tmux session cleanup every X hours using a LaunchAgent
 # This will create plist file to run the script every X hours
 # and log output/errors to /tmp/$PLIST_LABEL.out and /tmp/$PLIST_LABEL.err
@@ -120,6 +123,7 @@ fi
 # launchctl bootout gui/$(id -u) ~/Library/LaunchAgents/com.linkarzu.tmuxKillSessions
 # Not sure why its not unloading it so I just remove the plist file
 # rm $PLIST_PATH
+TMUX_CLEANUP_DISABLED
 
 install_xterm_kitty_terminfo() {
   # Attempt to get terminfo for xterm-kitty
@@ -221,6 +225,9 @@ fi
 
 # disable auto-update when running 'brew something'
 export HOMEBREW_NO_AUTO_UPDATE="1"
+
+# Store shared Hugging Face credentials outside project repositories.
+export HF_HOME="${HF_HOME:-$HOME/.config/huggingface}"
 
 # Stuff in my private dotfiles that is still in beta, so I'm still testing it
 # Usually shared in my discord in the #early-releases channel with youtube members

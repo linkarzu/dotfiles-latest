@@ -24,44 +24,54 @@ custom=(
   label="Custom"
 )
 
+sit_30_10=(
+  click_script="sketchybar --set timer popup.drawing=toggle ; python3 ${PLUGIN_DIR}/timer.py sequence Sit:1800,Stand:600"
+  label="Sit-30-10"
+)
+
+stand_10_30=(
+  click_script="sketchybar --set timer popup.drawing=toggle ; python3 ${PLUGIN_DIR}/timer.py sequence Stand:600,Sit:1800"
+  label="Stand-10-30"
+)
+
 preset0=(
   click_script="sketchybar --set timer popup.drawing=toggle ; python3 ${PLUGIN_DIR}/timer.py timer 60"
   label="1 min"
 )
 
 preset1=(
+  click_script="sketchybar --set timer popup.drawing=toggle ; python3 ${PLUGIN_DIR}/timer.py timer 120"
+  label="2 min"
+)
+
+preset2=(
   click_script="sketchybar --set timer popup.drawing=toggle ; python3 ${PLUGIN_DIR}/timer.py timer 180"
   label="3 min"
 )
 
-preset2=(
+preset3=(
+  click_script="sketchybar --set timer popup.drawing=toggle ; python3 ${PLUGIN_DIR}/timer.py timer 240"
+  label="4 min"
+)
+
+preset4=(
   click_script="sketchybar --set timer popup.drawing=toggle ; python3 ${PLUGIN_DIR}/timer.py timer 300"
   label="5 min"
 )
 
-preset3=(
-  click_script="sketchybar --set timer popup.drawing=toggle ; python3 ${PLUGIN_DIR}/timer.py timer 1800"
-  label="30 min"
-)
-
-preset4=(
-  click_script="sketchybar --set timer popup.drawing=toggle ; python3 ${PLUGIN_DIR}/timer.py timer 2100"
-  label="35 min"
-)
-
 preset5=(
-  click_script="sketchybar --set timer popup.drawing=toggle ; python3 ${PLUGIN_DIR}/timer.py timer 2400"
-  label="40 min"
+  click_script="sketchybar --set timer popup.drawing=toggle ; python3 ${PLUGIN_DIR}/timer.py timer 600"
+  label="10 min"
 )
 
 preset6=(
-  click_script="sketchybar --set timer popup.drawing=toggle ; python3 ${PLUGIN_DIR}/timer.py timer 2700"
-  label="45 min"
+  click_script="sketchybar --set timer popup.drawing=toggle ; python3 ${PLUGIN_DIR}/timer.py timer 1200"
+  label="20 min"
 )
 
 preset7=(
-  click_script="sketchybar --set timer popup.drawing=toggle ; python3 ${PLUGIN_DIR}/timer.py timer 3000"
-  label="50 min"
+  click_script="sketchybar --set timer popup.drawing=toggle ; python3 ${PLUGIN_DIR}/timer.py timer 1800"
+  label="30 min"
 )
 
 preset8=(
@@ -70,11 +80,6 @@ preset8=(
 )
 
 preset9=(
-  click_script="sketchybar --set timer popup.drawing=toggle ; python3 ${PLUGIN_DIR}/timer.py timer 4800"
-  label="80 min"
-)
-
-preset10=(
   click_script="sketchybar --set timer popup.drawing=toggle ; python3 ${PLUGIN_DIR}/timer.py timer 7200"
   label="120 min"
 )
@@ -88,6 +93,10 @@ sketchybar --add item timer left \
   --set timer.stop "${stop[@]}" \
   --add item timer.custom popup.timer \
   --set timer.custom "${custom[@]}" \
+  --add item timer.sit_30_10 popup.timer \
+  --set timer.sit_30_10 "${sit_30_10[@]}" \
+  --add item timer.stand_10_30 popup.timer \
+  --set timer.stand_10_30 "${stand_10_30[@]}" \
   --add item timer.preset0 popup.timer \
   --set timer.preset0 "${preset0[@]}" \
   --add item timer.preset1 popup.timer \
@@ -107,6 +116,4 @@ sketchybar --add item timer left \
   --add item timer.preset8 popup.timer \
   --set timer.preset8 "${preset8[@]}" \
   --add item timer.preset9 popup.timer \
-  --set timer.preset9 "${preset9[@]}" \
-  --add item timer.preset10 popup.timer \
-  --set timer.preset10 "${preset10[@]}"
+  --set timer.preset9 "${preset9[@]}"

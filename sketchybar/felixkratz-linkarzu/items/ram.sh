@@ -1,12 +1,18 @@
 #!/bin/bash
 
+# Lower this to move the RAM widget closer to CPU; raise it to increase the gap.
+ram_label_column_width=55
+
+# Change this only to adjust the gap between the RAM graph and its labels.
+ram_graph_label_padding=5
+
 ram_top=(
   label.font="$FONT:Heavy:10"
   label="ram 0%"
   label.y_offset=5
-  label.width=60
+  label.width=$ram_label_column_width
   label.align=left
-  label.padding_left=5
+  label.padding_left=$ram_graph_label_padding
   label.padding_right=0
   width=0
   icon.drawing=off
@@ -16,12 +22,12 @@ swap_percent=(
   label.font="$FONT:Heavy:10"
   label="swp 0G"
   label.y_offset=-5
-  label.width=60
+  label.width=$ram_label_column_width
   label.align=left
-  label.padding_left=5
+  label.padding_left=$ram_graph_label_padding
   label.padding_right=0
   padding_right=1
-  width=60
+  width=$ram_label_column_width
   icon.drawing=off
   update_freq=4
   mach_helper="$HELPER"

@@ -5,7 +5,7 @@
 
 custom_text=(
   updates=on
-  update_freq=300
+  update_freq=120
   icon.drawing=on
   icon.font="$FONT:Regular:8.0"
   icon.y_offset=5

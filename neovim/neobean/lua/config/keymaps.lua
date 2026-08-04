@@ -3880,7 +3880,7 @@ local function insert_heading_and_date(level)
   -- vim.api.nvim_win_set_cursor(0, { row, #heading })
 end
 
-local personal_daily_note_dir = vim.fn.expand("~/github/obsidian_main/250-daily")
+local personal_daily_note_dir = vim.fn.expand("~/github/notes/250-daily")
 
 local function normalize_daily_note_path(path)
   if type(path) ~= "string" or path == "" then
@@ -3901,11 +3901,8 @@ local function read_work_env_path(name)
     return nil
   end
 
-  local command = string.format(
-    "source %s >/dev/null 2>&1 && print -r -- ${%s}",
-    vim.fn.shellescape(work_env_file),
-    name
-  )
+  local command =
+    string.format("source %s >/dev/null 2>&1 && print -r -- ${%s}", vim.fn.shellescape(work_env_file), name)
   local output = vim.fn.systemlist({ "/bin/zsh", "-lc", command })
   if vim.v.shell_error ~= 0 or not output[1] or output[1] == "" then
     return nil
@@ -4133,84 +4130,56 @@ vim.keymap.set("n", "<leader>mD", function()
   end)
 end, { desc = "[P]Create N next daily notes from current file" })
 
+local function change_markdown_heading_levels(start_line, end_line, direction)
+  local cursor_pos = vim.api.nvim_win_get_cursor(0)
+  local buf = vim.api.nvim_get_current_buf()
+
+  if start_line > end_line then
+    start_line, end_line = end_line, start_line
+  end
+
+  for lnum = start_line, end_line do
+    local line = vim.api.nvim_buf_get_lines(buf, lnum - 1, lnum, false)[1]
+    if line then
+      local indent, hashes, rest = line:match("^(%s*)(#+)(%s+.*)$")
+      if indent and hashes and rest then
+        if direction == "increase" then
+          line = indent .. "#" .. hashes .. rest
+        elseif direction == "decrease" and #hashes > 1 then
+          line = indent .. hashes:sub(2) .. rest
+        end
+
+        vim.api.nvim_buf_set_lines(buf, lnum - 1, lnum, false, { line })
+      end
+    end
+  end
+
+  vim.api.nvim_win_set_cursor(0, cursor_pos)
+  vim.cmd("nohlsearch")
+  vim.cmd("normal! zx")
+end
+
 -- - I have several `.md` documents that do not follow markdown guidelines
 -- - There are some old ones that have more than one H1 heading in them, so when I
 --   open one of those old documents, I want to add one more `#` to each heading
 --
---  This doesn't ask for confirmation and just increase all the headings
+-- This doesn't ask for confirmation and just increases all the headings.
 vim.keymap.set("n", "<leader>mhI", function()
-  -- Save the current cursor position
-  local cursor_pos = vim.api.nvim_win_get_cursor(0)
-  -- I'm using [[ ]] to escape the special characters in a command
-  vim.cmd([[:g/\(^$\n\s*#\+\s.*\n^$\)/ .+1 s/^#\+\s/#&/]])
-  -- Restore the cursor position
-  vim.api.nvim_win_set_cursor(0, cursor_pos)
-  -- Clear search highlight
-  vim.cmd("nohlsearch")
+  change_markdown_heading_levels(1, vim.api.nvim_buf_line_count(0), "increase")
 end, { desc = "[P]Increase headings without confirmation" })
 
 vim.keymap.set("n", "<leader>mhD", function()
-  -- Save the current cursor position
-  local cursor_pos = vim.api.nvim_win_get_cursor(0)
-  -- I'm using [[ ]] to escape the special characters in a command
-  vim.cmd([[:g/^\s*#\{2,}\s/ s/^#\(#\+\s.*\)/\1/]])
-  -- Restore the cursor position
-  vim.api.nvim_win_set_cursor(0, cursor_pos)
-  -- Clear search highlight
-  vim.cmd("nohlsearch")
+  change_markdown_heading_levels(1, vim.api.nvim_buf_line_count(0), "decrease")
 end, { desc = "[P]Decrease headings without confirmation" })
 
--- Increase markdown headings for text selected in visual mode
+-- Increase markdown headings for text selected in visual mode.
 vim.keymap.set("v", "<leader>mhI", function()
-  -- Save cursor position
-  local cursor_pos = vim.api.nvim_win_get_cursor(0)
-  -- Get visual selection bounds and ensure correct order
-  local start_line = vim.fn.line("'<")
-  local end_line = vim.fn.line("'>")
-  if start_line > end_line then
-    start_line, end_line = end_line, start_line
-  end
-  local buf = vim.api.nvim_get_current_buf()
-  -- Process each line in the selection
-  for lnum = start_line, end_line do
-    local line = vim.api.nvim_buf_get_lines(buf, lnum - 1, lnum, false)[1]
-    if line and line:match("^##+%s") then -- Match headings level 2+
-      local new_line = "#" .. line
-      vim.api.nvim_buf_set_lines(buf, lnum - 1, lnum, false, { new_line })
-    end
-  end
-  -- Restore cursor and clear highlights
-  vim.api.nvim_win_set_cursor(0, cursor_pos)
-  vim.cmd("nohlsearch")
+  change_markdown_heading_levels(vim.fn.line("'<"), vim.fn.line("'>"), "increase")
 end, { desc = "Increase headings in visual selection" })
 
--- Decrease markdown headings for text selected in visual mode
+-- Decrease markdown headings for text selected in visual mode.
 vim.keymap.set("v", "<leader>mhD", function()
-  -- Save cursor position
-  local cursor_pos = vim.api.nvim_win_get_cursor(0)
-  -- Get visual selection bounds and ensure correct order
-  local start_line = vim.fn.line("'<")
-  local end_line = vim.fn.line("'>")
-  if start_line > end_line then
-    start_line, end_line = end_line, start_line
-  end
-  local buf = vim.api.nvim_get_current_buf()
-  -- Process each line in the selection
-  for lnum = start_line, end_line do
-    local line = vim.api.nvim_buf_get_lines(buf, lnum - 1, lnum, false)[1]
-    if line and line:match("^##+%s") then -- Match headings level 2+
-      -- Split into hashes and content, then remove one #
-      local hashes, content = line:match("^(#+)(%s.+)$")
-      if hashes and #hashes >= 2 then
-        local new_hashes = hashes:sub(1, #hashes - 1)
-        local new_line = new_hashes .. content
-        vim.api.nvim_buf_set_lines(buf, lnum - 1, lnum, false, { new_line })
-      end
-    end
-  end
-  -- Restore cursor and clear highlights
-  vim.api.nvim_win_set_cursor(0, cursor_pos)
-  vim.cmd("nohlsearch")
+  change_markdown_heading_levels(vim.fn.line("'<"), vim.fn.line("'>"), "decrease")
 end, { desc = "Decrease headings in visual selection" })
 
 -- -- This goes 1 heading at a time and asks for **confirmation**

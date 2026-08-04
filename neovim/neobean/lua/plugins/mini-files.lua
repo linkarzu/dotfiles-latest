@@ -32,16 +32,47 @@ local preview_blocklist_exts = {
   env = true,
   pdf = true,
 }
+
+-- Disable preview for files/directories inside these directories.
+local preview_blocklist_dirs = {
+  vim.fn.expand("~/.ssh"),
+}
+
+local function normalize_path(path)
+  if type(path) ~= "string" or path == "" then
+    return nil
+  end
+  return vim.fn.fnamemodify(path, ":p"):gsub("/+$", "")
+end
+
+local function is_path_in_dir(path, dir)
+  path = normalize_path(path)
+  dir = normalize_path(dir)
+  if not path or not dir then
+    return false
+  end
+  return path == dir or path:sub(1, #dir + 1) == dir .. "/"
+end
+
+local function is_preview_blocked_dir(path)
+  for _, dir in ipairs(preview_blocklist_dirs) do
+    if is_path_in_dir(path, dir) then
+      return true
+    end
+  end
+  return false
+end
+
 local function is_preview_blocked_path(path)
   if type(path) ~= "string" then
     return false
   end
   local ext = vim.fn.fnamemodify(path, ":e"):lower()
-  return preview_blocklist_exts[ext] == true
+  return preview_blocklist_exts[ext] == true or is_preview_blocked_dir(path)
 end
-local function is_preview_blocked_file(entry)
+local function is_preview_blocked_entry(entry)
   if not entry or entry.fs_type ~= "file" then
-    return false
+    return entry and entry.fs_type == "directory" and is_preview_blocked_dir(entry.path)
   end
   return is_preview_blocked_path(entry.path)
 end
@@ -52,6 +83,7 @@ local function setup_conditional_preview(opts)
     buf = nil,
     win = nil,
   }
+  local file_info_visible = false
   local original_fs_open = vim.loop.fs_open
   local fs_open_guard_enabled = false
   local opening = false
@@ -183,8 +215,22 @@ local function setup_conditional_preview(opts)
     if not ok or not entry then
       return
     end
-    if is_preview_blocked_file(entry) then
+    if is_preview_blocked_entry(entry) or file_info_visible then
       show_disabled_preview(entry)
+    else
+      close_disabled_preview()
+    end
+  end
+  local function toggle_file_info()
+    local ok, entry = pcall(mini_files.get_fs_entry)
+    if not ok or not entry then
+      return
+    end
+    file_info_visible = not file_info_visible
+    if file_info_visible then
+      show_disabled_preview(entry)
+    elseif is_preview_blocked_entry(entry) then
+      sync_preview()
     else
       close_disabled_preview()
     end
@@ -225,6 +271,7 @@ local function setup_conditional_preview(opts)
     group = group,
     pattern = "MiniFilesExplorerClose",
     callback = function()
+      file_info_visible = false
       close_disabled_preview()
       if not opening then
         disable_fs_open_guard()
@@ -310,6 +357,7 @@ local function setup_conditional_preview(opts)
       map(buf_id, mappings.synchronize, with_preview_guard(mini_files.synchronize), "Synchronize")
       map(buf_id, mappings.trim_left, with_preview_guard(mini_files.trim_left), "Trim branch left")
       map(buf_id, mappings.trim_right, with_preview_guard(mini_files.trim_right), "Trim branch right")
+      map(buf_id, (opts.custom_keymaps or {}).file_info, toggle_file_info, "Toggle file info")
     end,
   })
   if not mini_files._linkarzu_preview_blocklist_open_wrapped then
@@ -372,6 +420,7 @@ return {
       -- Don't use "i" as it conflicts wit insert mode
       preview_image = "<space>i",
       preview_image_popup = "<M-i>",
+      file_info = "<space>fi",
     }
 
     opts.windows = vim.tbl_deep_extend("force", opts.windows or {}, {

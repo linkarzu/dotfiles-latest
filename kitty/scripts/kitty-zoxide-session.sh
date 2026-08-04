@@ -50,11 +50,22 @@ if [[ ! -x "$kitty_bin" ]]; then
   exit 1
 fi
 
-sock="$($HOME/github/dotfiles-latest/scripts/macos/mac/misc/549-kittyMainSocket.sh || true)"
+main_socket_script="$HOME/github/dotfiles-latest/scripts/macos/mac/misc/549-kittyMainSocket.sh"
+sock="$($main_socket_script || true)"
 if [[ -z "${sock:-}" ]]; then
   echo "No kitty sockets found in /tmp (kitty not running, or remote control not available)."
   exit 1
 fi
+
+kitty_remote() {
+  local current_sock=""
+
+  # The zoxide picker can stay open while QAT is being cold-started. Re-resolve
+  # the main socket for every remote-control call so a transient /tmp/kitty-<pid>
+  # socket captured before fzf cannot disappear before goto_session runs.
+  current_sock="$($main_socket_script)" || return 1
+  "$kitty_bin" @ --to "unix:${current_sock}" "$@"
+}
 
 normalize_path() {
   local p="$1"
@@ -131,7 +142,7 @@ PY
 
 session_exists() {
   local name="$1"
-  "$kitty_bin" @ --to "unix:${sock}" ls 2>/dev/null | jq -e --arg name "$name" '
+  kitty_remote ls 2>/dev/null | jq -e --arg name "$name" '
     any(.[]?.tabs[]?.windows[]?; .session_name == $name)
   ' >/dev/null
 }
@@ -156,7 +167,7 @@ find_session_by_path() {
       return 0
     fi
   done < <(
-    "$kitty_bin" @ --to "unix:${sock}" ls 2>/dev/null | jq -r '
+    kitty_remote ls 2>/dev/null | jq -r '
       .[]?.tabs[]?.windows[]?
       | select(.session_name != null and .session_name != "")
       | [(.session_name|tostring), (.env.PWD // .cwd // "")]
@@ -307,17 +318,29 @@ focus_or_launch_dir() {
   local session_dir="/tmp/kitty-zoxide-sessions"
   local session_file=""
 
-  if [[ ! -d "$selected_path" ]]; then
-    echo "Directory not found: $selected_path"
+  case "$selected_path" in
+  "~")
+    selected_path="$HOME"
+    ;;
+  "~/"*)
+    selected_path="$HOME/${selected_path#\~/}"
+    ;;
+  /*)
+    ;;
+  *)
+    echo "Path must be absolute or start with ~/ : $selected_path"
     exit 1
-  fi
+    ;;
+  esac
+
+  mkdir -p -- "$selected_path"
 
   selected_real="$(normalize_path "$selected_path")"
 
   existing_session="$(find_session_by_path "$selected_real" || true)"
   if [[ -n "$existing_session" ]]; then
     bump_zoxide_score "$selected_real"
-    "$kitty_bin" @ --to "unix:${sock}" action goto_session "$existing_session"
+    kitty_remote action goto_session "$existing_session"
     return 0
   fi
 
@@ -342,7 +365,7 @@ focus
 focus_os_window
 EOF
 
-  "$kitty_bin" @ --to "unix:${sock}" action goto_session "$session_file"
+  kitty_remote action goto_session "$session_file"
   bump_zoxide_score "$selected_real"
 }
 
@@ -365,7 +388,7 @@ focus
 focus_os_window
 EOF
 
-  "$kitty_bin" @ --to "unix:${sock}" action goto_session "$session_file"
+  kitty_remote action goto_session "$session_file"
 }
 
 set +e
@@ -378,6 +401,7 @@ fzf_out="$(
     --with-nth=2.. \
     --no-sort \
     --tiebreak=index \
+    --print-query \
     --expect=enter,esc \
     --bind 'enter:accept' \
     --bind 'esc:abort' \
@@ -392,15 +416,18 @@ if [[ $fzf_rc -ne 0 && -z "${fzf_out:-}" ]]; then
   exit 0
 fi
 
-key="$(printf "%s\n" "$fzf_out" | head -n1)"
+query="$(printf "%s\n" "$fzf_out" | sed -n '1p')"
+key="$(printf "%s\n" "$fzf_out" | sed -n '2p')"
 if [[ "$key" == "esc" ]]; then
   exit 0
 fi
 
-sel="$(printf "%s\n" "$fzf_out" | sed -n '2p' || true)"
+sel="$(printf "%s\n" "$fzf_out" | sed -n '3p' || true)"
 selected_path=""
 if [[ -n "${sel:-}" ]]; then
   selected_path="$(printf "%s" "$sel" | awk -F'\t' '{print $1}')"
+elif [[ "$query" == /* || "$query" == "~" || "$query" == "~/"* ]]; then
+  selected_path="$query"
 fi
 
 if [[ -z "${selected_path:-}" ]]; then

@@ -10,6 +10,7 @@ brew=(
   label=?
   # Set update frequency to 30 min (30*60=1800)
   update_freq=1800
+  # Increase or decrease this to adjust the gap between Brew and the calendar.
   padding_right=12
   label.padding_left=2
   script="$PLUGIN_DIR/brew.sh"

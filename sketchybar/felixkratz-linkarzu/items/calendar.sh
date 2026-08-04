@@ -1,24 +1,38 @@
 #!/bin/bash
 
-#Filename: ~/github/dotfiles-latest/sketchybar/felixkratz/items/calendar.sh
-
-calendar=(
-  icon=cal
-  # Using "JetBrainsMono Nerd Font"
-  icon.font="$FONT:Black:14.0"
-  # Using default "SF Pro"
-  # icon.font="$FONT:Black:12.0"
-  icon.padding_right=0
-  # If showing the time, leave the width as 45
-  # label.width=45
-  label.width=5
-  label.align=right
-  padding_left=15
+# Keep the date and time in a shared column so the time stays centered below it.
+calendar_date=(
+  label.font="$FONT:Black:11.0"
+  label="Mon 00/00/00"
+  label.width=90
+  label.align=center
+  label.y_offset=5
+  label.padding_left=0
+  label.padding_right=0
+  width=0
+  icon.drawing=off
   update_freq=30
   script="$PLUGIN_DIR/calendar.sh"
   click_script="$PLUGIN_DIR/zen.sh"
 )
 
-sketchybar --add item calendar right \
-  --set calendar "${calendar[@]}" \
-  --subscribe calendar system_woke
+calendar_time=(
+  label.font="$FONT:Black:11.0"
+  label="00:00"
+  label.width=90
+  label.align=center
+  label.y_offset=-5
+  label.padding_left=0
+  label.padding_right=0
+  padding_left=15
+  width=90
+  icon.drawing=off
+  click_script="$PLUGIN_DIR/zen.sh"
+)
+
+sketchybar --add item calendar.date right \
+  --set calendar.date "${calendar_date[@]}" \
+  --subscribe calendar.date system_woke \
+  \
+  --add item calendar.time right \
+  --set calendar.time "${calendar_time[@]}"

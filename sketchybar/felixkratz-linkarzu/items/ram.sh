@@ -1,19 +1,28 @@
 #!/bin/bash
 
-ram_percent=(
-  icon="ram 0%"
-  icon.font="$FONT:Heavy:10"
-  icon.width=0
-  icon.y_offset=5
-  icon.padding_left=0
-  icon.padding_right=0
+ram_top=(
+  label.font="$FONT:Heavy:10"
+  label="ram 0%"
+  label.y_offset=5
+  label.width=60
+  label.align=left
+  label.padding_left=5
+  label.padding_right=0
+  width=0
+  icon.drawing=off
+)
+
+swap_percent=(
   label.font="$FONT:Heavy:10"
   label="swp 0G"
   label.y_offset=-5
-  label.padding_left=0
-  label.padding_right=10
-  padding_right=27
-  width=75
+  label.width=60
+  label.align=left
+  label.padding_left=5
+  label.padding_right=0
+  padding_right=1
+  width=60
+  icon.drawing=off
   update_freq=4
   mach_helper="$HELPER"
 )
@@ -37,8 +46,11 @@ swap_used=(
   background.color=$TRANSPARENT
 )
 
-sketchybar --add item ram.percent right \
-  --set ram.percent "${ram_percent[@]}" \
+sketchybar --add item ram.top right \
+  --set ram.top "${ram_top[@]}" \
+  \
+  --add item swap.percent right \
+  --set swap.percent "${swap_percent[@]}" \
   \
   --add graph ram.used right 75 \
   --set ram.used "${ram_used[@]}" \

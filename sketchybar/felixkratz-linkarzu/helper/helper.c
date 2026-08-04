@@ -18,7 +18,7 @@ void handler(env env) {
 
     if (strlen(g_cpu.command) > 0) sketchybar(g_cpu.command);
   }
-  else if ((strcmp(name, "ram.percent") == 0)) {
+  else if ((strcmp(name, "swap.percent") == 0)) {
     ram_update(&g_ram);
 
     if (strlen(g_ram.command) > 0) sketchybar(g_ram.command);

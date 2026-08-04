@@ -212,6 +212,7 @@ Npcap
 NvChad
 OS
 OVIwrite
+Ok
 Omarchy
 OnlyFans
 OpenIn
@@ -247,6 +248,7 @@ SDP
 SHell
 SMB
 SMP
+SR
 SRE
 SRs
 SSDP
@@ -279,6 +281,7 @@ TigerVNC
 TikTok
 Tinland
 ToolBox
+Trixie
 UID
 UMG
 UML
@@ -289,6 +292,7 @@ Ubersicht's
 Udemy
 Uebersicht
 Untoggling
+VDI
 VIRUSTOTAL
 VLAN
 VLANs
@@ -318,8 +322,6 @@ WhySoSerious
 WikiLinks
 WinPcap
 X11
-XCP3
-XOA
 XTNCTR
 XenServer
 Xenodium
@@ -485,6 +487,7 @@ gpanders
 grug
 gruvbox
 guestadditions
+gui
 hardtime
 harper_ls
 healthcheck
@@ -581,6 +584,7 @@ menubar
 meslo
 microkernel
 mikrotik
+minibuffer
 mista
 mnt
 mntops
@@ -623,6 +627,7 @@ pam
 paravirtualization
 passno
 passthrough
+permalink
 petejohanson
 phpactor
 phpcs
@@ -758,8 +763,10 @@ xD
 xcode
 xcp
 xcp1
+xcp3
 xen
 xo
+xoa
 xvda
 xz
 yabai

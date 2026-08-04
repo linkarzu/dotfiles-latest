@@ -105,6 +105,8 @@ return {
               --   -- SentenceCapitalization = true,
               --   -- SpellCheck = true,
               UseTitleCase = false,
+              UnclosedQuotes = false,
+              AvoidCurses = false,
             },
             isolateEnglish = true,
             markdown = {

@@ -60,7 +60,8 @@ static inline void ram_update(struct ram* ram) {
   snprintf(ram->command, sizeof(ram->command),
            "--push ram.used %.2f "
            "--push swap.used %.2f "
-           "--set ram.percent icon='ram %.0f%%' label='swp %.0fG'",
+           "--set ram.top label='ram %.0f%%' "
+           "--set swap.percent label='swp %.0fG'",
            ram_percent,
            swap_percent,
            ram_percent * 100.,

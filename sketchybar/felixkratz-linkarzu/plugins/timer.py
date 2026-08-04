@@ -6,18 +6,20 @@ import os
 import time
 import signal
 import subprocess
+from datetime import datetime
 
 
 # define colours:
 WHITE = str("0xffcad3f5")
 RED = str("0xffed8796")
 PID_FILE = "/tmp/sketchybar_timer.pid"
+STANDING_SEQUENCE_STOP_HOUR = 20
 
 
 # main function:
 def main(argv):
     if len(argv) < 2:
-        print("Usage: timer.py stopwatch|timer <seconds>|stop", file=sys.stderr)
+        print_usage()
         sys.exit(1)
 
     command = argv[1]
@@ -27,15 +29,23 @@ def main(argv):
         return
 
     seconds = None
+    phases = None
 
     if command == "timer" and len(argv) == 3:
         try:
             seconds = int(argv[2])
         except ValueError:
-            print("Usage: timer.py stopwatch|timer <seconds>|stop", file=sys.stderr)
+            print_usage()
+            sys.exit(1)
+    elif command == "sequence" and len(argv) == 3:
+        try:
+            phases = parse_sequence(argv[2])
+        except ValueError as error:
+            print(error, file=sys.stderr)
+            print_usage()
             sys.exit(1)
     elif command != "stopwatch" or len(argv) != 2:
-        print("Usage: timer.py stopwatch|timer <seconds>|stop", file=sys.stderr)
+        print_usage()
         sys.exit(1)
 
     stop_running(clear_label=False)
@@ -61,6 +71,42 @@ def main(argv):
             remove_pid_file()
             finish_event()
         return
+
+    if command == "sequence":
+        run_sequence(phases)
+        return
+
+
+def print_usage():
+    print(
+        "Usage: timer.py stopwatch|timer <seconds>|sequence <label:seconds,...>|stop",
+        file=sys.stderr,
+    )
+
+
+def parse_sequence(sequence):
+    phases = []
+
+    for phase in sequence.split(","):
+        label, separator, seconds = phase.partition(":")
+
+        if not separator or not label.strip():
+            raise ValueError("Invalid sequence phase: " + phase)
+
+        try:
+            duration = int(seconds)
+        except ValueError as error:
+            raise ValueError("Invalid sequence duration: " + phase) from error
+
+        if duration <= 0:
+            raise ValueError("Sequence duration must be greater than zero: " + phase)
+
+        phases.append((label.strip(), duration))
+
+    if not phases:
+        raise ValueError("Sequence must include at least one phase")
+
+    return phases
 
 
 def setup_signal_handlers():
@@ -156,7 +202,48 @@ def stopwatch(start_time):
         time.sleep(1)
 
 
-def count_down(start_time, end_time):
+def run_sequence(phases):
+    should_stop_after_cutoff = is_standing_sequence(phases)
+
+    while is_current_process():
+        for index, (label, seconds) in enumerate(phases):
+            start_time = int(time.time())
+            end_time = start_time + seconds
+
+            count_down(start_time, end_time, label)
+
+            if is_current_process():
+                next_label = phases[(index + 1) % len(phases)][0]
+                finish_event(next_action_message(next_label), clear_label=False)
+
+                if should_stop_after_cutoff and is_after_standing_sequence_cutoff():
+                    set_timer_label("")
+                    remove_pid_file()
+                    return
+
+
+def is_standing_sequence(phases):
+    labels = {label.strip().lower() for label, _ in phases}
+    return "sit" in labels or "stand" in labels
+
+
+def is_after_standing_sequence_cutoff():
+    return datetime.now().hour >= STANDING_SEQUENCE_STOP_HOUR
+
+
+def next_action_message(label):
+    normalized_label = label.strip().lower()
+
+    if normalized_label == "stand":
+        return "Standup!!"
+
+    if normalized_label == "sit":
+        return "Sit Down!!"
+
+    return "Time Up!"
+
+
+def count_down(start_time, end_time, label="Timer"):
     delta = end_time - start_time
 
     while delta > 1:
@@ -169,7 +256,7 @@ def count_down(start_time, end_time):
         else:
             color = WHITE
 
-        set_timer_label("Timer: " + format_seconds(delta), color)
+        set_timer_label(label + ": " + format_seconds(delta), color)
 
         time.sleep(1)
 
@@ -201,13 +288,14 @@ def format_seconds(seconds):
     return output.rstrip(":")
 
 
-def finish_event():
-    set_timer_label("Time Up!", WHITE)
+def finish_event(message="Time Up!", clear_label=True):
+    set_timer_label(message, WHITE)
 
     for i in range(2):
-        os.system("afplay /System/Library/Sounds/Funk.aiff")
+        os.system("afplay /System/Library/Sounds/Blow.aiff")
 
-    set_timer_label("")
+    if clear_label:
+        set_timer_label("")
 
 
 if __name__ == "__main__":

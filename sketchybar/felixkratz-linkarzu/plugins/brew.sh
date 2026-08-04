@@ -18,6 +18,9 @@ else
 fi
 
 case "$COUNT" in
+[6-9][0-9] | [1-9][0-9][0-9]*)
+  COLOR=0xffef555f
+  ;;
 [3-5][0-9])
   COLOR=$ORANGE
   ;;

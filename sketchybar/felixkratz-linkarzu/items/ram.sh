@@ -52,14 +52,15 @@ swap_used=(
   background.color=$TRANSPARENT
 )
 
+# Change USAGE_GRAPH_WIDTH_PERCENT in sketchybarrc (100 = original 75-point width).
 sketchybar --add item ram.top right \
   --set ram.top "${ram_top[@]}" \
   \
   --add item swap.percent right \
   --set swap.percent "${swap_percent[@]}" \
   \
-  --add graph ram.used right 75 \
+  --add graph ram.used right "$USAGE_GRAPH_WIDTH" \
   --set ram.used "${ram_used[@]}" \
   \
-  --add graph swap.used right 75 \
+  --add graph swap.used right "$USAGE_GRAPH_WIDTH" \
   --set swap.used "${swap_used[@]}"

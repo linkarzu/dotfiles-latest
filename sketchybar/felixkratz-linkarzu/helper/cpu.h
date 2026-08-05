@@ -6,6 +6,7 @@
 #include <time.h>
 
 #define MAX_TOPPROC_LEN 28
+#define TOPPROC_ELLIPSIS_LEN 3
 
 static const char TOPPROC[] = { "/bin/ps -Aceo pid,pcpu,comm -r" }; 
 static const char FILTER_PATTERN[] = { "com.apple." };
@@ -16,6 +17,7 @@ struct cpu {
   host_cpu_load_info_data_t load;
   host_cpu_load_info_data_t prev_load;
   bool has_prev_load;
+  uint32_t topproc_max_len;
 
   char command[256];
 };
@@ -24,6 +26,18 @@ static inline void cpu_init(struct cpu* cpu) {
   cpu->host = mach_host_self();
   cpu->count = HOST_CPU_LOAD_INFO_COUNT;
   cpu->has_prev_load = false;
+  cpu->topproc_max_len = MAX_TOPPROC_LEN;
+
+  char* max_chars = getenv("CPU_TOPPROC_MAX_CHARS");
+  if (max_chars) {
+    char* end;
+    long value = strtol(max_chars, &end, 10);
+    if (*max_chars != '\0' && *end == '\0'
+        && value > 0 && value <= MAX_TOPPROC_LEN) {
+      cpu->topproc_max_len = (uint32_t)value;
+    }
+  }
+
   snprintf(cpu->command, 100, "");
 }
 
@@ -71,7 +85,7 @@ static inline void cpu_update(struct cpu* cpu) {
     fgets(line, sizeof(line), file);
 
     char* start = strstr(line, FILTER_PATTERN);
-    char topproc[MAX_TOPPROC_LEN + 4];
+    char topproc[MAX_TOPPROC_LEN + TOPPROC_ELLIPSIS_LEN + 1];
     uint32_t caret = 0;
     for (int i = 0; i < sizeof(line); i++) {
       if (start && i == start - line) {
@@ -79,16 +93,17 @@ static inline void cpu_update(struct cpu* cpu) {
         continue;
       }
 
-      if (caret >= MAX_TOPPROC_LEN && caret <= MAX_TOPPROC_LEN + 2) {
+      if (caret >= cpu->topproc_max_len
+          && caret < cpu->topproc_max_len + TOPPROC_ELLIPSIS_LEN) {
         topproc[caret++] = '.';
         continue;
       }
-      if (caret > MAX_TOPPROC_LEN + 2) break;
+      if (caret >= cpu->topproc_max_len + TOPPROC_ELLIPSIS_LEN) break;
       topproc[caret++] = line[i];
       if (line[i] == '\0') break;
     }
 
-    topproc[MAX_TOPPROC_LEN + 3] = '\0';
+    topproc[cpu->topproc_max_len + TOPPROC_ELLIPSIS_LEN] = '\0';
 
     pclose(file);
 

@@ -16,6 +16,7 @@ ram_top=(
   label.padding_right=0
   width=0
   icon.drawing=off
+  click_script="$ACTIVITY_MONITOR_CLICK_SCRIPT"
 )
 
 swap_percent=(
@@ -29,6 +30,7 @@ swap_percent=(
   padding_right=1
   width=$ram_label_column_width
   icon.drawing=off
+  click_script="$ACTIVITY_MONITOR_CLICK_SCRIPT"
   update_freq=4
   mach_helper="$HELPER"
 )
@@ -38,6 +40,7 @@ ram_used=(
   graph.color=$ORANGE
   label.drawing=off
   icon.drawing=off
+  click_script="$ACTIVITY_MONITOR_CLICK_SCRIPT"
   background.height=30
   background.drawing=on
   background.color=$TRANSPARENT
@@ -47,6 +50,7 @@ swap_used=(
   graph.color=$GREEN
   label.drawing=off
   icon.drawing=off
+  click_script="$ACTIVITY_MONITOR_CLICK_SCRIPT"
   background.height=30
   background.drawing=on
   background.color=$TRANSPARENT

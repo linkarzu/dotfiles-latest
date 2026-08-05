@@ -42,6 +42,10 @@ cpu_user=(
   background.height=30
   background.drawing=on
   background.color=$TRANSPARENT
+  # Draw the shared 0-100% frame once, above both graph layers.
+  background.border_width=1
+  background.border_color=$GREY
+  background.corner_radius=0
 )
 
 # Change USAGE_GRAPH_WIDTH_PERCENT in sketchybarrc (100 = original 75-point width).

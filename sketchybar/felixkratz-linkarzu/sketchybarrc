@@ -26,6 +26,12 @@ CPU_TOPPROC_MAX_CHARS=$(((USAGE_GRAPH_WIDTH - 9) / 3))
 ((CPU_TOPPROC_MAX_CHARS < 1)) && CPU_TOPPROC_MAX_CHARS=1
 export CPU_TOPPROC_MAX_CHARS
 
+# Set to on to show the top CPU process above the graph.
+SHOW_CPU_PROCESS=off
+
+# Open and focus Activity Monitor when a CPU or RAM widget is clicked.
+ACTIVITY_MONITOR_CLICK_SCRIPT="open -a 'Activity Monitor'"
+
 # Setting up and starting the helper process
 HELPER=git.felix.helper
 killall helper

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Lower this to move the RAM widget closer to CPU; raise it to increase the gap.
-ram_label_column_width=55
+ram_label_column_width=50
 
 # Change this only to adjust the gap between the RAM graph and its labels.
 ram_graph_label_padding=5

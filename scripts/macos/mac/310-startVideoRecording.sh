@@ -50,6 +50,8 @@ sed -i '' 's/^font_size .*/font_size 20/' "$kitty_conf"
 set_kitty_font_size 20
 set_editor_width 70
 
+"$HOME/github/dotfiles-latest/scripts/macos/mac/290-refreshMembers.sh"
+
 osascript -e 'display notification "Started" with title "Recording started 🟢"'
 
 pkill "Slack" 2>/dev/null || true
@@ -72,7 +74,8 @@ open -a "Brave Browser"
 
 # open -a "DisplayLink Manager"
 
-sed -i '' "s|date '+%a %y/%m/%d %H:%M'|date '+%a %y/%m/%d'|" "$HOME/github/dotfiles-latest/sketchybar/felixkratz-linkarzu/plugins/calendar.sh"
+# Keep the calendar format unchanged when recording starts.
+# sed -i '' "s|date '+%a %y/%m/%d %H:%M'|date '+%a %y/%m/%d'|" "$HOME/github/dotfiles-latest/sketchybar/felixkratz-linkarzu/plugins/calendar.sh"
 
 "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/230-dnd.sh" on
 

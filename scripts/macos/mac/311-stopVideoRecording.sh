@@ -66,7 +66,8 @@ pkill -f 'TTS\.app/Contents/MacOS/app_mode_loader' 2>/dev/null || true
 
 # osascript -e 'tell application "DisplayLink Manager" to quit'
 
-sed -i '' "s|date '+%a %y/%m/%d'|date '+%a %y/%m/%d %H:%M'|" "$HOME/github/dotfiles-latest/sketchybar/felixkratz-linkarzu/plugins/calendar.sh"
+# Keep the calendar format unchanged when recording stops.
+# sed -i '' "s|date '+%a %y/%m/%d'|date '+%a %y/%m/%d %H:%M'|" "$HOME/github/dotfiles-latest/sketchybar/felixkratz-linkarzu/plugins/calendar.sh"
 
 # re-enable my work related daily note, so I don't access it even by mistake
 sed -i '' 's|^# cmd + alt - f1 : \$HOME/github/dotfiles-latest/scripts/macos/mac/misc/552-skhdDailyWork.sh$|cmd + alt - f1 : $HOME/github/dotfiles-latest/scripts/macos/mac/misc/552-skhdDailyWork.sh|' "$skhdrc"

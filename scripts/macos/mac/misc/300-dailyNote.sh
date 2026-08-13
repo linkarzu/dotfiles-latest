@@ -61,8 +61,8 @@ if [ "$mode" = "work" ]; then
   kitty_sess_file="$WORK_DAILY_KITTY_SESSION_FILE"
   note_template="$work_note_template"
 else
-  main_repo_dir="$HOME/github/obsidian_main"
-  main_note_dir="$HOME/github/obsidian_main/250-daily"
+  main_repo_dir="$HOME/github/notes"
+  main_note_dir="$HOME/github/notes/250-daily"
   kitty_sess_file="$HOME/github/dotfiles-latest/kitty/sessions/daily.kitty-session"
   note_template="$personal_note_template"
 fi

@@ -2,7 +2,7 @@
 
 # Lower this to reduce the gap between CPU and the widget on its right. Keep at
 # least 35 so the 100% label and its 5-point graph inset fit.
-cpu_percent_column_width=35
+cpu_percent_column_width=30
 
 cpu_top=(
   label.font="$FONT:Semibold:7"
@@ -20,8 +20,22 @@ cpu_top=(
   y_offset=6
 )
 
+cpu_label=(
+  label.font="$FONT:Heavy:10"
+  label=cpu
+  label.width=$cpu_percent_column_width
+  label.align=left
+  label.padding_left=5
+  label.padding_right=0
+  icon.drawing=off
+  click_script="$ACTIVITY_MONITOR_CLICK_SCRIPT"
+  width=0
+  padding_right=1
+  y_offset=8
+)
+
 cpu_percent=(
-  label.font="$FONT:Heavy:12"
+  label.font="$FONT:Heavy:10"
   label=CPU
   # Match the RAM label inset from its graph.
   label.width=$cpu_percent_column_width
@@ -66,6 +80,9 @@ cpu_user=(
 # Change USAGE_GRAPH_WIDTH_PERCENT in sketchybarrc (100 = original 75-point width).
 sketchybar --add item cpu.top right \
   --set cpu.top "${cpu_top[@]}" \
+  \
+  --add item cpu.label right \
+  --set cpu.label "${cpu_label[@]}" \
   \
   --add item cpu.percent right \
   --set cpu.percent "${cpu_percent[@]}" \

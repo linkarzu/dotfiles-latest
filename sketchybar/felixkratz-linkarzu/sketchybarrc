@@ -18,7 +18,7 @@ FONT="MesloLGM Nerd Font"
 PADDINGS=1
 
 # Set to 100 for the original graph width; 50 makes CPU and RAM graphs half as wide.
-USAGE_GRAPH_WIDTH_PERCENT=70
+USAGE_GRAPH_WIDTH_PERCENT=50
 USAGE_GRAPH_WIDTH=$(((75 * USAGE_GRAPH_WIDTH_PERCENT + 50) / 100))
 
 # Keep the CPU process label within the graph, reserving three characters for "...".

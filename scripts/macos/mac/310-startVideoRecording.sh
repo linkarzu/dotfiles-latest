@@ -60,6 +60,7 @@ pkill "Mail" 2>/dev/null || true
 osascript -e 'tell application "Finder" to close every window' >/dev/null 2>&1 || true
 
 # I used this in tmux, don't use tmux anymore
+rm -f "${TMPDIR:-/tmp}/sketchybar-streaming-16-minute-reminder"
 "$HOME/github/scripts-public/macos/mac/305-bannerOn.sh"
 
 open -a "BetterDisplay"

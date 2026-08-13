@@ -381,8 +381,8 @@ bind-key -T copy-mode-extended 'l' send -X end-of-line \; switch-client -T copy-
 # bind-key -T copy-mode-vi 'H' send -X start-of-line
 # bind-key -T copy-mode-vi 'L' send -X end-of-line
 
-# don't exit copy mode when dragging with mouse
-unbind -T copy-mode-vi MouseDragEnd1Pane
+# Copy the mouse selection on release without leaving copy mode.
+bind-key -T copy-mode-vi MouseDragEnd1Pane send -X copy-selection
 
 # Bind Alt-t <M-t> in copy-mode
 # This allows me to toggle my neovim terminal even if I'm in tmux copy-mode

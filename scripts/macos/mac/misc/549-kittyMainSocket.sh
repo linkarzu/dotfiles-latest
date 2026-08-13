@@ -13,7 +13,9 @@ for sock in /tmp/kitty-*; do
   pid="${sock##*-}"
   command="$(ps -p "$pid" -o command= 2>/dev/null || true)"
 
-  if [[ "$command" == "$kitty_bin"* ]]; then
+  # QAT sockets can appear while the panel is starting up. Match only the main
+  # kitty binary, with optional args, so kitty-quick-access sockets are skipped.
+  if [[ "$command" == "$kitty_bin" || "$command" == "$kitty_bin "* ]]; then
     printf '%s\n' "$sock"
     exit 0
   fi

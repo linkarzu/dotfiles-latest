@@ -24,7 +24,9 @@ main_kitty_socket() {
     pid="${sock##*-}"
     command="$(ps -p "$pid" -o command= 2>/dev/null || true)"
 
-    if [[ "$command" == "$kitty_bin"* ]]; then
+    # QAT creates its own kitty-quick-access socket. Match only the main kitty
+    # binary, with optional args, so QAT sockets cannot be mistaken for the app.
+    if [[ "$command" == "$kitty_bin" || "$command" == "$kitty_bin "* ]]; then
       printf '%s\n' "$sock"
       return 0
     fi

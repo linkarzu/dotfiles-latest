@@ -2,11 +2,11 @@
 
 # Filename: ~/github/dotfiles-latest/kitty/scripts/kitty-zoxide-session.sh
 # Select a zoxide entry and switch to an existing kitty session,
-# or create it if it doesn't exist.
+# or create it if it doesn't exist. Also supports active tmux sessions.
 #
 # Also supports SSH host entries from ~/.ssh/config (and Include files).
-# SSH entries are shown with a "ssh-" prefix to make them easy to filter
-# and are treated as SSH targets (not zoxide directories).
+# SSH and tmux entries use prefixes to make them easy to filter and are
+# treated as connection targets (not zoxide directories).
 
 set -euo pipefail
 
@@ -44,28 +44,19 @@ require_cmd() {
 require_cmd fzf "Install (brew): brew install fzf"
 require_cmd jq "Install (brew): brew install jq"
 require_cmd zoxide "Install (brew): brew install zoxide"
+require_cmd tmux "Install (brew): brew install tmux"
 
 if [[ ! -x "$kitty_bin" ]]; then
   echo "kitty binary not found at: $kitty_bin"
   exit 1
 fi
 
-main_socket_script="$HOME/github/dotfiles-latest/scripts/macos/mac/misc/549-kittyMainSocket.sh"
-sock="$($main_socket_script || true)"
+source "$HOME/github/dotfiles-latest/kitty/scripts/kitty-tmux-launch.sh"
+
 if [[ -z "${sock:-}" ]]; then
   echo "No kitty sockets found in /tmp (kitty not running, or remote control not available)."
   exit 1
 fi
-
-kitty_remote() {
-  local current_sock=""
-
-  # The zoxide picker can stay open while QAT is being cold-started. Re-resolve
-  # the main socket for every remote-control call so a transient /tmp/kitty-<pid>
-  # socket captured before fzf cannot disappear before goto_session runs.
-  current_sock="$($main_socket_script)" || return 1
-  "$kitty_bin" @ --to "unix:${current_sock}" "$@"
-}
 
 normalize_path() {
   local p="$1"
@@ -189,9 +180,9 @@ print_menu_lines() {
     printf "%s\t%s%s%s  %s\n", path, color, base, reset, path
   }'
 
-  # SSH entries are not zoxide paths: they are parsed from ~/.ssh/config
-  # (including Include files) and displayed with a ssh- prefix.
+  # SSH and tmux entries are not zoxide paths.
   print_ssh_menu_lines
+  print_tmux_menu_lines
 }
 
 collect_ssh_config_files() {
@@ -301,6 +292,19 @@ print_ssh_menu_lines() {
   )
 }
 
+print_tmux_menu_lines() {
+  local tmux_session=""
+  local label=""
+
+  # tmux exits non-zero when its server has no sessions, which should simply
+  # leave this section of the picker empty.
+  while IFS= read -r tmux_session; do
+    [[ -z "$tmux_session" ]] && continue
+    label="tmux-${tmux_session}"
+    printf "%s\t%b%s%b\n" "tmux:${tmux_session}" "${base_color}" "$label" "${reset_color}"
+  done < <(tmux list-sessions -F '#S' 2>/dev/null || true)
+}
+
 if [[ "${1:-}" == "--reload" ]]; then
   print_menu_lines "${2:-}"
   exit 0
@@ -396,7 +400,7 @@ printf '\033[2J\033[H'
 fzf_out="$(
   fzf --exact --ansi --height=20 --reverse \
     --header="Type to filter, enter open, esc quit" \
-    --prompt="Create New Kitty Session (zoxide + ssh) > " \
+    --prompt="Create New Kitty Session (zoxide + ssh + tmux) > " \
     --no-multi \
     --with-nth=2.. \
     --no-sort \
@@ -436,6 +440,8 @@ fi
 
 if [[ "$selected_path" == ssh:* ]]; then
   focus_or_launch_ssh "${selected_path#ssh:}"
+elif [[ "$selected_path" == tmux:* ]]; then
+  focus_or_launch_tmux "${selected_path#tmux:}"
 else
   focus_or_launch_dir "$selected_path"
 fi

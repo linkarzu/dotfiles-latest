@@ -82,7 +82,7 @@ case "$choice" in
   guest_3="guest3-3guest"
   guest_1_full="cam-full-guest1"
   guest_2_full="cam-full-guest2"
-  guest_3_full="cam-full-guest3"
+  guest_3_full="cam-guest3-live"
   ;;
 8)
   main_scene="main-3-guest-live"
@@ -92,7 +92,7 @@ case "$choice" in
   guest_3="guest3-3guest-live"
   guest_1_full="cam-full-guest1"
   guest_2_full="cam-full-guest2"
-  guest_3_full="cam-full-guest3"
+  guest_3_full="cam-guest3-live"
   ;;
 9)
   main_scene="main-4-guest"
@@ -103,20 +103,19 @@ case "$choice" in
   guest_4="guest4-4guest"
   guest_1_full="cam-full-guest1"
   guest_2_full="cam-full-guest2"
-  guest_3_full="cam-full-guest3"
-  guest_4_full="cam-full-guest4"
+  guest_3_full="cam-guest3-live"
+  guest_4_full="cam-guest4-live"
   ;;
+# echo "10 - 4 guest livestream"
 10)
-  main_scene="main-4-guest-live"
-  guest_scene="guests4-all-notes-right-live"
-  guest_1="guest1-4guest-live"
-  guest_2="guest2-4guest-live"
-  guest_3="guest3-4guest-live"
-  guest_4="guest4-4guest-live"
-  guest_1_full="cam-full-guest1"
-  guest_2_full="cam-full-guest2"
-  guest_3_full="cam-full-guest3"
-  guest_4_full="cam-full-guest4"
+  main_scene="screen-main-live"
+  guest_scene="all-guests-live"
+  guest_1="screen-guest1-live"
+  guest_2="screen-guest2-live"
+  guest_1_full="cam-guest1-live"
+  guest_2_full="cam-guest2-live"
+  guest_3_full="cam-guest3-live"
+  guest_4_full="cam-guest4-live"
   ;;
 11)
   main_scene="main-screen-keyboard"
@@ -132,8 +131,8 @@ case "$choice" in
   guest_5="guest5-5guest"
   guest_1_full="cam-full-guest1"
   guest_2_full="cam-full-guest2"
-  guest_3_full="cam-full-guest3"
-  guest_4_full="cam-full-guest4"
+  guest_3_full="cam-guest3-live"
+  guest_4_full="cam-guest4-live"
   guest_5_full="cam-full-guest5"
   ;;
 13)
@@ -146,8 +145,8 @@ case "$choice" in
   guest_5="guest5-5guest-live"
   guest_1_full="cam-full-guest1"
   guest_2_full="cam-full-guest2"
-  guest_3_full="cam-full-guest3"
-  guest_4_full="cam-full-guest4"
+  guest_3_full="cam-guest3-live"
+  guest_4_full="cam-guest4-live"
   guest_5_full="cam-full-guest5"
   ;;
 *)
@@ -163,24 +162,24 @@ case "$choice" in
   set_source_record_filter "cam-guest2-live" off
   set_source_record_filter "cam-guest3-live" off
   set_source_record_filter "cam-guest4-live" off
-  set_source_record_filter "cam-main-chat" on
+  set_source_record_filter "cam-main-chat" off
   ;;
 # 1 guest
 3 | 4)
-  set_source_record_filter "cam-guest1-live" on
+  set_source_record_filter "cam-guest1-live" off
   set_source_record_filter "cam-guest2-live" off
   set_source_record_filter "cam-guest3-live" off
   set_source_record_filter "cam-guest4-live" off
-  set_source_record_filter "cam-main-chat" on
+  set_source_record_filter "cam-main-chat" off
   ;;
 # echo "5 - 2 guest"
 # echo "6 - 2 guest livestream"
 5 | 6)
-  set_source_record_filter "cam-guest1-live" on
-  set_source_record_filter "cam-guest2-live" on
+  set_source_record_filter "cam-guest1-live" off
+  set_source_record_filter "cam-guest2-live" off
   set_source_record_filter "cam-guest3-live" off
   set_source_record_filter "cam-guest4-live" off
-  set_source_record_filter "cam-main-chat" on
+  set_source_record_filter "cam-main-chat" off
   ;;
 11)
   set_source_record_filter "cam-guest1-live" off

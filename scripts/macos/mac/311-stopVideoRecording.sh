@@ -54,6 +54,7 @@ set_editor_width 80
 
 osascript -e 'display notification "Stopped" with title "Recording stopped 🔴"'
 
+rm -f "${TMPDIR:-/tmp}/sketchybar-streaming-16-minute-reminder"
 "$HOME/github/scripts-public/macos/mac/310-bannerOff.sh"
 
 pkill "BetterDisplay" 2>/dev/null || true

@@ -18,7 +18,10 @@ echo "10 - 4 guest livestream"
 echo "11 - Solo keyboard"
 echo "12 - 5 guest"
 echo "13 - 5 guest livestream"
-read -rp "Enter number: " choice
+choice="${1:-}"
+if [[ -z "$choice" ]]; then
+  read -rp "Enter number: " choice
+fi
 
 target_file="$HOME/github/dotfiles-latest/kanata/configs/mac-common.kbd"
 target_file2="$HOME/github/dotfiles-latest/skhd/skhdrc"
@@ -47,7 +50,7 @@ case "$choice" in
   main_scene="main-1-guest"
   guest_scene="guests-all-notes-right"
   guest_1="guest1-1guest"
-  guest_1_full="cam-full-guest1"
+  guest_1_full="cam-guest1-live"
   ;;
 # echo "4 - 1 guest livestream"
 4)
@@ -62,8 +65,8 @@ case "$choice" in
   guest_scene="guests2-all-notes-right"
   guest_1="screen-guest1"
   guest_2="screen-guest2"
-  guest_1_full="cam-full-guest1"
-  guest_2_full="cam-full-guest2"
+  guest_1_full="cam-guest1-live"
+  guest_2_full="cam-guest2-live"
   ;;
 # echo "6 - 2 guest livestream"
 6)
@@ -75,23 +78,23 @@ case "$choice" in
   guest_2_full="cam-guest2-live"
   ;;
 7)
-  main_scene="main-3-guest"
-  guest_scene="guests3-all-notes-right"
-  guest_1="guest1-3guest"
-  guest_2="guest2-3guest"
-  guest_3="guest3-3guest"
-  guest_1_full="cam-full-guest1"
-  guest_2_full="cam-full-guest2"
+  main_scene="screen-main-live"
+  guest_scene="all-guests-live"
+  guest_1="screen-guest1-live"
+  guest_2="screen-guest2-live"
+  guest_3="screen-guest3-live"
+  guest_1_full="cam-guest1-live"
+  guest_2_full="cam-guest2-live"
   guest_3_full="cam-guest3-live"
   ;;
 8)
-  main_scene="main-3-guest-live"
-  guest_scene="guests3-all-notes-right-live"
-  guest_1="guest1-3guest-live"
-  guest_2="guest2-3guest-live"
-  guest_3="guest3-3guest-live"
-  guest_1_full="cam-full-guest1"
-  guest_2_full="cam-full-guest2"
+  main_scene="screen-main-live"
+  guest_scene="all-guests-live"
+  guest_1="screen-guest1-live"
+  guest_2="screen-guest2-live"
+  guest_3="screen-guest3-live"
+  guest_1_full="cam-guest1-live"
+  guest_2_full="cam-guest2-live"
   guest_3_full="cam-guest3-live"
   ;;
 9)
@@ -101,8 +104,8 @@ case "$choice" in
   guest_2="guest2-4guest"
   guest_3="guest3-4guest"
   guest_4="guest4-4guest"
-  guest_1_full="cam-full-guest1"
-  guest_2_full="cam-full-guest2"
+  guest_1_full="cam-guest1-live"
+  guest_2_full="cam-guest2-live"
   guest_3_full="cam-guest3-live"
   guest_4_full="cam-guest4-live"
   ;;
@@ -129,8 +132,8 @@ case "$choice" in
   guest_3="guest3-5guest"
   guest_4="guest4-5guest"
   guest_5="guest5-5guest"
-  guest_1_full="cam-full-guest1"
-  guest_2_full="cam-full-guest2"
+  guest_1_full="cam-guest1-live"
+  guest_2_full="cam-guest2-live"
   guest_3_full="cam-guest3-live"
   guest_4_full="cam-guest4-live"
   guest_5_full="cam-full-guest5"
@@ -143,8 +146,8 @@ case "$choice" in
   guest_3="guest3-5guest-live"
   guest_4="guest4-5guest-live"
   guest_5="guest5-5guest-live"
-  guest_1_full="cam-full-guest1"
-  guest_2_full="cam-full-guest2"
+  guest_1_full="cam-guest1-live"
+  guest_2_full="cam-guest2-live"
   guest_3_full="cam-guest3-live"
   guest_4_full="cam-guest4-live"
   guest_5_full="cam-full-guest5"

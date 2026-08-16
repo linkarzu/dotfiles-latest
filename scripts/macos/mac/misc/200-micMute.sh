@@ -16,8 +16,17 @@ export PATH="/opt/homebrew/bin:$PATH"
 MIC_NAME_FILE="/tmp/${USER}_mic_name"
 MIC_NAME=$(cat "$MIC_NAME_FILE" 2>/dev/null)
 
-# Get the current microphone volume
-MIC_VOLUME=$(osascript -e 'input volume of (get volume settings)')
+# Capture the current volume and mute the active microphone immediately. The
+# remaining logic still synchronizes every other input device afterward.
+MIC_VOLUME=$(osascript \
+  -e 'set micVolume to input volume of (get volume settings)' \
+  -e 'if micVolume > 0 then set volume input volume 0' \
+  -e 'return micVolume')
+
+# Reflect the mute immediately, before synchronizing the other input devices.
+if [[ "$MIC_VOLUME" =~ ^[0-9]+$ ]] && [ "$MIC_VOLUME" -gt 0 ]; then
+  sketchybar -m --set mic label="$MIC_NAME-0 " icon= icon.color=$RED label.color=$RED
+fi
 
 # Get current mic as swill switch to it after muting all mics
 CURRENT_MIC=$(SwitchAudioSource -t input -c)
@@ -55,11 +64,6 @@ if [[ "$MIC_VOLUME" =~ ^[0-9]+$ ]]; then
     SwitchAudioSource -t input -s "$CURRENT_MIC"
     # osascript -e 'display notification "Mic Unmuted 🔈" with title "Unmuted 🟢"'
     ~/github/dotfiles-latest/sketchybar/felixkratz-linkarzu/plugins/mic.sh
-    if [[ "$MIC_NAME" == Yeti* ]]; then
-      sketchybar -m --set mic label="$MIC_NAME-$MIC_LEVEL " icon= icon.color=$BLUE label.color=$BLUE
-    else
-      sketchybar -m --set mic label="$MIC_NAME-$MIC_LEVEL " icon= icon.color=$ORANGE label.color=$ORANGE
-    fi
   fi
 else
   osascript -e 'display notification "Make sure its connected" with title "Mic not detected"'

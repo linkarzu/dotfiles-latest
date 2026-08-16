@@ -104,7 +104,7 @@ shift + alt - f2 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/mac
 shift + alt - f3 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py cam-guest3-live --no-auth"
 shift + alt - f4 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py cam-guest4-live --no-auth"
 # shift + alt - f5 : 
-shift + alt - f6 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py youtube-members --no-auth"
+shift + alt - f6 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/youtube_members_scene.py --no-auth"
 # shift + alt - f7 : 
 # lineid_obs_switchscene_guest
 shift + alt - f8 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py all-guests-live --no-auth"

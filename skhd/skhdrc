@@ -50,6 +50,7 @@ ctrl + alt - f9 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switc
 ctrl + cmd - f12 : $HOME/github/dotfiles-latest/scripts/macos/mac/misc/550-skhdSession.sh "$HOME/github/dotfiles-latest/kitty/sessions/dots-private.kitty-session"
 # ctrl + cmd - f13 : $HOME/github/dotfiles-latest/scripts/macos/mac/misc/551-skhdDaily.sh
 ctrl + cmd - f13 : /Applications/kitty.app/Contents/MacOS/kitty @ --to "unix:$($HOME/github/dotfiles-latest/scripts/macos/mac/misc/549-kittyMainSocket.sh)" action launch_session_select
+ctrl + cmd - f16 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/561-skhdQatOpencode.sh"
 ctrl + cmd - f17 : $HOME/github/dotfiles-latest/scripts/macos/mac/misc/550-skhdSession.sh "$HOME/github/dotfiles-latest/kitty/sessions/obsidian.kitty-session"
 ctrl + cmd - f18 : $HOME/github/dotfiles-latest/scripts/macos/mac/misc/550-skhdSession.sh "$HOME/github/dotfiles-latest/kitty/sessions/networking.kitty-session"
 # ctrl + cmd - f18

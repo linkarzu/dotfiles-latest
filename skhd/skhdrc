@@ -24,8 +24,8 @@ shift + ctrl - f17 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-sw
 shift + ctrl - f18 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" kitty
 # shift + ctrl - f19 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" 'Brave Browser'
 shift + ctrl - f19 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" 'Helium'
-ctrl + alt - f18 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" YouTubeStudio
-ctrl + alt - f12 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" ChatGPT
+ctrl + alt - f18 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" "YouTube Studio"
+ctrl + alt - f12 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" 'ChatGPT Classic'
 ctrl + alt - f13 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" 'System Settings'
 
 # ctrl + alt - f1 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" zoom.us
@@ -83,7 +83,7 @@ cmd + alt - f11 : open "raycast://extensions/mattisssa/spotify-player/search"
 # cmd + alt - f12 : open "raycast://extensions/lardissone/raindrop-io/search"
 cmd + alt - f12 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/557-skhdQatBookmarks.sh"
 cmd + alt - f13 : open "raycast://extensions/mblode/google-search/index"
-cmd + alt - f16 : open "raycast://extensions/raycast/file-search/search-files"
+cmd + alt - f16 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/559-skhdQatRunningApps.sh"
 cmd + alt - f18 : open "raycast://extensions/vishaltelangre/google-drive/index"
 
 # letter-s
@@ -99,9 +99,9 @@ shift + cmd - f11 : open "btt://execute_assigned_actions_for_trigger/?uuid=92B63
 
 # OBS scenes
 # lineid_obs_switchscene_cam_guest1
-shift + alt - f1 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py cam-guest1-live --no-auth"
+shift + alt - f1 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py  --no-auth"
 # lineid_obs_switchscene_cam_guest2
-shift + alt - f2 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py cam-guest2-live --no-auth"
+shift + alt - f2 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py  --no-auth"
 shift + alt - f3 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py cam-guest3-live --no-auth"
 shift + alt - f4 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py cam-guest4-live --no-auth"
 # shift + alt - f5 : 
@@ -110,9 +110,9 @@ shift + alt - f6 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/mac
 # lineid_obs_switchscene_guest
 shift + alt - f8 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py all-guests-live --no-auth"
 # lineid_obs_switchscene_guest1
-shift + alt - f11 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py screen-guest1-live --no-auth"
+shift + alt - f11 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py guest1-0guest --no-auth"
 # lineid_obs_switchscene_guest2
-shift + alt - f12 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py screen-guest2-live --no-auth"
+shift + alt - f12 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py  --no-auth"
 # lineid_obs_switchscene_guest3
 shift + alt - f13 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py  --no-auth"
 shift + alt - f16 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py guest4-4guest-live --no-auth"

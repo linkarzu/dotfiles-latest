@@ -66,9 +66,8 @@ cask "microsoft-edge"
 cask "vivaldi"
 cask "obsidian"
 cask "spotify"
-# cask "hammerspoon"
+cask "hammerspoon"
 cask "hot"
 brew "fastfetch"
 cask "kindavim"
-
 

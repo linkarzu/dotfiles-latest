@@ -852,6 +852,7 @@ echo "Open installed apps"
 echo "########################################################################"
 
 open -a 'Karabiner-Elements'
+open -a 'Hammerspoon'
 open -a 'Ghostty'
 # open -a 'Raycast'
 # open -a 'Setapp'

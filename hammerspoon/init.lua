@@ -3,4 +3,7 @@
 
 -- require("cursor_escape")
 -- require("lgtv_init")
+hs.autoLaunch(true)
+
 require("move_mouse_to_corner")
+require("clipboard_feedback")

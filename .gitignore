@@ -99,3 +99,11 @@ neovim/lazyvim/lazyvim.json
 neovim/neobean/lua/.DS_Store
 kitty/sessions/daily.kitty-session
 /sketchybar/felixkratz-linkarzu/plugins/__pycache__/timer.cpython-314.pyc
+
+# Emacs generated state
+/emacs/auto-save-list/
+/emacs/eln-cache/
+/emacs/elpa/
+/emacs/custom.el
+/emacs/history
+/emacs/*~

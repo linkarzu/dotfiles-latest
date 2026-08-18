@@ -166,6 +166,7 @@ source "$ITEM_DIR/cpu.sh"
 source "$ITEM_DIR/ram.sh"
 
 source "$ITEM_DIR/timer.sh"
+source "$ITEM_DIR/opencode.sh"
 
 ###############################################################################
 #                            Community plugins

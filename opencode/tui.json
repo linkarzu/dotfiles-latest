@@ -1,4 +1,5 @@
 {
   "$schema": "https://opencode.ai/tui.json",
-  "theme": "system"
+  "theme": "system",
+  "plugin": ["./plugins/session-title-footer.tsx"]
 }

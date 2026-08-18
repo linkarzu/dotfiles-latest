@@ -53,6 +53,12 @@ opencode_windows() {
           instance: (.user_vars.opencode_instance // ""),
           generation: ((.user_vars.opencode_generation // "0") | number)
         }
+      | .opencode_title = (.title | sub("^OC[[:space:]]*\\|[[:space:]]*"; ""))
+      | .display_title = (
+          if .session_name == "" then .opencode_title
+          else "\(.session_name) | \(.opencode_title)"
+          end
+        )
       | .status = (if .waiting > 0 then "attention" elif .busy > 0 then "running" else "idle" end)
     ]
     | sort_by(
@@ -66,6 +72,7 @@ focus_window() {
   local window_id="$1"
   local socket=""
   local acknowledgement=""
+  local session_name=""
   local window=""
 
   [[ "$window_id" =~ ^[0-9]+$ ]] || return 1
@@ -77,9 +84,13 @@ focus_window() {
 
   socket="$(kitty_socket)"
   acknowledgement="$(jq -r '"\(.instance):\(.generation)"' <<<"$window")"
+  session_name="$(jq -r '.session_name' <<<"$window")"
   "$kitty_bin" @ --to "unix:${socket}" set-user-vars --match "id:${window_id}" \
     opencode_waiting=0 opencode_reason=none "opencode_ack=${acknowledgement}"
   /opt/homebrew/bin/sketchybar --trigger opencode_update >/dev/null 2>&1 || true
+  if [[ -n "$session_name" ]]; then
+    "$kitty_bin" @ --to "unix:${socket}" action goto_session "$session_name"
+  fi
   "$kitty_bin" @ --to "unix:${socket}" focus-window --match "id:${window_id}"
   open -a kitty
 }
@@ -88,7 +99,7 @@ menu_lines() {
   local home_display=""
   local status=""
   local reason=""
-  local title=""
+  local display_title=""
   local cwd=""
   local busy=""
   local id=""
@@ -99,7 +110,7 @@ menu_lines() {
   local blue=$'\033[34m'
   local grey=$'\033[90m'
 
-  while IFS=$'\t' read -r id status reason busy title cwd; do
+  while IFS=$'\t' read -r id status reason busy display_title cwd; do
     [[ -n "$id" ]] || continue
     home_display="${cwd/#$HOME/~}"
 
@@ -120,9 +131,9 @@ menu_lines() {
       ;;
     esac
 
-    printf '%s\t%b%s%b %s  %s  %s\n' "$id" "$color" "$marker" "$reset" "$title" "$home_display" "$reason"
+    printf '%s\t%b%s%b %s  %s  %s\n' "$id" "$color" "$marker" "$reset" "$display_title" "$home_display" "$reason"
   done < <(
-    opencode_windows | jq -r '.[] | [.id, .status, .reason, .busy, .title, .cwd] | @tsv'
+    opencode_windows | jq -r '.[] | [.id, .status, .reason, .busy, .display_title, .cwd] | @tsv'
   )
 }
 

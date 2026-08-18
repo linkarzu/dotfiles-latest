@@ -17,7 +17,7 @@ refresh() {
   local status=""
   local reason=""
   local busy=0
-  local title=""
+  local display_title=""
   local cwd=""
   local detail=""
   local row_icon=""
@@ -47,7 +47,7 @@ refresh() {
   args+=(--set opencode label="$count" icon.color="$color")
   args+=(--remove '/opencode\.window\..*/')
 
-  while IFS=$'\t' read -r id status reason busy title cwd; do
+  while IFS=$'\t' read -r id status reason busy display_title cwd; do
     [[ -n "$id" ]] || continue
     cwd="${cwd/#$HOME/~}"
 
@@ -75,10 +75,10 @@ refresh() {
       drawing=on
       icon="$row_icon"
       icon.color="$row_color"
-      label="${title}  ${cwd}  ${detail}"
+      label="${display_title}  ${cwd}  ${detail}"
       click_script="$selector --focus $id; sketchybar --set opencode popup.drawing=off"
     )
-  done < <(jq -r '.[] | [.id, .status, .reason, .busy, .title, .cwd] | @tsv' <<<"$windows")
+  done < <(jq -r '.[] | [.id, .status, .reason, .busy, .display_title, .cwd] | @tsv' <<<"$windows")
 
   if ((count == 0)); then
     args+=(

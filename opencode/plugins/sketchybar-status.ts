@@ -1,8 +1,10 @@
 import type { Plugin } from "@opencode-ai/plugin"
+import { readFile } from "node:fs/promises"
 
 type AttentionReason = "done" | "error" | "permission" | "question"
 type SessionState = {
   parentID?: string
+  title?: string
   status: "busy" | "idle" | "retry"
   attention: Map<string, { reason: AttentionReason; generation: number }>
 }
@@ -13,6 +15,22 @@ type RuntimeEvent = {
 
 const kittyBin = "/Applications/kitty.app/Contents/MacOS/kitty"
 const sketchybarBin = "/opt/homebrew/bin/sketchybar"
+const telegramBridgeURL = "http://127.0.0.1:47653"
+const proxyRoutes = [
+  ["GET", /^\/question$/],
+  ["GET", /^\/permission$/],
+  ["GET", /^\/api\/session\/[^/]+\/(question|permission)$/],
+  ["GET", /^\/session\/status$/],
+  ["GET", /^\/session\/[^/]+$/],
+  ["GET", /^\/session\/[^/]+\/message$/],
+  ["POST", /^\/permission\/[^/]+\/reply$/],
+  ["POST", /^\/question\/[^/]+\/reply$/],
+  ["POST", /^\/question\/[^/]+\/reject$/],
+  ["POST", /^\/session\/[^/]+\/permissions\/[^/]+$/],
+  ["POST", /^\/api\/session\/[^/]+\/(permission|question)\/[^/]+\/reply$/],
+  ["POST", /^\/api\/session\/[^/]+\/question\/[^/]+\/reject$/],
+  ["POST", /^\/session\/[^/]+\/(prompt_async|abort)$/],
+] as const
 const trackedEvents = new Set([
   "session.created",
   "session.updated",
@@ -32,18 +50,84 @@ const trackedEvents = new Set([
   "question.v2.rejected",
 ])
 
-export const SketchybarStatusPlugin: Plugin = async ({ client, $ }) => {
+export const SketchybarStatusPlugin: Plugin = async ({ client, directory, $ }) => {
   const kittyPID = process.env.KITTY_PID
   const windowID = process.env.KITTY_WINDOW_ID
   if (!kittyPID || !windowID || !$) return {}
 
   const socket = `unix:/tmp/kitty-${kittyPID}`
-  const instanceID = String(process.pid)
+  const instanceID = `${process.pid}:${windowID}:${Date.now()}`
   const initialAcknowledgement = `${instanceID}:0`
   const sessions = new Map<string, SessionState>()
+  const bridgeAttention = new Map<string, Record<string, any>>()
+  const bridgeSecret = await readFile(`${process.env.HOME}/.config/opencode-telegram-bridge/plugin-secret`, "utf8")
+    .then((value) => value.trim())
+    .catch(() => "")
   let lastPublished = ""
   let generation = 0
   let queue = Promise.resolve()
+  let bridgeQueue = Promise.resolve()
+  let proxyServer: any
+  let proxyURL = ""
+
+  async function postBridge(path: string, body: unknown) {
+    if (!bridgeSecret) return false
+    const response = await fetch(`${telegramBridgeURL}${path}`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${bridgeSecret}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
+      signal: AbortSignal.timeout(1500),
+    }).catch(() => undefined)
+    return response?.ok ?? false
+  }
+
+  function bridgeEventKey(event: Record<string, any>) {
+    return `${event.sessionID}:${event.kind}:${event.requestID ?? event.sessionID}`
+  }
+
+  function trackBridgeEvent(event: Record<string, any>) {
+    if (event.action === "attention") {
+      bridgeAttention.set(bridgeEventKey(event), event)
+      return
+    }
+    if (event.action === "resolve") {
+      bridgeAttention.delete(bridgeEventKey(event))
+      return
+    }
+    if (event.action === "resolve-session") {
+      const kinds = new Set(event.kinds ?? ["done", "error", "permission", "question"])
+      for (const [key, pending] of bridgeAttention) {
+        if (pending.sessionID === event.sessionID && kinds.has(pending.kind)) bridgeAttention.delete(key)
+      }
+    }
+  }
+
+  async function proxyRequest(request: Request) {
+    const url = new URL(request.url)
+    const allowed = proxyRoutes.some(([method, pattern]) => request.method === method && pattern.test(url.pathname))
+    if (
+      !allowed ||
+      request.headers.has("Origin") ||
+      request.headers.get("Authorization") !== `Bearer ${bridgeSecret}`
+    ) {
+      return Response.json({ error: "Forbidden" }, { status: 403 })
+    }
+
+    const apiClient = (client as any)._client
+    const method = request.method.toLowerCase() as "get" | "post"
+    const body = request.method === "POST" ? await request.json().catch(() => undefined) : undefined
+    const result = await apiClient[method]({
+      url: url.pathname,
+      query: Object.fromEntries(url.searchParams),
+      body,
+    })
+    const status = result.response?.status ?? (result.error ? 500 : 200)
+    if (status === 204) return new Response(null, { status })
+    return Response.json(result.error ?? result.data ?? {}, { status })
+  }
 
   function session(sessionID: string) {
     let current = sessions.get(sessionID)
@@ -59,7 +143,10 @@ export const SketchybarStatusPlugin: Plugin = async ({ client, $ }) => {
     if (current.parentID !== undefined) return current
 
     const response = await client.session.get({ path: { id: sessionID } }).catch(() => undefined)
-    if (response?.data?.parentID) current.parentID = response.data.parentID
+    if (response?.data) {
+      current.parentID = response.data.parentID ?? ""
+      current.title = response.data.title
+    }
     return current
   }
 
@@ -108,7 +195,11 @@ export const SketchybarStatusPlugin: Plugin = async ({ client, $ }) => {
         is_focused?: boolean
         tabs?: Array<{
           is_focused?: boolean
-          windows?: Array<{ is_focused?: boolean; user_vars?: Record<string, string> }>
+          windows?: Array<{
+            is_focused?: boolean
+            session_name?: string
+            user_vars?: Record<string, string>
+          }>
         }>
       }>
       const osWindow = tree[0]
@@ -117,10 +208,44 @@ export const SketchybarStatusPlugin: Plugin = async ({ client, $ }) => {
       return {
         acknowledgement: window?.user_vars?.opencode_ack ?? "",
         focused: Boolean(osWindow?.is_focused && tab?.is_focused && window?.is_focused),
+        sessionName: window?.session_name ?? "",
       }
     } catch {
       return undefined
     }
+  }
+
+  async function registerBridge() {
+    if (!proxyURL) return
+    const windowState = await kittyWindowState()
+    await postBridge("/register", {
+      instanceID,
+      serverURL: proxyURL,
+      directory,
+      kittySession: windowState?.sessionName ?? "",
+      kittyWindowID: windowID,
+      sessions: [...sessions].map(([id, current]) => ({
+        id,
+        parentID: current.parentID || undefined,
+        title: current.title,
+        status: current.status,
+      })),
+      attention: [...bridgeAttention.values()],
+    })
+  }
+
+  function scheduleBridgeRegistration() {
+    bridgeQueue = bridgeQueue.then(registerBridge).catch(() => undefined)
+  }
+
+  function sendBridgeEvent(event: Record<string, unknown>) {
+    trackBridgeEvent(event)
+    bridgeQueue = bridgeQueue
+      .then(async () => {
+        await registerBridge()
+        await postBridge("/event", { instanceID, event })
+      })
+      .catch(() => undefined)
   }
 
   async function applyAcknowledgement() {
@@ -131,13 +256,19 @@ export const SketchybarStatusPlugin: Plugin = async ({ client, $ }) => {
     if (!Number.isFinite(acknowledgedGeneration)) return false
 
     let changed = false
-    for (const current of sessions.values()) {
+    let bridgeChanged = false
+    for (const [sessionID, current] of sessions) {
       for (const [key, attention] of current.attention) {
         if (attention.generation > acknowledgedGeneration) continue
         current.attention.delete(key)
+        if (attention.reason === "done" || attention.reason === "error") {
+          bridgeAttention.delete(`${sessionID}:${attention.reason}:${sessionID}`)
+          bridgeChanged = true
+        }
         changed = true
       }
     }
+    if (bridgeChanged) scheduleBridgeRegistration()
     return changed
   }
 
@@ -165,10 +296,18 @@ export const SketchybarStatusPlugin: Plugin = async ({ client, $ }) => {
         if (!info?.id) return false
         const current = session(info.id)
         current.parentID = info.parentID ?? ""
+        current.title = info.title
         return false
       }
       case "session.deleted": {
-        if (properties.info?.id) sessions.delete(properties.info.id)
+        if (properties.info?.id) {
+          await sendBridgeEvent({
+            action: "resolve-session",
+            sessionID: properties.info.id,
+            resolution: "Session deleted locally",
+          })
+          sessions.delete(properties.info.id)
+        }
         break
       }
       case "session.status": {
@@ -183,22 +322,43 @@ export const SketchybarStatusPlugin: Plugin = async ({ client, $ }) => {
         if (status === "busy" || status === "retry") {
           current.attention.delete("done")
           current.attention.delete("error")
+          await sendBridgeEvent({
+            action: "resolve-session",
+            sessionID,
+            kinds: ["done", "error"],
+            resolution: "Session resumed locally",
+          })
           break
         }
 
         if (wasActive) {
-          for (const key of current.attention.keys()) {
-            if (key.startsWith("permission:") || key.startsWith("question:")) current.attention.delete(key)
-          }
           await loadSession(sessionID)
           const windowState = await kittyWindowState()
-          if (!current.parentID && !windowState?.focused) addAttention(current, "done", "done")
+          const pendingRequest = [...bridgeAttention.values()].some((event) => (
+            event.sessionID === sessionID && (event.kind === "permission" || event.kind === "question")
+          ))
+          if (!current.parentID && !pendingRequest && !windowState?.focused) {
+            addAttention(current, "done", "done")
+          }
+          if (!current.parentID && !pendingRequest) {
+            await sendBridgeEvent({ action: "attention", kind: "done", sessionID })
+          }
         }
         break
       }
       case "session.error": {
         const sessionID = properties.sessionID
-        if (sessionID) addAttention(session(sessionID), "error", "error")
+        if (sessionID) {
+          addAttention(session(sessionID), "error", "error")
+          await sendBridgeEvent({
+            action: "attention",
+            kind: "error",
+            sessionID,
+            details: {
+              message: properties.error?.data?.message ?? properties.error?.message ?? properties.error?.name,
+            },
+          })
+        }
         break
       }
       case "permission.asked":
@@ -208,6 +368,23 @@ export const SketchybarStatusPlugin: Plugin = async ({ client, $ }) => {
         const requestID = properties.id
         if (sessionID && requestID) {
           addAttention(session(sessionID), `permission:${requestID}`, "permission")
+          await sendBridgeEvent({
+            action: "attention",
+            kind: "permission",
+            sessionID,
+            requestID,
+            details: {
+              apiVersion: input.type === "permission.updated"
+                ? "deprecated"
+                : input.type.includes(".v2.")
+                  ? "v2"
+                  : "legacy",
+              permission: properties.permission ?? properties.action ?? properties.type,
+              patterns: properties.patterns ?? properties.resources ?? (
+                Array.isArray(properties.pattern) ? properties.pattern : [properties.pattern].filter(Boolean)
+              ),
+            },
+          })
         }
         break
       }
@@ -215,9 +392,23 @@ export const SketchybarStatusPlugin: Plugin = async ({ client, $ }) => {
       case "permission.v2.replied": {
         if (properties.sessionID && properties.requestID) {
           removeRequest(properties.sessionID, properties.requestID)
+          await sendBridgeEvent({
+            action: "resolve",
+            kind: "permission",
+            sessionID: properties.sessionID,
+            requestID: properties.requestID,
+            resolution: "Permission answered locally",
+          })
         }
         if (properties.sessionID && properties.permissionID) {
           removeRequest(properties.sessionID, properties.permissionID)
+          await sendBridgeEvent({
+            action: "resolve",
+            kind: "permission",
+            sessionID: properties.sessionID,
+            requestID: properties.permissionID,
+            resolution: "Permission answered locally",
+          })
         }
         break
       }
@@ -227,6 +418,16 @@ export const SketchybarStatusPlugin: Plugin = async ({ client, $ }) => {
         const requestID = properties.id
         if (sessionID && requestID) {
           addAttention(session(sessionID), `question:${requestID}`, "question")
+          await sendBridgeEvent({
+            action: "attention",
+            kind: "question",
+            sessionID,
+            requestID,
+            details: {
+              apiVersion: input.type.includes(".v2.") ? "v2" : "legacy",
+              questions: properties.questions ?? [],
+            },
+          })
         }
         break
       }
@@ -236,6 +437,13 @@ export const SketchybarStatusPlugin: Plugin = async ({ client, $ }) => {
       case "question.v2.rejected": {
         if (properties.sessionID && properties.requestID) {
           removeRequest(properties.sessionID, properties.requestID)
+          await sendBridgeEvent({
+            action: "resolve",
+            kind: "question",
+            sessionID: properties.sessionID,
+            requestID: properties.requestID,
+            resolution: "Question answered locally",
+          })
         }
         break
       }
@@ -249,7 +457,17 @@ export const SketchybarStatusPlugin: Plugin = async ({ client, $ }) => {
   await $`${kittyBin} @ --to ${socket} set-user-vars --match id:${windowID} opencode_ack=${initialAcknowledgement}`
     .quiet()
     .nothrow()
+  const bun = (globalThis as any).Bun
+  if (bridgeSecret && bun?.serve) {
+    try {
+      proxyServer = bun.serve({ hostname: "127.0.0.1", port: 0, fetch: proxyRequest })
+      proxyURL = `http://127.0.0.1:${proxyServer.port}`
+    } catch {
+      proxyServer = undefined
+    }
+  }
   await publish(true)
+  await registerBridge()
 
   const retryTimer = setInterval(() => {
     const state = aggregate()
@@ -262,6 +480,10 @@ export const SketchybarStatusPlugin: Plugin = async ({ client, $ }) => {
       })
       .catch(() => undefined)
   }, 1000)
+
+  const bridgeHeartbeatTimer = setInterval(() => {
+    scheduleBridgeRegistration()
+  }, 10_000)
 
   return {
     event: async ({ event }) => {
@@ -280,7 +502,11 @@ export const SketchybarStatusPlugin: Plugin = async ({ client, $ }) => {
     },
     dispose: async () => {
       clearInterval(retryTimer)
+      clearInterval(bridgeHeartbeatTimer)
       await queue
+      await bridgeQueue
+      await postBridge("/unregister", { instanceID })
+      proxyServer?.stop(true)
       await $`${kittyBin} @ --to ${socket} set-user-vars --match id:${windowID} opencode_busy opencode_waiting opencode_reason opencode_ack opencode_instance opencode_generation`
         .quiet()
         .nothrow()

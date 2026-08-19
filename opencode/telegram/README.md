@@ -1,0 +1,64 @@
+# OpenCode Telegram bridge
+
+This bridge keeps each Kitty OpenCode process independent while allowing one
+private Telegram bot to report and answer pending questions, permissions,
+errors, and completed sessions.
+
+Notifications for questions, permissions, and completion are sent only after
+they remain unresolved for four minutes. Errors are sent immediately. The bot
+accepts messages only from the configured numeric Telegram user ID.
+
+## Setup
+
+Run the guided configuration:
+
+```sh
+~/github/dotfiles-latest/opencode/telegram/setup.sh --configure
+```
+
+The script walks through creating a bot with the verified `@BotFather`, checks
+the token with Telegram, and discovers your numeric user ID from the `/start`
+message sent directly to the new bot. It stores credentials outside this
+repository at `~/.config/opencode-telegram-bridge/credentials.json` with file
+mode `0600` in a directory with mode `0700`. It also generates a separate
+owner-readable local secret used to authenticate OpenCode plugin requests to
+the loopback bridge; the plugin never reads the Telegram bot token.
+
+Install and start the per-user macOS LaunchAgent:
+
+```sh
+~/github/dotfiles-latest/opencode/telegram/setup.sh --install
+```
+
+Restart existing OpenCode processes after installing the bridge so the updated
+plugin is loaded. New processes register automatically.
+
+Check or remove the service with:
+
+```sh
+~/github/dotfiles-latest/opencode/telegram/setup.sh --status
+~/github/dotfiles-latest/opencode/telegram/setup.sh --uninstall
+```
+
+The unresolved-attention delay defaults to four minutes. For temporary testing,
+change it and restart the bridge with:
+
+```sh
+~/github/dotfiles-latest/opencode/telegram/setup.sh --set-delay 30
+~/github/dotfiles-latest/opencode/telegram/setup.sh --install
+```
+
+Uninstalling preserves credentials. Bot and bridge logs are under
+`~/.config/opencode-telegram-bridge/`.
+
+## Telegram usage
+
+- Tap `Once`, `Always`, or `Reject` on a permission alert.
+- Tap an option or reply directly to a question alert.
+- Reply directly to a completion or error alert to continue that session.
+- Reply with `/abort` to stop the associated session.
+- Send `/sessions` or `/status` to see currently registered processes.
+
+Telegram bot chats are not end-to-end encrypted. Notifications intentionally
+contain only short session, question, permission, command/path, error, and
+completion summaries rather than full source, diffs, or tool output.

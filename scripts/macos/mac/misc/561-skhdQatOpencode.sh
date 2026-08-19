@@ -2,9 +2,6 @@
 
 set -euo pipefail
 
-# Reset this persistent picker after editing with:
-# pkill -f 'kitty-quick-access.*--instance-group=opencode-sessions'
-
 kitty_bin="/Applications/kitty.app/Contents/MacOS/kitty"
 main_socket_script="$HOME/github/dotfiles-latest/scripts/macos/mac/misc/549-kittyMainSocket.sh"
 qat_config="$HOME/github/dotfiles-latest/kitty/quick-access-terminal-center.conf"
@@ -35,36 +32,33 @@ launch_qat() {
 }
 
 if [[ "${1:-}" == "--pick" ]]; then
-  while true; do
-    set +e
-    available="$($selector --list)"
-    list_rc=$?
-    set -e
+  set +e
+  available="$($selector --list)"
+  list_rc=$?
+  set -e
 
-    if [[ $list_rc -ne 0 ]]; then
-      exit "$list_rc"
-    fi
-    if [[ -z "$available" ]]; then
-      printf 'No OpenCode tabs are running.\n'
-      read -r -p "Press enter to hide. "
-      toggle_qat
-      sleep 1
-      continue
-    fi
-
-    set +e
-    window_id="$($selector --pick-id)"
-    picker_rc=$?
-    set -e
-
+  if [[ $list_rc -ne 0 ]]; then
+    exit "$list_rc"
+  fi
+  if [[ -z "$available" ]]; then
+    printf 'No OpenCode tabs are running.\n'
+    read -r -p "Press enter to hide. "
     toggle_qat
-    if [[ $picker_rc -eq 0 && -n "$window_id" ]]; then
-      "$selector" --focus "$window_id" || true
-    elif [[ $picker_rc -ne 1 && $picker_rc -ne 130 ]]; then
-      exit "$picker_rc"
-    fi
-    sleep 0.2
-  done
+    exit 0
+  fi
+
+  set +e
+  window_id="$($selector --pick-id)"
+  picker_rc=$?
+  set -e
+
+  toggle_qat
+  if [[ $picker_rc -eq 0 && -n "$window_id" ]]; then
+    "$selector" --focus "$window_id" || true
+  elif [[ $picker_rc -ne 1 && $picker_rc -ne 130 ]]; then
+    exit "$picker_rc"
+  fi
+  exit 0
 fi
 
 launch_qat

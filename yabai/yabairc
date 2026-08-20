@@ -381,7 +381,8 @@ yabai -m rule --add app="^(Python)$" title="^Schedule livestream$" manage=off
 # newly-created window after the move. Add other apps with this behavior to
 # this regex. Example: app="^(macshot|GIMP|Microsoft Edge)$"
 yabai -m signal --add event=window_created app="^(macshot)$" action='sleep 0.2; yabai -m window "$YABAI_WINDOW_ID" --focus'
-yabai -m signal --add event=window_created app="^(Python)$" title="^Schedule livestream$" action='sleep 0.2; yabai -m window "$YABAI_WINDOW_ID" --focus'
+# Follow Kitty if its assigned space changes instead of hard-coding desk3.
+yabai -m signal --add event=window_created app="^(Python)$" title="^Schedule livestream$" action='sleep 0.2; kitty_space="$(yabai -m query --windows | jq -r "first(.[] | select(.app == \"kitty\") | .space) // empty")"; if [ -n "$kitty_space" ]; then yabai -m window "$YABAI_WINDOW_ID" --space "$kitty_space"; fi; yabai -m window "$YABAI_WINDOW_ID" --focus'
 
 yabai -m rule --add app="^kitty$" space=desk3
 

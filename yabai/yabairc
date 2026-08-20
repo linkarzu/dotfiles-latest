@@ -378,6 +378,7 @@ yabai -m rule --add app="^.*$" space=desk1
 # newly-created window after the move. Add other apps with this behavior to
 # this regex. Example: app="^(macshot|GIMP|Microsoft Edge)$"
 yabai -m signal --add event=window_created app="^(macshot)$" action='sleep 0.2; yabai -m window "$YABAI_WINDOW_ID" --focus'
+yabai -m signal --add event=window_created app="^(Python)$" title="^Schedule livestream$" action='sleep 0.2; yabai -m window "$YABAI_WINDOW_ID" --focus'
 
 yabai -m rule --add app="^kitty$" space=desk3
 

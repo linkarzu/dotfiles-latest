@@ -372,6 +372,9 @@ elif [ "$display_count" -eq 3 ]; then
 fi
 
 yabai -m rule --add app="^.*$" space=desk1
+# Keep the Tk livestream picker floating so its own size and position survive
+# the catch-all desk1 rule above.
+yabai -m rule --add app="^(Python)$" title="^Schedule livestream$" manage=off
 # Some apps create editor/helper windows but do not reliably activate/focus
 # them after yabai moves them to desk1 with the catch-all rule above. CleanShot
 # handles this correctly by itself, but macshot needs yabai to focus the exact

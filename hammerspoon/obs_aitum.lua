@@ -3,6 +3,7 @@ local M = {}
 local log = hs.logger.new("obs-aitum", "info")
 local URL_EVENT = "obs-aitum-start"
 local DIAGNOSTIC_URL_EVENT = "obs-aitum-diagnose"
+local START_RESULT_PATH = "/tmp/obs-aitum-start.txt"
 local DIAGNOSTIC_RESULT_PATH = "/tmp/obs-aitum-diagnose.txt"
 local MAX_NODES = 2000
 
@@ -69,17 +70,24 @@ local function findText(elements, expected, pressable)
 	return nil
 end
 
+local function findTextContaining(elements, expected)
+	for _, element in ipairs(elements) do
+		for _, name in ipairs({ "AXTitle", "AXDescription", "AXValue", "AXHelp" }) do
+			local value = attribute(element, name)
+			if type(value) == "string" and value:find(expected, 1, true) then
+				return element
+			end
+		end
+	end
+	return nil
+end
+
 local function frameCenterY(element)
 	local frame = attribute(element, "AXFrame")
 	if not frame then
 		return nil
 	end
 	return frame.y + frame.h / 2, frame
-end
-
-local function selected(element)
-	local value = attribute(element, "AXValue")
-	return attribute(element, "AXSelected") == true or value == true or value == 1
 end
 
 local function press(element)
@@ -168,11 +176,74 @@ local function writeDiagnosticResult(ok, message)
 	file:close()
 end
 
-local function runHorizontalYouTube(startOutput)
+local function writeStartResult(status, message)
+	local file = io.open(START_RESULT_PATH, "w")
+	if not file then
+		return
+	end
+	file:write(status .. ": " .. message .. "\n")
+	file:close()
+end
+
+local function dismissObsCrashReporter()
+	local reporter = hs.application.find("Problem Reporter")
+	if not reporter then
+		return false, nil
+	end
+	local root = hs.axuielement.applicationElement(reporter)
+	for _, window in ipairs(attribute(root, "AXWindows") or {}) do
+		local elements = descendants(window, 8)
+		local isObsReport = attribute(window, "AXTitle") == "Problem Report for OBS Studio"
+			or findTextContaining(elements, "OBS Studio quit unexpectedly.") ~= nil
+		if isObsReport then
+			local okButton = findText(elements, "OK", true)
+			if not okButton or not press(okButton) then
+				return true, "Could not dismiss the OBS crash report"
+			end
+			log.w("Dismissed stale OBS crash report without reopening OBS")
+			return true, nil
+		end
+	end
+	return false, nil
+end
+
+local function runHorizontalYouTube(startOutput, popupAttempts)
+	popupAttempts = popupAttempts or 0
+	if startOutput then
+		writeStartResult("pending", "Inspecting OBS Aitum controls")
+	end
+	local foundCrashReport, crashReportError = dismissObsCrashReporter()
+	if crashReportError then
+		fail(crashReportError)
+		if startOutput then
+			writeStartResult("error", crashReportError)
+		else
+			writeDiagnosticResult(false, crashReportError)
+		end
+		return false
+	end
+	if foundCrashReport then
+		if popupAttempts >= 3 then
+			local message = "OBS crash report remained open after dismissal"
+			fail(message)
+			if startOutput then
+				writeStartResult("error", message)
+			else
+				writeDiagnosticResult(false, message)
+			end
+			return false
+		end
+		hs.timer.doAfter(0.2, function()
+			runHorizontalYouTube(startOutput, popupAttempts + 1)
+		end)
+		return true
+	end
 	local app = hs.application.get("com.obsproject.obs-studio") or hs.application.find("OBS")
 	if not app then
 		fail("OBS is not running")
-		if not startOutput then
+		if startOutput then
+			writeStartResult("error", "OBS is not running")
+		else
 			writeDiagnosticResult(false, "OBS is not running")
 		end
 		return false
@@ -186,10 +257,39 @@ local function runHorizontalYouTube(startOutput)
 
 	local root = hs.axuielement.applicationElement(app)
 	local elements = descendants(root, 14)
+	if findTextContaining(elements, "Unable to start output.") then
+		if popupAttempts >= 3 then
+			local message = "Aitum output error remained open after dismissal"
+			fail(message)
+			if startOutput then
+				writeStartResult("error", message)
+			else
+				writeDiagnosticResult(false, message)
+			end
+			return false
+		end
+		local okButton = findText(elements, "OK", true)
+		if not okButton or not press(okButton) then
+			fail("Could not dismiss the stale Aitum output error")
+			if startOutput then
+				writeStartResult("error", "Could not dismiss the stale Aitum output error")
+			else
+				writeDiagnosticResult(false, "Could not dismiss the stale Aitum output error")
+			end
+			return false
+		end
+		log.w("Dismissed stale Aitum main-encoder output error")
+		hs.timer.doAfter(0.2, function()
+			runHorizontalYouTube(startOutput, popupAttempts + 1)
+		end)
+		return true
+	end
 	local aitumTab = findText(elements, "Aitum Multistream", true)
 	if not aitumTab then
 		fail("Could not find the Aitum Multistream dock tab")
-		if not startOutput then
+		if startOutput then
+			writeStartResult("error", "Could not find the Aitum Multistream dock tab")
+		else
 			writeDiagnosticResult(false, "Could not find the Aitum Multistream dock tab")
 		end
 		return false
@@ -200,20 +300,24 @@ local function runHorizontalYouTube(startOutput)
 		return lowerThirdsTab ~= nil and press(lowerThirdsTab)
 	end
 
-	if not selected(aitumTab) and not press(aitumTab) then
+	if not press(aitumTab) then
 		fail("Could not select the Aitum Multistream dock tab")
-		if not startOutput then
+		if startOutput then
+			writeStartResult("error", "Could not select the Aitum Multistream dock tab")
+		else
 			writeDiagnosticResult(false, "Could not select the Aitum Multistream dock tab")
 		end
 		return false
 	end
 
-	hs.timer.doAfter(0.2, function()
+	hs.timer.doAfter(0.5, function()
 		local visibleElements = descendants(root, 14)
 		local label, labelError = horizontalYouTubeLabel(visibleElements)
 		if not label then
 			fail(labelError)
-			if not startOutput then
+			if startOutput then
+				writeStartResult("error", labelError)
+			else
 				writeDiagnosticResult(false, labelError)
 			end
 			restoreLowerThirdsTab()
@@ -223,7 +327,9 @@ local function runHorizontalYouTube(startOutput)
 		local button = adjacentStreamButton(label)
 		if not button then
 			fail("Could not find the Main Canvas YouTube Output button")
-			if not startOutput then
+			if startOutput then
+				writeStartResult("error", "Could not find the Main Canvas YouTube Output button")
+			else
 				writeDiagnosticResult(false, "Could not find the Main Canvas YouTube Output button")
 			end
 			restoreLowerThirdsTab()
@@ -242,12 +348,19 @@ local function runHorizontalYouTube(startOutput)
 		end
 		if not click(button) then
 			fail("Could not press the Main Canvas YouTube Output button")
+			writeStartResult("error", "Could not press the Main Canvas YouTube Output button")
 			restoreLowerThirdsTab()
 			return
 		end
 		log.i("Pressed Main Canvas YouTube Output")
 
-		hs.timer.doAfter(0.2, function()
+		hs.timer.doAfter(0.5, function()
+			local resultElements = descendants(root, 14)
+			if findTextContaining(resultElements, "Unable to start output.") then
+				writeStartResult("error", "Aitum rejected the output because the main encoder is inactive")
+			else
+				writeStartResult("ok", "Pressed Main Canvas YouTube Output")
+			end
 			if not restoreLowerThirdsTab() then
 				log.w("Could not restore the lower-thirds OBS dock tab")
 			end

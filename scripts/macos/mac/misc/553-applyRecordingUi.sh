@@ -26,6 +26,13 @@ sed -i '' -E "/^  - files: \"\\*\\.md\"$/,/^  - files:/ s/^([[:space:]]*printWid
 
 sed -i '' -E "/^else$/,/^  vim.opt.wrap = true$/ s/^([[:space:]]*vim\.opt\.colorcolumn = \x22)[0-9]+(\x22)/\1${text_width}\2/" "$neovim_options"
 
+grep -Eq "^font_size ${font_size}([.]0)?$" "$kitty_conf"
+grep -Eq "^[[:space:]]*vim[.]opt[.]textwidth = ${text_width}$" "$neovim_options"
+grep -Eq "^[[:space:]]*vim[.]opt[.]colorcolumn = \"${text_width}\"$" "$neovim_options"
+grep -Eq "^[[:space:]]*virtcolumn = \"${text_width}\"," "$virt_column_conf"
+grep -Eq "^[[:space:]]*printWidth: ${text_width}$" "$prettier_conf"
+grep -Eq "^[[:space:]]*printWidth: ${text_width}$" "$website_prettier_conf"
+
 updated_sockets=0
 for sock in /tmp/kitty-*; do
   [[ -S "$sock" ]] || continue
@@ -47,6 +54,11 @@ for server in "$nvim_server_dir"/*/*; do
     updated_nvim=$((updated_nvim + 1))
   fi
 done
+
+if [[ "$updated_nvim" -eq 0 ]]; then
+  echo "No running Neovim server accepted the recording UI update." >&2
+  exit 1
+fi
 
 printf 'Updated %s kitty socket(s) and %s running Neovim instance(s) in place.\n' \
   "$updated_sockets" "$updated_nvim"

@@ -166,9 +166,6 @@ case "$choice" in
 # 1 guest
 3 | 4)
   set_source_record_filter "cam-guest1-live" off
-  set_source_record_filter "cam-guest2-live" off
-  set_source_record_filter "cam-guest3-live" off
-  set_source_record_filter "cam-guest4-live" off
   set_source_record_filter "cam-main-chat" off
   ;;
 # echo "5 - 2 guest"

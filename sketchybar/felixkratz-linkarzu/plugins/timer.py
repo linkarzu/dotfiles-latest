@@ -1,23 +1,68 @@
 #!/usr/bin/env python3
 
 # import libs:
+import hashlib
 import sys
 import os
 import time
 import signal
+import shutil
 import subprocess
 from datetime import datetime
+from pathlib import Path
+
+
+HERE = Path(__file__).resolve().parent
+VENV_PATH = HERE / ".venv"
+REQUIREMENTS_PATH = HERE / "requirements.txt"
+
+
+def ensure_venv():
+    if Path(sys.prefix).resolve() == VENV_PATH.resolve():
+        return
+    python = VENV_PATH / "bin" / "python"
+    expected_version = f"{sys.version_info.major}.{sys.version_info.minor}"
+    if python.exists():
+        installed_version = subprocess.run(
+            [
+                str(python),
+                "-c",
+                "import sys; print(f'{sys.version_info.major}.{sys.version_info.minor}')",
+            ],
+            text=True,
+            capture_output=True,
+            check=False,
+        ).stdout.strip()
+        if installed_version != expected_version:
+            shutil.rmtree(VENV_PATH)
+    if not python.exists():
+        subprocess.check_call([sys.executable, "-m", "venv", str(VENV_PATH)])
+    requirements_digest = hashlib.sha256(REQUIREMENTS_PATH.read_bytes()).hexdigest()
+    requirements_marker = VENV_PATH / ".requirements.sha256"
+    installed_digest = (
+        requirements_marker.read_text(encoding="utf-8").strip()
+        if requirements_marker.exists()
+        else None
+    )
+    if installed_digest != requirements_digest:
+        subprocess.check_call(
+            [str(python), "-m", "pip", "install", "-r", str(REQUIREMENTS_PATH)]
+        )
+        requirements_marker.write_text(f"{requirements_digest}\n", encoding="utf-8")
+    os.execv(str(python), [str(python), *sys.argv])
 
 
 # define colours:
 WHITE = str("0xffcad3f5")
 RED = str("0xffed8796")
 PID_FILE = "/tmp/sketchybar_timer.pid"
+READY_FILE = "/tmp/sketchybar_timer.ready"
 STANDING_SEQUENCE_STOP_HOUR = 20
 
 
 # main function:
 def main(argv):
+    ensure_venv()
     if len(argv) < 2:
         print_usage()
         sys.exit(1)
@@ -120,6 +165,10 @@ def handle_exit(signum, frame):
 
 
 def write_pid():
+    try:
+        os.remove(READY_FILE)
+    except FileNotFoundError:
+        pass
     with open(PID_FILE, "w", encoding="utf-8") as pid_file:
         pid_file.write(str(os.getpid()))
 
@@ -134,6 +183,10 @@ def read_pid():
 
 def remove_pid_file():
     if is_current_process():
+        try:
+            os.remove(READY_FILE)
+        except FileNotFoundError:
+            pass
         try:
             os.remove(PID_FILE)
         except FileNotFoundError:
@@ -182,9 +235,19 @@ def stop_running(clear_label):
                 os.kill(pid, signal.SIGKILL)
             except ProcessLookupError:
                 pass
+            for _ in range(10):
+                if not is_process_running(pid):
+                    break
+                time.sleep(0.1)
+        if is_process_running(pid):
+            raise RuntimeError(f"Timer process {pid} did not stop")
 
     try:
         os.remove(PID_FILE)
+    except FileNotFoundError:
+        pass
+    try:
+        os.remove(READY_FILE)
     except FileNotFoundError:
         pass
 
@@ -267,7 +330,10 @@ def set_timer_label(label, color=None):
     if color:
         args.append("label.color=" + color)
 
-    subprocess.run(args, check=False)
+    subprocess.run(args, check=True)
+    if is_current_process() and not os.path.exists(READY_FILE):
+        with open(READY_FILE, "w", encoding="utf-8") as ready_file:
+            ready_file.write(str(os.getpid()))
 
 
 def format_seconds(seconds):
@@ -299,4 +365,7 @@ def finish_event(message="Time Up!", clear_label=True):
 
 
 if __name__ == "__main__":
-    main(sys.argv)
+    try:
+        main(sys.argv)
+    finally:
+        remove_pid_file()

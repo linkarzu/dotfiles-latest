@@ -22,13 +22,11 @@
 #   DNDModeAssertionService.takeModeAssertionWithDetailsError returned nil.
 # - Do not write Assertions.json, ModeConfigurations.json, or Settings.sqlite
 #   directly. donotdisturbd owns those files and direct writes would be brittle.
-# - Control Center UI scripting was the reliable native path here. Use process
-#   "ControlCenter" and the menu bar item whose description is "Control Center".
-# - Opening Control Center was more reliable with AXPress than click:
-#   perform action "AXPress" of menu bar item ...
-# - The Focus tile was the wide checkbox in Control Center, usually checkbox 2.
-#   This script searches for a checkbox wider than 100px and taller than 50px
-#   before falling back to checkbox 2.
+# - Hammerspoon drives Control Center through stable accessibility identifiers:
+#   com.apple.menuextra.controlcenter and controlcenter-focus-modes.
+# - recording-on records the initial state once and ensures DND is on.
+# - recording-off restores that initial state, including leaving preexisting
+#   DND enabled.
 # - For JXA status output, return from run() instead of console.log so Bash
 #   command substitution captures only the value.
 
@@ -39,11 +37,13 @@ export PATH="/opt/homebrew/bin:$PATH"
 ACTION="${1:-toggle}"
 export DND_MODE_IDENTIFIER="${DND_MODE_IDENTIFIER:-com.apple.donotdisturb.mode.default}"
 export DND_ASSERTIONS_DB="${DND_ASSERTIONS_DB:-$HOME/Library/DoNotDisturb/DB/Assertions.json}"
+HAMMERSPOON_RESULT="/tmp/dnd-hammerspoon-result"
+RECORDING_STATE="${TMPDIR:-/tmp}/recording-dnd-initial-state"
 
 case "$ACTION" in
-on | start | enable | off | stop | disable | toggle | status) ;;
+on | start | enable | off | stop | disable | toggle | status | recording-on | recording-off) ;;
 *)
-  echo "Usage: $(basename "$0") [on|off|toggle|status]" >&2
+  echo "Usage: $(basename "$0") [on|off|toggle|status|recording-on|recording-off]" >&2
   exit 2
   ;;
 esac
@@ -100,38 +100,23 @@ wait_for_status() {
 }
 
 press_focus_toggle() {
-  /usr/bin/osascript <<'APPLESCRIPT'
-tell application "System Events"
-  key code 53
-  delay 0.15
+  rm -f "$HAMMERSPOON_RESULT"
+  hs -c 'return require("dnd").pressFocus()' >/dev/null
 
-  tell process "ControlCenter"
-    perform action "AXPress" of (first menu bar item of menu bar 1 whose description is "Control Center")
+  for _ in {1..50}; do
+    if [[ -f "$HAMMERSPOON_RESULT" ]]; then
+      result="$(<"$HAMMERSPOON_RESULT")"
+      if [[ "$result" == ok:* ]]; then
+        return 0
+      fi
+      echo "${result#error: }" >&2
+      return 1
+    fi
+    sleep 0.1
+  done
 
-    repeat 20 times
-      if (count of windows) > 0 then exit repeat
-      delay 0.1
-    end repeat
-
-    if (count of windows) = 0 then error "Control Center did not open"
-
-    set focusToggle to missing value
-    repeat with candidate in (checkboxes of group 1 of window 1)
-      set candidateSize to size of candidate
-      if ((item 1 of candidateSize) > 100) and ((item 2 of candidateSize) > 50) then
-        set focusToggle to candidate
-        exit repeat
-      end if
-    end repeat
-
-    if focusToggle is missing value then set focusToggle to checkbox 2 of group 1 of window 1
-    click focusToggle
-  end tell
-
-  delay 0.2
-  key code 53
-end tell
-APPLESCRIPT
+  echo "Timed out waiting for Hammerspoon to press the Focus control" >&2
+  return 1
 }
 
 turn_on() {
@@ -170,6 +155,35 @@ turn_off() {
   return 1
 }
 
+recording_on() {
+  if [[ ! -f "$RECORDING_STATE" ]]; then
+    get_status >"$RECORDING_STATE"
+  fi
+  turn_on
+}
+
+recording_off() {
+  if [[ ! -f "$RECORDING_STATE" ]]; then
+    echo "No recording DND state found; leaving DND $(get_status)"
+    return 0
+  fi
+
+  initial_status="$(<"$RECORDING_STATE")"
+  case "$initial_status" in
+  on)
+    turn_on
+    ;;
+  off)
+    turn_off
+    ;;
+  *)
+    echo "Invalid recording DND state: $initial_status" >&2
+    return 1
+    ;;
+  esac
+  rm -f "$RECORDING_STATE"
+}
+
 case "$ACTION" in
 on | start | enable)
   turn_on
@@ -186,5 +200,11 @@ toggle)
   ;;
 status)
   get_status
+  ;;
+recording-on)
+  recording_on
+  ;;
+recording-off)
+  recording_off
   ;;
 esac

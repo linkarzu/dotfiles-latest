@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 
 export PATH="/opt/homebrew/bin:$PATH"
+mode="${1:-recording}"
+studio_url="${2:-}"
+livestream_title="${3:-}"
+helium_binary="/Applications/Helium.app/Contents/MacOS/Helium"
+youtube_studio_app_id="bgdnkjfekohdpfolipjfgjboaibfacfe"
 SwitchAudioSource -t output -s "USB Audio"
 dotfiles_dir="$HOME/github/dotfiles-latest"
 kitty_conf="$dotfiles_dir/kitty/kitty.conf"
@@ -52,7 +57,11 @@ set_editor_width 70
 
 "$HOME/github/dotfiles-latest/scripts/macos/mac/290-refreshMembers.sh"
 
-osascript -e 'display notification "Started" with title "Recording started 🟢"'
+if [[ "$mode" == "--prepare-livestream" ]]; then
+  osascript -e 'display notification "Ready for final checks" with title "Livestream prepared"'
+else
+  osascript -e 'display notification "Started" with title "Recording started 🟢"'
+fi
 
 pkill "Slack" 2>/dev/null || true
 pkill "MSTeams" 2>/dev/null || true
@@ -71,19 +80,45 @@ open -a "KofiAlerts"
 open -a "StreamElements"
 open -a "TTS"
 open -a "Brave Browser"
+nohup "$dotfiles_dir/scripts/macos/mac/315-fixObsAudio.sh" --wait \
+  >"${TMPDIR:-/tmp}/obs-brave-audio-selector.log" 2>&1 &
+if [[ "$mode" == "--prepare-livestream" && -n "$studio_url" ]]; then
+  broadcast_id="${studio_url#*/video/}"
+  broadcast_id="${broadcast_id%%/*}"
+  python3 "$HOME/github/dotfiles-private/scripts/macos/mac/obs/socialstream_prepare.py" \
+    --broadcast-id "$broadcast_id" \
+    --twitch-channel linkarzu \
+    --twitch-title "$livestream_title" \
+    || exit 1
+  "$helium_binary" \
+    --profile-directory=Default \
+    --app-id="$youtube_studio_app_id" \
+    --app-launch-url-for-shortcuts-menu-item="$studio_url" \
+    >/dev/null 2>&1 &
+  sleep 1
+  youtube_studio_window_id="$(
+    yabai -m query --windows \
+      | jq -r '[.[] | select(.app == "YouTube Studio")] | max_by(.id).id // empty'
+  )"
+  if [[ -n "$youtube_studio_window_id" ]]; then
+    yabai -m window --focus "$youtube_studio_window_id"
+  fi
+else
+  "$dotfiles_dir/scripts/macos/mac/misc/500-switchApp.sh" socialstream
+fi
 
 # open -a "DisplayLink Manager"
 
 # Keep the calendar format unchanged when recording starts.
 # sed -i '' "s|date '+%a %y/%m/%d %H:%M'|date '+%a %y/%m/%d'|" "$HOME/github/dotfiles-latest/sketchybar/felixkratz-linkarzu/plugins/calendar.sh"
 
-"$HOME/github/dotfiles-latest/scripts/macos/mac/misc/230-dnd.sh" on
+"$HOME/github/dotfiles-latest/scripts/macos/mac/misc/230-dnd.sh" recording-on
 
 # Disable my work related daily note, so I don't access it even by mistake
 sed -i '' 's|^cmd + alt - f1 : \$HOME/github/dotfiles-latest/scripts/macos/mac/misc/552-skhdDailyWork.sh$|# cmd + alt - f1 : $HOME/github/dotfiles-latest/scripts/macos/mac/misc/552-skhdDailyWork.sh|' "$skhdrc"
 skhd -r
 
-restart_kitty
+# restart_kitty
 
 $HOME/github/dotfiles-latest/yabai/yabai_restart.sh
 

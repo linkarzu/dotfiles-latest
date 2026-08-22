@@ -50,7 +50,7 @@ sed -i '' 's/^font_size .*/font_size 15/' "$kitty_conf"
 set_kitty_font_size 15
 set_editor_width 80
 
-"$HOME/github/dotfiles-latest/scripts/macos/mac/misc/230-dnd.sh" off
+"$HOME/github/dotfiles-latest/scripts/macos/mac/misc/230-dnd.sh" recording-off
 
 osascript -e 'display notification "Stopped" with title "Recording stopped 🔴"'
 
@@ -60,6 +60,15 @@ rm -f "${TMPDIR:-/tmp}/sketchybar-streaming-16-minute-reminder"
 pkill "BetterDisplay" 2>/dev/null || true
 pkill "KeyCastr" 2>/dev/null || true
 pkill "Brave Browser" 2>/dev/null || true
+brave_audio_pid_file="${TMPDIR:-/tmp}/obs-brave-audio-selector.pid"
+if [[ -f "$brave_audio_pid_file" ]]; then
+  brave_audio_pid="$(<"$brave_audio_pid_file")"
+  brave_audio_command="$(ps -p "$brave_audio_pid" -o command= 2>/dev/null || true)"
+  if [[ "$brave_audio_command" == *"315-fixObsAudio.sh --wait"* ]]; then
+    kill "$brave_audio_pid" 2>/dev/null || true
+  fi
+  rm -f "$brave_audio_pid_file"
+fi
 pkill -f 'KofiAlerts\.app/Contents/MacOS/app_mode_loader' 2>/dev/null || true
 pkill -f 'StreamElements\.app/Contents/MacOS/app_mode_loader' 2>/dev/null || true
 pkill -f 'TTS\.app/Contents/MacOS/app_mode_loader' 2>/dev/null || true
@@ -73,7 +82,7 @@ pkill -f 'TTS\.app/Contents/MacOS/app_mode_loader' 2>/dev/null || true
 sed -i '' 's|^# cmd + alt - f1 : \$HOME/github/dotfiles-latest/scripts/macos/mac/misc/552-skhdDailyWork.sh$|cmd + alt - f1 : $HOME/github/dotfiles-latest/scripts/macos/mac/misc/552-skhdDailyWork.sh|' "$skhdrc"
 skhd -r
 
-restart_kitty
+# restart_kitty
 
 $HOME/github/dotfiles-latest/yabai/yabai_restart.sh
 

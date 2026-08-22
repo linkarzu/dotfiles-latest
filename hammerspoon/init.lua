@@ -4,6 +4,10 @@
 -- require("cursor_escape")
 -- require("lgtv_init")
 hs.autoLaunch(true)
+require("hs.ipc")
 
 require("move_mouse_to_corner")
 require("clipboard_feedback")
+require("obs_aitum")
+require("obs_brave_audio")
+require("dnd")

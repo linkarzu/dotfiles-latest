@@ -7,6 +7,14 @@
 # Path to the directory containing the scripts
 SCRIPTS_DIR="$HOME/github/dotfiles-latest/scripts/macos/mac"
 fzf_colors_file="$HOME/github/dotfiles-latest/colorscheme/active/active-fzf-colors.sh"
+fzf_ai_socket="${TMPDIR:-/tmp}"
+fzf_ai_socket="${fzf_ai_socket%/}/linkarzu-system-task-fzf.sock"
+
+# Expose this fzf and every nested fzf to the local AI helper. fzf's normal
+# terminal interface is unchanged; the Unix socket only provides state and
+# selection actions to processes running as this user.
+export FZF_AI_SOCKET="$fzf_ai_socket"
+export FZF_DEFAULT_OPTS="${FZF_DEFAULT_OPTS:-} --listen=$FZF_AI_SOCKET"
 
 # Ensure fzf is installed
 if ! command -v fzf &>/dev/null; then

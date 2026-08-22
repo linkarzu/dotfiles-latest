@@ -66,6 +66,49 @@ ctrl + cmd - f19 : $HOME/github/dotfiles-latest/scripts/macos/mac/misc/551-skhdD
 cmd + alt - f1 : $HOME/github/dotfiles-latest/scripts/macos/mac/misc/552-skhdDailyWork.sh
 
 cmd + alt - f2 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/200-micMute.sh"
+
+# AI ENTRY POINT: main tasks fzf QAT
+# ===================================
+# Give AI agents this binding as the entry point for task menus. They should
+# launch the QAT by running the command below (or by triggering cmd + alt + F3),
+# then control its normal visible fzf through the helper API. Do not use
+# screenshots, OCR, arrow keys, synthetic macOS keystrokes, or knowledge copied
+# from menu source code; the point is to inspect each unknown live menu.
+#
+#   qat="$HOME/github/dotfiles-latest/scripts/macos/mac/misc/555-skhdQatTask.sh"
+#   helper="$HOME/github/dotfiles-latest/scripts/macos/mac/misc/fzf-ai.sh"
+#   "$qat"
+#   "$helper" wait
+#   "$helper" inspect
+#
+# `inspect` returns the current ordered choices as 1-based FZF_OPTION records.
+# Those numbers are valid only for that inspection. Always inspect again after
+# a query change or after a nested menu opens; never assume positions carry over.
+#
+# Single-select menu:
+#   "$helper" choose 3
+#
+# Multi-select menu (inspect reports mode=multi):
+#   "$helper" mark 2 4
+#   "$helper" inspect          # Verify FZF_SELECTED 2 and 4
+#   "$helper" accept
+#
+# Other controls:
+#   "$helper" unmark 2
+#   "$helper" clear            # Clear the current fzf query
+#   "$helper" cancel
+#   "$helper" state            # Raw JSON for debugging
+#   "$helper" help
+#
+# `FZF_NEXT_READY` means the accepted option opened another fzf on the same
+# socket; run `inspect` again. `FZF_FLOW_ENDED` means no next fzf appeared, so
+# verify the resulting terminal output or external action instead of selecting
+# again. If no menu is active, reopen this QAT and run `wait`.
+#
+# 240-systemTask.sh enables fzf's safe Unix-socket API and exports it to every
+# script selected from this menu. Therefore nested fzf calls need no rewrite:
+# any executable *.sh added directly under scripts/macos/mac is discovered and
+# inherits the bridge. Humans still see and operate the unchanged fzf UI.
 cmd + alt - f3 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/555-skhdQatTask.sh"
 cmd + alt - f4 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/556-skhdQatColor.sh"
 cmd + alt - f5 : open "btt://execute_assigned_actions_for_trigger/?uuid=9A1CFA49-416C-480E-9430-184D2DAEE1CA"

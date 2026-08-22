@@ -174,30 +174,7 @@ function M.selectIntermediate()
 end
 
 function M.selectBrave()
-	os.remove(RESULT_PATH)
-	local app, _, window, menu, _, err = context()
-	if not app then
-		writeResult(false, err)
-		return false
-	end
-	local windowFrame = attribute(window, "AXFrame")
-	if not windowFrame then
-		writeResult(false, "Could not focus the Properties window")
-		return false
-	end
-	hs.eventtap.leftClick({ x = windowFrame.x + windowFrame.w / 2, y = windowFrame.y + 12 })
-	hs.timer.doAfter(0.15, function()
-		if not click(menu) then
-			writeResult(false, "Could not open the Application menu")
-			return
-		end
-		hs.timer.doAfter(0.3, function()
-			hs.eventtap.keyStroke({}, "up", 0)
-			hs.eventtap.keyStroke({}, "return", 0)
-			writeResult(true, "Selected Brave Browser")
-		end)
-	end)
-	return true
+	return selectNamedApplication(BRAVE_TITLE, {})
 end
 
 function M.pressOk()

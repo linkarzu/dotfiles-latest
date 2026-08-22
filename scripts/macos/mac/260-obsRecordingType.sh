@@ -161,10 +161,6 @@ esac
 case "$choice" in
 # Solo
 1 | 2)
-  set_source_record_filter "cam-guest1-live" off
-  set_source_record_filter "cam-guest2-live" off
-  set_source_record_filter "cam-guest3-live" off
-  set_source_record_filter "cam-guest4-live" off
   set_source_record_filter "cam-main-chat" off
   ;;
 # 1 guest

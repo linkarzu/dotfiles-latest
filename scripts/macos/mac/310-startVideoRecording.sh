@@ -6,60 +6,59 @@ studio_url="${2:-}"
 livestream_title="${3:-}"
 helium_binary="/Applications/Helium.app/Contents/MacOS/Helium"
 youtube_studio_app_id="bgdnkjfekohdpfolipjfgjboaibfacfe"
-SwitchAudioSource -t output -s "USB Audio"
 dotfiles_dir="$HOME/github/dotfiles-latest"
-kitty_conf="$dotfiles_dir/kitty/kitty.conf"
-neovim_options="$dotfiles_dir/neovim/neobean/lua/config/options.lua"
-virt_column_conf="$dotfiles_dir/neovim/neobean/lua/plugins/virt-column.lua"
-prettier_conf="$dotfiles_dir/.prettierrc.yaml"
-website_prettier_conf="/System/Volumes/Data/mnt/github_nfs/linkarzu.github.io/.prettierrc.yaml"
 skhdrc="$dotfiles_dir/skhd/skhdrc"
+recording_mode_marker="$HOME/.cache/obs-meeting-manager/recording-mode"
+work_env_file="$HOME/github/dotfiles-private/work/work-env.sh"
 
-set_kitty_font_size() {
-  local size="$1"
-  local changed=0
-
-  for sock in /tmp/kitty-*; do
-    [[ -S "$sock" ]] || continue
-    if /Applications/kitty.app/Contents/MacOS/kitty @ --to "unix:${sock}" set-font-size --all "$size" >/dev/null 2>&1; then
-      changed=1
-    fi
-  done
-
-  if [[ "$changed" -eq 0 ]]; then
-    /Applications/kitty.app/Contents/MacOS/kitty @ set-font-size --all "$size" >/dev/null 2>&1 || true
+if [[ "$mode" == "--finish-livestream" ]]; then
+  "$dotfiles_dir/scripts/macos/mac/315-fixObsAudio.sh" --wait
+  brave_audio_window_id="$(
+    yabai -m query --windows \
+      | jq -r '[.[] | select(.app == "Brave Browser" and (.title | contains("Audio playing")))] | max_by(.id).id // empty'
+  )"
+  if [[ -z "$brave_audio_window_id" ]]; then
+    echo "Could not find the Brave audio-test window to pause." >&2
+    exit 1
   fi
-}
+  yabai -m window --focus "$brave_audio_window_id"
+  osascript -e 'tell application "System Events" to keystroke "k"'
+  sleep 1
+  if yabai -m query --windows \
+    | jq -e --argjson id "$brave_audio_window_id" '.[] | select(.id == $id and (.title | contains("Audio playing")))' \
+      >/dev/null; then
+    echo "The Brave audio-test video did not pause." >&2
+    exit 1
+  fi
+  obs_window_id="$(
+    yabai -m query --windows \
+      | jq -r '[.[] | select(.app == "OBS Studio" and (.title | startswith("OBS ")))] | max_by(.id).id // empty'
+  )"
+  [[ -n "$obs_window_id" ]] && yabai -m window --focus "$obs_window_id"
+  echo "Paused the Brave audio-test video."
+  osascript -e 'display notification "Ready for final checks" with title "Livestream prepared"'
+  exit 0
+fi
 
-set_editor_width() {
-  local width="$1"
+SwitchAudioSource -t output -s "USB Audio"
 
-  sed -i '' -E "/^else$/,/^  vim.opt.wrap = true$/ s/^([[:space:]]*vim\.opt\.textwidth = )[0-9]+/\\1${width}/" "$neovim_options"
-  sed -i '' -E "s/^([[:space:]]*virtcolumn = \")[0-9]+(\",)/\\1${width}\\2/" "$virt_column_conf"
-  sed -i '' -E "/^  - files: \"\\*\\.md\"$/,/^  - files:/ s/^([[:space:]]*printWidth: )[0-9]+/\\1${width}/" "$prettier_conf"
-  sed -i '' -E "/^  - files: \"\\*\\.md\"$/,/^  - files:/ s/^([[:space:]]*printWidth: )[0-9]+/\\1${width}/" "$website_prettier_conf"
-}
+mkdir -p "$(dirname "$recording_mode_marker")"
+touch "$recording_mode_marker"
+if [[ -f "$work_env_file" ]]; then
+  # shellcheck disable=SC1090
+  source "$work_env_file"
+  main_kitty_socket="$($dotfiles_dir/scripts/macos/mac/misc/549-kittyMainSocket.sh)"
+  /Applications/kitty.app/Contents/MacOS/kitty @ --to "unix:${main_kitty_socket}" \
+    action close_session "$WORK_DAILY_KITTY_SESSION_FILE" >/dev/null 2>&1 || true
+fi
+sed -i '' 's|^cmd + alt - f1 : \$HOME/github/dotfiles-latest/scripts/macos/mac/misc/552-skhdDailyWork.sh$|# cmd + alt - f1 : $HOME/github/dotfiles-latest/scripts/macos/mac/misc/552-skhdDailyWork.sh|' "$skhdrc"
+skhd -r
 
-restart_kitty() {
-  nohup /bin/bash -c '
-    osascript -e '\''tell application "kitty" to quit'\'' >/dev/null 2>&1 || true
-    for _ in {1..20}; do
-      pgrep -x "kitty" >/dev/null 2>&1 || break
-      sleep 0.2
-    done
-    open -a "kitty"
-  ' >/dev/null 2>&1 &
-}
-
-sed -i '' 's/^font_size .*/font_size 20/' "$kitty_conf"
-set_kitty_font_size 20
-set_editor_width 70
+"$dotfiles_dir/scripts/macos/mac/misc/553-applyRecordingUi.sh" 20 70
 
 "$HOME/github/dotfiles-latest/scripts/macos/mac/290-refreshMembers.sh"
 
-if [[ "$mode" == "--prepare-livestream" ]]; then
-  osascript -e 'display notification "Ready for final checks" with title "Livestream prepared"'
-else
+if [[ "$mode" != "--prepare-livestream" ]]; then
   osascript -e 'display notification "Started" with title "Recording started 🟢"'
 fi
 
@@ -79,9 +78,6 @@ open -a "KeyCastr"
 open -a "KofiAlerts"
 open -a "StreamElements"
 open -a "TTS"
-open -a "Brave Browser"
-nohup "$dotfiles_dir/scripts/macos/mac/315-fixObsAudio.sh" --wait \
-  >"${TMPDIR:-/tmp}/obs-brave-audio-selector.log" 2>&1 &
 if [[ "$mode" == "--prepare-livestream" && -n "$studio_url" ]]; then
   broadcast_id="${studio_url#*/video/}"
   broadcast_id="${broadcast_id%%/*}"
@@ -113,12 +109,6 @@ fi
 # sed -i '' "s|date '+%a %y/%m/%d %H:%M'|date '+%a %y/%m/%d'|" "$HOME/github/dotfiles-latest/sketchybar/felixkratz-linkarzu/plugins/calendar.sh"
 
 "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/230-dnd.sh" recording-on
-
-# Disable my work related daily note, so I don't access it even by mistake
-sed -i '' 's|^cmd + alt - f1 : \$HOME/github/dotfiles-latest/scripts/macos/mac/misc/552-skhdDailyWork.sh$|# cmd + alt - f1 : $HOME/github/dotfiles-latest/scripts/macos/mac/misc/552-skhdDailyWork.sh|' "$skhdrc"
-skhd -r
-
-# restart_kitty
 
 $HOME/github/dotfiles-latest/yabai/yabai_restart.sh
 

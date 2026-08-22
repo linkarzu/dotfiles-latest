@@ -89,6 +89,15 @@ local function press(element)
 	return ok and result ~= nil and result ~= false
 end
 
+local function click(element)
+	local frame = attribute(element, "AXFrame")
+	if not frame then
+		return false
+	end
+	hs.eventtap.leftClick({ x = frame.x + frame.w / 2, y = frame.y + frame.h / 2 })
+	return true
+end
+
 local function horizontalYouTubeLabel(elements)
 	local mainHeading = findText(elements, "Main Canvas", false)
 	local verticalHeading = findText(elements, "Vertical Canvas", false)
@@ -168,6 +177,12 @@ local function runHorizontalYouTube(startOutput)
 		end
 		return false
 	end
+	for _, window in ipairs(app:allWindows()) do
+		if window:title():match("^OBS ") then
+			window:focus()
+			break
+		end
+	end
 
 	local root = hs.axuielement.applicationElement(app)
 	local elements = descendants(root, 14)
@@ -225,7 +240,7 @@ local function runHorizontalYouTube(startOutput)
 			end
 			return
 		end
-		if not press(button) then
+		if not click(button) then
 			fail("Could not press the Main Canvas YouTube Output button")
 			restoreLowerThirdsTab()
 			return

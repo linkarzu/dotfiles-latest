@@ -42,6 +42,7 @@ Commands:
   mark INDEX...            Select one or more options without accepting.
   unmark INDEX...          Deselect one or more options without accepting.
   accept                   Accept the current item or marked items.
+  query TEXT               Replace fzf's current search query with TEXT.
   clear                    Clear fzf's current search query.
   cancel                   Abort the current fzf menu.
   help                     Show this help.
@@ -52,7 +53,8 @@ AI protocol:
   3. For multi-select, use `mark`, inspect again to verify FZF_SELECTED, then
      use `accept`.
   4. After choose/accept, inspect again. A nested fzf uses the same socket.
-  5. `FZF_NEXT_READY` means another menu replaced the previous one.
+  5. For a text-entry menu, use `query`, inspect the exact query, then `accept`.
+  6. `FZF_NEXT_READY` means another menu replaced the previous one.
      `FZF_FLOW_ENDED` means no next fzf appeared within the transition timeout.
 
 Environment:
@@ -173,6 +175,16 @@ post_action() {
     --request POST \
     --data-binary "$action" \
     http://localhost/ >/dev/null
+}
+
+change_query() {
+  local query="$1"
+
+  [[ "$query" != *$'\n'* && "$query" != *$'\r'* ]] || die "query must be a single line"
+  # fzf's colon form consumes the remaining payload as one argument, avoiding
+  # action parsing for parentheses, backslashes, and strings such as +accept.
+  post_action "change-query:${query}"
+  printf 'FZF_QUERY_SET %s\n' "$(jq -Rn --arg query "$query" '$query')"
 }
 
 validate_match_position() {
@@ -302,6 +314,10 @@ main() {
     ;;
   accept)
     accept_selection
+    ;;
+  query)
+    [[ $# -eq 1 ]] || die "query requires exactly one text argument"
+    change_query "$1"
     ;;
   clear)
     post_action clear-query

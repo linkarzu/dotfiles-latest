@@ -4,7 +4,7 @@ set -euo pipefail
 
 export PATH="/opt/homebrew/bin:$PATH"
 cleanup_reason="${1:-recording-stop}"
-if [[ "$cleanup_reason" != "recording-stop" && "$cleanup_reason" != "--prepare-rollback" ]]; then
+if [[ "$cleanup_reason" != "recording-stop" && "$cleanup_reason" != "--prepare-rollback" && "$cleanup_reason" != "--livestream-cleanup" ]]; then
   echo "Unsupported cleanup reason: $cleanup_reason" >&2
   exit 1
 fi
@@ -66,17 +66,30 @@ log_step banner success 'marker_present=false'
 support_apps=(
   'BetterDisplay|/BetterDisplay.app/Contents/'
   'KeyCastr|/KeyCastr.app/Contents/'
-  'Brave_Browser|/Brave Browser.app/Contents/'
   'KofiAlerts|/KofiAlerts.app/Contents/MacOS/app_mode_loader'
   'StreamElements|/StreamElements.app/Contents/MacOS/app_mode_loader'
   'TTS|/TTS.app/Contents/MacOS/app_mode_loader'
 )
+if [[ "$cleanup_reason" == "--livestream-cleanup" ]]; then
+  support_apps+=(
+    'Social_Stream|/socialstream.app/Contents/'
+    'OBS_Studio|/OBS.app/Contents/MacOS/OBS'
+    'Google_Chrome|/Google Chrome.app/Contents/'
+    'Brave_Browser|/Brave Browser.app/Contents/'
+  )
+else
+  support_apps+=('Brave_Browser|/Brave Browser.app/Contents/')
+fi
 for entry in "${support_apps[@]}"; do
   label="${entry%%|*}"
   pattern="${entry#*|}"
   log_step support-app start "app=$label expected=process-absent"
   pkill -f "$pattern" 2>/dev/null || true
-  wait_for_process_absent "$label" "$pattern"
+  if ! wait_for_process_absent "$label" "$pattern"; then
+    log_step support-app start "app=$label action=force-stop expected=process-absent"
+    pkill -KILL -f "$pattern" 2>/dev/null || true
+    wait_for_process_absent "$label" "$pattern"
+  fi
 done
 
 brave_audio_pid_file="${TMPDIR:-/tmp}/obs-brave-audio-selector.pid"
@@ -183,6 +196,12 @@ fi
 log_step recovery-state success 'marker_present=false cleanup_gates_complete=true'
 if [[ "$cleanup_reason" == "--prepare-rollback" ]]; then
   log_step notification success 'displayed=false required=false owner=meeting-manager-result-popup'
+elif [[ "$cleanup_reason" == "--livestream-cleanup" ]]; then
+  if osascript -e 'display notification "Computer restored" with title "Livestream cleanup complete"'; then
+    log_step notification success 'displayed=true reason=livestream-cleanup'
+  else
+    log_step notification failure 'displayed=false optional=true reason=livestream-cleanup'
+  fi
 elif osascript -e 'display notification "Stopped" with title "Recording stopped 🔴"'; then
   log_step notification success 'displayed=true'
 else

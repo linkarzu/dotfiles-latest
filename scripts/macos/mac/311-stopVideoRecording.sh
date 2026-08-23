@@ -3,6 +3,11 @@
 set -euo pipefail
 
 export PATH="/opt/homebrew/bin:$PATH"
+cleanup_reason="${1:-recording-stop}"
+if [[ "$cleanup_reason" != "recording-stop" && "$cleanup_reason" != "--prepare-rollback" ]]; then
+  echo "Unsupported cleanup reason: $cleanup_reason" >&2
+  exit 1
+fi
 dotfiles_dir="$HOME/github/dotfiles-latest"
 skhdrc="$dotfiles_dir/skhd/skhdrc"
 recording_mode_marker="$HOME/.cache/obs-meeting-manager/recording-mode"
@@ -48,7 +53,15 @@ log_step dnd start 'expected=initial-state-restored'
 log_step dnd success 'initial_state_restored=true'
 
 rm -f "${TMPDIR:-/tmp}/sketchybar-streaming-16-minute-reminder"
-"$HOME/github/scripts-public/macos/mac/310-bannerOff.sh"
+log_step banner start 'expected=marker-absent'
+if [[ -e "$dotfiles_dir/youtube-banner.txt" ]]; then
+  "$HOME/github/scripts-public/macos/mac/310-bannerOff.sh"
+fi
+if [[ -e "$dotfiles_dir/youtube-banner.txt" ]]; then
+  log_step banner failure 'marker_present=true'
+  exit 1
+fi
+log_step banner success 'marker_present=false'
 
 support_apps=(
   'BetterDisplay|/BetterDisplay.app/Contents/'
@@ -168,7 +181,9 @@ if [[ -e "$recording_mode_marker" ]]; then
   exit 1
 fi
 log_step recovery-state success 'marker_present=false cleanup_gates_complete=true'
-if osascript -e 'display notification "Stopped" with title "Recording stopped 🔴"'; then
+if [[ "$cleanup_reason" == "--prepare-rollback" ]]; then
+  log_step notification success 'displayed=false required=false owner=meeting-manager-result-popup'
+elif osascript -e 'display notification "Stopped" with title "Recording stopped 🔴"'; then
   log_step notification success 'displayed=true'
 else
   log_step notification failure 'displayed=false optional=true'

@@ -7,8 +7,6 @@ mode="${1:-recording}"
 studio_url="${2:-}"
 livestream_title="${3:-}"
 output_scope="${4:-}"
-helium_binary="/Applications/Helium.app/Contents/MacOS/Helium"
-youtube_studio_app_id="bgdnkjfekohdpfolipjfgjboaibfacfe"
 dotfiles_dir="$HOME/github/dotfiles-latest"
 skhdrc="$dotfiles_dir/skhd/skhdrc"
 recording_mode_marker="$HOME/.cache/obs-meeting-manager/recording-mode"
@@ -28,19 +26,6 @@ wait_for_app() {
     if pgrep -f "/${app_name}.app/Contents/" >/dev/null 2>&1; then
       return 0
     fi
-    sleep 0.25
-  done
-  return 1
-}
-
-wait_for_studio_window() {
-  local deadline=$((SECONDS + 15))
-  while ((SECONDS < deadline)); do
-    youtube_studio_window_id="$(
-      yabai -m query --windows \
-        | jq -r '[.[] | select(.app == "YouTube Studio")] | max_by(.id).id // empty'
-    )"
-    [[ -n "$youtube_studio_window_id" ]] && return 0
     sleep 0.25
   done
   return 1
@@ -74,7 +59,6 @@ if [[ "$mode" == "--finish-livestream" ]]; then
   )"
   [[ -n "$obs_window_id" ]] && yabai -m window "$obs_window_id" --focus
   echo "Paused the Brave audio-test video."
-  osascript -e 'display notification "Ready for final checks" with title "Livestream prepared"'
   exit 0
 fi
 
@@ -117,16 +101,12 @@ if [[ -f "$work_env_file" ]]; then
   main_kitty_socket="$($dotfiles_dir/scripts/macos/mac/misc/549-kittyMainSocket.sh)"
   /Applications/kitty.app/Contents/MacOS/kitty @ --to "unix:${main_kitty_socket}" \
     action close_session "$WORK_DAILY_KITTY_SESSION_FILE" >/dev/null 2>&1 || true
-  work_daily_title="$(sed -n 's/^launch --title "\([^"]*\)".*/\1/p' "$WORK_DAILY_KITTY_SESSION_FILE")"
-  if [[ -z "$work_daily_title" ]]; then
-    log_step recording-mode failure 'work_session_title=unknown'
-    exit 1
-  fi
-  if /Applications/kitty.app/Contents/MacOS/kitty \
-    @ --to "unix:${main_kitty_socket}" ls \
-    | jq -e --arg title "$work_daily_title" '.[]?.tabs[]?.windows[]? | select(.title == $title)' \
-      >/dev/null; then
-    log_step recording-mode failure "work_session_title=$(printf '%q' "$work_daily_title") still_open=true"
+  if ! python3 \
+    "$HOME/github/dotfiles-private/scripts/macos/mac/obs/meeting/py/work_session_gate.py" \
+    --socket "$main_kitty_socket" \
+    --work-root "$WORK_OBSIDIAN_DIR" \
+    --timeout 5; then
+    log_step recording-mode failure 'work_session_state=present-or-unknown'
     exit 1
   fi
 fi
@@ -190,18 +170,10 @@ if [[ "$mode" == "--prepare-livestream" && -n "$studio_url" ]]; then
     "$broadcast_id" "$([[ "$output_scope" == "--youtube-only" ]] && printf true || printf false)"
   "${socialstream_command[@]}" || exit 1
   printf 'phase=prepare step=socialstream status=success broadcast_id=%s\n' "$broadcast_id"
-  "$helium_binary" \
-    --profile-directory=Default \
-    --app-id="$youtube_studio_app_id" \
-    --app-launch-url-for-shortcuts-menu-item="$studio_url" \
-    >/dev/null 2>&1 &
-  log_step youtube-studio start "broadcast_id=$broadcast_id expected=window-present"
-  if ! wait_for_studio_window; then
-    log_step youtube-studio failure "broadcast_id=$broadcast_id window_present=false"
-    exit 1
-  fi
-  yabai -m window --focus "$youtube_studio_window_id"
-  log_step youtube-studio success "broadcast_id=$broadcast_id window_id=$youtube_studio_window_id"
+  python3 \
+    "$HOME/github/dotfiles-private/scripts/macos/mac/obs/meeting/py/youtube_studio_window.py" \
+    --studio-url "$studio_url" \
+    --timeout 15
 else
   "$dotfiles_dir/scripts/macos/mac/misc/500-switchApp.sh" socialstream
 fi

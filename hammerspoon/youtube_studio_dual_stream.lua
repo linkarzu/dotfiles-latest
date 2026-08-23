@@ -35,7 +35,26 @@ end
 
 local descendants
 
-local function press(element)
+local function frameCenterIsInside(frame, container)
+	if not frame or not container or frame.w <= 0 or frame.h <= 0 then
+		return false
+	end
+	local x = frame.x + frame.w / 2
+	local y = frame.y + frame.h / 2
+	return x >= container.x and x <= container.x + container.w and y >= container.y and y <= container.y + container.h
+end
+
+local function scrollToVisible(element)
+	if not element then
+		return false
+	end
+	local ok = pcall(function()
+		element:performAction("AXScrollToVisible")
+	end)
+	return ok
+end
+
+local function press(element, visibleContainer)
 	if not element or not hasAction(element, "AXPress") then
 		return false
 	end
@@ -51,11 +70,14 @@ local function press(element)
 			end
 		end
 	end
-	pcall(function()
-		target:performAction("AXScrollToVisible")
-	end)
+	if not visibleContainer then
+		scrollToVisible(target)
+	end
 	local frame = attribute(target, "AXFrame")
 	if not frame or frame.w <= 0 or frame.h <= 0 then
+		return false
+	end
+	if visibleContainer and not frameCenterIsInside(frame, visibleContainer) then
 		return false
 	end
 	hs.eventtap.leftClick({ x = frame.x + frame.w / 2, y = frame.y + frame.h / 2 })
@@ -152,7 +174,7 @@ local function validBroadcastId(value)
 	return type(value) == "string" and #value > 0 and #value <= 100 and value:match("^[%w_-]+$") ~= nil
 end
 
-local function writeResult(requestId, broadcastId, status, code, observed)
+local function writeResult(requestId, broadcastId, status, code, observed, details)
 	if not validRequestId(requestId) then
 		log.e("Refused to write Dual stream result with an invalid request ID")
 		return
@@ -170,6 +192,7 @@ local function writeResult(requestId, broadcastId, status, code, observed)
 		status = status,
 		code = code,
 		observed = observed or code,
+		details = details,
 	}) .. "\n")
 	file:close()
 	if not os.rename(temporaryPath, path) then
@@ -335,17 +358,39 @@ local function snapshot(expectedTitle, broadcastId)
 			end
 		end
 	end
+	local pageFrame = attribute(page, "AXFrame")
+	local toggleFrame = toggleButton and attribute(toggleButton, "AXFrame") or nil
+	local checkboxFrame = attribute(checkbox, "AXFrame")
+	local clickFrame = toggleFrame or checkboxFrame
+	local toggleVisible = frameCenterIsInside(clickFrame, pageFrame)
+	local modeButtonFrame = modeButton and attribute(modeButton, "AXFrame") or nil
+	local modeButtonVisible = modeButtonFrame and frameCenterIsInside(modeButtonFrame, pageFrame) or false
 
-	return {
+	local state = {
 		checkbox = checkbox,
 		checkboxEnabled = attribute(checkbox, "AXEnabled") == true,
 		checkboxState = checkboxState,
 		entries = entries,
 		mode = mode,
 		modeButton = modeButton,
+		modeButtonVisible = modeButtonVisible,
 		selectKeyCount = #selectKeys,
 		expectedVerticalKeyCount = expectedVerticalKeyCount,
+		pageFrame = pageFrame,
+		checkboxFrame = checkboxFrame,
+		toggleFrame = toggleFrame,
+		toggleVisible = toggleVisible,
 	}
+	if activeRun then
+		activeRun.evidence = {
+			checkboxState = checkboxState,
+			clickAttempts = activeRun.clickAttempts or 0,
+			mode = mode or "absent",
+			modeButtonVisible = modeButtonVisible,
+			toggleVisible = toggleVisible,
+		}
+	end
+	return state
 end
 
 local function isActive(id, deadline)
@@ -361,12 +406,13 @@ local function finish(id, status, code, observed)
 	end
 	local requestId = activeRun.requestId
 	local broadcastId = activeRun.broadcastId
+	local evidence = activeRun.evidence
 	activeRun = nil
 	runId = runId + 1
-	writeResult(requestId, broadcastId, status, code, observed)
+	writeResult(requestId, broadcastId, status, code, observed, evidence)
 end
 
-local function waitFor(id, description, timeout, overallDeadline, timeoutCode, check, onSuccess)
+local function waitFor(id, description, timeout, overallDeadline, timeoutCode, check, onSuccess, onTimeout)
 	local deadline = math.min(hs.timer.secondsSinceEpoch() + timeout, overallDeadline)
 	local lastObserved = "not-observed"
 
@@ -380,14 +426,22 @@ local function waitFor(id, description, timeout, overallDeadline, timeoutCode, c
 		end
 		if hs.timer.secondsSinceEpoch() >= deadline then
 			log.e(description .. " timed out; last observed: " .. lastObserved)
-			finish(id, "error", timeoutCode, lastObserved)
+			if onTimeout and isActive(id, overallDeadline) then
+				onTimeout(lastObserved)
+			else
+				finish(id, "error", timeoutCode, lastObserved)
+			end
 			return
 		end
 		local result, observed = check()
 		lastObserved = observed or lastObserved
 		if hs.timer.secondsSinceEpoch() >= deadline then
 			log.e(description .. " timed out; last observed: " .. lastObserved)
-			finish(id, "error", timeoutCode, lastObserved)
+			if onTimeout and isActive(id, overallDeadline) then
+				onTimeout(lastObserved)
+			else
+				finish(id, "error", timeoutCode, lastObserved)
+			end
 			return
 		end
 		if result then
@@ -405,16 +459,18 @@ end
 local function configure(expectedTitle, broadcastId, requestId)
 	runId = runId + 1
 	local id = runId
-	local overallDeadline = hs.timer.secondsSinceEpoch() + 15
+	-- Page discovery, one verified click retry, panel rendering, and final verification each have their own bound.
+	local overallDeadline = hs.timer.secondsSinceEpoch() + 45
 	activeRun = {
 		runId = id,
 		requestId = requestId,
 		broadcastId = broadcastId,
+		clickAttempts = 0,
 	}
 	writeResult(requestId, broadcastId, "pending", "waiting-for-broadcast-page")
 
 	local function verifyFinalState()
-		waitFor(id, "Dual stream encoder verification", 5, overallDeadline, "verification-timeout", function()
+		waitFor(id, "Dual stream encoder verification", 8, overallDeadline, "verification-timeout", function()
 			local state, observed = snapshot(expectedTitle, broadcastId)
 			if not state then
 				return nil, observed
@@ -450,26 +506,40 @@ local function configure(expectedTitle, broadcastId, requestId)
 			verifyFinalState()
 			return
 		end
-		if state.mode ~= "Auto crop" or not state.modeButton or not press(state.modeButton) then
+		if state.mode ~= "Auto crop" or not state.modeButton then
 			finish(id, "error", "mode-menu-open-failed")
 			return
 		end
-		waitFor(id, "Encoder menu option", 5, overallDeadline, "encoder-option-timeout", function()
-			local current, observed = snapshot(expectedTitle, broadcastId)
-			if not current then
+		scrollToVisible(state.modeButton)
+		waitFor(id, "Vertical mode selector visibility", 5, overallDeadline, "mode-selector-visibility-timeout", function()
+			local visibleState, observed = snapshot(expectedTitle, broadcastId)
+			if not visibleState then
 				return nil, observed
 			end
-			local option, count = findUniqueExact(current.entries, "Encoder", "AXMenuItem", true)
-			if count > 1 then
-				return nil, "encoder-menu-option-ambiguous"
-			end
-			return option, option and nil or "encoder-menu-option-absent"
-		end, function(option)
-			if not isActive(id, overallDeadline) or not press(option) then
-				finish(id, "error", "encoder-selection-failed")
+			return visibleState.modeButtonVisible and visibleState or nil, "vertical-mode-selector-offscreen"
+		end, function(visibleState)
+			if not press(visibleState.modeButton, visibleState.pageFrame) then
+				finish(id, "error", "mode-menu-open-failed", "mode-menu-visible-click-failed")
 				return
 			end
-			verifyFinalState()
+			waitFor(id, "Encoder menu option", 5, overallDeadline, "encoder-option-timeout", function()
+				local current, observed = snapshot(expectedTitle, broadcastId)
+				if not current then
+					return nil, observed
+				end
+				local option, count = findUniqueExact(current.entries, "Encoder", "AXMenuItem", true)
+				if count > 1 then
+					return nil, "encoder-menu-option-ambiguous"
+				end
+				return option and { option = option, pageFrame = current.pageFrame } or nil,
+					option and nil or "encoder-menu-option-absent"
+			end, function(selection)
+				if not isActive(id, overallDeadline) or not press(selection.option, selection.pageFrame) then
+					finish(id, "error", "encoder-selection-failed")
+					return
+				end
+				verifyFinalState()
+			end)
 		end)
 	end
 
@@ -479,13 +549,64 @@ local function configure(expectedTitle, broadcastId, requestId)
 			return
 		end
 		local function waitForPanel()
-			waitFor(id, "Dual stream panel", 5, overallDeadline, "dual-stream-panel-timeout", function()
+			waitFor(id, "Dual stream panel", 12, overallDeadline, "dual-stream-panel-timeout", function()
 				local enabledState, currentObserved = snapshot(expectedTitle, broadcastId)
 				if not enabledState then
 					return nil, currentObserved
 				end
-				return enabledState.mode and enabledState or nil, "vertical-mode-selector-absent"
+				local observed = "vertical-mode-selector-absent-checkbox-" .. enabledState.checkboxState
+				return enabledState.mode and enabledState or nil, observed
 			end, selectEncoder)
+		end
+
+		local ensureVisibleAndEnable
+		ensureVisibleAndEnable = function(state, attempt)
+			if not isActive(id, overallDeadline) then
+				return
+			end
+			scrollToVisible(state.checkbox)
+			waitFor(id, "Dual stream control visibility", 5, overallDeadline, "dual-stream-control-visibility-timeout", function()
+				local visibleState, observed = snapshot(expectedTitle, broadcastId)
+				if not visibleState then
+					return nil, observed
+				end
+				return visibleState.toggleVisible and visibleState or nil, "dual-stream-toggle-offscreen"
+			end, function(visibleState)
+				if visibleState.checkboxState == "on" then
+					waitForPanel()
+					return
+				end
+				if visibleState.checkboxState ~= "off" then
+					finish(id, "error", "dual-stream-state-unknown")
+					return
+				end
+				activeRun.clickAttempts = attempt
+				if not press(visibleState.checkbox, visibleState.pageFrame) then
+					finish(id, "error", "dual-stream-enable-failed", "dual-stream-visible-click-failed")
+					return
+				end
+				waitFor(id, "Dual stream toggle transition", 5, overallDeadline, "dual-stream-toggle-timeout", function()
+					local toggledState, observed = snapshot(expectedTitle, broadcastId)
+					if not toggledState then
+						return nil, observed
+					end
+					if toggledState.checkboxState == "on" or toggledState.mode then
+						return toggledState
+					end
+					return nil, "dual-stream-toggle-remained-" .. toggledState.checkboxState
+				end, waitForPanel, function(lastObserved)
+					if attempt < 2 then
+						local retryState, observed = snapshot(expectedTitle, broadcastId)
+						if retryState then
+							ensureVisibleAndEnable(retryState, attempt + 1)
+						else
+							finish(id, "error", "dual-stream-toggle-timeout", observed or lastObserved)
+						end
+					else
+						finish(id, "error", "dual-stream-toggle-timeout", lastObserved)
+					end
+				end)
+			end)
 		end
 
 		-- Give an already-enabled panel time to render before deciding whether to press the toggle.
@@ -514,11 +635,7 @@ local function configure(expectedTitle, broadcastId, requestId)
 				finish(id, "error", "dual-stream-state-unknown")
 				return
 			end
-			if not press(state.checkbox) then
-				finish(id, "error", "dual-stream-enable-failed")
-				return
-			end
-			waitForPanel()
+			ensureVisibleAndEnable(state, 1)
 		end)
 	end
 

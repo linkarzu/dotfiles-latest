@@ -24,7 +24,7 @@ sed -i '' -E "s/^([[:space:]]*virtcolumn = \")[0-9]+(\",)/\\1${text_width}\\2/" 
 sed -i '' -E "/^  - files: \"\\*\\.md\"$/,/^  - files:/ s/^([[:space:]]*printWidth: )[0-9]+/\\1${text_width}/" "$prettier_conf"
 sed -i '' -E "/^  - files: \"\\*\\.md\"$/,/^  - files:/ s/^([[:space:]]*printWidth: )[0-9]+/\\1${text_width}/" "$website_prettier_conf"
 
-sed -i '' -E "/^else$/,/^  vim.opt.wrap = true$/ s/^([[:space:]]*vim\.opt\.colorcolumn = \x22)[0-9]+(\x22)/\1${text_width}\2/" "$neovim_options"
+sed -i '' -E "/^else$/,/^[[:space:]]*vim\.opt\.colorcolumn = \x22[0-9]+\x22$/ s/^([[:space:]]*vim\.opt\.colorcolumn = \x22)[0-9]+(\x22)/\1${text_width}\2/" "$neovim_options"
 
 grep -Eq "^font_size ${font_size}([.]0)?$" "$kitty_conf"
 grep -Eq "^[[:space:]]*vim[.]opt[.]textwidth = ${text_width}$" "$neovim_options"

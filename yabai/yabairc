@@ -411,7 +411,7 @@ yabai -m rule --add app="^YouTubeStudio$" space=desk1
 yabai -m rule --add app="^Calendar$" space="$non_stream_space"
 yabai -m rule --add app="^Google Chrome$" space="$non_stream_space"
 yabai -m rule --add app="^Microsoft Teams$" space="$non_stream_space"
-yabai -m rule --add app="^ChatGPT Classic$" space="$non_stream_space"
+yabai -m rule --add app="^ChatGPT$" space="$non_stream_space"
 # yabai -m rule --add app="^Vivaldi$" space="$non_stream_space"
 yabai -m rule --add app="^Signal$" space="$non_stream_space"
 yabai -m rule --add app="^Google Photos$" space="$non_stream_space"

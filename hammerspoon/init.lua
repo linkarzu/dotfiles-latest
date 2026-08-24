@@ -8,6 +8,8 @@ require("hs.ipc")
 
 require("move_mouse_to_corner")
 require("clipboard_feedback")
+opencodePopup = require("opencode_popup")
+applePopup = require("apple_popup")
 require("obs_aitum")
 require("obs_brave_audio")
 require("youtube_studio_dual_stream")

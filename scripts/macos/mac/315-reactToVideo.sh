@@ -17,8 +17,8 @@ Usage:
   315-reactToVideo.sh
   315-reactToVideo.sh --configure
 
-Create a Discord forum post for a YouTube video and apply the configured
-react-to tag.
+Create a Discord forum post for a YouTube video or X/Twitter post and apply
+the configured react-to tag.
 
 Options:
   --configure  Securely save the Discord webhook URL and react-to tag ID
@@ -118,7 +118,7 @@ load_config() {
   REACT_TO_TAG_ID=$loaded_tag
 }
 
-fetch_video_title() {
+fetch_youtube_title() {
   local video_url=$1 metadata
 
   if ! metadata=$(curl --silent --show-error --fail-with-body --max-time 20 \
@@ -133,12 +133,79 @@ fetch_video_title() {
     error 'YouTube returned an invalid video title.'
 }
 
+is_x_url() {
+  [[ "$1" =~ ^https?://(www\.|mobile\.)?(x\.com|twitter\.com)(/|$) ]]
+}
+
+is_x_post_url() {
+  [[ "$1" =~ ^https?://(www\.|mobile\.)?(x\.com|twitter\.com)/[^/?#]+/status/[0-9]+([/?#].*)?$ ]]
+}
+
+fetch_x_post() {
+  local post_url=$1 metadata post_text author title
+
+  if ! metadata=$(curl --silent --show-error --fail-with-body --max-time 20 \
+    --get \
+    --data-urlencode "url=$post_url" \
+    --data-urlencode 'omit_script=true' \
+    --data-urlencode 'dnt=true' \
+    'https://publish.x.com/oembed'); then
+    error 'X could not find a public post at that URL.'
+  fi
+
+  if ! post_text=$(jq -er '
+    .html
+    | select(type == "string")
+    | capture("<p[^>]*>(?<text>.*?)</p>"; "s").text
+    | gsub("<br ?/?>"; "\n"; "i")
+    | gsub("<[^>]+>"; "")
+    | gsub("&amp;"; "&")
+    | gsub("&lt;"; "<")
+    | gsub("&gt;"; ">")
+    | gsub("&quot;"; "\"")
+    | gsub("&#39;|&apos;"; "\u0027")
+    | gsub("&nbsp;"; " ")
+    | gsub("[ \t]+"; " ")
+    | gsub(" *\n *"; "\n")
+    | gsub("^\n+|\n+$"; "")
+    | select(length > 0)
+  ' <<<"$metadata"); then
+    error 'X returned invalid post text.'
+  fi
+
+  author=$(jq -r '.author_name | select(type == "string" and length > 0) // "X user"' <<<"$metadata")
+  title=$(jq -nr --arg text "$post_text" --arg author "$author" '
+    $text
+    | gsub("https?://[^[:space:]]+"; "")
+    | gsub("(pic\\.)?twitter\\.com/[^[:space:]]+"; "")
+    | gsub("[[:space:]]+"; " ")
+    | gsub("^ +| +$"; "")
+    | if length == 0 then "Post by " + $author + " on X" else . end
+    | .[0:100]
+  ')
+
+  POST_TITLE=$title
+  if ! POST_CONTENT=$(jq -nr --arg text "$post_text" --arg url "$post_url" '
+    ("\n\nOriginal post: " + $url) as $suffix
+    | (2000 - ($suffix | length)) as $text_limit
+    | if $text_limit < 3 then
+        error("X URL is too long for a Discord message")
+      elif ($text | length) <= $text_limit then
+        $text + $suffix
+      else
+        $text[0:($text_limit - 3)] + "..." + $suffix
+      end
+  '); then
+    error 'The X URL is too long for a Discord message.'
+  fi
+}
+
 create_forum_post() {
-  local video_url=$1 title=$2 payload response api_message guild_id thread_id
+  local title=$1 content=$2 payload response api_message guild_id thread_id
 
   payload=$(jq -n \
     --arg title "$title" \
-    --arg content "$video_url" \
+    --arg content "$content" \
     --arg tag_id "$REACT_TO_TAG_ID" \
     '{
       thread_name: $title,
@@ -174,7 +241,7 @@ create_forum_post() {
 }
 
 main() {
-  local video_url title
+  local shared_url title content
 
   case "${1:-}" in
   --configure)
@@ -196,13 +263,22 @@ main() {
   require_command curl
   load_config
 
-  if ! IFS= read -rp 'Enter the YouTube video URL: ' video_url; then
-    error 'Could not read the video URL.'
+  if ! IFS= read -rp 'Enter a YouTube or X/Twitter URL: ' shared_url; then
+    error 'Could not read the URL.'
   fi
-  [[ "$video_url" =~ ^https?:// ]] || error 'Enter a complete HTTP or HTTPS YouTube URL.'
+  [[ "$shared_url" =~ ^https?:// ]] || error 'Enter a complete HTTP or HTTPS URL.'
 
-  title=$(fetch_video_title "$video_url")
-  create_forum_post "$video_url" "$title"
+  if is_x_url "$shared_url"; then
+    is_x_post_url "$shared_url" || error 'Enter a complete X/Twitter status URL.'
+    fetch_x_post "$shared_url"
+    title=$POST_TITLE
+    content=$POST_CONTENT
+  else
+    title=$(fetch_youtube_title "$shared_url")
+    content=$shared_url
+  fi
+
+  create_forum_post "$title" "$content"
 }
 
 main "$@"

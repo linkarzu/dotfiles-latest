@@ -11,6 +11,7 @@ const DEFAULT_PORT = 47653
 const DEFAULT_DELAY_MS = 4 * 60 * 1000
 const INSTANCE_STALE_MS = 60 * 1000
 const TELEGRAM_TEXT_LIMIT = 3900
+const COMPLETION_SUMMARY_LIMIT = 3500
 const RESOLVED_RETENTION_MS = 24 * 60 * 60 * 1000
 
 function sleep(milliseconds) {
@@ -42,7 +43,7 @@ function isLoopbackURL(value) {
 }
 
 function defaultState() {
-  return { updateOffset: 0, alerts: {}, abortSuppressions: {} }
+  return { updateOffset: 0, alerts: {}, abortSuppressions: {}, phoneMode: false }
 }
 
 export class TelegramBridge {
@@ -75,6 +76,7 @@ export class TelegramBridge {
           abortSuppressions: parsed.abortSuppressions && typeof parsed.abortSuppressions === "object"
             ? parsed.abortSuppressions
             : {},
+          phoneMode: parsed.phoneMode === true,
         }
       }
     } catch (error) {
@@ -108,6 +110,8 @@ export class TelegramBridge {
       commands: [
         { command: "status", description: "Show registered OpenCode instances" },
         { command: "sessions", description: "List live OpenCode sessions" },
+        { command: "build", description: "Continue a replied session in build mode" },
+        { command: "plan", description: "Continue a replied session in plan mode" },
         { command: "abort", description: "Abort the session in a replied notification" },
       ],
     }).catch((error) => console.error("Telegram command setup failed", error.message))
@@ -163,6 +167,7 @@ export class TelegramBridge {
           ok: true,
           instances: this.instances.size,
           attentionDelaySeconds: this.attentionDelayMs / 1000,
+          phoneMode: this.state.phoneMode,
         })
         return
       }
@@ -184,6 +189,7 @@ export class TelegramBridge {
       }
 
       const payload = await this.readJSONBody(request)
+      let responseBody = { ok: true }
       await this.enqueue(async () => {
         if (request.url === "/register") {
           this.registerInstance(payload)
@@ -192,11 +198,13 @@ export class TelegramBridge {
           await this.processPluginEvent(payload)
         } else if (request.url === "/unregister") {
           await this.unregisterInstance(payload.instanceID)
+        } else if (request.url === "/phone-mode/toggle") {
+          responseBody = { ok: true, phoneMode: await this.togglePhoneMode() }
         } else {
           throw new Error("Not found")
         }
       })
-      this.sendLocalResponse(response, 200, { ok: true })
+      this.sendLocalResponse(response, 200, responseBody)
     } catch (error) {
       console.error("local request failed", error)
       this.sendLocalResponse(response, 400, { error: error.message })
@@ -259,7 +267,9 @@ export class TelegramBridge {
     const event = payload.event
     const instance = this.instances.get(instanceID)
     if (!instance || !event?.action || !event.sessionID) throw new Error("Unknown OpenCode instance or event")
-    if (!["attention", "resolve", "resolve-session"].includes(event.action)) throw new Error("Invalid event action")
+    if (!["attention", "resolve", "resolve-session", "local-prompt"].includes(event.action)) {
+      throw new Error("Invalid event action")
+    }
     if (event.kind && !["done", "error", "permission", "question"].includes(event.kind)) {
       throw new Error("Invalid attention kind")
     }
@@ -271,6 +281,15 @@ export class TelegramBridge {
     const suppressionKey = `${instanceID}:${event.sessionID}`
     if (
       event.action === "attention" &&
+      event.kind === "error" &&
+      String(event.details?.message ?? "").trim().toLowerCase() === "aborted"
+    ) {
+      this.state.abortSuppressions[suppressionKey] = this.now()
+      await this.saveState()
+      return
+    }
+    if (
+      event.action === "attention" &&
       ["error", "done"].includes(event.kind) &&
       this.state.abortSuppressions[suppressionKey]
     ) {
@@ -280,10 +299,11 @@ export class TelegramBridge {
       delete this.state.abortSuppressions[suppressionKey]
     }
 
+    let immediate = false
     if (event.action === "attention") {
       const key = alertKey(instanceID, event)
       const existing = this.state.alerts[key]?.resolvedAt ? undefined : this.state.alerts[key]
-      const immediate = event.kind === "error"
+      immediate = event.kind === "error" || this.state.phoneMode
       this.state.alerts[key] = {
         id: existing?.id ?? randomBytes(6).toString("hex"),
         key,
@@ -308,9 +328,39 @@ export class TelegramBridge {
         if (alert.instanceID !== instanceID || alert.sessionID !== event.sessionID || alert.resolvedAt) continue
         if (kinds.has(alert.kind)) await this.resolveAlert(alert, event.resolution ?? "Resolved locally")
       }
+    } else if (event.action === "local-prompt") {
+      this.deactivatePhoneMode()
     }
     await this.saveState()
-    if (event.kind === "error") await this.flushDueAlerts()
+    if (immediate) await this.flushDueAlerts()
+  }
+
+  async activatePhoneMode() {
+    this.state.phoneMode = true
+    for (const alert of Object.values(this.state.alerts)) {
+      if (!alert.resolvedAt && !alert.sentMessageID) alert.dueAt = this.now()
+    }
+    await this.saveState()
+    await this.flushDueAlerts().catch((error) => console.error("phone mode alert flush failed", error.message))
+  }
+
+  deactivatePhoneMode() {
+    if (!this.state.phoneMode) return
+    this.state.phoneMode = false
+    const dueAt = this.now() + this.attentionDelayMs
+    for (const alert of Object.values(this.state.alerts)) {
+      if (!alert.resolvedAt && !alert.sentMessageID) alert.dueAt = dueAt
+    }
+  }
+
+  async togglePhoneMode() {
+    if (this.state.phoneMode) {
+      this.deactivatePhoneMode()
+      await this.saveState()
+    } else {
+      await this.activatePhoneMode()
+    }
+    return this.state.phoneMode
   }
 
   instanceForAlert(alert) {
@@ -398,7 +448,7 @@ export class TelegramBridge {
             ?.filter((part) => part.type === "text")
             .map((part) => part.text)
             .join(" "),
-          500,
+          COMPLETION_SUMMARY_LIMIT,
         )
       }
     } catch (error) {
@@ -501,7 +551,7 @@ export class TelegramBridge {
     return Object.values(this.state.alerts).find((alert) => alert.sentMessageID === messageID)
   }
 
-  async answerPermission(alert, reply) {
+  async answerPermission(alert, reply, activatePhoneMode = true) {
     const instance = this.actionableInstance(alert)
     let path
     let body = { reply }
@@ -513,6 +563,7 @@ export class TelegramBridge {
     } else {
       path = `/permission/${encodeURIComponent(alert.requestID)}/reply`
     }
+    if (activatePhoneMode) await this.activatePhoneMode()
     await this.opencodeRequest(instance, path, {
       method: "POST",
       body: JSON.stringify(body),
@@ -526,6 +577,7 @@ export class TelegramBridge {
     const path = alert.details?.apiVersion === "v2"
       ? `/api/session/${encodeURIComponent(alert.sessionID)}/question/${encodeURIComponent(alert.requestID)}/reply`
       : `/question/${encodeURIComponent(alert.requestID)}/reply`
+    await this.activatePhoneMode()
     await this.opencodeRequest(instance, path, {
       method: "POST",
       body: JSON.stringify({ answers }),
@@ -534,7 +586,7 @@ export class TelegramBridge {
     await this.saveState()
   }
 
-  async continueSession(alert, text) {
+  async continueSession(alert, text, agentOverride) {
     const instance = this.actionableInstance(alert)
     const statuses = await this.opencodeRequest(instance, "/session/status")
     if (["busy", "retry"].includes(statuses?.[alert.sessionID]?.type)) {
@@ -548,13 +600,15 @@ export class TelegramBridge {
       ? [...messages].reverse().find((item) => item?.info?.role === "user")?.info
       : undefined
     const body = { parts: [{ type: "text", text }] }
-    if (latestUser?.agent) body.agent = latestUser.agent
+    if (agentOverride) body.agent = agentOverride
+    else if (latestUser?.agent) body.agent = latestUser.agent
     if (latestUser?.model?.providerID && latestUser?.model?.modelID) {
       body.model = {
         providerID: latestUser.model.providerID,
         modelID: latestUser.model.modelID,
       }
     }
+    await this.activatePhoneMode()
     await this.opencodeRequest(instance, `/session/${encodeURIComponent(alert.sessionID)}/prompt_async`, {
       method: "POST",
       body: JSON.stringify(body),
@@ -572,7 +626,7 @@ export class TelegramBridge {
         : `/question/${encodeURIComponent(alert.requestID)}/reject`
       await this.opencodeRequest(instance, path, { method: "POST" })
     } else if (alert.kind === "permission") {
-      await this.answerPermission(alert, "reject")
+      await this.answerPermission(alert, "reject", false)
     }
     this.state.abortSuppressions[suppressionKey] = this.now()
     await this.saveState()
@@ -648,7 +702,7 @@ export class TelegramBridge {
       return
     }
     if (text === "/status" || text === "/sessions") {
-      const lines = [`OpenCode instances: ${this.instances.size}`]
+      const lines = [`OpenCode instances: ${this.instances.size}`, `Phone mode: ${this.state.phoneMode ? "on" : "off"}`]
       for (const instance of this.instances.values()) {
         const roots = instance.sessions.filter((session) => !session.parentID)
         if (!roots.length) lines.push(`- ${instance.kittySession || instance.directory}`)
@@ -662,6 +716,9 @@ export class TelegramBridge {
 
     const repliedMessageID = message.reply_to_message?.message_id
     const alert = repliedMessageID ? this.findAlertByMessageID(repliedMessageID) : undefined
+    const agentCommand = text.match(/^\/(build|plan)(?:@\w+)?(?:\s+([\s\S]*))?$/i)
+    const agentOverride = agentCommand?.[1]?.toLowerCase()
+    const agentPrompt = agentCommand?.[2]?.trim()
     if (text === "/abort") {
       if (!alert) {
         await this.telegram("sendMessage", { chat_id: this.chatID, text: "Reply to an OpenCode notification with /abort." })
@@ -684,6 +741,9 @@ export class TelegramBridge {
     }
 
     try {
+      if (agentCommand && ["question", "permission"].includes(alert.kind)) {
+        throw new Error("Use mode commands only when replying to a completion or error notification")
+      }
       if (alert.kind === "question") {
         const questions = alert.details?.questions ?? []
         const lines = text.split("\n").map((line) => line.trim()).filter(Boolean)
@@ -694,9 +754,11 @@ export class TelegramBridge {
       } else if (alert.kind === "permission") {
         throw new Error("Use the Once, Always, or Reject buttons")
       } else {
-        await this.continueSession(alert, text)
+        if (agentCommand && !agentPrompt) throw new Error(`Use /${agentOverride} followed by a prompt`)
+        await this.continueSession(alert, agentPrompt ?? text, agentOverride)
       }
-      await this.telegram("sendMessage", { chat_id: this.chatID, text: "Sent to OpenCode." })
+      const confirmation = agentOverride ? `Sent to OpenCode in ${agentOverride} mode.` : "Sent to OpenCode."
+      await this.telegram("sendMessage", { chat_id: this.chatID, text: confirmation })
     } catch (error) {
       await this.telegram("sendMessage", { chat_id: this.chatID, text: `Could not respond: ${error.message}` })
     }

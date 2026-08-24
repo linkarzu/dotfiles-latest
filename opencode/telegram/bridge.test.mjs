@@ -75,6 +75,31 @@ test("waits four minutes and revalidates before notifying", async (context) => {
   assert.match(telegramCall.body.text, /Question requires an answer\n\nkitty-one/)
 })
 
+test("includes up to 3,500 characters from the completed response", async (context) => {
+  const responseText = "x".repeat(3600)
+  const { bridge, cleanup } = await fixture(async (url) => {
+    if (String(url).includes("/message")) {
+      return jsonResponse([{
+        info: { role: "assistant" },
+        parts: [{ type: "text", text: responseText }],
+      }])
+    }
+    return jsonResponse({ title: "Long response" })
+  })
+  context.after(cleanup)
+  register(bridge, "one", 5001)
+
+  const presentation = await bridge.alertPresentation({
+    instanceID: "one",
+    sessionID: "session-1",
+    kind: "done",
+    details: {},
+  })
+
+  assert.ok(presentation.text.includes(`${"x".repeat(3497)}...`))
+  assert.ok(presentation.text.length <= 3900)
+})
+
 test("local resolution cancels an unsent alert", async (context) => {
   let now = 1000
   const calls = []
@@ -122,6 +147,8 @@ test("routes replies to the exact registered OpenCode instance", async (context)
     },
   })
   const alert = Object.values(bridge.state.alerts)[0]
+  alert.sentMessageID = 99
+  alert.sentText = "Permission required"
   await bridge.answerPermission(alert, "always")
 
   assert.match(calls[0].url, /^http:\/\/127\.0\.0\.1:5002\/api\/session\/session-2\/permission\/permission-2\/reply/)
@@ -316,6 +343,33 @@ test("local HTTP writes require the plugin secret", async (context) => {
   assert.equal(bridge.instances.has("one"), true)
 })
 
+test("local HTTP client can toggle phone mode", async (context) => {
+  const { bridge, cleanup } = await fixture(async () => jsonResponse({ ok: true, result: true }))
+  bridge.port = 0
+  await bridge.startLocalServer()
+  context.after(async () => {
+    await bridge.stop()
+    await cleanup()
+  })
+  const port = bridge.server.address().port
+  const toggle = () => fetch(`http://127.0.0.1:${port}/phone-mode/toggle`, {
+    method: "POST",
+    headers: {
+      Authorization: "Bearer test-secret",
+      "Content-Type": "application/json",
+    },
+    body: "{}",
+  })
+
+  const enabled = await toggle()
+  assert.deepEqual(await enabled.json(), { ok: true, phoneMode: true })
+  assert.equal(bridge.state.phoneMode, true)
+
+  const disabled = await toggle()
+  assert.deepEqual(await disabled.json(), { ok: true, phoneMode: false })
+  assert.equal(bridge.state.phoneMode, false)
+})
+
 test("Telegram follow-ups preserve the session agent and model", async (context) => {
   const calls = []
   const { bridge, cleanup } = await fixture(async (url, options) => {
@@ -336,6 +390,12 @@ test("Telegram follow-ups preserve the session agent and model", async (context)
   })
   context.after(cleanup)
   register(bridge, "one", 5001)
+  let phoneModeAtPrompt = false
+  const opencodeRequest = bridge.opencodeRequest.bind(bridge)
+  bridge.opencodeRequest = async (instance, path, options) => {
+    if (path.includes("/prompt_async")) phoneModeAtPrompt = bridge.state.phoneMode
+    return opencodeRequest(instance, path, options)
+  }
   const alert = {
     id: "done-1",
     instanceID: "one",
@@ -351,6 +411,155 @@ test("Telegram follow-ups preserve the session agent and model", async (context)
     model: { providerID: "openai", modelID: "gpt-test" },
     parts: [{ type: "text", text: "Continue from Telegram" }],
   })
+  assert.equal(bridge.state.phoneMode, true)
+  assert.equal(phoneModeAtPrompt, true)
+})
+
+test("Telegram build command overrides a session's plan agent", async (context) => {
+  const calls = []
+  const { bridge, cleanup } = await fixture(async (url, options) => {
+    const target = String(url)
+    calls.push({ url: target, body: options?.body && JSON.parse(options.body) })
+    if (target.includes("api.telegram.org")) {
+      return jsonResponse({ ok: true, result: { message_id: 90 } })
+    }
+    if (target.includes("/session/status")) return jsonResponse({})
+    if (target.includes("/message")) {
+      return jsonResponse([{
+        info: { role: "user", agent: "plan" },
+        parts: [],
+      }])
+    }
+    if (target.includes("/prompt_async")) return new Response(null, { status: 204 })
+    return jsonResponse({})
+  })
+  context.after(cleanup)
+  register(bridge, "one", 5001)
+  await bridge.processPluginEvent({
+    instanceID: "one",
+    event: { action: "attention", kind: "done", sessionID: "session-1" },
+  })
+  const alert = Object.values(bridge.state.alerts)[0]
+  alert.sentMessageID = 77
+  alert.sentText = "OpenCode is waiting"
+
+  await bridge.handleMessage({
+    from: { id: 42 },
+    chat: { id: 42 },
+    text: "/build Implement the plan",
+    reply_to_message: { message_id: 77 },
+  })
+
+  const prompt = calls.find((call) => call.url.includes("/prompt_async"))
+  assert.deepEqual(prompt.body, {
+    agent: "build",
+    parts: [{ type: "text", text: "Implement the plan" }],
+  })
+  assert.ok(calls.some((call) => call.body?.text === "Sent to OpenCode in build mode."))
+})
+
+test("Telegram replies enable global phone mode until the next local prompt", async (context) => {
+  let now = 1000
+  let messageID = 100
+  const calls = []
+  const { bridge, cleanup } = await fixture(async (url, options) => {
+    const target = String(url)
+    calls.push({ url: target, body: options?.body && JSON.parse(options.body) })
+    if (target.includes("api.telegram.org")) {
+      return jsonResponse({ ok: true, result: { message_id: messageID++ } })
+    }
+    if (target.includes("/session/status")) return jsonResponse({})
+    if (target.includes("/message")) return jsonResponse([])
+    if (target.includes("/prompt_async")) return new Response(null, { status: 204 })
+    return jsonResponse({})
+  }, () => now)
+  context.after(cleanup)
+  register(bridge, "one", 5001)
+  register(bridge, "two", 5002)
+
+  await bridge.processPluginEvent({
+    instanceID: "one",
+    event: { action: "attention", kind: "done", sessionID: "session-1" },
+  })
+  await bridge.processPluginEvent({
+    instanceID: "two",
+    event: { action: "attention", kind: "done", sessionID: "session-2" },
+  })
+  const first = Object.values(bridge.state.alerts).find((alert) => alert.sessionID === "session-1")
+  const second = Object.values(bridge.state.alerts).find((alert) => alert.sessionID === "session-2")
+  first.sentMessageID = 42
+  first.sentText = "First completion"
+
+  await bridge.continueSession(first, "Continue from Telegram")
+
+  assert.equal(bridge.state.phoneMode, true)
+  assert.ok(second.sentMessageID)
+  assert.ok(calls.some((call) => call.body?.text?.includes("session-2")))
+
+  now += 1000
+  await bridge.processPluginEvent({
+    instanceID: "one",
+    event: { action: "local-prompt", sessionID: "session-1" },
+  })
+  await bridge.processPluginEvent({
+    instanceID: "two",
+    event: { action: "attention", kind: "done", sessionID: "session-3" },
+  })
+  const third = Object.values(bridge.state.alerts).find((alert) => alert.sessionID === "session-3")
+
+  assert.equal(bridge.state.phoneMode, false)
+  assert.equal(third.sentMessageID, undefined)
+  assert.equal(third.dueAt, now + 4 * 60 * 1000)
+})
+
+test("restores phone mode after a bridge restart", async (context) => {
+  const { bridge, cleanup } = await fixture(async () => jsonResponse({ ok: true, result: true }))
+  context.after(cleanup)
+  await bridge.activatePhoneMode()
+
+  const restored = new TelegramBridge({
+    botToken: "123:test-token",
+    allowedUserID: "42",
+    stateFile: bridge.stateFile,
+    fetchImpl: async () => jsonResponse({ ok: true, result: true }),
+  })
+  await restored.loadState()
+
+  assert.equal(restored.state.phoneMode, true)
+})
+
+test("local abort suppresses its error and follow-up completion", async (context) => {
+  const calls = []
+  const { bridge, cleanup } = await fixture(async (url) => {
+    calls.push(String(url))
+    return jsonResponse({ ok: true, result: true })
+  })
+  context.after(cleanup)
+  register(bridge, "one", 5001)
+
+  await bridge.processPluginEvent({
+    instanceID: "one",
+    event: { action: "attention", kind: "error", sessionID: "session-1", details: { message: "Aborted" } },
+  })
+  await bridge.processPluginEvent({
+    instanceID: "one",
+    event: { action: "attention", kind: "done", sessionID: "session-1" },
+  })
+
+  assert.deepEqual(calls, [])
+  assert.equal(Object.values(bridge.state.alerts).length, 0)
+  assert.ok(bridge.state.abortSuppressions["one:session-1"])
+
+  const resumedRegistration = {
+    instanceID: "one",
+    serverURL: "http://127.0.0.1:5001",
+    directory: "/project",
+    attention: [],
+    sessions: [{ id: "session-1", status: "busy" }],
+  }
+  bridge.registerInstance(resumedRegistration)
+  await bridge.reconcileRegistration(resumedRegistration)
+  assert.equal(bridge.state.abortSuppressions["one:session-1"], undefined)
 })
 
 test("abort rejects a pending question and suppresses expected follow-up alerts", async (context) => {

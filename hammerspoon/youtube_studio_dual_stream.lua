@@ -1,4 +1,5 @@
 local M = {}
+local safeClick = require("safe_frontmost_click")
 
 local log = hs.logger.new("youtube-dual-stream", "info")
 local URL_EVENT = "youtube-studio-dual-stream"
@@ -54,9 +55,14 @@ local function scrollToVisible(element)
 	return ok
 end
 
-local function press(element, visibleContainer)
+local function press(element, visibleContainer, semantic)
 	if not element or not hasAction(element, "AXPress") then
 		return false
+	end
+	local app = hs.application.find("YouTube Studio")
+	local targetWindow = activeRun and activeRun.targetWindow or nil
+	if semantic then
+		return safeClick.performAction(app, element, "AXPress", targetWindow)
 	end
 	local target = element
 	if
@@ -80,8 +86,7 @@ local function press(element, visibleContainer)
 	if visibleContainer and not frameCenterIsInside(frame, visibleContainer) then
 		return false
 	end
-	hs.eventtap.leftClick({ x = frame.x + frame.w / 2, y = frame.y + frame.h / 2 })
-	return true
+	return safeClick.leftClick(app, { x = frame.x + frame.w / 2, y = frame.y + frame.h / 2 }, targetWindow)
 end
 
 descendants = function(root)
@@ -242,6 +247,9 @@ local function snapshot(expectedTitle, broadcastId)
 	if not focusedWindow or focusedWindow:id() ~= targetWindow:id() then
 		return nil, "broadcast-window-focus-failed"
 	end
+	if activeRun then
+		activeRun.targetWindow = targetWindow
+	end
 	local window = attribute(applicationElement, "AXFocusedWindow") or attribute(applicationElement, "AXMainWindow")
 	if not window then
 		return nil, "studio-window-not-accessible"
@@ -365,6 +373,9 @@ local function snapshot(expectedTitle, broadcastId)
 	local toggleVisible = frameCenterIsInside(clickFrame, pageFrame)
 	local modeButtonFrame = modeButton and attribute(modeButton, "AXFrame") or nil
 	local modeButtonVisible = modeButtonFrame and frameCenterIsInside(modeButtonFrame, pageFrame) or false
+	local selectKey = #selectKeys == 1 and selectKeys[1] or nil
+	local selectKeyFrame = selectKey and attribute(selectKey, "AXFrame") or nil
+	local selectKeyVisible = selectKeyFrame and frameCenterIsInside(selectKeyFrame, pageFrame) or false
 
 	local state = {
 		checkbox = checkbox,
@@ -374,6 +385,8 @@ local function snapshot(expectedTitle, broadcastId)
 		mode = mode,
 		modeButton = modeButton,
 		modeButtonVisible = modeButtonVisible,
+		selectKey = selectKey,
+		selectKeyVisible = selectKeyVisible,
 		selectKeyCount = #selectKeys,
 		expectedVerticalKeyCount = expectedVerticalKeyCount,
 		pageFrame = pageFrame,
@@ -498,12 +511,56 @@ local function configure(expectedTitle, broadcastId, requestId)
 		end)
 	end
 
+	local function ensureVerticalKey()
+		waitFor(id, "Vertical stream key selector", 8, overallDeadline, "vertical-key-selector-timeout", function()
+			local state, observed = snapshot(expectedTitle, broadcastId)
+			if not state then
+				return nil, observed
+			end
+			if state.expectedVerticalKeyCount == 1 then
+				return { state = state, selected = true }
+			end
+			if state.selectKeyCount ~= 1 then
+				return nil, "vertical-key-selector-ambiguous"
+			end
+			return state.selectKeyVisible and { state = state, selected = false } or nil,
+				"vertical-key-selector-offscreen"
+		end, function(result)
+			if result.selected then
+				verifyFinalState()
+				return
+			end
+			if not press(result.state.selectKey, result.state.pageFrame, true) then
+				finish(id, "error", "vertical-key-menu-open-failed")
+				return
+			end
+			waitFor(id, "Vertical stream key menu option", 5, overallDeadline, "vertical-key-option-timeout", function()
+				local current, observed = snapshot(expectedTitle, broadcastId)
+				if not current then
+					return nil, observed
+				end
+				local option, count = findUniqueExact(current.entries, EXPECTED_VERTICAL_KEY, "AXMenuItem", true)
+				if count > 1 then
+					return nil, "vertical-key-option-ambiguous"
+				end
+				return option and { option = option, pageFrame = current.pageFrame } or nil,
+					option and nil or "vertical-key-option-absent"
+			end, function(selection)
+				if not isActive(id, overallDeadline) or not press(selection.option, selection.pageFrame, true) then
+					finish(id, "error", "vertical-key-selection-failed")
+					return
+				end
+				verifyFinalState()
+			end)
+		end)
+	end
+
 	local function selectEncoder(state)
 		if not isActive(id, overallDeadline) then
 			return
 		end
 		if state.mode == "Encoder" then
-			verifyFinalState()
+			ensureVerticalKey()
 			return
 		end
 		if state.mode ~= "Auto crop" or not state.modeButton then
@@ -518,7 +575,7 @@ local function configure(expectedTitle, broadcastId, requestId)
 			end
 			return visibleState.modeButtonVisible and visibleState or nil, "vertical-mode-selector-offscreen"
 		end, function(visibleState)
-			if not press(visibleState.modeButton, visibleState.pageFrame) then
+			if not press(visibleState.modeButton, visibleState.pageFrame, true) then
 				finish(id, "error", "mode-menu-open-failed", "mode-menu-visible-click-failed")
 				return
 			end
@@ -534,11 +591,11 @@ local function configure(expectedTitle, broadcastId, requestId)
 				return option and { option = option, pageFrame = current.pageFrame } or nil,
 					option and nil or "encoder-menu-option-absent"
 			end, function(selection)
-				if not isActive(id, overallDeadline) or not press(selection.option, selection.pageFrame) then
+				if not isActive(id, overallDeadline) or not press(selection.option, selection.pageFrame, true) then
 					finish(id, "error", "encoder-selection-failed")
 					return
 				end
-				verifyFinalState()
+				ensureVerticalKey()
 			end)
 		end)
 	end
@@ -581,7 +638,7 @@ local function configure(expectedTitle, broadcastId, requestId)
 					return
 				end
 				activeRun.clickAttempts = attempt
-				if not press(visibleState.checkbox, visibleState.pageFrame) then
+				if not press(visibleState.checkbox, visibleState.pageFrame, attempt > 1) then
 					finish(id, "error", "dual-stream-enable-failed", "dual-stream-visible-click-failed")
 					return
 				end

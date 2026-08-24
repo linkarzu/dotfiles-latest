@@ -1,4 +1,5 @@
 local M = {}
+local safeClick = require("safe_frontmost_click")
 
 local log = hs.logger.new("obs-brave-audio", "info")
 local RESULT_PATH = "/tmp/obs-brave-audio-hammerspoon-result"
@@ -87,8 +88,8 @@ local function click(element)
 	if not frame then
 		return false
 	end
-	hs.eventtap.leftClick({ x = frame.x + frame.w / 2, y = frame.y + frame.h / 2 })
-	return true
+	local app = hs.application.get("com.obsproject.obs-studio") or hs.application.find("OBS")
+	return safeClick.leftClick(app, { x = frame.x + frame.w / 2, y = frame.y + frame.h / 2 })
 end
 
 local function popupItems(root, menuFrame)

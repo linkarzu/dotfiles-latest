@@ -3,6 +3,7 @@ set -euo pipefail
 
 audio_dir="$HOME/github/dotfiles-private/scripts/macos/mac/obs/set-audio-application/py"
 pid_file="${TMPDIR:-/tmp}/obs-brave-audio-selector.pid"
+audio_test_url="https://www.youtube.com/watch?v=UDNVICQMXB0&list=PLZWMav2s1MZRr93uiz6vjEWCdXL93QzGz&index=5"
 wait_pid=""
 
 cleanup() {
@@ -12,19 +13,6 @@ cleanup() {
   if [[ -f "$pid_file" && "$(<"$pid_file")" == "$$" ]]; then
     rm -f "$pid_file"
   fi
-}
-
-wait_for_brave_youtube_window() {
-  local deadline=$((SECONDS + 15))
-  while ((SECONDS < deadline)); do
-    brave_window_id="$(
-      yabai -m query --windows \
-        | jq -r '[.[] | select(.app == "Brave Browser" and (.title | contains("YouTube")))] | max_by(.id).id // empty'
-    )"
-    [[ -n "$brave_window_id" ]] && return 0
-    sleep 0.25
-  done
-  return 1
 }
 
 if [[ "${1:-}" == "--wait" ]]; then
@@ -49,13 +37,7 @@ if [[ "${1:-}" == "--wait" ]]; then
   trap cleanup EXIT INT TERM
   wait_started="$SECONDS"
   if ! python3 "$audio_dir/wait-for-audio-output.py" "Brave Browser" --timeout 6 --stable-for 5; then
-    if ! wait_for_brave_youtube_window; then
-      printf 'Could not find the Brave YouTube audio-test window.\n' >&2
-      exit 1
-    fi
-    printf '[+] Brave produced no audio; focusing YouTube window %s and starting playback\n' "$brave_window_id"
-    yabai -m window "$brave_window_id" --focus
-    osascript -e 'tell application "System Events" to keystroke "k"'
+    python3 "$audio_dir/brave-youtube-playback.py" --url "$audio_test_url" --timeout 15
     python3 "$audio_dir/wait-for-audio-output.py" "Brave Browser" --timeout 14 --stable-for 5
   fi
   printf '[timing] Brave audio detected after %ss\n' "$((SECONDS - wait_started))"

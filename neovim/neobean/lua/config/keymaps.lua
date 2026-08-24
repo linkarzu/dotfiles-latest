@@ -1826,6 +1826,28 @@ vim.keymap.set("n", "<leader>io", function()
   end
 end, { desc = "[P](macOS) Open image under cursor in Preview" })
 
+-- Copy the full path of the image under the cursor to the system clipboard
+vim.keymap.set("n", "<leader>ip", function()
+  local line = vim.api.nvim_get_current_line()
+  local _, _, image_path = string.find(line, "%[.-%]%((.-)%)")
+
+  if not image_path then
+    vim.notify("No image found under the cursor", vim.log.levels.WARN)
+    return
+  end
+
+  local full_image_path = image_path
+  if not image_path:match("^https?://") then
+    if not image_path:match("^/") then
+      full_image_path = vim.fn.expand("%:p:h") .. "/" .. image_path
+    end
+    full_image_path = vim.fn.fnamemodify(full_image_path, ":p")
+  end
+
+  vim.fn.setreg("+", full_image_path)
+  vim.notify("Copied image path: " .. full_image_path, vim.log.levels.INFO)
+end, { desc = "[P]Copy full image path to system clipboard" })
+
 -- ############################################################################
 
 -- HACK: Upload images from Neovim to Imgur

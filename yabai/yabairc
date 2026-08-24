@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+set -eo pipefail
+
+config_ready_marker="/tmp/yabai_linkarzu.config-ready"
+rm -f "$config_ready_marker"
+
 # #############################################################################
 # Do not delete the `UNIQUE_ID` line below, I use it to backup original files
 # so they're not lost when my symlinks are applied
@@ -20,8 +25,8 @@ source "$HOME/github/dotfiles-latest/yabai/yabai_env.sh"
 # This command is the one that loads the scripting addition
 # Configure your user to execute `yabai --load-sa` as the root user without having to enter a password.
 #  https://github.com/koekeishiya/yabai/wiki/Installing-yabai-(latest-release)#configure-scripting-addition
-yabai -m signal --add event=dock_did_restart action="sudo yabai --load-sa"
-sudo yabai --load-sa
+yabai -m signal --add event=dock_did_restart action="timeout 5 sudo yabai --load-sa"
+timeout 5 sudo yabai --load-sa
 
 # # In order to prevent simple-bar freezing upon yabai restart, you'll need to add
 # # this line at the start of your .yabairc file
@@ -127,35 +132,38 @@ fi
 #                               Transparency
 ###############################################################################
 
-# Enable or disable transparency
-yabai -m config window_opacity on
-# yabai -m config window_opacity off
+# During restart, nested opacity commands can inherit accepted daemon sockets
+# and remain blocked, leaving unrelated yabai query clients waiting forever.
+# Static opacity rules are commented because opacity is unused; they did not
+# cause the socket inheritance.
+# yabai -m config window_opacity on
+yabai -m config window_opacity off
 
-opacity_value=0.87
+# opacity_value=0.87
 
 # Make the below apps transparent
-yabai -m signal --add event=window_focused app="^${apps_transparent}$" action="yabai -m config active_window_opacity $opacity_value"
+# yabai -m signal --add event=window_focused app="^${apps_transparent}$" action="yabai -m config active_window_opacity $opacity_value"
 # I don't want to be moving Ghostty around to other desktops, so I'll set its
 # opacity to 1 and manage its transparency through the ghostty config file
-yabai -m signal --add event=window_focused app="Ghostty" action="yabai -m config active_window_opacity 1"
-yabai -m signal --add event=window_focused app="^${apps_transparent}$" action="yabai -m config normal_window_opacity 0.00001"
+# yabai -m signal --add event=window_focused app="Ghostty" action="yabai -m config active_window_opacity 1"
+# yabai -m signal --add event=window_focused app="^${apps_transparent}$" action="yabai -m config normal_window_opacity 0.00001"
 
 # I want the apps here to always be shown, probably they'll be on the right
 # padding section. This is my "sticky notes"
-yabai -m rule --add app="^${apps_transp_ignore}$" opacity=$opacity_value
-yabai -m rule --add app="^${apps_stream}$" opacity=1
+# yabai -m rule --add app="^${apps_transp_ignore}$" opacity=$opacity_value
+# yabai -m rule --add app="^${apps_stream}$" opacity=1
 
 # When any other app gains focus, reset both active and background window opacity to fully visible
-yabai -m signal --add event=window_focused app!="^${apps_transparent}$" action="yabai -m config active_window_opacity 1.0"
-yabai -m signal --add event=window_focused app!="^${apps_transparent}$" action="yabai -m config normal_window_opacity 1.0"
+# yabai -m signal --add event=window_focused app!="^${apps_transparent}$" action="yabai -m config active_window_opacity 1.0"
+# yabai -m signal --add event=window_focused app!="^${apps_transparent}$" action="yabai -m config normal_window_opacity 1.0"
 
 # yabai -m signal --add event=window_focused app=".*CleanShot X.*" action="yabai -m config active_window_opacity 1.0"
 # yabai -m signal --add event=window_focused app=".*CleanShot X.*" action="yabai -m config normal_window_opacity 1.0"
 
 # Nice trick shared by @timhansinger8030 in my YouTube video https://youtu.be/SLCR1oO65GI
 # Allows to see mission control apps when calling mission control from a transparent app
-yabai -m signal --add event=mission_control_enter action="yabai -m config normal_window_opacity 1.0"
-yabai -m signal --add event=mission_control_exit action="yabai -m config active_window_opacity 1.0"
+# yabai -m signal --add event=mission_control_enter action="yabai -m config normal_window_opacity 1.0"
+# yabai -m signal --add event=mission_control_exit action="yabai -m config active_window_opacity 1.0"
 
 ###############################################################################
 #                             sub-layer=normal
@@ -290,7 +298,7 @@ yabai -m space 10 --label desk10
 # bkp_terminal_space using its first and second spaces.
 # With 3 displays, use the left non-main display for non_stream_space and the
 # right non-main display for bkp_terminal_space.
-displays_json="$(yabai -m query --displays)"
+displays_json="$(timeout 5 yabai -m query --displays)"
 display_count="$(echo "$displays_json" | jq 'length')"
 # Default target
 non_stream_space="desk1"
@@ -380,9 +388,9 @@ yabai -m rule --add app="^(Python)$" title="^Schedule livestream$" manage=off
 # handles this correctly by itself, but macshot needs yabai to focus the exact
 # newly-created window after the move. Add other apps with this behavior to
 # this regex. Example: app="^(macshot|GIMP|Microsoft Edge)$"
-yabai -m signal --add event=window_created app="^(macshot)$" action='sleep 0.2; yabai -m window "$YABAI_WINDOW_ID" --focus'
+yabai -m signal --add event=window_created app="^(macshot)$" action='sleep 0.2; timeout 5 yabai -m window "$YABAI_WINDOW_ID" --focus'
 # Follow Kitty if its assigned space changes instead of hard-coding desk3.
-yabai -m signal --add event=window_created app="^(Python)$" title="^Schedule livestream$" action='sleep 0.2; kitty_space="$(yabai -m query --windows | jq -r "first(.[] | select(.app == \"kitty\") | .space) // empty")"; if [ -n "$kitty_space" ]; then yabai -m window "$YABAI_WINDOW_ID" --space "$kitty_space"; fi; yabai -m window "$YABAI_WINDOW_ID" --focus'
+yabai -m signal --add event=window_created app="^(Python)$" title="^Schedule livestream$" action='sleep 0.2; kitty_space="$(timeout 5 yabai -m query --windows | jq -r "first(.[] | select(.app == \"kitty\") | .space) // empty")"; if [ -n "$kitty_space" ]; then timeout 5 yabai -m window "$YABAI_WINDOW_ID" --space "$kitty_space"; fi; timeout 5 yabai -m window "$YABAI_WINDOW_ID" --focus'
 
 yabai -m rule --add app="^kitty$" space=desk3
 
@@ -442,3 +450,5 @@ yabai -m signal --add event=space_changed action="$HOME/github/dotfiles-latest/y
 yabai -m rule --apply
 
 echo "Linkarzu yabai configuration loaded.."
+printf 'ready\n' >"${config_ready_marker}.tmp"
+mv "${config_ready_marker}.tmp" "$config_ready_marker"

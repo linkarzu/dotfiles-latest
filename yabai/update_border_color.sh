@@ -3,7 +3,10 @@
 source "$HOME/github/dotfiles-latest/sketchybar/felixkratz-linkarzu/colors.sh"
 
 # update border color only for BSP spaces; invisible elsewhere
-space_json=$(yabai -m query --spaces --space)
+if ! space_json=$(timeout 5 yabai -m query --spaces --space); then
+  borders hidpi=on width=5.0 inactive_color=0x00000000 active_color=0x00000000 &
+  exit 1
+fi
 layout=$(printf '%s' "$space_json" | jq -r '.type')
 
 if [[ "$layout" != "bsp" ]]; then

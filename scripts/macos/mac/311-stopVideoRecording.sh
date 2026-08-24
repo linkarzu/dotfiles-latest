@@ -150,9 +150,12 @@ fi
 log_step recording-mode success 'hotkey_initial_state_restored=true recovery_marker_preserved=true'
 
 log_step yabai-restart start 'expected=query-ready'
-"$HOME/github/dotfiles-latest/yabai/yabai_restart.sh"
+if ! timeout 5 "$HOME/github/dotfiles-latest/yabai/yabai_restart.sh"; then
+  log_step yabai-restart failure 'restart_completed=false'
+  exit 1
+fi
 deadline=$((SECONDS + 15))
-while ! yabai -m query --windows >/dev/null 2>&1; do
+while ! timeout 5 yabai -m query --windows >/dev/null 2>&1; do
   if ((SECONDS >= deadline)); then
     log_step yabai-restart failure 'query_ready=false'
     exit 1
@@ -161,9 +164,21 @@ while ! yabai -m query --windows >/dev/null 2>&1; do
 done
 log_step yabai-restart success 'query_ready=true'
 
-kitty_id="$(yabai -m query --windows | jq -r '[.[] | select(.app == "kitty")] | first.id // empty')"
+if ! yabai_windows="$(timeout 5 yabai -m query --windows)"; then
+  log_step yabai-restart timeout 'observed=post-ready-query-timeout timeout_seconds=5'
+  exit 1
+fi
+if ! kitty_id="$(
+  printf '%s' "$yabai_windows" | jq -r '[.[] | select(.app == "kitty")] | first.id // empty'
+)"; then
+  log_step yabai-restart failure 'observed=invalid-window-query-data'
+  exit 1
+fi
 if [[ -n "$kitty_id" ]]; then
-  yabai -m window --focus "$kitty_id"
+  if ! timeout 5 yabai -m window --focus "$kitty_id"; then
+    log_step yabai-restart failure 'observed=kitty-focus-failed-or-timed-out timeout_seconds=5'
+    exit 1
+  fi
 fi
 
 timer_pid=""

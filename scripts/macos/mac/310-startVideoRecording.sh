@@ -34,25 +34,26 @@ wait_for_app() {
 if [[ "$mode" == "--finish-livestream" ]]; then
   obs_focus_gate="$HOME/github/dotfiles-private/scripts/macos/mac/obs/set-audio-application/py/obs_focus_gate.py"
   "$dotfiles_dir/scripts/macos/mac/315-fixObsAudio.sh" --wait
-  log_step support-app start 'app=BetterDisplay expected=process-present-and-obs-audio-retained'
-  python3 "$obs_focus_gate"
-  open -a BetterDisplay
-  if ! wait_for_app BetterDisplay; then
-    log_step support-app failure 'app=BetterDisplay process_present=false'
+  if ! brave_windows="$(timeout 5 yabai -m query --windows)"; then
+    log_step brave-audio-window timeout 'observed=yabai-window-query-timeout timeout_seconds=5'
     exit 1
   fi
-  "$dotfiles_dir/scripts/macos/mac/315-fixObsAudio.sh"
-  log_step support-app success 'app=BetterDisplay process_present=true obs_audio_retained=true'
-  brave_audio_window_id="$(
-    yabai -m query --windows \
+  if ! brave_audio_window_id="$(
+    printf '%s' "$brave_windows" \
       | jq -r '[.[] | select(.app == "Brave Browser" and (.title | contains("Audio playing")))] | max_by(.id).id // empty'
-  )"
+  )"; then
+    log_step brave-audio-window failure 'observed=invalid-yabai-window-data'
+    exit 1
+  fi
   if [[ -z "$brave_audio_window_id" ]]; then
     echo "Could not find the Brave audio-test window to pause." >&2
     exit 1
   fi
   python3 "$obs_focus_gate"
-  yabai -m window "$brave_audio_window_id" --focus
+  if ! timeout 5 yabai -m window "$brave_audio_window_id" --focus; then
+    log_step brave-audio-window failure 'observed=focus-command-failed-or-timed-out timeout_seconds=5'
+    exit 1
+  fi
   osascript -e 'tell application "System Events" to keystroke "k"'
   python3 "$HOME/github/dotfiles-private/scripts/macos/mac/obs/set-audio-application/py/wait-for-audio-output.py" \
     "Brave Browser" --timeout 15 --stable-for 1 --expect-stopped
@@ -185,24 +186,6 @@ fi
 log_step dnd start 'expected=recording-on'
 "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/230-dnd.sh" recording-on
 log_step dnd success 'mode=recording-on'
-
-log_step yabai-restart start 'expected=query-ready'
-"$HOME/github/dotfiles-latest/yabai/yabai_restart.sh"
-
-deadline=$((SECONDS + 15))
-while ! yabai -m query --windows >/dev/null 2>&1; do
-  if ((SECONDS >= deadline)); then
-    log_step yabai-restart failure 'query_ready=false'
-    exit 1
-  fi
-  sleep 0.25
-done
-log_step yabai-restart success 'query_ready=true'
-
-kitty_id="$(yabai -m query --windows | jq -r '[.[] | select(.app == "kitty")] | first.id // empty')"
-if [[ -n "$kitty_id" ]]; then
-  yabai -m window --focus "$kitty_id"
-fi
 
 timer_log="$HOME/.cache/obs-meeting-manager/recording-timer.log"
 timer_pid_file="/tmp/sketchybar_timer.pid"

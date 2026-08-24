@@ -14,7 +14,7 @@ source "$HOME/github/dotfiles-latest/yabai/yabai_env.sh"
 # the /opt/homebrew/bin dir
 export PATH="/opt/homebrew/bin:$PATH"
 
-yabai --restart-service
+timeout 5 yabai --restart-service || exit $?
 
 # Wait a few seconds after restarting yabai, or the apps will restart too early
 # I think this causes the apps not to show with my transparent apps

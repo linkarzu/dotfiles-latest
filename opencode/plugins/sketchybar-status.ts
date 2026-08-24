@@ -16,6 +16,13 @@ type RuntimeEvent = {
 const kittyBin = "/Applications/kitty.app/Contents/MacOS/kitty"
 const sketchybarBin = "/opt/homebrew/bin/sketchybar"
 const telegramBridgeURL = "http://127.0.0.1:47653"
+const phoneModeSystem = [
+  "The user is reading this response in Telegram on a narrow phone screen.",
+  "Keep the final response at or below 3,500 characters whenever practical.",
+  "Use phone-friendly plain text with short section labels, hyphen bullets, or numbered steps.",
+  "Do not use Markdown tables, multi-column layouts, or complex formatting; convert tabular information into labeled bullets.",
+  "Use simple code blocks only when they are essential.",
+].join(" ")
 const proxyRoutes = [
   ["GET", /^\/question$/],
   ["GET", /^\/permission$/],
@@ -69,6 +76,7 @@ export const SketchybarStatusPlugin: Plugin = async ({ client, directory, $ }) =
   let bridgeQueue = Promise.resolve()
   let proxyServer: any
   let proxyURL = ""
+  const telegramPromptSessions = new Set<string>()
 
   async function postBridge(path: string, body: unknown) {
     if (!bridgeSecret) return false
@@ -82,6 +90,16 @@ export const SketchybarStatusPlugin: Plugin = async ({ client, directory, $ }) =
       signal: AbortSignal.timeout(1500),
     }).catch(() => undefined)
     return response?.ok ?? false
+  }
+
+  async function phoneModeEnabled() {
+    if (!bridgeSecret) return false
+    const response = await fetch(`${telegramBridgeURL}/health`, {
+      signal: AbortSignal.timeout(500),
+    }).catch(() => undefined)
+    if (!response?.ok) return false
+    const health = await response.json().catch(() => undefined) as { phoneMode?: boolean } | undefined
+    return health?.phoneMode === true
   }
 
   function bridgeEventKey(event: Record<string, any>) {
@@ -119,11 +137,19 @@ export const SketchybarStatusPlugin: Plugin = async ({ client, directory, $ }) =
     const apiClient = (client as any)._client
     const method = request.method.toLowerCase() as "get" | "post"
     const body = request.method === "POST" ? await request.json().catch(() => undefined) : undefined
-    const result = await apiClient[method]({
-      url: url.pathname,
-      query: Object.fromEntries(url.searchParams),
-      body,
-    })
+    const promptMatch = request.method === "POST" && url.pathname.match(/^\/session\/([^/]+)\/prompt_async$/)
+    const telegramPromptSessionID = promptMatch ? decodeURIComponent(promptMatch[1]) : undefined
+    if (telegramPromptSessionID) telegramPromptSessions.add(telegramPromptSessionID)
+    let result: any
+    try {
+      result = await apiClient[method]({
+        url: url.pathname,
+        query: Object.fromEntries(url.searchParams),
+        body,
+      })
+    } finally {
+      if (telegramPromptSessionID) telegramPromptSessions.delete(telegramPromptSessionID)
+    }
     const status = result.response?.status ?? (result.error ? 500 : 200)
     if (status === 204) return new Response(null, { status })
     return Response.json(result.error ?? result.data ?? {}, { status })
@@ -238,14 +264,20 @@ export const SketchybarStatusPlugin: Plugin = async ({ client, directory, $ }) =
     bridgeQueue = bridgeQueue.then(registerBridge).catch(() => undefined)
   }
 
-  function sendBridgeEvent(event: Record<string, unknown>) {
+  function queueBridgeEvent(event: Record<string, unknown>) {
     trackBridgeEvent(event)
-    bridgeQueue = bridgeQueue
+    const pending = bridgeQueue
       .then(async () => {
         await registerBridge()
         await postBridge("/event", { instanceID, event })
       })
       .catch(() => undefined)
+    bridgeQueue = pending
+    return pending
+  }
+
+  function sendBridgeEvent(event: Record<string, unknown>) {
+    void queueBridgeEvent(event)
   }
 
   async function applyAcknowledgement() {
@@ -475,8 +507,8 @@ export const SketchybarStatusPlugin: Plugin = async ({ client, directory, $ }) =
     if (state.waiting === 0 && serialized === lastPublished) return
     queue = queue
       .then(async () => {
-        await applyAcknowledgement()
-        await publish(state.waiting > 0)
+        const acknowledged = await applyAcknowledgement()
+        if (acknowledged) await publish()
       })
       .catch(() => undefined)
   }, 1000)
@@ -486,6 +518,16 @@ export const SketchybarStatusPlugin: Plugin = async ({ client, directory, $ }) =
   }, 10_000)
 
   return {
+    "chat.message": async ({ sessionID }) => {
+      if (telegramPromptSessions.has(sessionID)) return
+      if ((await loadSession(sessionID)).parentID) return
+      await queueBridgeEvent({ action: "local-prompt", sessionID })
+    },
+    "experimental.chat.system.transform": async ({ sessionID }, output) => {
+      if (!sessionID || !(await phoneModeEnabled())) return
+      if ((await loadSession(sessionID)).parentID) return
+      output.system.push(phoneModeSystem)
+    },
     event: async ({ event }) => {
       const runtimeEvent = event as RuntimeEvent
       if (!trackedEvents.has(runtimeEvent.type)) return

@@ -5,8 +5,21 @@ private Telegram bot to report and answer pending questions, permissions,
 errors, and completed sessions.
 
 Notifications for questions, permissions, and completion are sent only after
-they remain unresolved for four minutes. Errors are sent immediately. The bot
-accepts messages only from the configured numeric Telegram user ID.
+they remain unresolved for four minutes. Unexpected errors are sent
+immediately. Intentional aborts from OpenCode or Telegram are suppressed. The
+bot accepts messages only from the configured numeric Telegram user ID.
+
+Replying to any OpenCode notification from Telegram enables global phone mode.
+While phone mode is active, existing and new unresolved notifications from all
+OpenCode processes are sent immediately. The next prompt submitted locally in
+any OpenCode session disables phone mode and restores the four-minute delay.
+Telegram-injected prompts and background subagent prompts do not disable it.
+Right-clicking the OpenCode SketchyBar item also toggles phone mode; left-click
+opens the session popup.
+Phone-mode responses are instructed to stay within 3,500 characters and use
+plain-text headings, bullets, and numbered steps instead of tables or complex
+layouts. Completion notifications include up to 3,500 characters of the latest
+assistant response.
 
 ## Setup
 
@@ -56,9 +69,13 @@ Uninstalling preserves credentials. Bot and bridge logs are under
 - Tap `Once`, `Always`, or `Reject` on a permission alert.
 - Tap an option or reply directly to a question alert.
 - Reply directly to a completion or error alert to continue that session.
+- Reply with `/build PROMPT` to continue that session in build mode.
+- Reply with `/plan PROMPT` to continue that session in plan mode.
+- Ordinary follow-up replies preserve the most recently selected mode.
 - Reply with `/abort` to stop the associated session.
 - Send `/sessions` or `/status` to see currently registered processes.
+- `/sessions` and `/status` also show whether global phone mode is active.
 
 Telegram bot chats are not end-to-end encrypted. Notifications intentionally
-contain only short session, question, permission, command/path, error, and
+contain only bounded session, question, permission, command/path, error, and
 completion summaries rather than full source, diffs, or tool output.

@@ -115,6 +115,8 @@ case "$choice" in
   guest_scene="all-guests-live"
   guest_1="screen-guest1-live"
   guest_2="screen-guest2-live"
+  guest_3="screen-guest3-live"
+  guest_4="screen-guest4-live"
   guest_1_full="cam-guest1-live"
   guest_2_full="cam-guest2-live"
   guest_3_full="cam-guest3-live"
@@ -171,6 +173,19 @@ case "$choice" in
 # echo "5 - 2 guest"
 # echo "6 - 2 guest livestream"
 5 | 6)
+  set_source_record_filter "cam-guest1-live" off
+  set_source_record_filter "cam-guest2-live" off
+  set_source_record_filter "cam-main-chat" off
+  ;;
+# 3 guests
+7 | 8)
+  set_source_record_filter "cam-guest1-live" off
+  set_source_record_filter "cam-guest2-live" off
+  set_source_record_filter "cam-guest3-live" off
+  set_source_record_filter "cam-main-chat" off
+  ;;
+# 4 guests
+9 | 10)
   set_source_record_filter "cam-guest1-live" off
   set_source_record_filter "cam-guest2-live" off
   set_source_record_filter "cam-guest3-live" off

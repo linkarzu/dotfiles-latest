@@ -1,4 +1,5 @@
 local M = {}
+local safeClick = require("safe_frontmost_click")
 
 local log = hs.logger.new("obs-aitum", "info")
 local URL_EVENT = "obs-aitum-start"
@@ -91,10 +92,8 @@ local function frameCenterY(element)
 end
 
 local function press(element)
-	local ok, result = pcall(function()
-		return element:performAction("AXPress")
-	end)
-	return ok and result ~= nil and result ~= false
+	local app = hs.application.get("com.obsproject.obs-studio") or hs.application.find("OBS")
+	return safeClick.performAction(app, element, "AXPress")
 end
 
 local function click(element)
@@ -102,8 +101,8 @@ local function click(element)
 	if not frame then
 		return false
 	end
-	hs.eventtap.leftClick({ x = frame.x + frame.w / 2, y = frame.y + frame.h / 2 })
-	return true
+	local app = hs.application.get("com.obsproject.obs-studio") or hs.application.find("OBS")
+	return safeClick.leftClick(app, { x = frame.x + frame.w / 2, y = frame.y + frame.h / 2 })
 end
 
 local function horizontalYouTubeLabel(elements)
@@ -207,7 +206,54 @@ local function dismissObsCrashReporter()
 	return false, nil
 end
 
-local function runHorizontalYouTube(startOutput, popupAttempts)
+local function dismissStreamReminders()
+	local dismissed = 0
+	for _, application in ipairs(hs.application.runningApplications()) do
+		if application:name() == "osascript" then
+			local root = hs.axuielement.applicationElement(application)
+			for _, window in ipairs(attribute(root, "AXWindows") or {}) do
+				if attribute(window, "AXTitle") == "Stream reminder" then
+					local okButton = findText(descendants(window, 6), "OK", true)
+					if not okButton or not press(okButton) then
+						return false, "Could not dismiss a Stream reminder dialog"
+					end
+					dismissed = dismissed + 1
+				end
+			end
+		end
+	end
+	if dismissed > 0 then
+		log.i(string.format("Dismissed %d Stream reminder dialog(s)", dismissed))
+	end
+	return true, nil
+end
+
+local function hideQatWindows()
+	local hidden = 0
+	for _, application in ipairs(hs.application.runningApplications()) do
+		if application:name() == "kitty-quick-access" then
+			application:hide()
+			hidden = hidden + 1
+		end
+	end
+	if hidden == 0 then
+		return true, nil
+	end
+	hs.timer.usleep(200000)
+	for _, application in ipairs(hs.application.runningApplications()) do
+		if application:name() == "kitty-quick-access" then
+			for _, window in ipairs(application:allWindows()) do
+				if window:isVisible() then
+					return false, "The QAT quick-access terminal still covers OBS"
+				end
+			end
+		end
+	end
+	log.i(string.format("Hid %d QAT quick-access terminal application(s)", hidden))
+	return true, nil
+end
+
+local function runHorizontalYouTube(startOutput, popupAttempts, forceClick)
 	popupAttempts = popupAttempts or 0
 	if startOutput then
 		writeStartResult("pending", "Inspecting OBS Aitum controls")
@@ -234,9 +280,19 @@ local function runHorizontalYouTube(startOutput, popupAttempts)
 			return false
 		end
 		hs.timer.doAfter(0.2, function()
-			runHorizontalYouTube(startOutput, popupAttempts + 1)
+			runHorizontalYouTube(startOutput, popupAttempts + 1, forceClick)
 		end)
 		return true
+	end
+	local remindersDismissed, reminderError = dismissStreamReminders()
+	if not remindersDismissed then
+		fail(reminderError)
+		if startOutput then
+			writeStartResult("error", reminderError)
+		else
+			writeDiagnosticResult(false, reminderError)
+		end
+		return false
 	end
 	local app = hs.application.get("com.obsproject.obs-studio") or hs.application.find("OBS")
 	if not app then
@@ -248,8 +304,10 @@ local function runHorizontalYouTube(startOutput, popupAttempts)
 		end
 		return false
 	end
+	local obsWindow
 	for _, window in ipairs(app:allWindows()) do
 		if window:title():match("^OBS ") then
+			obsWindow = window
 			window:focus()
 			break
 		end
@@ -280,7 +338,7 @@ local function runHorizontalYouTube(startOutput, popupAttempts)
 		end
 		log.w("Dismissed stale Aitum main-encoder output error")
 		hs.timer.doAfter(0.2, function()
-			runHorizontalYouTube(startOutput, popupAttempts + 1)
+			runHorizontalYouTube(startOutput, popupAttempts + 1, forceClick)
 		end)
 		return true
 	end
@@ -336,9 +394,28 @@ local function runHorizontalYouTube(startOutput, popupAttempts)
 			return
 		end
 		if not startOutput then
-			log.i("Found Main Canvas YouTube Output button")
+			local buttonFrame = attribute(button, "AXFrame") or {}
+			local valueSettable = false
+			pcall(function()
+				valueSettable = button:isAttributeSettable("AXValue")
+			end)
+			local diagnostic = string.format(
+				"Found Main Canvas YouTube Output button role=%s title=%s description=%s identifier=%s value=%s valueSettable=%s frame=%.0f,%.0f %.0fx%.0f actions=%s",
+				tostring(attribute(button, "AXRole")),
+				tostring(attribute(button, "AXTitle")),
+				tostring(attribute(button, "AXDescription")),
+				tostring(attribute(button, "AXIdentifier")),
+				tostring(attribute(button, "AXValue")),
+				tostring(valueSettable),
+				buttonFrame.x or -1,
+				buttonFrame.y or -1,
+				buttonFrame.w or -1,
+				buttonFrame.h or -1,
+				table.concat(attribute(button, "AXActionNames") or {}, ",")
+			)
+			log.i(diagnostic)
 			if restoreLowerThirdsTab() then
-				writeDiagnosticResult(true, "Found Main Canvas YouTube Output button and restored lower-thirds")
+				writeDiagnosticResult(true, diagnostic .. " and restored lower-thirds")
 				hs.alert.show("OBS Aitum: Main Canvas YouTube Output is ready", 3)
 			else
 				writeDiagnosticResult(false, "Found the output button but could not restore the prior tab")
@@ -346,7 +423,27 @@ local function runHorizontalYouTube(startOutput, popupAttempts)
 			end
 			return
 		end
-		if not click(button) then
+		local qatHidden, qatError = hideQatWindows()
+		if not qatHidden then
+			fail(qatError)
+			writeStartResult("error", qatError)
+			return
+		end
+		app:activate(true)
+		if obsWindow then
+			obsWindow:raise()
+			obsWindow:focus()
+		end
+		hs.timer.usleep(200000)
+		local frontmost = hs.application.frontmostApplication()
+		if not frontmost or frontmost:bundleID() ~= "com.obsproject.obs-studio" then
+			fail("Could not focus OBS before clicking the Main Canvas YouTube Output button")
+			writeStartResult("error", "OBS was not frontmost before the output click")
+			return
+		end
+		local priorValue = attribute(button, "AXValue")
+		local pressed = click(button)
+		if not pressed then
 			fail("Could not press the Main Canvas YouTube Output button")
 			writeStartResult("error", "Could not press the Main Canvas YouTube Output button")
 			restoreLowerThirdsTab()
@@ -359,7 +456,15 @@ local function runHorizontalYouTube(startOutput, popupAttempts)
 			if findTextContaining(resultElements, "Unable to start output.") then
 				writeStartResult("error", "Aitum rejected the output because the main encoder is inactive")
 			else
-				writeStartResult("ok", "Pressed Main Canvas YouTube Output")
+				writeStartResult(
+					"ok",
+					string.format(
+						"Pressed Main Canvas YouTube Output mode=%s value=%s->%s",
+						forceClick and "click-fallback" or "click",
+						tostring(priorValue),
+						tostring(attribute(button, "AXValue"))
+					)
+				)
 			end
 			if not restoreLowerThirdsTab() then
 				log.w("Could not restore the lower-thirds OBS dock tab")
@@ -369,16 +474,16 @@ local function runHorizontalYouTube(startOutput, popupAttempts)
 	return true
 end
 
-function M.startHorizontalYouTube()
-	return runHorizontalYouTube(true)
+function M.startHorizontalYouTube(forceClick)
+	return runHorizontalYouTube(true, nil, forceClick)
 end
 
 function M.diagnoseHorizontalYouTube()
 	return runHorizontalYouTube(false)
 end
 
-hs.urlevent.bind(URL_EVENT, function()
-	M.startHorizontalYouTube()
+hs.urlevent.bind(URL_EVENT, function(_, params)
+	M.startHorizontalYouTube(params and params.mode == "click")
 end)
 
 hs.urlevent.bind(DIAGNOSTIC_URL_EVENT, function()

@@ -32,8 +32,10 @@ wait_for_app() {
 }
 
 if [[ "$mode" == "--finish-livestream" ]]; then
+  obs_focus_gate="$HOME/github/dotfiles-private/scripts/macos/mac/obs/set-audio-application/py/obs_focus_gate.py"
   "$dotfiles_dir/scripts/macos/mac/315-fixObsAudio.sh" --wait
   log_step support-app start 'app=BetterDisplay expected=process-present-and-obs-audio-retained'
+  python3 "$obs_focus_gate"
   open -a BetterDisplay
   if ! wait_for_app BetterDisplay; then
     log_step support-app failure 'app=BetterDisplay process_present=false'
@@ -49,15 +51,12 @@ if [[ "$mode" == "--finish-livestream" ]]; then
     echo "Could not find the Brave audio-test window to pause." >&2
     exit 1
   fi
+  python3 "$obs_focus_gate"
   yabai -m window "$brave_audio_window_id" --focus
   osascript -e 'tell application "System Events" to keystroke "k"'
   python3 "$HOME/github/dotfiles-private/scripts/macos/mac/obs/set-audio-application/py/wait-for-audio-output.py" \
     "Brave Browser" --timeout 15 --stable-for 1 --expect-stopped
-  obs_window_id="$(
-    yabai -m query --windows \
-      | jq -r '[.[] | select(.app == "OBS Studio" and (.title | startswith("OBS ")))] | max_by(.id).id // empty'
-  )"
-  [[ -n "$obs_window_id" ]] && yabai -m window "$obs_window_id" --focus
+  python3 "$obs_focus_gate"
   echo "Paused the Brave audio-test video."
   exit 0
 fi

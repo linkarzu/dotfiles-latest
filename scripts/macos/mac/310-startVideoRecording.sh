@@ -32,33 +32,14 @@ wait_for_app() {
 }
 
 if [[ "$mode" == "--finish-livestream" ]]; then
+  audio_dir="$HOME/github/dotfiles-private/scripts/macos/mac/obs/set-audio-application/py"
   obs_focus_gate="$HOME/github/dotfiles-private/scripts/macos/mac/obs/set-audio-application/py/obs_focus_gate.py"
   "$dotfiles_dir/scripts/macos/mac/315-fixObsAudio.sh" --wait
-  if ! brave_windows="$(timeout 5 yabai -m query --windows)"; then
-    log_step brave-audio-window timeout 'observed=yabai-window-query-timeout timeout_seconds=5'
-    exit 1
-  fi
-  if ! brave_audio_window_id="$(
-    printf '%s' "$brave_windows" \
-      | jq -r '[.[] | select(.app == "Brave Browser" and (.title | contains("Audio playing")))] | max_by(.id).id // empty'
-  )"; then
-    log_step brave-audio-window failure 'observed=invalid-yabai-window-data'
-    exit 1
-  fi
-  if [[ -z "$brave_audio_window_id" ]]; then
-    echo "Could not find the Brave audio-test window to pause." >&2
-    exit 1
-  fi
-  python3 "$obs_focus_gate"
-  if ! timeout 5 yabai -m window "$brave_audio_window_id" --focus; then
-    log_step brave-audio-window failure 'observed=focus-command-failed-or-timed-out timeout_seconds=5'
-    exit 1
-  fi
-  osascript -e 'tell application "System Events" to keystroke "k"'
-  python3 "$HOME/github/dotfiles-private/scripts/macos/mac/obs/set-audio-application/py/wait-for-audio-output.py" \
+  python3 "$audio_dir/brave-youtube-playback.py" --stop --timeout 15
+  python3 "$audio_dir/wait-for-audio-output.py" \
     "Brave Browser" --timeout 15 --stable-for 1 --expect-stopped
   python3 "$obs_focus_gate"
-  echo "Paused the Brave audio-test video."
+  echo "Stopped the local Brave audio fixture."
   exit 0
 fi
 

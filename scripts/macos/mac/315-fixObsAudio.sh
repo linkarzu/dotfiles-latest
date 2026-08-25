@@ -3,7 +3,8 @@ set -euo pipefail
 
 audio_dir="$HOME/github/dotfiles-private/scripts/macos/mac/obs/set-audio-application/py"
 pid_file="${TMPDIR:-/tmp}/obs-brave-audio-selector.pid"
-audio_test_url="https://www.youtube.com/watch?v=UDNVICQMXB0&list=PLZWMav2s1MZRr93uiz6vjEWCdXL93QzGz&index=5"
+audio_test_page="$HOME/github/dotfiles-private/scripts/macos/mac/obs/set-audio-application/audio-test/brave-audio-test.html"
+audio_test_url="file://$audio_test_page"
 wait_pid=""
 
 cleanup() {
@@ -36,10 +37,9 @@ if [[ "${1:-}" == "--wait" ]]; then
   printf '%s\n' "$$" >"$pid_file"
   trap cleanup EXIT INT TERM
   wait_started="$SECONDS"
-  if ! python3 "$audio_dir/wait-for-audio-output.py" "Brave Browser" --timeout 6 --stable-for 5; then
-    python3 "$audio_dir/brave-youtube-playback.py" --url "$audio_test_url" --timeout 15
-    python3 "$audio_dir/wait-for-audio-output.py" "Brave Browser" --timeout 14 --stable-for 5
-  fi
+  open -a "Brave Browser" "$audio_test_page"
+  python3 "$audio_dir/brave-youtube-playback.py" --url "$audio_test_url" --timeout 15
+  python3 "$audio_dir/wait-for-audio-output.py" "Brave Browser" --timeout 14 --stable-for 5
   printf '[timing] Brave audio detected after %ss\n' "$((SECONDS - wait_started))"
 fi
 

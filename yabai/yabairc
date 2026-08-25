@@ -3,6 +3,32 @@
 set -eo pipefail
 
 config_ready_marker="/tmp/yabai_linkarzu.config-ready"
+startup_timing_log="/tmp/yabai_linkarzu.startup.log"
+# Touch this marker before a restart to append per-phase startup timings.
+if [[ -f /tmp/yabai_linkarzu.startup-timing-enabled ]]; then
+  startup_started_at="$(/usr/bin/perl -MTime::HiRes=time -e 'printf "%.6f", time')"
+  startup_last_at="$startup_started_at"
+  startup_run_id="$$-$startup_started_at"
+
+  log_startup_phase() {
+    local phase="$1"
+    local timing now elapsed_ms phase_ms
+    timing="$(
+      /usr/bin/perl -MTime::HiRes=time -e '
+        $now = time;
+        printf "%.6f %.1f %.1f", $now, 1000 * ($now - $ARGV[0]), 1000 * ($now - $ARGV[1]);
+      ' "$startup_started_at" "$startup_last_at"
+    )"
+    read -r now elapsed_ms phase_ms <<<"$timing"
+    printf 'run_id=%s phase=%s elapsed_ms=%s phase_ms=%s\n' \
+      "$startup_run_id" "$phase" "$elapsed_ms" "$phase_ms" >>"$startup_timing_log"
+    startup_last_at="$now"
+  }
+else
+  log_startup_phase() { :; }
+fi
+
+log_startup_phase "start"
 rm -f "$config_ready_marker"
 
 # #############################################################################
@@ -21,12 +47,14 @@ rm -f "$config_ready_marker"
 
 # Load all the variables I need from the yabai_env.sh file
 source "$HOME/github/dotfiles-latest/yabai/yabai_env.sh"
+log_startup_phase "environment-loaded"
 
 # This command is the one that loads the scripting addition
 # Configure your user to execute `yabai --load-sa` as the root user without having to enter a password.
 #  https://github.com/koekeishiya/yabai/wiki/Installing-yabai-(latest-release)#configure-scripting-addition
 yabai -m signal --add event=dock_did_restart action="timeout 5 sudo yabai --load-sa"
 timeout 5 sudo yabai --load-sa
+log_startup_phase "scripting-addition-loaded"
 
 # # In order to prevent simple-bar freezing upon yabai restart, you'll need to add
 # # this line at the start of your .yabairc file
@@ -56,8 +84,7 @@ yabai -m rule --add app="^${apps_mgoff_above}$" manage=off sub-layer=above
 # I only change the paddings if yabai is installed, otherwise I use default
 # paddings
 if command -v sketchybar &>/dev/null; then
-  # Check the display size (e.g., grab the resolution here)
-  display_resolution=$(system_profiler SPDisplaysDataType | grep Resolution)
+  # Reuse the display details collected by yabai_env.sh.
   # First condition is to match my macbook pro, the * are used as wildcards
   if [[ "$display_resolution" == *"3456 x 2234"* ]]; then
     # yabai -m config top_padding 12
@@ -127,6 +154,7 @@ else
   yabai -m config top_padding 02
   yabai -m config bottom_padding 00
 fi
+log_startup_phase "base-rules-and-padding-configured"
 
 ###############################################################################
 #                               Transparency
@@ -261,6 +289,7 @@ yabai -m config \
   mouse_action1 move \
   mouse_action2 resize \
   mouse_drop_action swap
+log_startup_phase "defaults-configured"
 
 ###############################################################################
 #                             Yabai Spaces
@@ -378,6 +407,7 @@ elif [ "$display_count" -eq 3 ]; then
   yabai -m config --space "$right_second_space_index" top_padding 9
   yabai -m config --space "$right_second_space_index" right_padding 2
 fi
+log_startup_phase "spaces-configured"
 
 yabai -m rule --add app="^.*$" space=desk1
 # Keep the Tk livestream picker floating so its own size and position survive
@@ -441,6 +471,7 @@ yabai -m rule --add app="^Ghostty$" space="$bkp_terminal_space"
 # brew install borders
 yabai -m signal --add event=window_focused action="$HOME/github/dotfiles-latest/yabai/update_border_color.sh"
 yabai -m signal --add event=space_changed action="$HOME/github/dotfiles-latest/yabai/update_border_color.sh"
+log_startup_phase "application-rules-and-signals-configured"
 
 # THIS IS VERY IMPORTANT
 # It ensures that when I restart yabai, all the rules (including the manage=off rules)
@@ -448,7 +479,9 @@ yabai -m signal --add event=space_changed action="$HOME/github/dotfiles-latest/y
 # Otherwise yabai takes care of management and I couldnt resize apps like
 # packet tracer for example
 yabai -m rule --apply
+log_startup_phase "rules-applied"
 
 echo "Linkarzu yabai configuration loaded.."
 printf 'ready\n' >"${config_ready_marker}.tmp"
 mv "${config_ready_marker}.tmp" "$config_ready_marker"
+log_startup_phase "config-ready"

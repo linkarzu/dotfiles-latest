@@ -76,6 +76,7 @@ if [[ "$cleanup_reason" == "--livestream-cleanup" ]]; then
     'OBS_Studio|/OBS.app/Contents/MacOS/OBS'
     'Google_Chrome|/Google Chrome.app/Contents/'
     'Brave_Browser|/Brave Browser.app/Contents/'
+    'YouTube_Studio|/Helium.app/Contents/'
   )
 else
   support_apps+=('Brave_Browser|/Brave Browser.app/Contents/')

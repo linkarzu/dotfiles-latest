@@ -5,12 +5,19 @@ local log = hs.logger.new("youtube-dual-stream", "info")
 local URL_EVENT = "youtube-studio-dual-stream"
 local RESULT_PREFIX = "/tmp/youtube-studio-dual-stream"
 local EXPECTED_VERTICAL_KEY = "Vertical stream key (RTMP, Variable)"
+local YABAI = "/opt/homebrew/bin/yabai"
 local MAX_NODES = 10000
 local MAX_DEPTH = 45
 local POLL_INTERVAL = 0.2
 local runId = 0
 local activeRun
 local cancelledRequests = {}
+
+local function safeLog(method, message)
+	pcall(function()
+		method(message)
+	end)
+end
 
 local function attribute(element, name)
 	local ok, value = pcall(function()
@@ -181,14 +188,14 @@ end
 
 local function writeResult(requestId, broadcastId, status, code, observed, details)
 	if not validRequestId(requestId) then
-		log.e("Refused to write Dual stream result with an invalid request ID")
+		safeLog(log.e, "Refused to write Dual stream result with an invalid request ID")
 		return
 	end
 	local path = resultPath(requestId)
 	local temporaryPath = path .. ".tmp"
 	local file = io.open(temporaryPath, "w")
 	if not file then
-		log.e("Could not write Dual stream result")
+		safeLog(log.e, "Could not write Dual stream result")
 		return
 	end
 	file:write(hs.json.encode({
@@ -201,8 +208,24 @@ local function writeResult(requestId, broadcastId, status, code, observed, detai
 	}) .. "\n")
 	file:close()
 	if not os.rename(temporaryPath, path) then
-		log.e("Could not publish Dual stream result")
+		safeLog(log.e, "Could not publish Dual stream result")
 	end
+end
+
+local function focusExactWindow(targetWindow, axWindow)
+	local targetWindowId = targetWindow and targetWindow:id() or nil
+	if type(targetWindowId) ~= "number" or targetWindowId <= 0 or targetWindowId % 1 ~= 0 then
+		return false, targetWindowId, 0
+	end
+	targetWindow:focus()
+	targetWindow:raise()
+	pcall(function()
+		axWindow:performAction("AXRaise")
+	end)
+	hs.execute(string.format("%s -m window %d --focus", YABAI, targetWindowId), true)
+	local focusedWindow = hs.window.focusedWindow()
+	local focusedWindowId = focusedWindow and focusedWindow:id() or 0
+	return focusedWindowId == targetWindowId, targetWindowId, focusedWindowId
 end
 
 local function snapshot(expectedTitle, broadcastId)
@@ -210,7 +233,6 @@ local function snapshot(expectedTitle, broadcastId)
 	if not app then
 		return nil, "studio-not-running"
 	end
-	app:activate(true)
 	local applicationElement = hs.axuielement.applicationElement(app)
 	local axWindows = attribute(applicationElement, "AXWindows") or {}
 	local appWindows = app:allWindows()
@@ -238,19 +260,20 @@ local function snapshot(expectedTitle, broadcastId)
 	if not targetWindow then
 		return nil, "broadcast-window-mapping-unavailable"
 	end
-	targetWindow:focus()
-	targetWindow:raise()
-	pcall(function()
-		axWindows[targetIndex]:performAction("AXRaise")
-	end)
-	local focusedWindow = hs.window.focusedWindow()
-	if not focusedWindow or focusedWindow:id() ~= targetWindow:id() then
+	local focused, targetWindowId, focusedWindowId = focusExactWindow(targetWindow, axWindows[targetIndex])
+	if activeRun then
+		activeRun.focusEvidence = {
+			targetWindowId = targetWindowId or 0,
+			focusedWindowId = focusedWindowId,
+		}
+	end
+	if not focused then
 		return nil, "broadcast-window-focus-failed"
 	end
 	if activeRun then
 		activeRun.targetWindow = targetWindow
 	end
-	local window = attribute(applicationElement, "AXFocusedWindow") or attribute(applicationElement, "AXMainWindow")
+	local window = axWindows[targetIndex]
 	if not window then
 		return nil, "studio-window-not-accessible"
 	end
@@ -401,6 +424,8 @@ local function snapshot(expectedTitle, broadcastId)
 			mode = mode or "absent",
 			modeButtonVisible = modeButtonVisible,
 			toggleVisible = toggleVisible,
+			targetWindowId = activeRun.focusEvidence and activeRun.focusEvidence.targetWindowId or 0,
+			focusedWindowId = activeRun.focusEvidence and activeRun.focusEvidence.focusedWindowId or 0,
 		}
 	end
 	return state
@@ -419,7 +444,11 @@ local function finish(id, status, code, observed)
 	end
 	local requestId = activeRun.requestId
 	local broadcastId = activeRun.broadcastId
-	local evidence = activeRun.evidence
+	local evidence = activeRun.evidence or {}
+	if activeRun.focusEvidence then
+		evidence.targetWindowId = activeRun.focusEvidence.targetWindowId
+		evidence.focusedWindowId = activeRun.focusEvidence.focusedWindowId
+	end
 	activeRun = nil
 	runId = runId + 1
 	writeResult(requestId, broadcastId, status, code, observed, evidence)
@@ -432,29 +461,29 @@ local function waitFor(id, description, timeout, overallDeadline, timeoutCode, c
 	local function poll()
 		if not isActive(id, overallDeadline) then
 			if activeRun and activeRun.runId == id then
-				log.e(description .. " timed out; last observed: " .. lastObserved)
 				finish(id, "error", timeoutCode, lastObserved)
+				safeLog(log.e, description .. " timed out; last observed: " .. lastObserved)
 			end
 			return
 		end
 		if hs.timer.secondsSinceEpoch() >= deadline then
-			log.e(description .. " timed out; last observed: " .. lastObserved)
 			if onTimeout and isActive(id, overallDeadline) then
 				onTimeout(lastObserved)
 			else
 				finish(id, "error", timeoutCode, lastObserved)
 			end
+			safeLog(log.e, description .. " timed out; last observed: " .. lastObserved)
 			return
 		end
 		local result, observed = check()
 		lastObserved = observed or lastObserved
 		if hs.timer.secondsSinceEpoch() >= deadline then
-			log.e(description .. " timed out; last observed: " .. lastObserved)
 			if onTimeout and isActive(id, overallDeadline) then
 				onTimeout(lastObserved)
 			else
 				finish(id, "error", timeoutCode, lastObserved)
 			end
+			safeLog(log.e, description .. " timed out; last observed: " .. lastObserved)
 			return
 		end
 		if result then
@@ -506,8 +535,8 @@ local function configure(expectedTitle, broadcastId, requestId)
 			end
 			return state
 		end, function()
-			log.i("Verified YouTube Studio Dual stream encoder configuration")
 			finish(id, "ok", "verified")
+			safeLog(log.i, "Verified YouTube Studio Dual stream encoder configuration")
 		end)
 	end
 
@@ -731,7 +760,7 @@ function M.cancel(requestId, broadcastId)
 		activeRun = nil
 		runId = runId + 1
 		writeResult(requestId, broadcastId, "error", "cancelled")
-		log.i("Cancelled YouTube Studio Dual stream automation")
+		safeLog(log.i, "Cancelled YouTube Studio Dual stream automation")
 		return true
 	end
 	if validRequestId(requestId) then

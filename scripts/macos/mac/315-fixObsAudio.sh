@@ -38,7 +38,7 @@ if [[ "${1:-}" == "--wait" ]]; then
   trap cleanup EXIT INT TERM
   wait_started="$SECONDS"
   open -a "Brave Browser" "$audio_test_page"
-  python3 "$audio_dir/brave-youtube-playback.py" --url "$audio_test_url" --timeout 15
+  python3 "$audio_dir/brave-youtube-playback.py" --url "$audio_test_url" --timeout 30
   python3 "$audio_dir/wait-for-audio-output.py" "Brave Browser" --timeout 14 --stable-for 5
   printf '[timing] Brave audio detected after %ss\n' "$((SECONDS - wait_started))"
 fi

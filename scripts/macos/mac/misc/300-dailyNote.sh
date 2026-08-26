@@ -57,7 +57,7 @@ if [ "$mode" = "work" ]; then
   # shellcheck disable=SC1090
   source "$work_env_file"
   main_repo_dir="$WORK_OBSIDIAN_DIR"
-  main_note_dir="$WORK_DAILY_NOTE_DIR"
+  main_note_dir="${DAILY_NOTE_MAIN_NOTE_DIR:-$WORK_DAILY_NOTE_DIR}"
   kitty_sess_file="$WORK_DAILY_KITTY_SESSION_FILE"
   note_template="$work_note_template"
 else
@@ -92,6 +92,11 @@ if [ ! -f "$full_path" ]; then
 ${note_template}
 
 EOF
+fi
+
+if [ "${DAILY_NOTE_CREATE_ONLY:-0}" = "1" ]; then
+  printf '%s\n' "$full_path"
+  exit 0
 fi
 
 ###############################################################################

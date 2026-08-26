@@ -228,31 +228,6 @@ local function dismissStreamReminders()
 	return true, nil
 end
 
-local function hideQatWindows()
-	local hidden = 0
-	for _, application in ipairs(hs.application.runningApplications()) do
-		if application:name() == "kitty-quick-access" then
-			application:hide()
-			hidden = hidden + 1
-		end
-	end
-	if hidden == 0 then
-		return true, nil
-	end
-	hs.timer.usleep(200000)
-	for _, application in ipairs(hs.application.runningApplications()) do
-		if application:name() == "kitty-quick-access" then
-			for _, window in ipairs(application:allWindows()) do
-				if window:isVisible() then
-					return false, "The QAT quick-access terminal still covers OBS"
-				end
-			end
-		end
-	end
-	log.i(string.format("Hid %d QAT quick-access terminal application(s)", hidden))
-	return true, nil
-end
-
 local function runHorizontalYouTube(startOutput, popupAttempts, forceClick)
 	popupAttempts = popupAttempts or 0
 	if startOutput then
@@ -353,11 +328,6 @@ local function runHorizontalYouTube(startOutput, popupAttempts, forceClick)
 		return false
 	end
 
-	local lowerThirdsTab = findText(elements, "lower-thirds", true)
-	local function restoreLowerThirdsTab()
-		return lowerThirdsTab ~= nil and press(lowerThirdsTab)
-	end
-
 	if not press(aitumTab) then
 		fail("Could not select the Aitum Multistream dock tab")
 		if startOutput then
@@ -378,7 +348,6 @@ local function runHorizontalYouTube(startOutput, popupAttempts, forceClick)
 			else
 				writeDiagnosticResult(false, labelError)
 			end
-			restoreLowerThirdsTab()
 			return
 		end
 
@@ -390,7 +359,6 @@ local function runHorizontalYouTube(startOutput, popupAttempts, forceClick)
 			else
 				writeDiagnosticResult(false, "Could not find the Main Canvas YouTube Output button")
 			end
-			restoreLowerThirdsTab()
 			return
 		end
 		if not startOutput then
@@ -414,19 +382,8 @@ local function runHorizontalYouTube(startOutput, popupAttempts, forceClick)
 				table.concat(attribute(button, "AXActionNames") or {}, ",")
 			)
 			log.i(diagnostic)
-			if restoreLowerThirdsTab() then
-				writeDiagnosticResult(true, diagnostic .. " and restored lower-thirds")
-				hs.alert.show("OBS Aitum: Main Canvas YouTube Output is ready", 3)
-			else
-				writeDiagnosticResult(false, "Found the output button but could not restore the prior tab")
-				fail("Found the output button but could not restore the prior tab")
-			end
-			return
-		end
-		local qatHidden, qatError = hideQatWindows()
-		if not qatHidden then
-			fail(qatError)
-			writeStartResult("error", qatError)
+			writeDiagnosticResult(true, diagnostic)
+			hs.alert.show("OBS Aitum: Main Canvas YouTube Output is ready", 3)
 			return
 		end
 		app:activate(true)
@@ -446,7 +403,6 @@ local function runHorizontalYouTube(startOutput, popupAttempts, forceClick)
 		if not pressed then
 			fail("Could not press the Main Canvas YouTube Output button")
 			writeStartResult("error", "Could not press the Main Canvas YouTube Output button")
-			restoreLowerThirdsTab()
 			return
 		end
 		log.i("Pressed Main Canvas YouTube Output")
@@ -465,9 +421,6 @@ local function runHorizontalYouTube(startOutput, popupAttempts, forceClick)
 						tostring(attribute(button, "AXValue"))
 					)
 				)
-			end
-			if not restoreLowerThirdsTab() then
-				log.w("Could not restore the lower-thirds OBS dock tab")
 			end
 		end)
 	end)

@@ -848,6 +848,22 @@ fi
 
 echo
 echo "########################################################################"
+echo "Configure Helium renderer accessibility"
+echo "########################################################################"
+
+helium_accessibility_setup="$HOME/github/dotfiles-latest/scripts/macos/mac/setup/030-heliumAccessibility.sh"
+if [[ -x "/Applications/Helium.app/Contents/MacOS/Helium" ]]; then
+  if ! "$helium_accessibility_setup" --install; then
+    echo -e "${boldRed}Helium accessibility login setup failed.${noColor}"
+    exit 1
+  fi
+else
+  echo -e "${boldYellow}Helium is not installed; its login agent was not installed.${noColor}"
+  echo "After installing Helium, run: $helium_accessibility_setup --install"
+fi
+
+echo
+echo "########################################################################"
 echo "Open installed apps"
 echo "########################################################################"
 

@@ -2,8 +2,16 @@
 
 set -euo pipefail
 
+work_env_file="$HOME/github/dotfiles-private/work/work-env.sh"
+if [[ ! -f "$work_env_file" ]]; then
+  printf 'Missing work environment file: %s\n' "$work_env_file" >&2
+  exit 1
+fi
+# shellcheck disable=SC1090
+source "$work_env_file"
+
 downloads_dir="${FIREWALL_DOWNLOADS_DIR:-$HOME/Documents/work-downloads}"
-projects_root="${FIREWALL_PROJECTS_ROOT:-$HOME/Library/CloudStorage/OneDrive-Conduent/Obsidian/network_build/00-projects/c6008588/01-prog}"
+projects_root="${FIREWALL_PROJECTS_ROOT:-${WORK_FIREWALL_PROJECTS_ROOT:?Missing WORK_FIREWALL_PROJECTS_ROOT}}"
 request_date="${FIREWALL_REQUEST_DATE:-$(date +%y%m%d)}"
 fzf_colors_file="$HOME/github/dotfiles-latest/colorscheme/active/active-fzf-colors.sh"
 

@@ -106,6 +106,12 @@ else
   -- Fuck relative numbers, I'm done with them
   vim.opt.relativenumber = true
 
+  -- Snacks' custom status column grows when the displayed line number gains a
+  -- digit, which shifts the text area and can change where wrapped words land.
+  -- Use Neovim's native gutter and keep it stable through line 9999.
+  vim.opt.statuscolumn = ""
+  vim.opt.numberwidth = 5
+
   -- When text reaches this limit, it automatically wraps to the next line.
   -- This WILL NOT auto wrap existing lines, or if you paste a long line into a
   -- file it will not wrap it as well

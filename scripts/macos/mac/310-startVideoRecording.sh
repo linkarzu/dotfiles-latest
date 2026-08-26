@@ -11,6 +11,8 @@ dotfiles_dir="$HOME/github/dotfiles-latest"
 skhdrc="$dotfiles_dir/skhd/skhdrc"
 recording_mode_marker="$HOME/.cache/obs-meeting-manager/recording-mode"
 work_env_file="$HOME/github/dotfiles-private/work/work-env.sh"
+# shellcheck source=scripts/macos/mac/misc/recordingModeState.sh
+source "$dotfiles_dir/scripts/macos/mac/misc/recordingModeState.sh"
 
 log_step() {
   local step="$1"
@@ -58,20 +60,11 @@ fi
 log_step audio-output success 'observed="USB Audio"'
 
 log_step recording-mode start 'expected=marker-present work-session-closed hotkey-disabled'
-mkdir -p "$(dirname "$recording_mode_marker")"
-active_hotkey='cmd + alt - f1 : $HOME/github/dotfiles-latest/scripts/macos/mac/misc/552-skhdDailyWork.sh'
-disabled_hotkey='# cmd + alt - f1 : $HOME/github/dotfiles-latest/scripts/macos/mac/misc/552-skhdDailyWork.sh'
-if grep -Fqx "$active_hotkey" "$skhdrc"; then
-  initial_hotkey_state="enabled"
-elif grep -Fqx "$disabled_hotkey" "$skhdrc"; then
-  initial_hotkey_state="disabled"
-else
-  log_step recording-mode failure 'hotkey_initial_state=unknown'
+if ! marker_capture="$(capture_recording_mode_state "$recording_mode_marker" "$skhdrc")"; then
+  log_step recording-mode failure 'marker_state=invalid-or-hotkey-state-unknown'
   exit 1
 fi
-recording_mode_marker_tmp="${recording_mode_marker}.$$"
-printf 'hotkey_initial=%s\n' "$initial_hotkey_state" >"$recording_mode_marker_tmp"
-mv "$recording_mode_marker_tmp" "$recording_mode_marker"
+read -r marker_action initial_hotkey_state <<<"$marker_capture"
 [[ -e "$recording_mode_marker" ]] || {
   log_step recording-mode failure 'marker_present=false'
   exit 1
@@ -91,13 +84,20 @@ if [[ -f "$work_env_file" ]]; then
     exit 1
   fi
 fi
-sed -i '' 's|^cmd + alt - f1 : \$HOME/github/dotfiles-latest/scripts/macos/mac/misc/552-skhdDailyWork.sh$|# cmd + alt - f1 : $HOME/github/dotfiles-latest/scripts/macos/mac/misc/552-skhdDailyWork.sh|' "$skhdrc"
-skhd -r
-grep -Fqx '# cmd + alt - f1 : $HOME/github/dotfiles-latest/scripts/macos/mac/misc/552-skhdDailyWork.sh' "$skhdrc" || {
+if ! disable_work_hotkey "$skhdrc"; then
+  log_step recording-mode failure 'hotkey_disabled=false observed=invalid-hotkey-config'
+  exit 1
+fi
+if ! timeout 5 skhd -r; then
+  log_step recording-mode failure 'hotkey_reload=false timeout_seconds=5'
+  exit 1
+fi
+[[ "$(work_hotkey_state "$skhdrc")" == disabled ]] || {
   log_step recording-mode failure 'hotkey_disabled=false'
   exit 1
 }
-log_step recording-mode success 'marker_present=true work_session_closed=true hotkey_disabled=true'
+log_step recording-mode success \
+  "marker_present=true marker_action=$marker_action hotkey_initial=$initial_hotkey_state work_session_closed=true hotkey_disabled=true"
 
 log_step recording-ui start 'expected=font-20 width-70 live-update'
 "$dotfiles_dir/scripts/macos/mac/misc/553-applyRecordingUi.sh" 20 70

@@ -1,1 +1,1 @@
-SHARED
+guest1

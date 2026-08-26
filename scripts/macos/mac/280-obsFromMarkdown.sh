@@ -4,8 +4,8 @@
 LOG_FILE="/tmp/280-setupObs.log"
 : >"$LOG_FILE"
 
-MD_DIR="$HOME/github/dotfiles-private/scripts/macos/mac/obs/meeting/py/meetings"
-PY_SCRIPT="$HOME/github/dotfiles-private/scripts/macos/mac/obs/set-obs/obs-from-md.py"
+MD_DIR="$HOME/Library/Application Support/obs-meeting-manager/meetings"
+PY_SCRIPT="$HOME/github/dotfiles-private/scripts/macos/mac/obs-meeting-manager/scripts/macos/mac/obs/set-obs/obs-from-md.py"
 
 echo "[DEBUG] MD_DIR: $MD_DIR" >>"$LOG_FILE"
 echo "[DEBUG] PY_SCRIPT: $PY_SCRIPT" >>"$LOG_FILE"

@@ -24,11 +24,17 @@ LOADED_OVERLAY_MTIME_PATH = CACHE_DIR / "loaded-overlay-mtime.txt"
 LOCK_PATH = CACHE_DIR / "page.lock"
 BANNER_PATH = Path("~/github/dotfiles-latest/youtube-banner.txt").expanduser()
 MEMBERS_OVERLAY_DIR = Path(
-    "~/github/dotfiles-private/scripts/macos/mac/yt-members-overlay"
+    "~/github/dotfiles-private/scripts/macos/mac/obs-meeting-manager/scripts/macos/mac/yt-members-overlay"
 ).expanduser()
 MEMBERS_GENERATOR_PATH = MEMBERS_OVERLAY_DIR / "member_overlay.py"
-MEMBERS_JSON_PATH = MEMBERS_OVERLAY_DIR / "overlay" / "members.json"
-MEMBERS_HTML_PATH = MEMBERS_OVERLAY_DIR / "overlay" / "index.html"
+MEMBERS_OUTPUT_DIR = Path(
+    os.environ.get(
+        "OBS_MEETING_MANAGER_OVERLAY_DIR",
+        "~/Library/Application Support/obs-meeting-manager/member-overlay",
+    )
+).expanduser()
+MEMBERS_JSON_PATH = MEMBERS_OUTPUT_DIR / "members.json"
+MEMBERS_HTML_PATH = MEMBERS_OUTPUT_DIR / "index.html"
 DOWNLOADS_DIR = Path("~/Downloads").expanduser()
 ONEPASSWORD_SECRET = "op://helixdeeznuts/obs-websocket-password/credential"
 

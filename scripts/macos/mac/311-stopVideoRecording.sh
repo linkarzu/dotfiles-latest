@@ -13,6 +13,11 @@ skhdrc="$dotfiles_dir/skhd/skhdrc"
 recording_mode_marker="$HOME/.cache/obs-meeting-manager/recording-mode"
 timer_pid_file="/tmp/sketchybar_timer.pid"
 timer_ready_file="/tmp/sketchybar_timer.ready"
+skhd_command="${SKHD_COMMAND:-skhd}"
+pgrep_command="${PGREP_COMMAND:-pgrep}"
+hotkey_reload_timeout="${HOTKEY_RELOAD_TIMEOUT:-5}"
+# shellcheck source=scripts/macos/mac/misc/recordingModeState.sh
+source "$dotfiles_dir/scripts/macos/mac/misc/recordingModeState.sh"
 
 log_step() {
   local step="$1"
@@ -34,6 +39,28 @@ wait_for_process_absent() {
   done
   log_step support-app success "app=$label process_present=false"
 }
+
+if [[ "$cleanup_reason" == "--livestream-cleanup" ]]; then
+  log_step recording-mode start 'expected=work-hotkey-enabled marker-absent daily-note-not-opened'
+  if ! restore_livestream_work_hotkey "$skhdrc"; then
+    log_step recording-mode failure 'hotkey_config_enabled=false marker_preserved=true'
+    exit 1
+  fi
+  if ! timeout "$hotkey_reload_timeout" "$skhd_command" -r; then
+    log_step recording-mode failure "hotkey_reload=false timeout_seconds=$hotkey_reload_timeout"
+    exit 1
+  fi
+  if ! "$pgrep_command" -x skhd >/dev/null 2>&1; then
+    log_step recording-mode failure 'hotkey_daemon_running=false'
+    exit 1
+  fi
+  if ! complete_livestream_work_hotkey_restore "$recording_mode_marker" "$skhdrc"; then
+    log_step recording-mode failure 'hotkey_restored=false marker_present=true'
+    exit 1
+  fi
+  log_step recording-mode success \
+    'hotkey_restored=enabled marker_present=false hotkey_daemon_running=true daily_note_launch_action=not-performed'
+fi
 
 log_step audio-output start 'expected="MacBook Pro Speakers"'
 SwitchAudioSource -t output -s "MacBook Pro Speakers"
@@ -123,32 +150,36 @@ log_step audio-watcher success 'pid_file_present=false'
 # Keep the calendar format unchanged when recording stops.
 # sed -i '' "s|date '+%a %y/%m/%d'|date '+%a %y/%m/%d %H:%M'|" "$HOME/github/dotfiles-latest/sketchybar/felixkratz-linkarzu/plugins/calendar.sh"
 
-# Restore the work hotkey to the exact state recorded before preparation.
-log_step recording-mode start 'expected=initial-hotkey-state marker-absent'
-expected_hotkey_line=""
-if [[ -f "$recording_mode_marker" ]]; then
-  marker_state="$(<"$recording_mode_marker")"
-  case "$marker_state" in
-  hotkey_initial=enabled)
-    sed -i '' 's|^# cmd + alt - f1 : \$HOME/github/dotfiles-latest/scripts/macos/mac/misc/552-skhdDailyWork.sh$|cmd + alt - f1 : $HOME/github/dotfiles-latest/scripts/macos/mac/misc/552-skhdDailyWork.sh|' "$skhdrc"
-    expected_hotkey_line='cmd + alt - f1 : $HOME/github/dotfiles-latest/scripts/macos/mac/misc/552-skhdDailyWork.sh'
-    ;;
-  hotkey_initial=disabled)
-    sed -i '' 's|^cmd + alt - f1 : \$HOME/github/dotfiles-latest/scripts/macos/mac/misc/552-skhdDailyWork.sh$|# cmd + alt - f1 : $HOME/github/dotfiles-latest/scripts/macos/mac/misc/552-skhdDailyWork.sh|' "$skhdrc"
-    expected_hotkey_line='# cmd + alt - f1 : $HOME/github/dotfiles-latest/scripts/macos/mac/misc/552-skhdDailyWork.sh'
-    ;;
-  *)
-    log_step recording-mode failure 'hotkey_initial_state=invalid'
+# Non-livestream cleanup restores the exact state recorded before preparation.
+if [[ "$cleanup_reason" != "--livestream-cleanup" ]]; then
+  log_step recording-mode start 'expected=initial-hotkey-state-restored marker-preserved'
+  if ! initial_hotkey_state="$(recording_mode_marker_state "$recording_mode_marker")"; then
+    log_step recording-mode failure 'marker_state=invalid'
     exit 1
-    ;;
-  esac
-  skhd -r
-  grep -Fqx "$expected_hotkey_line" "$skhdrc" || {
-    log_step recording-mode failure 'hotkey_restored=false'
+  fi
+  if [[ "$initial_hotkey_state" != absent ]]; then
+    if ! restore_initial_work_hotkey "$skhdrc" "$initial_hotkey_state"; then
+      log_step recording-mode failure "hotkey_restored=false expected=$initial_hotkey_state"
+      exit 1
+    fi
+    expected_hotkey_state="$initial_hotkey_state"
+  else
+    expected_hotkey_state="$(work_hotkey_state "$skhdrc")" || {
+      log_step recording-mode failure 'hotkey_state=unknown marker_state=absent'
+      exit 1
+    }
+  fi
+  if ! timeout "$hotkey_reload_timeout" "$skhd_command" -r; then
+    log_step recording-mode failure "hotkey_reload=false timeout_seconds=$hotkey_reload_timeout"
+    exit 1
+  fi
+  [[ "$(work_hotkey_state "$skhdrc")" == "$expected_hotkey_state" ]] || {
+    log_step recording-mode failure "hotkey_restored=false expected=$expected_hotkey_state"
     exit 1
   }
+  log_step recording-mode success \
+    "hotkey_restored=$expected_hotkey_state hotkey_initial=$initial_hotkey_state recovery_marker_preserved=true daily_note_launch_action=not-performed"
 fi
-log_step recording-mode success 'hotkey_initial_state_restored=true recovery_marker_preserved=true'
 
 log_step yabai-restart start 'expected=query-ready'
 if ! timeout 5 "$HOME/github/dotfiles-latest/yabai/yabai_restart.sh"; then

@@ -4,7 +4,6 @@ local safeClick = require("safe_frontmost_click")
 local log = hs.logger.new("youtube-dual-stream", "info")
 local URL_EVENT = "youtube-studio-dual-stream"
 local RESULT_PREFIX = "/tmp/youtube-studio-dual-stream"
-local EXPECTED_VERTICAL_KEY = "Vertical stream key (RTMP, Variable)"
 local YABAI = "/opt/homebrew/bin/yabai"
 local MAX_NODES = 10000
 local MAX_DEPTH = 45
@@ -349,20 +348,6 @@ local function snapshot(expectedTitle, broadcastId)
 		modeButton = autoCropButton
 	end
 
-	local verticalContainer = modeButton and findAncestor(modeButton, "ingestion-container") or nil
-	local verticalEntries = verticalContainer and descendants(verticalContainer) or {}
-	local selectKeys = {}
-	local expectedVerticalKeyCount = 0
-	for _, entry in ipairs(verticalEntries) do
-		local element = entry.element
-		if attribute(element, "AXRole") == "AXTextField" and attribute(element, "AXTitle") == "Select key" then
-			table.insert(selectKeys, element)
-			if attribute(element, "AXValue") == EXPECTED_VERTICAL_KEY then
-				expectedVerticalKeyCount = expectedVerticalKeyCount + 1
-			end
-		end
-	end
-
 	local toggleBar
 	local toggleButton
 	for _, entry in ipairs(descendants(checkbox)) do
@@ -396,10 +381,6 @@ local function snapshot(expectedTitle, broadcastId)
 	local toggleVisible = frameCenterIsInside(clickFrame, pageFrame)
 	local modeButtonFrame = modeButton and attribute(modeButton, "AXFrame") or nil
 	local modeButtonVisible = modeButtonFrame and frameCenterIsInside(modeButtonFrame, pageFrame) or false
-	local selectKey = #selectKeys == 1 and selectKeys[1] or nil
-	local selectKeyFrame = selectKey and attribute(selectKey, "AXFrame") or nil
-	local selectKeyVisible = selectKeyFrame and frameCenterIsInside(selectKeyFrame, pageFrame) or false
-
 	local state = {
 		checkbox = checkbox,
 		checkboxEnabled = attribute(checkbox, "AXEnabled") == true,
@@ -408,10 +389,6 @@ local function snapshot(expectedTitle, broadcastId)
 		mode = mode,
 		modeButton = modeButton,
 		modeButtonVisible = modeButtonVisible,
-		selectKey = selectKey,
-		selectKeyVisible = selectKeyVisible,
-		selectKeyCount = #selectKeys,
-		expectedVerticalKeyCount = expectedVerticalKeyCount,
 		pageFrame = pageFrame,
 		checkboxFrame = checkboxFrame,
 		toggleFrame = toggleFrame,
@@ -526,61 +503,10 @@ local function configure(expectedTitle, broadcastId, requestId)
 			if state.mode ~= "Encoder" then
 				return nil, "vertical-mode-not-encoder"
 			end
-			if state.selectKeyCount ~= 1 then
-				return nil, "vertical-key-selector-ambiguous"
-			end
-			if state.expectedVerticalKeyCount ~= 1 then
-				return nil, state.expectedVerticalKeyCount == 0 and "vertical-key-not-selected"
-					or "vertical-key-ambiguous"
-			end
 			return state
 		end, function()
 			finish(id, "ok", "verified")
 			safeLog(log.i, "Verified YouTube Studio Dual stream encoder configuration")
-		end)
-	end
-
-	local function ensureVerticalKey()
-		waitFor(id, "Vertical stream key selector", 8, overallDeadline, "vertical-key-selector-timeout", function()
-			local state, observed = snapshot(expectedTitle, broadcastId)
-			if not state then
-				return nil, observed
-			end
-			if state.expectedVerticalKeyCount == 1 then
-				return { state = state, selected = true }
-			end
-			if state.selectKeyCount ~= 1 then
-				return nil, "vertical-key-selector-ambiguous"
-			end
-			return state.selectKeyVisible and { state = state, selected = false } or nil,
-				"vertical-key-selector-offscreen"
-		end, function(result)
-			if result.selected then
-				verifyFinalState()
-				return
-			end
-			if not press(result.state.selectKey, result.state.pageFrame, true) then
-				finish(id, "error", "vertical-key-menu-open-failed")
-				return
-			end
-			waitFor(id, "Vertical stream key menu option", 5, overallDeadline, "vertical-key-option-timeout", function()
-				local current, observed = snapshot(expectedTitle, broadcastId)
-				if not current then
-					return nil, observed
-				end
-				local option, count = findUniqueExact(current.entries, EXPECTED_VERTICAL_KEY, "AXMenuItem", true)
-				if count > 1 then
-					return nil, "vertical-key-option-ambiguous"
-				end
-				return option and { option = option, pageFrame = current.pageFrame } or nil,
-					option and nil or "vertical-key-option-absent"
-			end, function(selection)
-				if not isActive(id, overallDeadline) or not press(selection.option, selection.pageFrame, true) then
-					finish(id, "error", "vertical-key-selection-failed")
-					return
-				end
-				verifyFinalState()
-			end)
 		end)
 	end
 
@@ -589,7 +515,7 @@ local function configure(expectedTitle, broadcastId, requestId)
 			return
 		end
 		if state.mode == "Encoder" then
-			ensureVerticalKey()
+			verifyFinalState()
 			return
 		end
 		if state.mode ~= "Auto crop" or not state.modeButton then
@@ -624,7 +550,7 @@ local function configure(expectedTitle, broadcastId, requestId)
 					finish(id, "error", "encoder-selection-failed")
 					return
 				end
-				ensureVerticalKey()
+				verifyFinalState()
 			end)
 		end)
 	end

@@ -17,5 +17,9 @@ local successLogPosition = assert(
 	source:find('safeLog(log.i, "Verified YouTube Studio Dual stream encoder configuration")', 1, true)
 )
 assert(finishPosition < successLogPosition, "verified result must be published before optional logging")
+assert(source:find('state.checkboxState ~= "on"', 1, true), "verification must require Dual Stream on")
+assert(source:find('state.mode ~= "Encoder"', 1, true), "verification must require Encoder mode")
+assert(not source:find("Vertical stream key", 1, true), "verification must not inspect the vertical stream key")
+assert(not source:find("vertical-key-", 1, true), "vertical key failures must not gate Dual Stream")
 
 print("youtube_studio_dual_stream result-order tests passed")

@@ -16,5 +16,7 @@ source ".venv/bin/activate"
 
 python generate_plan.py --sortasc --ranges
 
-nvim_cmd "$HOME/github/dotfiles-private/scripts/macos/mac/subnet-finder/matches.txt"
-nvim_cmd "$HOME/github/dotfiles-private/scripts/macos/mac/plan-creator/generated-plan.md"
+# nvim_cmd "$HOME/github/dotfiles-private/scripts/macos/mac/subnet-finder/matches.txt"
+# nvim_cmd "$HOME/github/dotfiles-private/scripts/macos/mac/plan-creator/generated-plan.md"
+
+"$HOME/github/dotfiles-private/scripts/macos/mac/plan-creator/open-last-generated-plan.sh"

@@ -16,6 +16,7 @@ type RuntimeEvent = {
 const kittyBin = "/Applications/kitty.app/Contents/MacOS/kitty"
 const sketchybarBin = "/opt/homebrew/bin/sketchybar"
 const telegramBridgeURL = "http://127.0.0.1:47653"
+const focusAcknowledgementDelayMs = 2_000
 const phoneModeSystem = [
   "The user is reading this response in Telegram on a narrow phone screen.",
   "Keep the final response at or below 3,500 characters whenever practical.",
@@ -24,6 +25,7 @@ const phoneModeSystem = [
   "Use simple code blocks only when they are essential.",
 ].join(" ")
 const proxyRoutes = [
+  ["GET", /^\/attention-context$/],
   ["GET", /^\/question$/],
   ["GET", /^\/permission$/],
   ["GET", /^\/api\/session\/[^/]+\/(question|permission)$/],
@@ -72,6 +74,7 @@ export const SketchybarStatusPlugin: Plugin = async ({ client, directory, $ }) =
     .catch(() => "")
   let lastPublished = ""
   let generation = 0
+  let focusedAttentionSince = 0
   let queue = Promise.resolve()
   let bridgeQueue = Promise.resolve()
   let proxyServer: any
@@ -134,6 +137,27 @@ export const SketchybarStatusPlugin: Plugin = async ({ client, directory, $ }) =
       return Response.json({ error: "Forbidden" }, { status: 403 })
     }
 
+    if (request.method === "GET" && url.pathname === "/attention-context") {
+      const windowState = await kittyWindowState()
+      const idleResponse = await $`/usr/sbin/ioreg -c IOHIDSystem -d 1 -r`.quiet().nothrow()
+      const idleMatch = idleResponse.exitCode === 0
+        ? idleResponse.text().match(/"HIDIdleTime"\s*=\s*(\d+)/)
+        : undefined
+      let idleMilliseconds: number | undefined
+      if (idleMatch) {
+        try {
+          idleMilliseconds = Number(BigInt(idleMatch[1]) / 1_000_000n)
+        } catch {
+          idleMilliseconds = undefined
+        }
+      }
+      return Response.json({
+        available: windowState !== undefined && idleMilliseconds !== undefined,
+        focused: windowState?.focused === true,
+        idleMilliseconds: idleMilliseconds ?? null,
+      })
+    }
+
     const apiClient = (client as any)._client
     const method = request.method.toLowerCase() as "get" | "post"
     const body = request.method === "POST" ? await request.json().catch(() => undefined) : undefined
@@ -184,6 +208,7 @@ export const SketchybarStatusPlugin: Plugin = async ({ client, directory, $ }) =
 
   function addAttention(current: SessionState, key: string, reason: AttentionReason) {
     generation++
+    focusedAttentionSince = 0
     current.attention.set(key, { reason, generation })
   }
 
@@ -280,13 +305,7 @@ export const SketchybarStatusPlugin: Plugin = async ({ client, directory, $ }) =
     void queueBridgeEvent(event)
   }
 
-  async function applyAcknowledgement() {
-    const state = await kittyWindowState()
-    if (!state?.acknowledgement.startsWith(`${instanceID}:`)) return false
-
-    const acknowledgedGeneration = Number(state.acknowledgement.slice(instanceID.length + 1))
-    if (!Number.isFinite(acknowledgedGeneration)) return false
-
+  function acknowledgeThrough(acknowledgedGeneration: number) {
     let changed = false
     let bridgeChanged = false
     for (const [sessionID, current] of sessions) {
@@ -302,6 +321,42 @@ export const SketchybarStatusPlugin: Plugin = async ({ client, directory, $ }) =
     }
     if (bridgeChanged) scheduleBridgeRegistration()
     return changed
+  }
+
+  async function applyAcknowledgement() {
+    const state = await kittyWindowState()
+    let changed = false
+
+    if (state?.acknowledgement.startsWith(`${instanceID}:`)) {
+      const acknowledgedGeneration = Number(state.acknowledgement.slice(instanceID.length + 1))
+      if (Number.isFinite(acknowledgedGeneration)) changed = acknowledgeThrough(acknowledgedGeneration)
+    }
+
+    if (aggregate().waiting === 0) {
+      focusedAttentionSince = 0
+      return changed
+    }
+    if (!state?.focused) {
+      focusedAttentionSince = 0
+      return changed
+    }
+
+    const now = Date.now()
+    if (focusedAttentionSince === 0) {
+      focusedAttentionSince = now
+      return changed
+    }
+    if (now - focusedAttentionSince < focusAcknowledgementDelayMs) return changed
+
+    const acknowledgedGeneration = generation
+    const acknowledgement = `${instanceID}:${acknowledgedGeneration}`
+    const result = await $`${kittyBin} @ --to ${socket} set-user-vars --match id:${windowID} opencode_ack=${acknowledgement}`
+      .quiet()
+      .nothrow()
+    if (result.exitCode !== 0) return changed
+
+    focusedAttentionSince = 0
+    return acknowledgeThrough(acknowledgedGeneration) || changed
   }
 
   async function publish(force = false) {

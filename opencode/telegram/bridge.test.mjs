@@ -75,6 +75,132 @@ test("waits four minutes and revalidates before notifying", async (context) => {
   assert.match(telegramCall.body.text, /Question requires an answer\n\nkitty-one/)
 })
 
+test("withholds a due alert while its Kitty window is focused and recently active", async (context) => {
+  let now = 10_000
+  let idleMilliseconds = 1_000
+  const calls = []
+  const { bridge, cleanup } = await fixture(async (url, options) => {
+    const target = String(url)
+    calls.push({ url: target, body: options?.body && JSON.parse(options.body) })
+    if (target.includes("/attention-context")) {
+      return jsonResponse({ available: true, focused: true, idleMilliseconds })
+    }
+    if (target.includes("/session/status")) return jsonResponse({})
+    if (target.includes("/message")) return jsonResponse([])
+    if (target.includes("/session/session-1")) return jsonResponse({ title: "Focused session" })
+    if (target.includes("api.telegram.org")) {
+      return jsonResponse({ ok: true, result: { message_id: 78 } })
+    }
+    return jsonResponse({})
+  }, () => now)
+  context.after(cleanup)
+  register(bridge, "one", 5001)
+  await bridge.processPluginEvent({
+    instanceID: "one",
+    event: { action: "attention", kind: "done", sessionID: "session-1" },
+  })
+
+  now += 4 * 60 * 1000
+  register(bridge, "one", 5001)
+  await bridge.flushDueAlerts()
+  assert.equal(calls.some((call) => call.url.includes("api.telegram.org")), false)
+
+  idleMilliseconds = 90_001
+  await bridge.flushDueAlerts()
+  assert.equal(calls.some((call) => call.url.includes("api.telegram.org")), true)
+})
+
+test("sends a withheld alert after its Kitty window loses focus", async (context) => {
+  let now = 10_000
+  let focused = true
+  const calls = []
+  const { bridge, cleanup } = await fixture(async (url) => {
+    const target = String(url)
+    calls.push(target)
+    if (target.includes("/attention-context")) {
+      return jsonResponse({ available: true, focused, idleMilliseconds: 500 })
+    }
+    if (target.includes("/session/status")) return jsonResponse({})
+    if (target.includes("/message")) return jsonResponse([])
+    if (target.includes("/session/session-1")) return jsonResponse({ title: "Draft session" })
+    if (target.includes("api.telegram.org")) {
+      return jsonResponse({ ok: true, result: { message_id: 79 } })
+    }
+    return jsonResponse({})
+  }, () => now)
+  context.after(cleanup)
+  register(bridge, "one", 5001)
+  await bridge.processPluginEvent({
+    instanceID: "one",
+    event: { action: "attention", kind: "done", sessionID: "session-1" },
+  })
+
+  now += 4 * 60 * 1000
+  register(bridge, "one", 5001)
+  await bridge.flushDueAlerts()
+  focused = false
+  await bridge.flushDueAlerts()
+
+  assert.equal(calls.filter((url) => url.includes("api.telegram.org")).length, 1)
+})
+
+test("does not withhold errors from a focused active window", async (context) => {
+  const calls = []
+  const { bridge, cleanup } = await fixture(async (url) => {
+    const target = String(url)
+    calls.push(target)
+    if (target.includes("api.telegram.org")) {
+      return jsonResponse({ ok: true, result: { message_id: 80 } })
+    }
+    if (target.includes("/session/session-1")) return jsonResponse({ title: "Failed session" })
+    return jsonResponse({ available: true, focused: true, idleMilliseconds: 0 })
+  })
+  context.after(cleanup)
+  register(bridge, "one", 5001)
+
+  await bridge.processPluginEvent({
+    instanceID: "one",
+    event: {
+      action: "attention",
+      kind: "error",
+      sessionID: "session-1",
+      details: { message: "Unexpected failure" },
+    },
+  })
+
+  assert.equal(calls.some((url) => url.includes("api.telegram.org")), true)
+  assert.equal(calls.some((url) => url.includes("/attention-context")), false)
+})
+
+test("fails open when local attention context is unavailable", async (context) => {
+  let now = 10_000
+  const calls = []
+  const { bridge, cleanup } = await fixture(async (url) => {
+    const target = String(url)
+    calls.push(target)
+    if (target.includes("/attention-context")) return jsonResponse({}, 500)
+    if (target.includes("/session/status")) return jsonResponse({})
+    if (target.includes("/message")) return jsonResponse([])
+    if (target.includes("/session/session-1")) return jsonResponse({ title: "Available session" })
+    if (target.includes("api.telegram.org")) {
+      return jsonResponse({ ok: true, result: { message_id: 81 } })
+    }
+    return jsonResponse({})
+  }, () => now)
+  context.after(cleanup)
+  register(bridge, "one", 5001)
+  await bridge.processPluginEvent({
+    instanceID: "one",
+    event: { action: "attention", kind: "done", sessionID: "session-1" },
+  })
+
+  now += 4 * 60 * 1000
+  register(bridge, "one", 5001)
+  await bridge.flushDueAlerts()
+
+  assert.equal(calls.some((url) => url.includes("api.telegram.org")), true)
+})
+
 test("includes up to 3,500 characters from the completed response", async (context) => {
   const responseText = "x".repeat(3600)
   const { bridge, cleanup } = await fixture(async (url) => {
@@ -235,8 +361,9 @@ test("uses the deprecated session permission response contract", async (context)
   const alert = Object.values(bridge.state.alerts)[0]
   await bridge.answerPermission(alert, "once")
 
-  assert.match(calls[0].url, /\/session\/session-old\/permissions\/permission-old/)
-  assert.deepEqual(calls[0].body, { response: "once" })
+  const permissionCall = calls.find((call) => call.url.includes("/permissions/permission-old"))
+  assert.match(permissionCall.url, /\/session\/session-old\/permissions\/permission-old/)
+  assert.deepEqual(permissionCall.body, { response: "once" })
 })
 
 test("restores pending attention and resolves it from heartbeat snapshots", async (context) => {

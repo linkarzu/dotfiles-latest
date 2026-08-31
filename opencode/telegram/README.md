@@ -9,6 +9,13 @@ they remain unresolved for four minutes. Unexpected errors are sent
 immediately. Intentional aborts from OpenCode or Telegram are suppressed. The
 bot accepts messages only from the configured numeric Telegram user ID.
 
+When a delayed notification becomes due, it remains queued while its exact
+Kitty window is focused and macOS has received keyboard or mouse input within
+the last 90 seconds. The bridge checks again every five seconds. Switching
+away or becoming inactive makes the notification eligible again, while
+answering locally resolves it without sending. Error notifications are never
+withheld by local activity.
+
 Replying to any OpenCode notification from Telegram enables global phone mode.
 While phone mode is active, existing and new unresolved notifications from all
 OpenCode processes are sent immediately. The next prompt submitted locally in

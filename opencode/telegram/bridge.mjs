@@ -9,6 +9,7 @@ import { pathToFileURL } from "node:url"
 const LOOPBACK_HOST = "127.0.0.1"
 const DEFAULT_PORT = 47653
 const DEFAULT_DELAY_MS = 4 * 60 * 1000
+const RECENT_LOCAL_ACTIVITY_MS = 90 * 1000
 const INSTANCE_STALE_MS = 60 * 1000
 const TELEGRAM_TEXT_LIMIT = 3900
 const COMPLETION_SUMMARY_LIMIT = 3500
@@ -427,6 +428,24 @@ export class TelegramBridge {
     }
   }
 
+  async shouldWithholdForLocalActivity(alert) {
+    if (alert.kind === "error") return false
+    const instance = this.instanceForAlert(alert)
+    if (!instance) return false
+
+    try {
+      const context = await this.opencodeRequest(instance, "/attention-context")
+      const idleMilliseconds = Number(context?.idleMilliseconds)
+      return context?.available === true &&
+        context.focused === true &&
+        Number.isFinite(idleMilliseconds) &&
+        idleMilliseconds >= 0 &&
+        idleMilliseconds <= RECENT_LOCAL_ACTIVITY_MS
+    } catch {
+      return false
+    }
+  }
+
   async sessionInfo(alert) {
     const instance = this.instanceForAlert(alert)
     if (!instance) return { title: alert.sessionID, summary: "" }
@@ -508,6 +527,7 @@ export class TelegramBridge {
   async flushDueAlertsInternal() {
     for (const alert of Object.values(this.state.alerts)) {
       if (alert.resolvedAt || alert.sentMessageID || alert.dueAt > this.now()) continue
+      if (await this.shouldWithholdForLocalActivity(alert)) continue
       const valid = await this.validateAlert(alert)
       if (valid === false) {
         await this.resolveAlert(alert, "Resolved before Telegram notification")

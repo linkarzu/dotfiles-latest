@@ -3,7 +3,7 @@
 # Keep the date and time in a shared column so the time stays centered below it.
 calendar_date=(
   label.font="$FONT:Black:11.0"
-  label="Mon 00/00/00"
+  label="Mon 000000"
   label.width=90
   label.align=center
   label.y_offset=5

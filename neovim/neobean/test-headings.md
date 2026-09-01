@@ -25,26 +25,17 @@ Body under H2.
 ## fake H2 in fenced code
 ```
 
-~~~markdown
+```markdown
 ### fake H3 in tilde fence
-~~~
+```
 
     ## indented code is not a heading
 
-   ### Three-space ATX H3
+### Three-space ATX H3
 
-#### ATX H4 with closing hashes ####
+#### ATX H4 with closing hashes
 
-##
+## Final H2
 
-Setext H1
-=========
+Heading 2 with nothing
 
-Setext H2
----------
-
-Paragraph after Setext headings.
-
-## Final ATX H2
-
-Final body.

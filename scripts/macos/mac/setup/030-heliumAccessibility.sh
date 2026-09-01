@@ -8,6 +8,10 @@ readonly HELIUM_BINARY="/Applications/Helium.app/Contents/MacOS/Helium"
 readonly PLIST_FILE="$HOME/Library/LaunchAgents/$LABEL.plist"
 readonly STATE_DIR="$HOME/.local/state/helium-accessibility"
 readonly DOMAIN="gui/$(id -u)"
+readonly HELIUM_PREFERENCE_DOMAIN="net.imput.helium"
+readonly HELIUM_PREFERENCE_FILE="/Library/Managed Preferences/$(id -un)/$HELIUM_PREFERENCE_DOMAIN.plist"
+readonly CLEAR_DATA_POLICY="ClearBrowsingDataOnExitList"
+readonly CLEAR_DATA_PROFILE="$HOME/github/dotfiles-latest/scripts/macos/mac/setup/031-heliumClearDataOnExit.mobileconfig"
 
 error() {
   printf 'Error: %s\n' "$*" >&2
@@ -22,15 +26,30 @@ Usage:
   $(basename "$0") --status
 
 Options:
-  --install    Install or replace the login LaunchAgent and start Helium
+  --install    Configure privacy, install or replace the LaunchAgent, and start Helium
   --uninstall  Stop and remove the LaunchAgent without removing Helium
-  --status     Verify that launchd owns the accessibility-enabled Helium process
+  --status     Verify Helium privacy policy and accessibility-enabled process
   -h, --help   Show this help
 EOF
 }
 
 agent_is_running() {
   /bin/launchctl print "$DOMAIN/$LABEL" 2>/dev/null | /usr/bin/grep -Eq '^[[:space:]]*state = running$'
+}
+
+clear_data_policy_is_configured() {
+  [[ $(/usr/bin/plutil -extract "$CLEAR_DATA_POLICY" raw -expect array "$HELIUM_PREFERENCE_FILE" 2>/dev/null) == 2 ]] &&
+    [[ $(/usr/bin/plutil -extract "$CLEAR_DATA_POLICY.0" raw -o - "$HELIUM_PREFERENCE_FILE" 2>/dev/null) == browsing_history ]] &&
+    [[ $(/usr/bin/plutil -extract "$CLEAR_DATA_POLICY.1" raw -o - "$HELIUM_PREFERENCE_FILE" 2>/dev/null) == download_history ]]
+}
+
+configure_clear_data_policy() {
+  if clear_data_policy_is_configured; then
+    return
+  fi
+  [[ -f "$CLEAR_DATA_PROFILE" ]] || error "Helium policy profile not found: $CLEAR_DATA_PROFILE"
+  /usr/bin/open "$CLEAR_DATA_PROFILE"
+  error "Approve 'Helium Clear Data on Exit' in System Settings, then rerun --install."
 }
 
 wait_for_helium_exit() {
@@ -51,6 +70,7 @@ install_agent() {
   [[ -d "$HOME/Library/LaunchAgents" ]] || error "LaunchAgents directory not found: $HOME/Library/LaunchAgents"
   /usr/bin/codesign --verify --deep --strict "$HELIUM_BINARY" || error "Helium code-signature verification failed."
 
+  configure_clear_data_policy
   /bin/mkdir -p "$STATE_DIR"
   temporary_file=$(/usr/bin/mktemp "$HOME/Library/LaunchAgents/.helium-accessibility.XXXXXX")
   trap '/bin/rm -f "${temporary_file:-}"' EXIT
@@ -96,6 +116,7 @@ EOF
     if agent_is_running && /usr/bin/pgrep -x Helium >/dev/null; then
       printf 'Installed and started %s\n' "$LABEL"
       printf 'LaunchAgent: %s\n' "$PLIST_FILE"
+      printf 'Clear on exit: browsing history and download history\n'
       printf 'Logs: %s\n' "$STATE_DIR"
       return 0
     fi
@@ -112,9 +133,11 @@ uninstall_agent() {
 }
 
 status_agent() {
+  clear_data_policy_is_configured || error "Helium clear-on-exit policy is not configured as expected."
   if agent_is_running && /usr/bin/pgrep -x Helium >/dev/null; then
     printf 'LaunchAgent: loaded and running\n'
     printf 'Helium renderer accessibility: forced by launchd ProgramArguments\n'
+    printf 'Helium clear on exit: browsing history and download history\n'
     return 0
   fi
   if /bin/launchctl print "$DOMAIN/$LABEL" >/dev/null 2>&1; then

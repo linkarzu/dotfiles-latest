@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>PayloadContent</key>
+  <array>
+    <dict>
+      <key>ClearBrowsingDataOnExitList</key>
+      <array>
+        <string>browsing_history</string>
+        <string>download_history</string>
+      </array>
+      <key>PayloadDisplayName</key>
+      <string>Helium Clear Data on Exit</string>
+      <key>PayloadIdentifier</key>
+      <string>com.linkarzu.helium-clear-data-on-exit.settings</string>
+      <key>PayloadType</key>
+      <string>net.imput.helium</string>
+      <key>PayloadUUID</key>
+      <string>282F74A8-4876-4DF3-9F33-29DA3E6EB696</string>
+      <key>PayloadVersion</key>
+      <integer>1</integer>
+    </dict>
+  </array>
+  <key>PayloadDescription</key>
+  <string>Clears Helium browsing and download history on exit while preserving cookies and other site data.</string>
+  <key>PayloadDisplayName</key>
+  <string>Helium Clear Data on Exit</string>
+  <key>PayloadIdentifier</key>
+  <string>com.linkarzu.helium-clear-data-on-exit</string>
+  <key>PayloadOrganization</key>
+  <string>linkarzu</string>
+  <key>PayloadRemovalDisallowed</key>
+  <false/>
+  <key>PayloadType</key>
+  <string>Configuration</string>
+  <key>PayloadUUID</key>
+  <string>A0389F93-356E-4B4F-B0C1-858E24416056</string>
+  <key>PayloadVersion</key>
+  <integer>1</integer>
+</dict>
+</plist>

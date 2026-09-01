@@ -60,6 +60,11 @@ return {
       },
       -- markdown-oxide
       markdown_oxide = {
+        -- markdown-oxide reports routine vault activity as warnings and errors,
+        -- causing lsp.log to grow rapidly without providing useful diagnostics.
+        handlers = {
+          ["window/logMessage"] = function() end,
+        },
         -- Ensure that dynamicRegistration is enabled
         -- This allows the LS to take into account actions like Create Unresolved File, etc
         capabilities = vim.tbl_deep_extend(

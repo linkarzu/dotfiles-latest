@@ -3300,12 +3300,25 @@ end, { desc = "[P]Insert heading emacs style" })
 -------------------------------------------------------------------------------
 
 local markdown_fold_cache = {}
-local compact_markdown_folds_namespace = vim.api.nvim_create_namespace("linkarzu_compact_markdown_folds")
+local markdown_fold_gaps_namespace = vim.api.nvim_create_namespace("linkarzu_markdown_fold_gaps")
 
-local function set_compact_markdown_fold_spacing(enabled)
+-- Fallback for configs that do not set this before keymaps.lua loads.
+vim.g.markdown_fold_spacing = vim.g.markdown_fold_spacing or "gapped"
+
+local function get_markdown_fold_spacing(buf)
+  local mode = vim.b[buf].markdown_fold_spacing or vim.g.markdown_fold_spacing
+  return mode == "gapless" and "gapless" or "gapped"
+end
+
+local function set_markdown_fold_spacing(enabled)
   local buf = vim.api.nvim_get_current_buf()
-  vim.api.nvim_buf_clear_namespace(buf, compact_markdown_folds_namespace, 0, -1)
-  if not enabled or vim.bo[buf].filetype ~= "markdown" then
+  vim.api.nvim_buf_clear_namespace(buf, markdown_fold_gaps_namespace, 0, -1)
+  local active = enabled and vim.bo[buf].filetype == "markdown"
+  vim.b[buf].markdown_fold_spacing_active = active
+  if not active then
+    return
+  end
+  if get_markdown_fold_spacing(buf) == "gapped" then
     return
   end
 
@@ -3313,68 +3326,62 @@ local function set_compact_markdown_fold_spacing(enabled)
   if not headings then
     return
   end
-  for index = 2, #headings do
-    local previous = headings[index - 1]
-    local current = headings[index]
-    local lines = vim.api.nvim_buf_get_lines(buf, previous.line, current.line - 1, false)
-    local only_blank_lines = #lines > 0
-    for _, line in ipairs(lines) do
-      if not line:match("^%s*$") then
-        only_blank_lines = false
-        break
-      end
-    end
-    if only_blank_lines then
-      for offset = 0, #lines - 1 do
-        local row = previous.line + offset
-        vim.api.nvim_buf_set_extmark(buf, compact_markdown_folds_namespace, row, 0, {
-          end_row = row, -- conceal_lines treats end_row as inclusive
-          end_col = 0,
-          conceal_lines = "",
-        })
-      end
+  local lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
+  for _, heading in ipairs(headings) do
+    local row = heading.line - 2
+    while row >= 0 and lines[row + 1]:match("^%s*$") do
+      vim.api.nvim_buf_set_extmark(buf, markdown_fold_gaps_namespace, row, 0, {
+        end_row = row, -- conceal_lines treats end_row as inclusive
+        end_col = 0,
+        conceal_lines = "",
+      })
+      row = row - 1
     end
   end
 end
 
-local function is_compact_markdown_fold_gap(buf, row)
-  return #vim.api.nvim_buf_get_extmarks(buf, compact_markdown_folds_namespace, { row, 0 }, { row, 0 }, { limit = 1 })
-    > 0
+local function is_markdown_fold_gap(buf, row)
+  return #vim.api.nvim_buf_get_extmarks(buf, markdown_fold_gaps_namespace, { row, 0 }, { row, 0 }, { limit = 1 }) > 0
 end
 
-local function move_skipping_compact_markdown_fold_gaps(key)
-  local buf = vim.api.nvim_get_current_buf()
-  local count = vim.v.count1
-  local compact_spacing_active = vim.bo[buf].filetype == "markdown"
-    and #vim.api.nvim_buf_get_extmarks(buf, compact_markdown_folds_namespace, 0, -1, { limit = 1 }) > 0
-  if not compact_spacing_active then
+local function move_skipping_markdown_fold_gaps(key)
+  local count = vim.v.count
+  if count > 0 then
     vim.cmd("normal! " .. count .. key)
     return
   end
 
-  for _ = 1, count do
-    local previous_line = vim.fn.line(".")
+  local buf = vim.api.nvim_get_current_buf()
+  local spacing_active = vim.bo[buf].filetype == "markdown" and vim.b[buf].markdown_fold_spacing_active
+  local previous_line = vim.fn.line(".")
+  vim.cmd("normal! " .. key)
+  while spacing_active and vim.fn.line(".") ~= previous_line and is_markdown_fold_gap(buf, vim.fn.line(".") - 1) do
+    previous_line = vim.fn.line(".")
     vim.cmd("normal! " .. key)
-    if vim.fn.line(".") == previous_line then
-      return
-    end
-    while is_compact_markdown_fold_gap(buf, vim.fn.line(".") - 1) do
-      previous_line = vim.fn.line(".")
-      vim.cmd("normal! " .. key)
-      if vim.fn.line(".") == previous_line then
-        return
-      end
-    end
   end
 end
 
 vim.keymap.set("n", "j", function()
-  move_skipping_compact_markdown_fold_gaps("j")
-end, { desc = "[P]Down (skip compact Markdown fold gaps)" })
+  move_skipping_markdown_fold_gaps("j")
+end, { desc = "[P]Down (skip Markdown fold gaps)" })
 
 vim.keymap.set("n", "k", function()
-  move_skipping_compact_markdown_fold_gaps("k")
-end, { desc = "[P]Up (skip compact Markdown fold gaps)" })
+  move_skipping_markdown_fold_gaps("k")
+end, { desc = "[P]Up (skip Markdown fold gaps)" })
+
+vim.keymap.set("n", "<leader>mfg", function()
+  if vim.bo.filetype ~= "markdown" then
+    vim.notify("Markdown fold spacing is only available in Markdown buffers", vim.log.levels.WARN)
+    return
+  end
+  local buf = vim.api.nvim_get_current_buf()
+  local mode = get_markdown_fold_spacing(buf) == "gapped" and "gapless" or "gapped"
+  vim.b[buf].markdown_fold_spacing = mode
+  if vim.b[buf].markdown_fold_spacing_active then
+    set_markdown_fold_spacing(true)
+  end
+  vim.notify("Markdown fold spacing: " .. mode, vim.log.levels.INFO)
+end, { desc = "[P]Toggle gapped/gapless fold spacing" })
 
 function _G.markdown_foldexpr()
   local buf = vim.api.nvim_get_current_buf()
@@ -3382,8 +3389,15 @@ function _G.markdown_foldexpr()
   local cache = markdown_fold_cache[buf]
   if not cache or cache.changedtick ~= changedtick then
     local heading_levels = {}
+    local separator_levels = {}
+    local lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
     for _, heading in ipairs(get_markdown_heading_list(buf, false) or {}) do
       heading_levels[heading.line] = heading.level
+      local line = heading.line - 1
+      while line >= 1 and lines[line]:match("^%s*$") do
+        separator_levels[line] = math.max(heading.level - 1, 0)
+        line = line - 1
+      end
     end
     local expressions = {}
     local current_level = 0
@@ -3392,6 +3406,8 @@ function _G.markdown_foldexpr()
       if heading_level then
         current_level = heading_level
         expressions[line] = ">" .. heading_level
+      elseif separator_levels[line] ~= nil then
+        expressions[line] = separator_levels[line]
       else
         expressions[line] = current_level
       end
@@ -3425,6 +3441,7 @@ local function set_markdown_folding()
   local is_daily_note = path == daily_note_dir or vim.startswith(path, daily_note_dir .. "/")
   vim.opt_local.foldlevel = is_daily_note and 99 or 1
   vim.cmd("normal! zX")
+  set_markdown_fold_spacing(not is_daily_note)
 end
 
 local function set_typst_folding()
@@ -3455,11 +3472,12 @@ vim.api.nvim_create_autocmd("BufWipeout", {
 })
 
 local function ensure_heading_folding()
-  if
-    vim.bo.filetype == "markdown"
-    and (vim.wo.foldmethod ~= "expr" or vim.wo.foldexpr ~= "v:lua.markdown_foldexpr()" or vim.wo.foldtext ~= "")
-  then
-    set_markdown_folding()
+  if vim.bo.filetype == "markdown" then
+    if vim.wo.foldmethod ~= "expr" or vim.wo.foldexpr ~= "v:lua.markdown_foldexpr()" or vim.wo.foldtext ~= "" then
+      set_markdown_folding()
+    elseif vim.b.markdown_fold_spacing_active == nil then
+      set_markdown_fold_spacing(vim.wo.foldlevel < 99)
+    end
   elseif
     vim.bo.filetype == "typst" and (vim.wo.foldmethod ~= "expr" or vim.wo.foldexpr ~= "v:lua.typst_foldexpr()")
   then
@@ -3484,7 +3502,7 @@ local function fold_headings_from_level(level)
   local saved_view = vim.fn.winsaveview()
   vim.opt_local.foldlevel = level - 1
   vim.cmd("normal! zX")
-  set_compact_markdown_fold_spacing(true)
+  set_markdown_fold_spacing(true)
   vim.fn.winrestview(saved_view)
   vim.cmd("normal! zz")
 end
@@ -3548,7 +3566,7 @@ end, { desc = "[P]Toggle fold" })
 -- zj, zk, zl, z; and zu respectively lamw25wmal
 vim.keymap.set("n", "zu", function()
   vim.cmd("normal! zR") -- Unfold all headings
-  set_compact_markdown_fold_spacing(false)
+  set_markdown_fold_spacing(false)
   vim.cmd("normal! zz") -- center the cursor line on screen
 end, { desc = "[P]Unfold all headings level 2 or above" })
 

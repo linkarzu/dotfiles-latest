@@ -33,6 +33,20 @@ local preview_blocklist_exts = {
   pdf = true,
 }
 
+-- Preview these image formats with Snacks instead of mini.files' text preview.
+local image_preview_exts = {
+  avif = true,
+  bmp = true,
+  gif = true,
+  heic = true,
+  icns = true,
+  jpeg = true,
+  jpg = true,
+  png = true,
+  tiff = true,
+  webp = true,
+}
+
 -- Disable preview for files/directories inside these directories.
 local preview_blocklist_dirs = {
   vim.fn.expand("~/.ssh"),
@@ -70,6 +84,13 @@ local function is_preview_blocked_path(path)
   local ext = vim.fn.fnamemodify(path, ":e"):lower()
   return preview_blocklist_exts[ext] == true or is_preview_blocked_dir(path)
 end
+local function is_image_preview_path(path)
+  if type(path) ~= "string" then
+    return false
+  end
+  local ext = vim.fn.fnamemodify(path, ":e"):lower()
+  return image_preview_exts[ext] == true
+end
 local function is_preview_blocked_entry(entry)
   if not entry or entry.fs_type ~= "file" then
     return entry and entry.fs_type == "directory" and is_preview_blocked_dir(entry.path)
@@ -83,6 +104,11 @@ local function setup_conditional_preview(opts)
     buf = nil,
     win = nil,
   }
+  local image_preview = {
+    buf = nil,
+    path = nil,
+    win = nil,
+  }
   local file_info_visible = false
   local original_fs_open = vim.loop.fs_open
   local fs_open_guard_enabled = false
@@ -93,7 +119,7 @@ local function setup_conditional_preview(opts)
     end
     fs_open_guard_enabled = true
     vim.loop.fs_open = function(path, flags, mode, callback)
-      if is_preview_blocked_path(path) then
+      if is_preview_blocked_path(path) or is_image_preview_path(path) then
         return nil
       end
       return original_fs_open(path, flags, mode, callback)
@@ -115,6 +141,24 @@ local function setup_conditional_preview(opts)
     end
     disabled_preview.buf = nil
     disabled_preview.win = nil
+  end
+  local function close_image_preview()
+    if image_preview.buf and vim.api.nvim_buf_is_valid(image_preview.buf) then
+      pcall(Snacks.image.placement.clean, image_preview.buf)
+    end
+    if image_preview.win and vim.api.nvim_win_is_valid(image_preview.win) then
+      pcall(vim.api.nvim_win_close, image_preview.win, true)
+    end
+    if image_preview.buf and vim.api.nvim_buf_is_valid(image_preview.buf) then
+      pcall(vim.api.nvim_buf_delete, image_preview.buf, { force = true })
+    end
+    image_preview.buf = nil
+    image_preview.path = nil
+    image_preview.win = nil
+  end
+  local function close_custom_previews()
+    close_disabled_preview()
+    close_image_preview()
   end
   local function format_stat_time(time)
     if not time or not time.sec then
@@ -210,15 +254,78 @@ local function setup_conditional_preview(opts)
       "FloatTitle:MiniFilesTitle",
     }, ",")
   end
+  local function image_preview_height()
+    local has_tabline = vim.o.showtabline == 2 or (vim.o.showtabline == 1 and #vim.api.nvim_list_tabpages() > 1)
+    local has_statusline = vim.o.laststatus > 0
+    local available = vim.o.lines
+      - vim.o.cmdheight
+      - (has_tabline and 1 or 0)
+      - (has_statusline and 1 or 0)
+      - 2
+    return math.max(math.min(available, 30), 1)
+  end
+  local function show_image_preview(entry)
+    local preview_win = get_native_preview_win(entry)
+    if not preview_win then
+      return close_image_preview()
+    end
+    close_disabled_preview()
+    local preview_config = vim.api.nvim_win_get_config(preview_win)
+    local width = vim.api.nvim_win_get_width(preview_win)
+    local win_config = vim.tbl_deep_extend("force", preview_config, {
+      focusable = false,
+      height = image_preview_height(),
+      title = " " .. vim.fn.fnamemodify(entry.path, ":t") .. " ",
+      width = width,
+      zindex = (preview_config.zindex or 99) + 1,
+    })
+    if
+      image_preview.path == entry.path
+      and image_preview.buf
+      and vim.api.nvim_buf_is_valid(image_preview.buf)
+      and image_preview.win
+      and vim.api.nvim_win_is_valid(image_preview.win)
+    then
+      vim.api.nvim_win_set_config(image_preview.win, win_config)
+      return
+    end
+    close_image_preview()
+    image_preview.buf = vim.api.nvim_create_buf(false, true)
+    vim.bo[image_preview.buf].bufhidden = "wipe"
+    vim.bo[image_preview.buf].buftype = "nofile"
+    vim.bo[image_preview.buf].swapfile = false
+    image_preview.win = vim.api.nvim_open_win(image_preview.buf, false, win_config)
+    image_preview.path = entry.path
+    vim.wo[image_preview.win].cursorline = false
+    vim.wo[image_preview.win].fillchars = "eob: "
+    vim.wo[image_preview.win].foldenable = false
+    vim.wo[image_preview.win].number = false
+    vim.wo[image_preview.win].relativenumber = false
+    vim.wo[image_preview.win].signcolumn = "no"
+    vim.wo[image_preview.win].wrap = false
+    vim.wo[image_preview.win].winhighlight = table.concat({
+      "NormalFloat:MiniFilesNormal",
+      "FloatBorder:MiniFilesBorder",
+      "FloatTitle:MiniFilesTitle",
+    }, ",")
+    Snacks.image.buf.attach(image_preview.buf, { src = entry.path })
+  end
   local function sync_preview()
     local ok, entry = pcall(mini_files.get_fs_entry)
     if not ok or not entry then
+      close_custom_previews()
       return
     end
-    if is_preview_blocked_entry(entry) or file_info_visible then
+    if file_info_visible then
+      close_image_preview()
       show_disabled_preview(entry)
+    elseif is_preview_blocked_entry(entry) then
+      close_image_preview()
+      show_disabled_preview(entry)
+    elseif entry.fs_type == "file" and is_image_preview_path(entry.path) then
+      show_image_preview(entry)
     else
-      close_disabled_preview()
+      close_custom_previews()
     end
   end
   local function toggle_file_info()
@@ -227,17 +334,11 @@ local function setup_conditional_preview(opts)
       return
     end
     file_info_visible = not file_info_visible
-    if file_info_visible then
-      show_disabled_preview(entry)
-    elseif is_preview_blocked_entry(entry) then
-      sync_preview()
-    else
-      close_disabled_preview()
-    end
+    sync_preview()
   end
   local function with_preview_guard(action)
     return function()
-      close_disabled_preview()
+      close_custom_previews()
       action()
       sync_preview()
     end
@@ -272,7 +373,7 @@ local function setup_conditional_preview(opts)
     pattern = "MiniFilesExplorerClose",
     callback = function()
       file_info_visible = false
-      close_disabled_preview()
+      close_custom_previews()
       if not opening then
         disable_fs_open_guard()
       end

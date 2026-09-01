@@ -18,6 +18,9 @@ return {
   -- :checkhealth render-markdown
   -- https://github.com/MeanderingProgrammer/render-markdown.nvim/issues/138#issuecomment-2295422741
   opts = {
+    ignore = function(buf)
+      return vim.api.nvim_buf_get_name(buf):match("fffile preview$") ~= nil
+    end,
     bullet = {
       -- Turn on / off list bullet rendering
       enabled = true,

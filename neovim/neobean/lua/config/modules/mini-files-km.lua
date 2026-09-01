@@ -156,21 +156,18 @@ M.setup = function(opts)
         vim.notify("Pasted successfully.", vim.log.levels.INFO)
       end, { buffer = buf_id, noremap = true, silent = true, desc = "[P]Paste from clipboard" })
 
-      -- Copy the current file or directory path (relative to home) to clipboard
+      -- Copy the full current file or directory path (shortened to ~) to clipboard
       vim.keymap.set("n", keymaps.copy_path, function()
         -- Get the current entry (file or directory)
         local curr_entry = mini_files.get_fs_entry()
         if curr_entry then
-          -- Convert path to be relative to home directory
-          local home_dir = vim.fn.expand("~")
-          local relative_path = curr_entry.path:gsub("^" .. home_dir, "~")
-          vim.fn.setreg("+", relative_path) -- Copy the relative path to the clipboard register
-          vim.notify(vim.fn.fnamemodify(relative_path, ":t"), vim.log.levels.INFO)
-          vim.notify("Path copied to clipboard: ", vim.log.levels.INFO)
+          local path = vim.fn.fnamemodify(curr_entry.path, ":p:~")
+          vim.fn.setreg("+", path)
+          vim.notify(path, vim.log.levels.INFO)
         else
           vim.notify("No file or directory selected", vim.log.levels.WARN)
         end
-      end, { buffer = buf_id, noremap = true, silent = true, desc = "[P]Copy relative path to clipboard" })
+      end, { buffer = buf_id, noremap = true, silent = true, desc = "[P]Copy full path to clipboard" })
 
       -- Open the selected file or directory with the default macOS app
       vim.keymap.set("n", keymaps.open_with_default_app, function()

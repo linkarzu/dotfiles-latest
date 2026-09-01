@@ -39,7 +39,7 @@ opencode_windows() {
       .[] as $os
       | $os.tabs[] as $tab
       | $tab.windows[]?
-      | select(any(.foreground_processes[]?.cmdline[0]?; split("/")[-1] == "opencode"))
+      | select(any(.foreground_processes[]?.cmdline[0]?; type == "string" and split("/")[-1] == "opencode"))
       | {
           id,
           title: (.title // "OpenCode"),

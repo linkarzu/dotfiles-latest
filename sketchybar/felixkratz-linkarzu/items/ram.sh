@@ -1,34 +1,32 @@
 #!/bin/bash
 
-# Lower this to move the RAM widget closer to CPU; raise it to increase the gap.
-ram_label_column_width=50
-
-# Change this only to adjust the gap between the RAM graph and its labels.
-ram_graph_label_padding=5
+# Shift zero-width labels back over the graph, including its right padding.
+ram_overlay_padding=$((-USAGE_GRAPH_WIDTH - PADDINGS))
 
 ram_top=(
-  label.font="$FONT:Heavy:10"
+  label.font="$FONT:Heavy:8"
   label="ram 0%"
   label.y_offset=5
-  label.width=$ram_label_column_width
-  label.align=left
-  label.padding_left=$ram_graph_label_padding
-  label.padding_right=0
+  label.width=$USAGE_GRAPH_WIDTH
+  label.align=right
+  label.padding_left=0
+  label.padding_right=2
+  padding_right=$ram_overlay_padding
   width=0
   icon.drawing=off
   click_script="$ACTIVITY_MONITOR_CLICK_SCRIPT"
 )
 
 swap_percent=(
-  label.font="$FONT:Heavy:10"
+  label.font="$FONT:Heavy:8"
   label="swp 0G"
   label.y_offset=-5
-  label.width=$ram_label_column_width
-  label.align=left
-  label.padding_left=$ram_graph_label_padding
-  label.padding_right=0
-  padding_right=1
-  width=$ram_label_column_width
+  label.width=$USAGE_GRAPH_WIDTH
+  label.align=right
+  label.padding_left=0
+  label.padding_right=2
+  padding_right=$ram_overlay_padding
+  width=0
   icon.drawing=off
   click_script="$ACTIVITY_MONITOR_CLICK_SCRIPT"
   update_freq=4
@@ -61,14 +59,14 @@ swap_used=(
 )
 
 # Change USAGE_GRAPH_WIDTH_PERCENT in sketchybarrc (100 = original 75-point width).
-sketchybar --add item ram.top right \
-  --set ram.top "${ram_top[@]}" \
-  \
-  --add item swap.percent right \
-  --set swap.percent "${swap_percent[@]}" \
-  \
-  --add graph ram.used right "$USAGE_GRAPH_WIDTH" \
+sketchybar --add graph ram.used right "$USAGE_GRAPH_WIDTH" \
   --set ram.used "${ram_used[@]}" \
   \
   --add graph swap.used right "$USAGE_GRAPH_WIDTH" \
-  --set swap.used "${swap_used[@]}"
+  --set swap.used "${swap_used[@]}" \
+  \
+  --add item ram.top right \
+  --set ram.top "${ram_top[@]}" \
+  \
+  --add item swap.percent right \
+  --set swap.percent "${swap_percent[@]}"

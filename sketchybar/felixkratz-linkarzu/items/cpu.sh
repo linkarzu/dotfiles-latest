@@ -1,8 +1,10 @@
 #!/bin/bash
 
-# Lower this to reduce the gap between CPU and the widget on its right. Keep at
-# least 35 so the 100% label and its 5-point graph inset fit.
-cpu_percent_column_width=30
+# Shift zero-width labels back over the graph, including its right padding.
+cpu_overlay_padding=$((-USAGE_GRAPH_WIDTH - PADDINGS))
+
+cpu_label_drawing=on
+[[ "$SHOW_CPU_PROCESS" == "on" ]] && cpu_label_drawing=off
 
 cpu_top=(
   label.font="$FONT:Semibold:7"
@@ -10,41 +12,43 @@ cpu_top=(
   # Toggle SHOW_CPU_PROCESS in sketchybarrc to show or hide this label.
   label.drawing=$SHOW_CPU_PROCESS
   label.width=$USAGE_GRAPH_WIDTH
+  label.align=right
+  label.padding_left=0
+  label.padding_right=2
   label.max_chars=$((CPU_TOPPROC_MAX_CHARS + 3))
   scroll_texts=off
   icon.drawing=off
   click_script="$ACTIVITY_MONITOR_CLICK_SCRIPT"
   width=0
-  # Align the process label's right edge with the CPU graph.
-  padding_right=$((cpu_percent_column_width + PADDINGS))
+  padding_right=$cpu_overlay_padding
   y_offset=6
 )
 
 cpu_label=(
-  label.font="$FONT:Heavy:10"
+  label.font="$FONT:Heavy:8"
   label=cpu
-  label.width=$cpu_percent_column_width
-  label.align=left
-  label.padding_left=5
-  label.padding_right=0
+  label.drawing=$cpu_label_drawing
+  label.width=$USAGE_GRAPH_WIDTH
+  label.align=right
+  label.padding_left=0
+  label.padding_right=2
   icon.drawing=off
   click_script="$ACTIVITY_MONITOR_CLICK_SCRIPT"
   width=0
-  padding_right=1
-  y_offset=8
+  padding_right=$cpu_overlay_padding
+  y_offset=5
 )
 
 cpu_percent=(
-  label.font="$FONT:Heavy:10"
+  label.font="$FONT:Heavy:8"
   label=CPU
-  # Match the RAM label inset from its graph.
-  label.width=$cpu_percent_column_width
-  label.align=left
-  label.padding_left=5
-  label.padding_right=0
-  y_offset=-4
-  padding_right=1
-  width=$cpu_percent_column_width
+  label.width=$USAGE_GRAPH_WIDTH
+  label.align=right
+  label.padding_left=0
+  label.padding_right=2
+  y_offset=-5
+  padding_right=$cpu_overlay_padding
+  width=0
   icon.drawing=off
   click_script="$ACTIVITY_MONITOR_CLICK_SCRIPT"
   update_freq=4
@@ -78,17 +82,17 @@ cpu_user=(
 )
 
 # Change USAGE_GRAPH_WIDTH_PERCENT in sketchybarrc (100 = original 75-point width).
-sketchybar --add item cpu.top right \
+sketchybar --add graph cpu.sys right "$USAGE_GRAPH_WIDTH" \
+  --set cpu.sys "${cpu_sys[@]}" \
+  \
+  --add graph cpu.user right "$USAGE_GRAPH_WIDTH" \
+  --set cpu.user "${cpu_user[@]}" \
+  \
+  --add item cpu.top right \
   --set cpu.top "${cpu_top[@]}" \
   \
   --add item cpu.label right \
   --set cpu.label "${cpu_label[@]}" \
   \
   --add item cpu.percent right \
-  --set cpu.percent "${cpu_percent[@]}" \
-  \
-  --add graph cpu.sys right "$USAGE_GRAPH_WIDTH" \
-  --set cpu.sys "${cpu_sys[@]}" \
-  \
-  --add graph cpu.user right "$USAGE_GRAPH_WIDTH" \
-  --set cpu.user "${cpu_user[@]}"
+  --set cpu.percent "${cpu_percent[@]}"

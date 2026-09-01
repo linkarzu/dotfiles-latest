@@ -4160,19 +4160,52 @@ local function change_markdown_heading_levels(start_line, end_line, direction)
     start_line, end_line = end_line, start_line
   end
 
-  for lnum = start_line, end_line do
-    local line = vim.api.nvim_buf_get_lines(buf, lnum - 1, lnum, false)[1]
-    if line then
-      local indent, hashes, rest = line:match("^(%s*)(#+)(%s+.*)$")
-      if indent and hashes and rest then
-        if direction == "increase" then
-          line = indent .. "#" .. hashes .. rest
-        elseif direction == "decrease" and #hashes > 1 then
-          line = indent .. hashes:sub(2) .. rest
-        end
+  local ok, parser = pcall(vim.treesitter.get_parser, buf, "markdown")
+  if not ok or not parser then
+    vim.notify("Markdown parser not available", vim.log.levels.ERROR)
+    return
+  end
 
-        vim.api.nvim_buf_set_lines(buf, lnum - 1, lnum, false, { line })
-      end
+  local query = vim.treesitter.query.parse(
+    "markdown",
+    [[
+      (atx_h1_marker) @h1
+      (atx_h2_marker) @h2
+      (atx_h3_marker) @h3
+      (atx_h4_marker) @h4
+      (atx_h5_marker) @h5
+      (atx_h6_marker) @h6
+    ]]
+  )
+  local tree = parser:parse()[1]
+  local markers = {}
+  for id, node in query:iter_captures(tree:root(), buf, start_line - 1, end_line) do
+    local level = tonumber(query.captures[id]:match("^h(%d)$"))
+    local row, node_start_col = node:range()
+    local marker_text = vim.treesitter.get_node_text(node, buf)
+    local hash_start, hash_end = marker_text:find("#+")
+    table.insert(markers, {
+      level = level,
+      row = row,
+      start_col = node_start_col + hash_start - 1,
+      end_col = node_start_col + hash_end,
+    })
+  end
+  table.sort(markers, function(a, b)
+    return a.row > b.row or (a.row == b.row and a.start_col > b.start_col)
+  end)
+
+  for _, marker in ipairs(markers) do
+    local new_level = direction == "increase" and math.min(marker.level + 1, 6) or math.max(marker.level - 1, 1)
+    if new_level ~= marker.level then
+      vim.api.nvim_buf_set_text(
+        buf,
+        marker.row,
+        marker.start_col,
+        marker.row,
+        marker.end_col,
+        { string.rep("#", new_level) }
+      )
     end
   end
 
@@ -4196,12 +4229,12 @@ end, { desc = "[P]Decrease headings without confirmation" })
 
 -- Increase markdown headings for text selected in visual mode.
 vim.keymap.set("v", "<leader>mhI", function()
-  change_markdown_heading_levels(vim.fn.line("'<"), vim.fn.line("'>"), "increase")
+  change_markdown_heading_levels(vim.fn.line("v"), vim.fn.line("."), "increase")
 end, { desc = "Increase headings in visual selection" })
 
 -- Decrease markdown headings for text selected in visual mode.
 vim.keymap.set("v", "<leader>mhD", function()
-  change_markdown_heading_levels(vim.fn.line("'<"), vim.fn.line("'>"), "decrease")
+  change_markdown_heading_levels(vim.fn.line("v"), vim.fn.line("."), "decrease")
 end, { desc = "Decrease headings in visual selection" })
 
 -- -- This goes 1 heading at a time and asks for **confirmation**

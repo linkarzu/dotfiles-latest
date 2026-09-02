@@ -67,8 +67,8 @@ cmd + alt - f1 : $HOME/github/dotfiles-latest/scripts/macos/mac/misc/552-skhdDai
 
 cmd + alt - f2 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/200-micMute.sh"
 
-# AI ENTRY POINT: main tasks fzf QAT
-# ===================================
+# CANONICAL AI ENTRY POINT: main tasks fzf QAT
+# =============================================
 # Give AI agents this binding as the entry point for task menus. They should
 # launch the QAT by running the command below (or by triggering cmd + alt + F3),
 # then control its normal visible fzf through the helper API. Do not use
@@ -104,6 +104,12 @@ cmd + alt - f2 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/200-micMut
 # socket; run `inspect` again. `FZF_FLOW_ENDED` means no next fzf appeared, so
 # verify the resulting terminal output or external action instead of selecting
 # again. If no menu is active, reopen this QAT and run `wait`.
+#
+# The launcher is also the visibility toggle for the `system-task` QAT. When a
+# selection exits fzf and opens an external UI, let that UI appear and then run
+# `"$qat"` once to hide the QAT if it remains visible. Do not invoke the launcher
+# repeatedly: another invocation can reopen the panel. Never use this launcher
+# to hide another QAT instance group or a normal Kitty window.
 #
 # 240-systemTask.sh enables fzf's safe Unix-socket API and exports it to every
 # script selected from this menu. Therefore nested fzf calls need no rewrite:

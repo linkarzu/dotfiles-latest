@@ -3,6 +3,8 @@
 set -euo pipefail
 
 # Control the live fzf opened by the main tasks QAT (cmd + alt + F3).
+# The canonical launcher and lifecycle guide is the `CANONICAL AI ENTRY POINT`
+# section in ~/github/dotfiles-latest/skhd/skhdrc.
 #
 # The QAT still displays an ordinary fzf interface. This helper talks to fzf's
 # local Unix-socket API, allowing an AI to inspect unknown options and perform

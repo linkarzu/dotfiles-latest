@@ -100,10 +100,11 @@ wait_for_status() {
 }
 
 press_focus_toggle() {
+  local target_state="$1"
   rm -f "$HAMMERSPOON_RESULT"
-  hs -c 'return require("dnd").pressFocus()' >/dev/null
+  hs -c "return require(\"dnd\").pressFocus(\"$target_state\")" >/dev/null
 
-  for _ in {1..50}; do
+  for _ in {1..120}; do
     if [[ -f "$HAMMERSPOON_RESULT" ]]; then
       result="$(<"$HAMMERSPOON_RESULT")"
       if [[ "$result" == ok:* ]]; then
@@ -128,7 +129,7 @@ turn_on() {
   # If another Focus mode is active, the first click may turn it off; the second
   # click then turns the default Do Not Disturb mode on.
   for _ in {1..2}; do
-    press_focus_toggle
+    press_focus_toggle on
     if wait_for_status "on"; then
       echo "on"
       return 0
@@ -145,7 +146,7 @@ turn_off() {
     return 0
   fi
 
-  press_focus_toggle
+  press_focus_toggle off
   if wait_for_status "off"; then
     echo "off"
     return 0

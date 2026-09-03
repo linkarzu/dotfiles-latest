@@ -59,6 +59,7 @@ export class TelegramBridge {
     this.fetch = options.fetchImpl ?? globalThis.fetch
     this.now = options.now ?? (() => Date.now())
     this.instances = new Map()
+    this.selections = new Map()
     this.state = defaultState()
     this.running = false
     this.server = undefined
@@ -164,9 +165,12 @@ export class TelegramBridge {
       }
 
       if (request.method === "GET" && request.url === "/health") {
+        const selectedInstances = [...this.instances.values()]
+          .filter((instance) => instance.activeSessionID !== undefined).length
         this.sendLocalResponse(response, 200, {
           ok: true,
           instances: this.instances.size,
+          selectedInstances,
           attentionDelaySeconds: this.attentionDelayMs / 1000,
           phoneMode: this.state.phoneMode,
         })
@@ -217,6 +221,7 @@ export class TelegramBridge {
     if (!instanceID || !isLoopbackURL(payload.serverURL) || !payload.directory) {
       throw new Error("Invalid OpenCode registration")
     }
+    const existing = this.instances.get(instanceID)
     this.instances.set(instanceID, {
       instanceID,
       serverURL: payload.serverURL,
@@ -225,13 +230,48 @@ export class TelegramBridge {
       kittyWindowID: String(payload.kittyWindowID ?? ""),
       sessions: Array.isArray(payload.sessions) ? payload.sessions : [],
       attention: Array.isArray(payload.attention) ? payload.attention : [],
+      activeSessionID: this.selections.get(instanceID) ?? existing?.activeSessionID,
       lastSeen: this.now(),
     })
   }
 
-  async reconcileRegistration(payload) {
+  sessionRoot(instance, sessionID) {
+    const sessions = new Map(instance.sessions.map((session) => [session.id, session]))
+    const seen = new Set()
+    let current = String(sessionID)
+    while (!seen.has(current)) {
+      seen.add(current)
+      const parentID = sessions.get(current)?.parentID
+      if (!parentID) return current
+      current = parentID
+    }
+    return current
+  }
+
+  selectionMatches(instance, sessionID) {
+    if (instance.activeSessionID === undefined) return undefined
+    if (!instance.activeSessionID) return false
+    return this.sessionRoot(instance, instance.activeSessionID) === this.sessionRoot(instance, sessionID)
+  }
+
+  async syncInstanceSelection(instance) {
+    if (instance.activeSessionID === undefined) return false
+    const synced = await this.opencodeRequest(instance, "/telegram-selection", {
+      method: "POST",
+      body: JSON.stringify({ sessionID: instance.activeSessionID }),
+    }).then(() => true, () => false)
+    instance.attention = instance.attention.filter((event) => (
+      event?.sessionID && this.selectionMatches(instance, event.sessionID) === true
+    ))
+    return synced
+  }
+
+  async reconcileRegistration(payload, resolution = "Resolved locally") {
     if (!Array.isArray(payload.attention)) return
     const instanceID = String(payload.instanceID)
+    const instance = this.instances.get(instanceID)
+    if (!instance) return
+    const synced = instance.activeSessionID === undefined || await this.syncInstanceSelection(instance)
     const pendingKeys = new Set()
     for (const session of payload.sessions ?? []) {
       if (["busy", "retry"].includes(session?.status)) {
@@ -240,12 +280,13 @@ export class TelegramBridge {
     }
     for (const event of payload.attention) {
       if (event?.action !== "attention" || !event.kind || !event.sessionID) continue
+      if (this.selectionMatches(instance, event.sessionID) === false) continue
       pendingKeys.add(alertKey(instanceID, event))
-      await this.processPluginEvent({ instanceID, event })
+      if (synced) await this.processPluginEvent({ instanceID, event })
     }
     for (const alert of Object.values(this.state.alerts)) {
       if (alert.instanceID !== instanceID || alert.resolvedAt || pendingKeys.has(alert.key)) continue
-      await this.resolveAlert(alert, "Resolved locally")
+      await this.resolveAlert(alert, resolution)
     }
     await this.saveState()
   }
@@ -253,6 +294,7 @@ export class TelegramBridge {
   async unregisterInstance(instanceID) {
     instanceID = String(instanceID ?? "")
     this.instances.delete(instanceID)
+    this.selections.delete(instanceID)
     for (const key of Object.keys(this.state.abortSuppressions)) {
       if (key.startsWith(`${instanceID}:`)) delete this.state.abortSuppressions[key]
     }
@@ -267,7 +309,16 @@ export class TelegramBridge {
     const instanceID = String(payload.instanceID ?? "")
     const event = payload.event
     const instance = this.instances.get(instanceID)
-    if (!instance || !event?.action || !event.sessionID) throw new Error("Unknown OpenCode instance or event")
+    if (!event?.action) throw new Error("Unknown OpenCode instance or event")
+    if (event.action === "select-session") {
+      const activeSessionID = String(event.sessionID ?? "")
+      this.selections.set(instanceID, activeSessionID)
+      if (!instance) return
+      instance.activeSessionID = activeSessionID
+      await this.reconcileRegistration(instance, "Session closed locally")
+      return
+    }
+    if (!instance || !event.sessionID) throw new Error("Unknown OpenCode instance or event")
     if (!["attention", "resolve", "resolve-session", "local-prompt"].includes(event.action)) {
       throw new Error("Invalid event action")
     }
@@ -278,6 +329,9 @@ export class TelegramBridge {
       throw new Error("Attention kind is required")
     }
     instance.lastSeen = this.now()
+
+    const selection = this.selectionMatches(instance, event.sessionID)
+    if (event.action === "attention" && selection === false) return
 
     const suppressionKey = `${instanceID}:${event.sessionID}`
     if (
@@ -304,7 +358,7 @@ export class TelegramBridge {
     if (event.action === "attention") {
       const key = alertKey(instanceID, event)
       const existing = this.state.alerts[key]?.resolvedAt ? undefined : this.state.alerts[key]
-      immediate = event.kind === "error" || this.state.phoneMode
+      immediate = selection !== false && (event.kind === "error" || this.state.phoneMode)
       this.state.alerts[key] = {
         id: existing?.id ?? randomBytes(6).toString("hex"),
         key,
@@ -330,6 +384,10 @@ export class TelegramBridge {
         if (kinds.has(alert.kind)) await this.resolveAlert(alert, event.resolution ?? "Resolved locally")
       }
     } else if (event.action === "local-prompt") {
+      for (const alert of Object.values(this.state.alerts)) {
+        if (alert.instanceID !== instanceID || alert.sessionID !== event.sessionID || alert.resolvedAt) continue
+        if (["done", "error"].includes(alert.kind)) await this.resolveAlert(alert, "Continued locally")
+      }
       this.deactivatePhoneMode()
     }
     await this.saveState()
@@ -398,6 +456,8 @@ export class TelegramBridge {
     if (!instance) return null
     const age = this.now() - instance.lastSeen
     if (age > INSTANCE_STALE_MS) return null
+    const selection = this.selectionMatches(instance, alert.sessionID)
+    if (selection === false) return false
 
     try {
       if (alert.kind === "question") {
@@ -507,6 +567,7 @@ export class TelegramBridge {
       }
     } else if (alert.kind === "error") {
       text = `OpenCode error\n\n${prefix}\n${truncate(details.message ?? "Session failed", 500)}`
+      text += "\n\nReply to this message to retry or continue the same session."
     } else {
       text = `OpenCode is waiting for your next prompt\n\n${prefix}`
       if (summary) text += `\n\n${summary}`
@@ -665,6 +726,9 @@ export class TelegramBridge {
     const instance = this.instanceForAlert(alert)
     if (!instance || this.now() - instance.lastSeen > INSTANCE_STALE_MS) {
       throw new Error("OpenCode instance is no longer registered")
+    }
+    if (this.selectionMatches(instance, alert.sessionID) === false) {
+      throw new Error("That OpenCode session is no longer selected")
     }
     return instance
   }

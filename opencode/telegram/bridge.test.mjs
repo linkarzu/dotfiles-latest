@@ -26,7 +26,7 @@ async function fixture(fetchImpl, now = () => 1000) {
   return { bridge, cleanup: () => rm(directory, { recursive: true, force: true }) }
 }
 
-function register(bridge, instanceID, port) {
+function register(bridge, instanceID, port, activeSessionID = "session-1") {
   bridge.registerInstance({
     instanceID,
     serverURL: `http://127.0.0.1:${port}`,
@@ -35,6 +35,8 @@ function register(bridge, instanceID, port) {
     kittyWindowID: port,
     sessions: [],
   })
+  bridge.instances.get(instanceID).activeSessionID = activeSessionID
+  bridge.selections.set(instanceID, activeSessionID)
 }
 
 test("waits four minutes and revalidates before notifying", async (context) => {
@@ -260,7 +262,7 @@ test("routes replies to the exact registered OpenCode instance", async (context)
   })
   context.after(cleanup)
   register(bridge, "one", 5001)
-  register(bridge, "two", 5002)
+  register(bridge, "two", 5002, "session-2")
 
   await bridge.processPluginEvent({
     instanceID: "two",
@@ -319,7 +321,7 @@ test("revalidates v2 questions through the session API wrapper", async (context)
     return jsonResponse({})
   }, () => now)
   context.after(cleanup)
-  register(bridge, "one", 5001)
+  register(bridge, "one", 5001, "session-v2")
   await bridge.processPluginEvent({
     instanceID: "one",
     event: {
@@ -332,7 +334,7 @@ test("revalidates v2 questions through the session API wrapper", async (context)
   })
 
   now += 4 * 60 * 1000
-  register(bridge, "one", 5001)
+  register(bridge, "one", 5001, "session-v2")
   await bridge.flushDueAlerts()
 
   assert.ok(calls.some((call) => call.url.includes("/api/session/session-v2/question")))
@@ -347,7 +349,7 @@ test("uses the deprecated session permission response contract", async (context)
     return jsonResponse({ id: "session-old" })
   })
   context.after(cleanup)
-  register(bridge, "one", 5001)
+  register(bridge, "one", 5001, "session-old")
   await bridge.processPluginEvent({
     instanceID: "one",
     event: {
@@ -383,7 +385,10 @@ test("restores pending attention and resolves it from heartbeat snapshots", asyn
     attention: [attention],
   }
   bridge.registerInstance(registration)
-  await bridge.reconcileRegistration(registration)
+  await bridge.processPluginEvent({
+    instanceID: "one",
+    event: { action: "select-session", sessionID: "session-1" },
+  })
   const alert = Object.values(bridge.state.alerts)[0]
   const originalDueAt = alert.dueAt
   alert.sentMessageID = 42
@@ -402,6 +407,280 @@ test("restores pending attention and resolves it from heartbeat snapshots", asyn
   await bridge.reconcileRegistration(resolvedRegistration)
   currentAlert = Object.values(bridge.state.alerts)[0]
   assert.equal(currentAlert.resolution, "Resolved locally")
+})
+
+test("applies TUI selection received before OpenCode registration", async (context) => {
+  const calls = []
+  const { bridge, cleanup } = await fixture(async (url) => {
+    calls.push(String(url))
+    if (String(url).includes("api.telegram.org")) {
+      return jsonResponse({ ok: true, result: { message_id: 91 } })
+    }
+    return jsonResponse({ title: "Selected session" })
+  })
+  context.after(cleanup)
+
+  await bridge.processPluginEvent({
+    instanceID: "one",
+    event: { action: "select-session", sessionID: "session-2" },
+  })
+  const selectedError = {
+    action: "attention",
+    kind: "error",
+    sessionID: "session-2",
+    details: { message: "Selected failure" },
+  }
+  const registration = {
+    instanceID: "one",
+    serverURL: "http://127.0.0.1:5001",
+    directory: "/project",
+    sessions: [
+      { id: "session-1", status: "idle" },
+      { id: "session-2", status: "idle" },
+    ],
+    attention: [
+      { action: "attention", kind: "done", sessionID: "session-1" },
+      selectedError,
+    ],
+  }
+  bridge.registerInstance(registration)
+  await bridge.reconcileRegistration(registration)
+
+  assert.deepEqual(Object.values(bridge.state.alerts).map((alert) => alert.sessionID), ["session-2"])
+  assert.equal(calls.filter((url) => url.includes("api.telegram.org")).length, 1)
+})
+
+test("switching TUI sessions closes old alerts and ignores later events", async (context) => {
+  const calls = []
+  const { bridge, cleanup } = await fixture(async (url) => {
+    calls.push(String(url))
+    if (String(url).includes("api.telegram.org")) {
+      return jsonResponse({ ok: true, result: { message_id: 92 } })
+    }
+    return jsonResponse({ title: "Session" })
+  })
+  context.after(cleanup)
+  register(bridge, "one", 5001)
+
+  const oldAttention = { action: "attention", kind: "done", sessionID: "session-1" }
+  bridge.instances.get("one").attention = [oldAttention]
+  await bridge.processPluginEvent({ instanceID: "one", event: oldAttention })
+  const oldAlert = Object.values(bridge.state.alerts)[0]
+
+  await bridge.processPluginEvent({
+    instanceID: "one",
+    event: { action: "select-session", sessionID: "session-2" },
+  })
+  await bridge.processPluginEvent({
+    instanceID: "one",
+    event: {
+      action: "attention",
+      kind: "error",
+      sessionID: "session-1",
+      details: { message: "Late failure" },
+    },
+  })
+  await bridge.processPluginEvent({
+    instanceID: "one",
+    event: { action: "select-session", sessionID: "session-1" },
+  })
+
+  assert.equal(oldAlert.resolution, "Session closed locally")
+  assert.deepEqual(bridge.instances.get("one").attention, [])
+  assert.equal(Object.values(bridge.state.alerts).length, 1)
+  assert.equal(calls.some((url) => url.includes("api.telegram.org")), false)
+})
+
+test("a failed plugin selection sync still closes and disables old alerts", async (context) => {
+  const { bridge, cleanup } = await fixture(async (url) => {
+    if (String(url).includes("api.telegram.org")) {
+      return jsonResponse({ ok: true, result: { message_id: 94 } })
+    }
+    return jsonResponse({ title: "Old session" })
+  })
+  context.after(cleanup)
+  register(bridge, "one", 5001)
+  const oldAttention = {
+    action: "attention",
+    kind: "error",
+    sessionID: "session-1",
+    details: { message: "Old failure" },
+  }
+  bridge.instances.get("one").attention = [oldAttention]
+  await bridge.processPluginEvent({ instanceID: "one", event: oldAttention })
+  const alert = Object.values(bridge.state.alerts)[0]
+  bridge.opencodeRequest = async (_instance, path) => {
+    if (path === "/telegram-selection") throw new Error("sync unavailable")
+    return {}
+  }
+
+  await bridge.processPluginEvent({
+    instanceID: "one",
+    event: { action: "select-session", sessionID: "session-2" },
+  })
+
+  assert.equal(alert.resolution, "Session closed locally")
+  assert.throws(() => bridge.actionableInstance(alert), /no longer selected/)
+})
+
+test("selection includes child sessions of the active root", async (context) => {
+  const { bridge, cleanup } = await fixture(async () => jsonResponse({ ok: true, result: true }))
+  context.after(cleanup)
+  bridge.registerInstance({
+    instanceID: "one",
+    serverURL: "http://127.0.0.1:5001",
+    directory: "/project",
+    sessions: [
+      { id: "root-1" },
+      { id: "child-1", parentID: "root-1" },
+      { id: "root-2" },
+      { id: "child-2", parentID: "root-2" },
+    ],
+    attention: [],
+  })
+  await bridge.processPluginEvent({
+    instanceID: "one",
+    event: { action: "select-session", sessionID: "root-1" },
+  })
+  await bridge.processPluginEvent({
+    instanceID: "one",
+    event: { action: "attention", kind: "done", sessionID: "child-1" },
+  })
+  await bridge.processPluginEvent({
+    instanceID: "one",
+    event: { action: "attention", kind: "done", sessionID: "child-2" },
+  })
+
+  assert.deepEqual(Object.values(bridge.state.alerts).map((alert) => alert.sessionID), ["child-1"])
+})
+
+test("TUI selection heartbeats do not refresh OpenCode liveness", async (context) => {
+  let now = 1000
+  const { bridge, cleanup } = await fixture(async () => jsonResponse({ ok: true }), () => now)
+  context.after(cleanup)
+  register(bridge, "one", 5001)
+  const lastSeen = bridge.instances.get("one").lastSeen
+
+  now += 61_000
+  await bridge.processPluginEvent({
+    instanceID: "one",
+    event: { action: "select-session", sessionID: "session-1" },
+  })
+
+  assert.equal(bridge.instances.get("one").lastSeen, lastSeen)
+})
+
+test("missing TUI selection fails open instead of suppressing alerts", async (context) => {
+  const calls = []
+  const { bridge, cleanup } = await fixture(async (url) => {
+    const target = String(url)
+    calls.push(target)
+    if (target.includes("api.telegram.org")) {
+      return jsonResponse({ ok: true, result: { message_id: 95 } })
+    }
+    return jsonResponse({ title: "Uncorrelated session" })
+  })
+  context.after(cleanup)
+
+  await bridge.processPluginEvent({
+    instanceID: "different-tui-runtime",
+    event: { action: "select-session", sessionID: "session-1" },
+  })
+  bridge.registerInstance({
+    instanceID: "core-runtime",
+    serverURL: "http://127.0.0.1:5001",
+    directory: "/project",
+    sessions: [{ id: "session-1", status: "idle" }],
+    attention: [],
+  })
+  await bridge.processPluginEvent({
+    instanceID: "core-runtime",
+    event: {
+      action: "attention",
+      kind: "error",
+      sessionID: "session-1",
+      details: { message: "Selection metadata is unavailable" },
+    },
+  })
+
+  const alert = Object.values(bridge.state.alerts)[0]
+  assert.equal(alert.sentMessageID, 95)
+  assert.equal(bridge.actionableInstance(alert).instanceID, "core-runtime")
+  assert.ok(calls.some((url) => url.includes("api.telegram.org")))
+})
+
+test("a local prompt resolves an actionable error", async (context) => {
+  const { bridge, cleanup } = await fixture(async (url) => {
+    if (String(url).includes("api.telegram.org")) {
+      return jsonResponse({ ok: true, result: { message_id: 93 } })
+    }
+    return jsonResponse({ title: "Failed session" })
+  })
+  context.after(cleanup)
+  register(bridge, "one", 5001)
+  await bridge.processPluginEvent({
+    instanceID: "one",
+    event: {
+      action: "attention",
+      kind: "error",
+      sessionID: "session-1",
+      details: { message: "Our servers are currently overloaded. Please try again later." },
+    },
+  })
+  const alert = Object.values(bridge.state.alerts)[0]
+  assert.equal(alert.resolvedAt, undefined)
+
+  await bridge.processPluginEvent({
+    instanceID: "one",
+    event: { action: "local-prompt", sessionID: "session-1" },
+  })
+
+  assert.equal(alert.resolution, "Continued locally")
+})
+
+test("a Telegram reply retries an overloaded session", async (context) => {
+  const calls = []
+  let messageID = 100
+  const { bridge, cleanup } = await fixture(async (url, options) => {
+    const target = String(url)
+    calls.push({ url: target, body: options?.body && JSON.parse(options.body) })
+    if (target.includes("api.telegram.org")) {
+      return jsonResponse({ ok: true, result: { message_id: messageID++ } })
+    }
+    if (target.includes("/session/status")) return jsonResponse({})
+    if (target.includes("/message")) {
+      return jsonResponse([{ info: { role: "user", agent: "build" }, parts: [] }])
+    }
+    if (target.includes("/prompt_async")) return new Response(null, { status: 204 })
+    return jsonResponse({ title: "Overloaded session" })
+  })
+  context.after(cleanup)
+  register(bridge, "one", 5001)
+  await bridge.processPluginEvent({
+    instanceID: "one",
+    event: {
+      action: "attention",
+      kind: "error",
+      sessionID: "session-1",
+      details: { message: "Our servers are currently overloaded. Please try again later." },
+    },
+  })
+  const alert = Object.values(bridge.state.alerts)[0]
+
+  await bridge.handleMessage({
+    from: { id: 42 },
+    chat: { id: 42 },
+    text: "Retry now",
+    reply_to_message: { message_id: alert.sentMessageID },
+  })
+
+  const prompt = calls.find((call) => call.url.includes("/prompt_async"))
+  assert.deepEqual(prompt.body, {
+    agent: "build",
+    parts: [{ type: "text", text: "Retry now" }],
+  })
+  assert.equal(alert.resolution, "Continued from Telegram")
+  assert.ok(calls.some((call) => call.body?.text === "Sent to OpenCode."))
 })
 
 test("concurrent flushes send only one Telegram notification", async (context) => {
@@ -468,6 +747,10 @@ test("local HTTP writes require the plugin secret", async (context) => {
   })
   assert.equal(accepted.status, 200)
   assert.equal(bridge.instances.has("one"), true)
+
+  const health = await fetch(`http://127.0.0.1:${port}/health`).then((response) => response.json())
+  assert.equal(health.instances, 1)
+  assert.equal(health.selectedInstances, 0)
 })
 
 test("local HTTP client can toggle phone mode", async (context) => {
@@ -602,7 +885,7 @@ test("Telegram replies enable global phone mode until the next local prompt", as
   }, () => now)
   context.after(cleanup)
   register(bridge, "one", 5001)
-  register(bridge, "two", 5002)
+  register(bridge, "two", 5002, "session-2")
 
   await bridge.processPluginEvent({
     instanceID: "one",
@@ -627,6 +910,10 @@ test("Telegram replies enable global phone mode until the next local prompt", as
   await bridge.processPluginEvent({
     instanceID: "one",
     event: { action: "local-prompt", sessionID: "session-1" },
+  })
+  await bridge.processPluginEvent({
+    instanceID: "two",
+    event: { action: "select-session", sessionID: "session-3" },
   })
   await bridge.processPluginEvent({
     instanceID: "two",

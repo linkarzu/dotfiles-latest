@@ -4,10 +4,22 @@ This bridge keeps each Kitty OpenCode process independent while allowing one
 private Telegram bot to report and answer pending questions, permissions,
 errors, and completed sessions.
 
+Only the OpenCode session currently selected in each TUI is eligible to send
+notifications. Using `Ctrl+P` to switch to another session or create a new
+session closes the previous session's notification scope: queued alerts are
+cancelled and later events from that session are ignored, even if its agent
+continues running in the background. Switching Kitty tabs, windows, or Kitty
+sessions does not close the selected OpenCode session. Child sessions remain
+eligible when their root session is selected. If selection metadata is
+temporarily unavailable, notifications remain enabled rather than failing
+silently.
+
 Notifications for questions, permissions, and completion are sent only after
 they remain unresolved for four minutes. Unexpected errors are sent
-immediately. Intentional aborts from OpenCode or Telegram are suppressed. The
-bot accepts messages only from the configured numeric Telegram user ID.
+immediately and remain replyable until the session is continued locally or
+from Telegram, switched away from, deleted, or closed with OpenCode.
+Intentional aborts from OpenCode or Telegram are suppressed. The bot accepts
+messages only from the configured numeric Telegram user ID.
 
 When a delayed notification becomes due, it remains queued while its exact
 Kitty window is focused and macOS has received keyboard or mouse input within
@@ -18,9 +30,10 @@ withheld by local activity.
 
 Replying to any OpenCode notification from Telegram enables global phone mode.
 While phone mode is active, existing and new unresolved notifications from all
-OpenCode processes are sent immediately. The next prompt submitted locally in
-any OpenCode session disables phone mode and restores the four-minute delay.
-Telegram-injected prompts and background subagent prompts do not disable it.
+OpenCode processes' currently selected sessions are sent immediately. The next
+prompt submitted locally in any OpenCode session disables phone mode and
+restores the four-minute delay. Telegram-injected prompts and background
+subagent prompts do not disable it.
 Right-clicking the OpenCode SketchyBar item also toggles phone mode; left-click
 opens the session popup.
 Phone-mode responses are instructed to stay within 3,500 characters and use

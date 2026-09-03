@@ -4,7 +4,7 @@
 calendar_date=(
   label.font="$FONT:Black:11.0"
   label="Mon 000000"
-  label.width=90
+  label.width=75
   label.align=center
   label.y_offset=5
   label.padding_left=0
@@ -19,13 +19,13 @@ calendar_date=(
 calendar_time=(
   label.font="$FONT:Black:11.0"
   label="00:00"
-  label.width=90
+  label.width=75
   label.align=center
   label.y_offset=-5
   label.padding_left=0
   label.padding_right=0
-  padding_left=15
-  width=90
+  padding_left=10
+  width=75
   icon.drawing=off
   click_script="$PLUGIN_DIR/zen.sh"
 )

@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # Shift zero-width labels back over the graph, including its right padding.
+cpu_graph_padding_right=6
 cpu_overlay_padding=$((-USAGE_GRAPH_WIDTH - PADDINGS))
 
 cpu_label_drawing=on
@@ -59,6 +60,7 @@ cpu_sys=(
   width=0
   graph.color=$RED
   graph.fill_color=$RED
+  padding_right=$cpu_graph_padding_right
   label.drawing=off
   icon.drawing=off
   click_script="$ACTIVITY_MONITOR_CLICK_SCRIPT"
@@ -69,6 +71,7 @@ cpu_sys=(
 
 cpu_user=(
   graph.color=$BLUE
+  padding_right=$cpu_graph_padding_right
   label.drawing=off
   icon.drawing=off
   click_script="$ACTIVITY_MONITOR_CLICK_SCRIPT"

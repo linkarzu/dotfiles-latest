@@ -135,7 +135,9 @@ local function create_separator(condition)
     function()
       return ""
     end,
-    color = { fg = colors["linkarzu_color14"], bg = colors["linkarzu_color17"] },
+    color = function()
+      return { fg = colors["linkarzu_color14"], bg = colors["linkarzu_color17"] }
+    end,
     separator = { left = "", right = "" },
     padding = 0,
   }
@@ -218,7 +220,9 @@ return {
         -- },
         {
           get_venv_name,
-          color = { fg = colors["linkarzu_color10"], bg = colors["linkarzu_color02"], gui = "bold" },
+          color = function()
+            return { fg = colors["linkarzu_color10"], bg = colors["linkarzu_color02"], gui = "bold" }
+          end,
           separator = { right = "" },
         },
       }

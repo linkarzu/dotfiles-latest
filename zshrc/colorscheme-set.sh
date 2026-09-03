@@ -82,6 +82,11 @@ if [ ! -f "$colorscheme_file" ]; then
   error "Colorscheme file '$colorscheme_file' does not exist."
 fi
 
+source "$colorscheme_file"
+if [ -z "$wallpaper" ]; then
+  wallpaper="$HOME/Library/Mobile Documents/com~apple~CloudDocs/Images/wallpapers/official/skyrim-dragon-4.webp"
+fi
+
 # If active-colorscheme.sh doesn't exist, create it
 if [ ! -f "$active_file" ]; then
   echo "Active colorscheme file not found. Creating '$active_file'."
@@ -363,62 +368,235 @@ EOF
   echo "Starship configuration updated at '$starship_conf_file'."
 }
 
-# macOS only applies System Events wallpaper changes to the current space,
-# and setting it that way disables the "Show on all Spaces" toggle on Sequoia.
-# This cycles through all spaces via yabai to force wallpaper updates everywhere.
-set_wallpaper_all_spaces_yabai() {
-  local wp="$1"
+reload_kitty_colors() {
+  local kitty_bin="/Applications/kitty.app/Contents/MacOS/kitty"
+  local theme_file="$HOME/github/dotfiles-latest/kitty/active-theme.conf"
+  local socket
+  local updated=0
 
-  if ! command -v yabai >/dev/null 2>&1; then
-    return 1
+  if [ ! -x "$kitty_bin" ]; then
+    echo "Warning: Kitty is not installed; skipping live color reload." >&2
+    return 0
   fi
 
-  local current_json
-  local spaces_json
-  current_json="$(yabai -m query --spaces --space 2>/dev/null || true)"
-  spaces_json="$(yabai -m query --spaces 2>/dev/null || true)"
-
-  if [ -z "$current_json" ] || [ -z "$spaces_json" ]; then
-    return 1
-  fi
-
-  local current_space
-  current_space="$(
-    printf '%s' "$current_json" | /usr/bin/python3 -c 'import json,sys; data=json.load(sys.stdin); print(data.get("index", ""))' 2>/dev/null || true
-  )"
-
-  if [ -z "$current_space" ]; then
-    return 1
-  fi
-
-  local spaces
-  spaces="$(
-    printf '%s' "$spaces_json" | /usr/bin/python3 -c 'import json,sys; data=json.load(sys.stdin); print(" ".join(str(space.get("index", "")) for space in data if space.get("index")))' 2>/dev/null || true
-  )"
-
-  if [ -z "$spaces" ]; then
-    return 1
-  fi
-
-  for space in $spaces; do
-    yabai -m space --focus "$space"
-    sleep 0.2
-    osascript -e 'tell application "System Events" to set picture of current desktop to POSIX file "'"$wp"'"'
-    sleep 0.1
+  for socket in /tmp/kitty-*; do
+    [ -S "$socket" ] || continue
+    if timeout 5 "$kitty_bin" @ --to "unix:${socket}" \
+      set-colors --all --configured "$theme_file" >/dev/null 2>&1; then
+      updated=$((updated + 1))
+    else
+      echo "Warning: Could not reload Kitty colors through '$socket'." >&2
+    fi
   done
 
-  if [ -n "$current_space" ]; then
-    yabai -m space --focus "$current_space"
-  fi
-
-  return 0
+  echo "Reloaded colors in $updated running Kitty instance(s)."
 }
 
-# set_wallpaper_system_events() {
-#   # Not used: setting via System Events disables "Show on all Spaces" in Sequoia.
-#   local wp="$1"
-#   osascript -e 'tell application "System Events" to set picture of current desktop to POSIX file "'"$wp"'"'
-# }
+reload_opencode_colors() {
+  local kitty_bin="/Applications/kitty.app/Contents/MacOS/kitty"
+  local socket
+  local kitty_state
+  local window_ids
+  local window_id
+  local updated=0
+
+  if [ ! -x "$kitty_bin" ]; then
+    echo "Warning: Kitty is not installed; skipping OpenCode color reload." >&2
+    return 0
+  fi
+
+  for socket in /tmp/kitty-*; do
+    [ -S "$socket" ] || continue
+
+    if ! kitty_state="$(
+      timeout 5 "$kitty_bin" @ --to "unix:${socket}" ls 2>/dev/null
+    )"; then
+      echo "Warning: Could not inspect Kitty windows through '$socket' for OpenCode." >&2
+      continue
+    fi
+
+    if ! window_ids="$(
+      printf '%s' "$kitty_state" | /usr/bin/python3 -c '
+import json
+import os
+import sys
+
+for os_window in json.load(sys.stdin):
+    for tab in os_window.get("tabs", []):
+        for window in tab.get("windows", []):
+            if not window.get("in_alternate_screen"):
+                continue
+            for process in window.get("foreground_processes", []):
+                command = process.get("cmdline") or []
+                if command and os.path.basename(command[0]) == "opencode":
+                    print(window["id"])
+                    break
+'
+    )"; then
+      echo "Warning: Could not parse Kitty windows from '$socket' for OpenCode." >&2
+      continue
+    fi
+
+    while IFS= read -r window_id; do
+      [ -n "$window_id" ] || continue
+      if timeout 5 "$kitty_bin" @ --to "unix:${socket}" \
+        send-text --match "id:${window_id}" '\e[?997;1n' >/dev/null 2>&1; then
+        updated=$((updated + 1))
+      else
+        echo "Warning: Could not notify OpenCode in Kitty window '$window_id'." >&2
+      fi
+    done <<<"$window_ids"
+  done
+
+  echo "Notified $updated running OpenCode TUI instance(s) of the terminal color change."
+}
+
+reload_neovim_colors() {
+  local runtime_tmp="${TMPDIR:-/tmp}"
+  local server_dir="${runtime_tmp%/}/nvim.${USER}"
+  local server
+  local updated=0
+  local remote_expr='luaeval("(function() _G.linkarzu_colors = require(\"config.colors\"); package.loaded[\"config.colors\"] = nil; return require(\"config.colors\").reload() end)()")'
+
+  if ! command -v nvim >/dev/null 2>&1; then
+    echo "Warning: Neovim is not installed; skipping live color reload." >&2
+    return 0
+  fi
+
+  for server in "$server_dir"/*/neobean.*; do
+    [ -S "$server" ] || continue
+    if timeout 5 nvim --server "$server" --remote-expr "$remote_expr" >/dev/null 2>&1; then
+      updated=$((updated + 1))
+    else
+      echo "Warning: Could not reload Neobean colors through '$server'." >&2
+    fi
+  done
+
+  echo "Reloaded colors in $updated running Neobean instance(s)."
+}
+
+sync_helium_wallpaper() {
+  local wallpaper_path="$1"
+  local helium_profile="$HOME/Library/Application Support/net.imput.helium/Default"
+  local helium_background="$helium_profile/background.jpg"
+  local helium_pending="$helium_profile/.linkarzu-theme-update-pending"
+  local helium_state="$helium_profile/.linkarzu-wallpaper-state"
+  local helium_helper="$HOME/github/dotfiles-latest/colorscheme/set-helium-wallpaper.applescript"
+  local native_wallpaper="$wallpaper_path"
+  local temp_dir=""
+  local source_hash
+  local background_hash
+  local cached_source_hash=""
+  local cached_background_hash=""
+  local native_updated=false
+  local attempt
+  local reloaded
+
+  if [ ! -f "$wallpaper_path" ]; then
+    echo "Warning: Could not update Helium; wallpaper does not exist: '$wallpaper_path'." >&2
+    return 0
+  fi
+  if [ ! -d "$helium_profile" ]; then
+    echo "Warning: Helium's default profile was not found; skipping wallpaper sync." >&2
+    return 0
+  fi
+  source_hash="$(shasum -a 256 "$wallpaper_path")"
+  source_hash="${source_hash%% *}"
+  if [ -f "$helium_state" ]; then
+    read -r cached_source_hash cached_background_hash <"$helium_state"
+  fi
+  if [ -f "$helium_background" ] && [ "$source_hash" = "$cached_source_hash" ] && [ ! -f "$helium_pending" ]; then
+    background_hash="$(shasum -a 256 "$helium_background")"
+    background_hash="${background_hash%% *}"
+    if [ "$background_hash" = "$cached_background_hash" ]; then
+      return 0
+    fi
+  fi
+
+  if ! pgrep -x Helium >/dev/null 2>&1; then
+    if cp "$wallpaper_path" "$helium_background"; then
+      rm -f "$helium_state"
+      touch "$helium_pending"
+      echo "Helium wallpaper updated; adaptive colors will be applied the next time the selector runs with Helium open."
+    else
+      echo "Warning: Could not update Helium's wallpaper." >&2
+    fi
+    return 0
+  fi
+
+  case "${wallpaper_path##*.}" in
+    jpg | JPG | jpeg | JPEG | png | PNG | gif | GIF) ;;
+    *)
+      if command -v magick >/dev/null 2>&1; then
+        temp_dir="$(mktemp -d "${TMPDIR:-/tmp}/helium-wallpaper.XXXXXX")"
+        native_wallpaper="$temp_dir/wallpaper.png"
+        if ! magick "$wallpaper_path" "$native_wallpaper"; then
+          native_wallpaper="$wallpaper_path"
+        fi
+      fi
+      ;;
+  esac
+
+  if timeout 20 osascript "$helium_helper" "$native_wallpaper" >/dev/null 2>&1; then
+    for attempt in 1 2 3 4 5 6 7 8 9 10; do
+      if cmp -s "$native_wallpaper" "$helium_background"; then
+        native_updated=true
+        break
+      fi
+      sleep 0.1
+    done
+  fi
+
+  if [ "$native_updated" != true ]; then
+    if [ -n "$temp_dir" ]; then
+      rm -f "$native_wallpaper"
+      rmdir "$temp_dir"
+    fi
+    echo "Warning: Helium's native wallpaper selection failed; enable View > Developer > Allow JavaScript from Apple Events." >&2
+    if cp "$wallpaper_path" "$helium_background"; then
+      rm -f "$helium_state"
+      touch "$helium_pending"
+      echo "Helium wallpaper updated without adaptive colors."
+    fi
+    return 0
+  fi
+
+  if [ "$native_wallpaper" != "$wallpaper_path" ]; then
+    cp "$wallpaper_path" "$helium_background"
+  fi
+  if [ -n "$temp_dir" ]; then
+    rm -f "$native_wallpaper"
+    rmdir "$temp_dir"
+  fi
+  rm -f "$helium_pending"
+  background_hash="$(shasum -a 256 "$helium_background")"
+  background_hash="${background_hash%% *}"
+  printf '%s %s\n' "$source_hash" "$background_hash" >"$helium_state"
+  echo "Helium wallpaper and adaptive colors updated."
+
+  if reloaded="$(
+    timeout 10 osascript \
+      -e 'tell application "Helium"' \
+      -e 'set reloadedTabs to 0' \
+      -e 'repeat with browserWindow in every window' \
+      -e 'set activeIndex to active tab index of browserWindow' \
+      -e 'repeat with browserTab in every tab of browserWindow' \
+      -e 'set tabURL to URL of browserTab' \
+      -e 'if (tabURL starts with "chrome://newtab") or (tabURL starts with "chrome://new-tab-page") or (tabURL is "about:newtab") then' \
+      -e 'reload browserTab' \
+      -e 'set reloadedTabs to reloadedTabs + 1' \
+      -e 'end if' \
+      -e 'end repeat' \
+      -e 'set active tab index of browserWindow to activeIndex' \
+      -e 'end repeat' \
+      -e 'return reloadedTabs' \
+      -e 'end tell' 2>/dev/null
+  )"; then
+    echo "Reloaded $reloaded Helium new-tab page(s)."
+  else
+    echo "Warning: Helium's wallpaper changed, but its new-tab pages could not be reloaded." >&2
+  fi
+}
 
 # If there's an update, replace the active colorscheme and perform necessary actions
 if [ "$UPDATED" = true ]; then
@@ -430,9 +608,6 @@ if [ "$UPDATED" = true ]; then
   # I want to copy the colorscheme_file to my neobean config for folks that
   # don't use my colorscheme selector
   cp "$colorscheme_file" "$HOME/github/dotfiles-latest/neovim/neobean/lua/config/active-colorscheme.sh"
-
-  # Source the active colorscheme to load variables
-  source "$active_file"
 
   # # Set the tmux colors
   # $HOME/github/dotfiles-latest/tmux/tools/linkarzu/set_tmux_colors.sh
@@ -452,13 +627,10 @@ if [ "$UPDATED" = true ]; then
 
   # Generate the Kitty configuration file
   generate_kitty_config
-  # This reloads kitty config without closing and re-opening
-  # kill -SIGUSR1 "$(pgrep -x kitty)"
+  reload_kitty_colors
+  reload_neovim_colors
 
   # Set the wallpaper
-  if [ -z "$wallpaper" ]; then
-    wallpaper="$HOME/Library/Mobile Documents/com~apple~CloudDocs/Images/wallpapers/official/skyrim-dragon-4.webp"
-  fi
   wallpaper_cache="$HOME/github/dotfiles-latest/colorscheme/active/active-wallpaper"
   last_wallpaper=""
   if [ -f "$wallpaper_cache" ]; then
@@ -466,10 +638,17 @@ if [ "$UPDATED" = true ]; then
   fi
 
   if [ "$wallpaper" != "$last_wallpaper" ]; then
-    set_wallpaper_all_spaces_yabai "$wallpaper"
+    /usr/bin/python3 \
+      "$HOME/github/dotfiles-latest/colorscheme/set-wallpaper-all-spaces.py" \
+      "$wallpaper"
     printf '%s' "$wallpaper" >"$wallpaper_cache"
   fi
-
   # Also restart yabai for my skitty-notes colors
   ~/github/dotfiles-latest/yabai/yabai_restart.sh
+
+  # Keep this final so OpenCode refreshes after every generated file is ready.
+  reload_opencode_colors
 fi
+
+# Keep Helium in sync even when reapplying the already-active profile.
+sync_helium_wallpaper "$wallpaper"

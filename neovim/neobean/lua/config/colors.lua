@@ -1,7 +1,7 @@
 -- ~/github/dotfiles-latest/neovim/neobean/lua/config/colors.lua
 
--- load the colors once when the module is required and then expose the colors
--- directly. This avoids the need to call load_colors() in every file
+-- Keep one shared table so modules that capture it see updates after a live
+-- colorscheme reload.
 
 -- Function to load colors from the external file
 local function load_colors()
@@ -32,14 +32,53 @@ local function load_colors()
   return colors
 end
 
--- Load colors when the module is required
-local colors = load_colors()
+local colors = rawget(_G, "linkarzu_colors") or {}
+_G.linkarzu_colors = colors
 
--- Check if the 'vim' global exists (i.e., if running in Neovim)
-if _G.vim then
+local function apply_color_highlights()
   for name, hex in pairs(colors) do
-    vim.api.nvim_set_hl(0, name, { fg = hex })
+    if type(hex) == "string" then
+      vim.api.nvim_set_hl(0, name, { fg = hex })
+    end
   end
+end
+
+local function refresh_colors()
+  local loaded_colors = load_colors()
+
+  for name, value in pairs(colors) do
+    if type(value) ~= "function" then
+      colors[name] = nil
+    end
+  end
+  for name, hex in pairs(loaded_colors) do
+    colors[name] = hex
+  end
+
+  apply_color_highlights()
+end
+
+refresh_colors()
+
+function colors.reload()
+  refresh_colors()
+
+  local colorscheme = vim.g.colors_name
+  if colorscheme and colorscheme ~= "" then
+    vim.cmd.colorscheme(colorscheme)
+  end
+
+  apply_color_highlights()
+  package.loaded["config.highlights"] = nil
+  require("config.highlights")
+
+  local has_lazy, lazy_loader = pcall(require, "lazy.core.loader")
+  if has_lazy then
+    lazy_loader.reload("lualine.nvim")
+  end
+  vim.cmd("redraw!")
+
+  return "verified"
 end
 
 -- Return the colors table for external usage (like wezterm)

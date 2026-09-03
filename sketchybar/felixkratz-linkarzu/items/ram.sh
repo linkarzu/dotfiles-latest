@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # Shift zero-width labels back over the graph, including its right padding.
+ram_graph_padding_right=4
 ram_overlay_padding=$((-USAGE_GRAPH_WIDTH - PADDINGS))
 
 ram_top=(
@@ -35,6 +36,7 @@ swap_percent=(
 
 ram_used=(
   width=0
+  padding_right=$ram_graph_padding_right
   graph.color=$ORANGE
   label.drawing=off
   icon.drawing=off
@@ -45,6 +47,7 @@ ram_used=(
 )
 
 swap_used=(
+  padding_right=$ram_graph_padding_right
   graph.color=$GREEN
   label.drawing=off
   icon.drawing=off

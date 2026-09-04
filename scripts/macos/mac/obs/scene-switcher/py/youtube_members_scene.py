@@ -21,6 +21,7 @@ HERE = Path(__file__).resolve().parent
 VENV_PATH = HERE / ".venv"
 SCENE_NAME = "youtube-members"
 PAGE_COUNT = 2
+PAGE_EVENT = "youtube-members-show-page"
 BROWSER_SOURCE_NAME = "members"
 PAGE_NAMES = ("premium", "members")
 OBS_REQUEST_TIMEOUT = 2.0
@@ -173,7 +174,36 @@ def set_and_verify_browser_page(
 ) -> None:
     timeout = VERIFY_TIMEOUT if timeout is None else timeout
     poll_interval = POLL_INTERVAL if poll_interval is None else poll_interval
-    target_url = page_url(browser_url(client), page, overlay_mtime)
+    settings = input_settings(client)
+    if settings.get("is_local_file") is True:
+        print(
+            "phase=members-scene step=browser-page status=start "
+            f"expected_page={page} source_mode=local-file"
+        )
+        try:
+            client.call_vendor_request(
+                "obs-browser",
+                "emit_event",
+                {
+                    "event_name": PAGE_EVENT,
+                    "event_data": {"scene_name": SCENE_NAME, "page": page},
+                },
+            )
+        except Exception as error:
+            raise RuntimeError(
+                "OBS members browser page event failed "
+                f"({type(error).__name__})."
+            ) from None
+        print(
+            "phase=members-scene step=browser-page status=success "
+            f"requested_page={page} verification=obs-vendor-request-accepted"
+        )
+        return
+
+    url = settings.get("url")
+    if not isinstance(url, str) or not url:
+        raise RuntimeError("OBS members browser input URL is unavailable.")
+    target_url = page_url(url, page, overlay_mtime)
     print(
         "phase=members-scene step=browser-page status=start "
         f"expected_page={page} overlay_mtime={overlay_mtime} timeout_seconds={timeout:g}"
@@ -310,11 +340,27 @@ def refresh_overlay_if_needed(client) -> bool:
     if read_loaded_overlay_mtime() == overlay_mtime:
         return False
 
-    set_and_verify_browser_page(client, 0, overlay_mtime)
+    settings = input_settings(client)
+    if settings.get("is_local_file") is True:
+        print(
+            "phase=members-scene step=overlay-refresh status=start "
+            "source_mode=local-file"
+        )
+        try:
+            client.press_input_properties_button(BROWSER_SOURCE_NAME, "refreshnocache")
+        except Exception as error:
+            raise RuntimeError(
+                "OBS members browser refresh failed "
+                f"({type(error).__name__})."
+            ) from None
+        verification = "obs-refresh-request-accepted"
+    else:
+        set_and_verify_browser_page(client, 0, overlay_mtime)
+        verification = "obs-input-url"
     write_loaded_overlay_mtime(overlay_mtime)
     print(
         "phase=members-scene step=overlay-refresh status=success "
-        f"overlay_mtime={overlay_mtime} verification=obs-input-url"
+        f"overlay_mtime={overlay_mtime} verification={verification}"
     )
     return True
 

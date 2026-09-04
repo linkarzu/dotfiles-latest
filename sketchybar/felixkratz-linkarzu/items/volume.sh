@@ -7,7 +7,7 @@ volume_slider=(
   updates=on
   label.drawing=off
   icon.drawing=off
-  padding_right=3
+  padding_right=0
   slider.highlight_color=$BLUE
   slider.background.height=5
   slider.background.corner_radius=3
@@ -24,7 +24,7 @@ volume_icon=(
   icon.align=left
   icon.color=$WHITE
   icon.font="$FONT:Regular:14.0"
-  label.width=25
+  label.width=22
   label.align=left
   label.font="$FONT:Regular:14.0"
 )

@@ -12,11 +12,18 @@ type RuntimeEvent = {
   type: string
   properties: Record<string, any>
 }
+type PendingPermissionAttention = {
+  sessionID: string
+  requestID: string
+  token: number
+  timer: ReturnType<typeof setTimeout>
+}
 
 const kittyBin = "/Applications/kitty.app/Contents/MacOS/kitty"
 const sketchybarBin = "/opt/homebrew/bin/sketchybar"
 const telegramBridgeURL = "http://127.0.0.1:47653"
 const focusAcknowledgementDelayMs = 2_000
+const permissionAttentionDelayMs = 2_000
 const phoneModeSystem = [
   "The user is reading this response in Telegram on a narrow phone screen.",
   "Keep the final response at or below 3,500 characters whenever practical.",
@@ -70,6 +77,7 @@ export const SketchybarStatusPlugin: Plugin = async ({ client, directory, $ }) =
   const initialAcknowledgement = `${instanceID}:0`
   const sessions = new Map<string, SessionState>()
   const bridgeAttention = new Map<string, Record<string, any>>()
+  const pendingPermissionAttention = new Map<string, PendingPermissionAttention>()
   const bridgeSecret = await readFile(`${process.env.HOME}/.config/opencode-telegram-bridge/plugin-secret`, "utf8")
     .then((value) => value.trim())
     .catch(() => "")
@@ -82,6 +90,7 @@ export const SketchybarStatusPlugin: Plugin = async ({ client, directory, $ }) =
   let proxyServer: any
   let proxyURL = ""
   let activeSessionID: string | undefined
+  let permissionAttentionToken = 0
   const telegramPromptSessions = new Set<string>()
 
   async function postBridge(path: string, body: unknown) {
@@ -140,6 +149,9 @@ export const SketchybarStatusPlugin: Plugin = async ({ client, directory, $ }) =
     }
     for (const [key, pending] of bridgeAttention) {
       if (!sessionIsActive(pending.sessionID)) bridgeAttention.delete(key)
+    }
+    for (const pending of pendingPermissionAttention.values()) {
+      if (!sessionIsActive(pending.sessionID)) cancelPendingPermissionAttention(pending.sessionID, pending.requestID)
     }
     return changed
   }
@@ -262,6 +274,50 @@ export const SketchybarStatusPlugin: Plugin = async ({ client, directory, $ }) =
     const current = sessions.get(sessionID)
     current?.attention.delete(`permission:${requestID}`)
     current?.attention.delete(`question:${requestID}`)
+  }
+
+  function permissionAttentionKey(sessionID: string, requestID: string) {
+    return `${sessionID}:${requestID}`
+  }
+
+  function cancelPendingPermissionAttention(sessionID: string, requestID: string) {
+    const key = permissionAttentionKey(sessionID, requestID)
+    const pending = pendingPermissionAttention.get(key)
+    if (!pending) return
+    clearTimeout(pending.timer)
+    pendingPermissionAttention.delete(key)
+  }
+
+  function cancelPendingPermissionAttentionForSession(sessionID: string) {
+    for (const pending of pendingPermissionAttention.values()) {
+      if (pending.sessionID === sessionID) cancelPendingPermissionAttention(pending.sessionID, pending.requestID)
+    }
+  }
+
+  function cancelAllPendingPermissionAttention() {
+    for (const pending of pendingPermissionAttention.values()) clearTimeout(pending.timer)
+    pendingPermissionAttention.clear()
+  }
+
+  function schedulePermissionAttention(sessionID: string, requestID: string) {
+    const key = permissionAttentionKey(sessionID, requestID)
+    if (pendingPermissionAttention.has(key)) return
+
+    const token = ++permissionAttentionToken
+    const timer = setTimeout(() => {
+      queue = queue
+        .then(async () => {
+          const pending = pendingPermissionAttention.get(key)
+          if (!pending || pending.token !== token) return
+          pendingPermissionAttention.delete(key)
+          if (!sessionIsActive(sessionID)) return
+          addAttention(session(sessionID), `permission:${requestID}`, "permission")
+          await publish()
+        })
+        .catch(() => undefined)
+    }, permissionAttentionDelayMs)
+
+    pendingPermissionAttention.set(key, { sessionID, requestID, token, timer })
   }
 
   function addAttention(current: SessionState, key: string, reason: AttentionReason) {
@@ -452,6 +508,7 @@ export const SketchybarStatusPlugin: Plugin = async ({ client, directory, $ }) =
       }
       case "session.deleted": {
         if (properties.info?.id) {
+          cancelPendingPermissionAttentionForSession(properties.info.id)
           await sendBridgeEvent({
             action: "resolve-session",
             sessionID: properties.info.id,
@@ -519,7 +576,7 @@ export const SketchybarStatusPlugin: Plugin = async ({ client, directory, $ }) =
         const sessionID = properties.sessionID
         const requestID = properties.id
         if (sessionID && requestID && sessionIsActive(sessionID)) {
-          addAttention(session(sessionID), `permission:${requestID}`, "permission")
+          schedulePermissionAttention(sessionID, requestID)
           await sendBridgeEvent({
             action: "attention",
             kind: "permission",
@@ -543,6 +600,7 @@ export const SketchybarStatusPlugin: Plugin = async ({ client, directory, $ }) =
       case "permission.replied":
       case "permission.v2.replied": {
         if (properties.sessionID && properties.requestID) {
+          cancelPendingPermissionAttention(properties.sessionID, properties.requestID)
           removeRequest(properties.sessionID, properties.requestID)
           await sendBridgeEvent({
             action: "resolve",
@@ -553,6 +611,7 @@ export const SketchybarStatusPlugin: Plugin = async ({ client, directory, $ }) =
           })
         }
         if (properties.sessionID && properties.permissionID) {
+          cancelPendingPermissionAttention(properties.sessionID, properties.permissionID)
           removeRequest(properties.sessionID, properties.permissionID)
           await sendBridgeEvent({
             action: "resolve",
@@ -665,6 +724,7 @@ export const SketchybarStatusPlugin: Plugin = async ({ client, directory, $ }) =
     dispose: async () => {
       clearInterval(retryTimer)
       clearInterval(bridgeHeartbeatTimer)
+      cancelAllPendingPermissionAttention()
       await queue
       await bridgeQueue
       await publishQueue

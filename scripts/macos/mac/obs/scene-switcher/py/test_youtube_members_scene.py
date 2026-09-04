@@ -41,6 +41,28 @@ class Client:
         self.browser_url = kwargs["settings"]["url"]
 
 
+class LocalFileClient(Client):
+    def __init__(self, current_scene):
+        super().__init__(current_scene)
+        self.vendor_calls = []
+        self.refresh_calls = []
+
+    def get_input_settings(self, **_kwargs):
+        return SimpleNamespace(
+            input_settings={
+                "is_local_file": True,
+                "local_file": "/overlay/index.html",
+            }
+        )
+
+    def call_vendor_request(self, vendor_name, request_type, request_data):
+        self.events.append("page")
+        self.vendor_calls.append((vendor_name, request_type, request_data))
+
+    def press_input_properties_button(self, input_name, property_name):
+        self.refresh_calls.append((input_name, property_name))
+
+
 class YouTubeMembersSceneTests(unittest.TestCase):
     def test_password_failure_does_not_expose_command_output(self):
         secret = "SENTINEL-OBS-PASSWORD"
@@ -78,6 +100,23 @@ class YouTubeMembersSceneTests(unittest.TestCase):
         self.assertEqual(client.scene_calls, ["youtube-members"])
         self.assertEqual(client.events, ["page", "scene"])
 
+    def test_local_file_source_enters_scene_with_browser_event(self):
+        client = LocalFileClient("another-scene")
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            state_path = Path(temporary_directory) / "page.txt"
+            html_path = Path(temporary_directory) / "index.html"
+            html_path.write_text("overlay", encoding="utf-8")
+            with patch.object(youtube_members_scene, "PAGE_STATE_PATH", state_path), patch.object(
+                youtube_members_scene, "MEMBERS_HTML_PATH", html_path
+            ):
+                page, switched = youtube_members_scene.handle_press(client)
+
+        self.assertTrue(switched)
+        self.assertEqual(page, 0)
+        self.assertEqual(client.events, ["page", "scene"])
+        self.assertEqual(client.vendor_calls[0][0:2], ("obs-browser", "emit_event"))
+        self.assertEqual(client.vendor_calls[0][2]["event_data"]["page"], 0)
+
     def test_entering_scene_page_failure_prevents_scene_switch(self):
         client = Client("another-scene")
         client.set_input_settings = lambda **_kwargs: None
@@ -114,6 +153,22 @@ class YouTubeMembersSceneTests(unittest.TestCase):
         self.assertEqual(client.scene_calls, [])
         self.assertIn("page=members", client.input_calls[0]["settings"]["url"])
         self.assertIn("page=premium", client.input_calls[1]["settings"]["url"])
+
+    def test_local_file_source_repeated_press_uses_browser_event(self):
+        client = LocalFileClient("youtube-members")
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            state_path = Path(temporary_directory) / "page.txt"
+            state_path.write_text("0\n", encoding="utf-8")
+            html_path = Path(temporary_directory) / "index.html"
+            html_path.write_text("overlay", encoding="utf-8")
+            with patch.object(youtube_members_scene, "PAGE_STATE_PATH", state_path), patch.object(
+                youtube_members_scene, "MEMBERS_HTML_PATH", html_path
+            ):
+                page, switched = youtube_members_scene.handle_press(client)
+
+        self.assertFalse(switched)
+        self.assertEqual(page, 1)
+        self.assertEqual(client.vendor_calls[0][2]["event_data"]["page"], 1)
 
     def test_refresh_resets_active_scene_to_page_one(self):
         client = Client("youtube-members")
@@ -235,6 +290,32 @@ class YouTubeMembersSceneTests(unittest.TestCase):
         regenerate.assert_not_called()
         self.assertIn("page=premium", client.input_calls[0]["settings"]["url"])
         self.assertEqual(saved_mtime, expected_mtime)
+
+    def test_changed_local_file_overlay_uses_browser_refresh(self):
+        client = LocalFileClient("youtube-members")
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            root = Path(temporary_directory)
+            downloads = root / "Downloads"
+            downloads.mkdir()
+            csv_path = downloads / "Your members current.csv"
+            csv_path.write_text("current", encoding="utf-8")
+            members_json = root / "members.json"
+            members_json.write_text(json.dumps({"sourceCsv": str(csv_path)}), encoding="utf-8")
+            html_path = root / "index.html"
+            html_path.write_text("new overlay", encoding="utf-8")
+            loaded_mtime_path = root / "loaded-overlay-mtime.txt"
+            loaded_mtime_path.write_text("0\n", encoding="utf-8")
+
+            with patch.object(youtube_members_scene, "DOWNLOADS_DIR", downloads), patch.object(
+                youtube_members_scene, "MEMBERS_JSON_PATH", members_json
+            ), patch.object(youtube_members_scene, "MEMBERS_HTML_PATH", html_path), patch.object(
+                youtube_members_scene, "LOADED_OVERLAY_MTIME_PATH", loaded_mtime_path
+            ), patch.object(youtube_members_scene, "regenerate_overlay"):
+                refreshed = youtube_members_scene.refresh_overlay_if_needed(client)
+
+        self.assertTrue(refreshed)
+        self.assertEqual(client.refresh_calls, [("members", "refreshnocache")])
+        self.assertEqual(client.input_calls, [])
 
     def test_changed_csv_regenerates_then_reloads_obs(self):
         client = Client("youtube-members")

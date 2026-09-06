@@ -28,6 +28,11 @@ away or becoming inactive makes the notification eligible again, while
 answering locally resolves it without sending. Error notifications are never
 withheld by local activity.
 
+Focusing a Kitty window can acknowledge and clear its SketchyBar attention
+indicator without resolving the corresponding Telegram alert. The Telegram
+alert remains queued until it is sent or the session is actually answered,
+continued, switched away from, deleted, or closed.
+
 Replying to any OpenCode notification from Telegram enables global phone mode.
 While phone mode is active, existing and new unresolved notifications from all
 OpenCode processes' currently selected sessions are sent immediately. The next

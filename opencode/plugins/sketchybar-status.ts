@@ -421,19 +421,13 @@ export const SketchybarStatusPlugin: Plugin = async ({ client, directory, $ }) =
 
   function acknowledgeThrough(acknowledgedGeneration: number) {
     let changed = false
-    let bridgeChanged = false
-    for (const [sessionID, current] of sessions) {
+    for (const current of sessions.values()) {
       for (const [key, attention] of current.attention) {
         if (attention.generation > acknowledgedGeneration) continue
         current.attention.delete(key)
-        if (attention.reason === "done") {
-          bridgeAttention.delete(`${sessionID}:${attention.reason}:${sessionID}`)
-          bridgeChanged = true
-        }
         changed = true
       }
     }
-    if (bridgeChanged) scheduleBridgeRegistration()
     return changed
   }
 

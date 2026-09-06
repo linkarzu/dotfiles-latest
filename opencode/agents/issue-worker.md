@@ -2,7 +2,7 @@
 description:
   Autonomously implements explicitly selected and approved GitHub issues in sequence.
 mode: primary
-steps: 100
+steps: 1000
 permission:
   question: deny
   doom_loop: deny

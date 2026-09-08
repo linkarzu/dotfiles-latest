@@ -6,6 +6,7 @@
 - [See themes](#see-themes)
 - [Configure themes](#configure-themes)
 - [Generate the default config](#generate-the-default-config)
+- [Livestream project sessions](#livestream-project-sessions)
 
 <!-- tocstop -->
 
@@ -59,3 +60,26 @@ rm ~/.config/kitty
 
 - Then open kitty and press `cmd+,` on macOS, this will generate a default
   config file
+
+## Livestream project sessions
+
+To open a portable project's terminal without starting media work:
+
+```sh
+~/github/dotfiles-latest/scripts/macos/mac/misc/560-skhdTmuxSession.sh /absolute/path/to/project
+```
+
+A file or subdirectory inside a marked project resolves to its owning root.
+Kitty and tmux both use that root's exact basename, without `tmux-` or job/hash
+suffixes. Horizontal clips and podcasts share the horizontal session; vertical
+work uses the sibling `V` project's session. Create media and
+`120-processVideo.sh` use the same project-session launcher for processing.
+
+The launcher checks project identity and current location before reusing a
+session. If an existing name is bound to another root or a stale location, stop
+the affected workers and reconcile that session explicitly; do not force an
+attach or interrupt unrelated sessions. Closing Kitty does not stop tmux workers.
+
+Ordinary unmarked directories retain the generic session behavior, including the
+Kitty `tmux-` prefix. For media selection, recovery, and HDD archive/restore, see
+the [canonical operator guide](https://github.com/linkarzu/obs-meeting-manager/blob/main/docs/livestream-projects.md).

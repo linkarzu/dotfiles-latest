@@ -55,6 +55,35 @@ focus_or_launch_tmux() {
     cd_target="$tmux_session_root"
   fi
 
+  local project_helper="$HOME/github/ffmpeg-clips/scripts/project_session.py"
+  local portable_root="" portable_status=3
+  if [[ -f "$project_helper" ]]; then
+    portable_status=0
+    portable_root="$(python3 "$project_helper" root "$tmux_session_root")" || portable_status=$?
+  elif [[ -e "$tmux_session_root/livestream-project.json" || -L "$tmux_session_root/livestream-project.json" ]]; then
+    printf 'Portable project session helper is missing: %s\n' "$project_helper" >&2
+    return 1
+  fi
+  if [[ "$portable_status" -eq 0 ]]; then
+    local portable_name
+    portable_name="$(python3 "$project_helper" name "$portable_root")" || return 1
+    if [[ "$tmux_session" != "$portable_name" ]]; then
+      printf 'Marked project requires exact session %s, not %s. Reconcile the old session explicitly.\n' "$portable_name" "$tmux_session" >&2
+      return 1
+    fi
+    python3 "$project_helper" launch "$portable_root"
+    return
+  elif [[ "$portable_status" -ne 3 ]]; then
+    return "$portable_status"
+  fi
+
+  local portable_binding=""
+  portable_binding="$(tmux show-environment -t "=$tmux_session" FFMPEG_CLIPS_PROJECT_ID 2>/dev/null || true)"
+  if [[ "$portable_binding" == FFMPEG_CLIPS_PROJECT_ID=?* ]]; then
+    printf 'Portable tmux session %s has an unavailable owning root. Explicitly reconcile the old session before restoring it; refusing generic attach.\n' "$tmux_session" >&2
+    return 1
+  fi
+
   # Best-effort: if the session already exists in a different cwd, realign it
   # before the next attach. Skipped silently if the send fails (e.g. the only
   # pane is detached or busy with a prompt).

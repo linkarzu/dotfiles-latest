@@ -18,6 +18,29 @@ export FZF_AI_SOCKET="${FZF_AI_SOCKET:-$fzf_ai_socket}"
 printf -v fzf_listen_opt '%q' "--listen=$FZF_AI_SOCKET"
 export FZF_DEFAULT_OPTS="${FZF_DEFAULT_OPTS:-} $fzf_listen_opt"
 
+# Keep provenance beside the selected socket, including runtime overrides.
+# Socket access and acceptance alone do not prove who entered a query.
+umask 077
+fzf_ai_dir="${FZF_AI_SOCKET}.ai"
+mkdir -p "$fzf_ai_dir" || exit 1
+if [[ ! -d "$fzf_ai_dir" || -L "$fzf_ai_dir" || ! -O "$fzf_ai_dir" ]]; then
+  printf 'Unsafe fzf AI control directory: %s\n' "$fzf_ai_dir" >&2
+  exit 1
+fi
+chmod 700 "$fzf_ai_dir" || exit 1
+command -v openssl >/dev/null 2>&1 || {
+  printf 'openssl is required for authenticated fzf AI provenance.\n' >&2
+  exit 1
+}
+FZF_AI_SESSION_TOKEN="$(openssl rand -hex 32)" || exit 1
+[[ "$FZF_AI_SESSION_TOKEN" =~ ^[0-9a-f]{64}$ ]] || exit 1
+export FZF_AI_SESSION_PATH="$fzf_ai_dir/session"
+export FZF_AI_QUERY_PROVENANCE_PATH="$fzf_ai_dir/query"
+rm -f "$FZF_AI_SESSION_PATH" "$FZF_AI_QUERY_PROVENANCE_PATH" || exit 1
+printf '%s\n' "$FZF_AI_SESSION_TOKEN" >"$FZF_AI_SESSION_PATH" || exit 1
+chmod 600 "$FZF_AI_SESSION_PATH" || exit 1
+trap 'rm -f "$FZF_AI_SESSION_PATH" "$FZF_AI_QUERY_PROVENANCE_PATH"' EXIT
+
 # Ensure fzf is installed
 if ! command -v fzf &>/dev/null; then
   echo "fzf is not installed. Please install it first."

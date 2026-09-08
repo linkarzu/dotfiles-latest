@@ -15,7 +15,9 @@ export KITTY_SOCKET
 
 # A detached launch otherwise uses the long-running Kitty server's environment.
 # Remove unset optional values too, so a stale runtime cannot supply them.
-launch_env=(--env "PYTHONPATH=$FFMPEG_CLIPS_SCRIPTS" --env BASH_ENV --env ENV)
+launch_env=(--env "PYTHONPATH=$FFMPEG_CLIPS_SCRIPTS")
+# Kitty background launches can pass bare --env deletions as literal sentinels.
+unset_env=(-u BASH_ENV -u ENV)
 for name in PATH HOME TMPDIR DOTFILES_DIR OBS_MEETING_MANAGER_ROOT \
   FFMPEG_CLIPS_ROOT FFMPEG_CLIPS_SCRIPTS FFMPEG_CLIPS_MEDIA_REQUEST \
   FFMPEG_CLIPS_RUNTIME_ID FFMPEG_CLIPS_PYTHON FZF_AI_SOCKET FZF_DEFAULT_OPTS \
@@ -28,7 +30,7 @@ for name in PATH HOME TMPDIR DOTFILES_DIR OBS_MEETING_MANAGER_ROOT \
   if [[ -n "${!name:-}" ]]; then
     launch_env+=(--env "$name=${!name}")
   else
-    launch_env+=(--env "$name")
+    unset_env+=(-u "$name")
   fi
 done
 
@@ -38,5 +40,5 @@ if [[ -n "${QAT_KITTY_CONFIG:-}" ]]; then
 fi
 
 "$KITTY_BIN" @ --to "unix:${KITTY_SOCKET}" \
-  launch --type=background "${launch_env[@]}" kitten quick-access-terminal "${qat_options[@]}" \
+  launch --type=background "${launch_env[@]}" /usr/bin/env "${unset_env[@]}" kitten quick-access-terminal "${qat_options[@]}" \
   --instance-group "${QAT_INSTANCE_GROUP:-system-task}" /bin/bash "$DOTFILES_DIR/scripts/macos/mac/misc/240-systemTask.sh"

@@ -605,6 +605,12 @@ if [ "$UPDATED" = true ]; then
   # Replace the contents of active-colorscheme.sh
   cp "$colorscheme_file" "$active_file"
 
+  # Notify only after publishing the palette; Hammerspoon is optional.
+  if command -v hs >/dev/null 2>&1; then
+    hs -a -q -t 2 -c 'if qatBorder then qatBorder.reloadPalette() end' >/dev/null 2>&1 ||
+      echo "Warning: Could not refresh the QAT border color." >&2
+  fi
+
   # I want to copy the colorscheme_file to my neobean config for folks that
   # don't use my colorscheme selector
   cp "$colorscheme_file" "$HOME/github/dotfiles-latest/neovim/neobean/lua/config/active-colorscheme.sh"

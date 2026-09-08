@@ -44,18 +44,20 @@ else
   exit 1
 fi
 
-project_helper="$HOME/github/ffmpeg-clips/scripts/project_session.py"
+export DOTFILES_DIR="${DOTFILES_DIR:-$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/../../../.." && pwd)}"
+project_helper="${FFMPEG_CLIPS_SCRIPTS:-${FFMPEG_CLIPS_ROOT:-$HOME/github/ffmpeg-clips}/scripts}/project_session.py"
+project_python="${FFMPEG_CLIPS_PYTHON:-python3}"
 portable_status=3
 if [[ -f "$project_helper" ]]; then
   portable_status=0
-  portable_root="$(python3 "$project_helper" root "$project_dir")" || portable_status=$?
+  portable_root="$("$project_python" "$project_helper" root "$project_dir")" || portable_status=$?
 elif [[ -e "$project_dir/livestream-project.json" || -L "$project_dir/livestream-project.json" ]]; then
   printf 'Portable project session helper is missing: %s\n' "$project_helper" >&2
   exit 1
 fi
 if [[ "$portable_status" -eq 0 ]]; then
   # Explicit terminal entry only; no media work is selected or started here.
-  exec python3 "$project_helper" launch "$portable_root"
+  exec "$project_python" "$project_helper" launch "$portable_root"
 elif [[ "$portable_status" -ne 3 ]]; then
   exit "$portable_status"
 fi
@@ -64,7 +66,7 @@ session="$(basename "$project_dir")"
 session="$(printf '%s' "$session" | tr -c '[:alnum:]_-' '_')"
 [[ -n "$session" ]] || session="ffmpeg-clips"
 
-source "$HOME/github/dotfiles-latest/kitty/scripts/kitty-tmux-launch.sh"
+source "$DOTFILES_DIR/kitty/scripts/kitty-tmux-launch.sh"
 
 if [[ -z "${sock:-}" ]]; then
   echo "No kitty sockets found in /tmp (kitty not running, or remote control not available)." >&2

@@ -9,17 +9,18 @@
 #
 # Do not execute this file directly; `source` it from a caller.
 
-kitty_bin="/Applications/kitty.app/Contents/MacOS/kitty"
-main_socket_script="$HOME/github/dotfiles-latest/scripts/macos/mac/misc/549-kittyMainSocket.sh"
+export DOTFILES_DIR="${DOTFILES_DIR:-$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/../.." && pwd)}"
+kitty_bin="${KITTY_BIN:-/Applications/kitty.app/Contents/MacOS/kitty}"
+main_socket_script="$DOTFILES_DIR/scripts/macos/mac/misc/549-kittyMainSocket.sh"
 
 # Resolved once at source time. kitty_remote re-resolves on every call so a
 # transient /tmp/kitty-<pid> socket captured before fzf cannot disappear
 # before goto_session runs.
-sock="$($main_socket_script || true)"
+sock="$("$main_socket_script" || true)"
 
 kitty_remote() {
   local current_sock=""
-  current_sock="$($main_socket_script)" || return 1
+  current_sock="$("$main_socket_script")" || return 1
   "$kitty_bin" @ --to "unix:${current_sock}" "$@"
 }
 
@@ -55,23 +56,24 @@ focus_or_launch_tmux() {
     cd_target="$tmux_session_root"
   fi
 
-  local project_helper="$HOME/github/ffmpeg-clips/scripts/project_session.py"
+  local project_helper="${FFMPEG_CLIPS_SCRIPTS:-${FFMPEG_CLIPS_ROOT:-$HOME/github/ffmpeg-clips}/scripts}/project_session.py"
+  local project_python="${FFMPEG_CLIPS_PYTHON:-python3}"
   local portable_root="" portable_status=3
   if [[ -f "$project_helper" ]]; then
     portable_status=0
-    portable_root="$(python3 "$project_helper" root "$tmux_session_root")" || portable_status=$?
+    portable_root="$("$project_python" "$project_helper" root "$tmux_session_root")" || portable_status=$?
   elif [[ -e "$tmux_session_root/livestream-project.json" || -L "$tmux_session_root/livestream-project.json" ]]; then
     printf 'Portable project session helper is missing: %s\n' "$project_helper" >&2
     return 1
   fi
   if [[ "$portable_status" -eq 0 ]]; then
     local portable_name
-    portable_name="$(python3 "$project_helper" name "$portable_root")" || return 1
+    portable_name="$("$project_python" "$project_helper" name "$portable_root")" || return 1
     if [[ "$tmux_session" != "$portable_name" ]]; then
       printf 'Marked project requires exact session %s, not %s. Reconcile the old session explicitly.\n' "$portable_name" "$tmux_session" >&2
       return 1
     fi
-    python3 "$project_helper" launch "$portable_root"
+    "$project_python" "$project_helper" launch "$portable_root"
     return
   elif [[ "$portable_status" -ne 3 ]]; then
     return "$portable_status"

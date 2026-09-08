@@ -31,6 +31,8 @@ set -euo pipefail
 
 socket_dir="${TMPDIR:-/tmp}"
 socket="${FZF_AI_SOCKET:-${socket_dir%/}/linkarzu-system-task-fzf.sock}"
+query_provenance_path="${FZF_AI_QUERY_PROVENANCE_PATH:-${socket}.ai/query}"
+session_path="${FZF_AI_SESSION_PATH:-${socket}.ai/session}"
 
 usage() {
   cat <<'EOF'
@@ -58,9 +60,14 @@ AI protocol:
   5. For a text-entry menu, use `query`, inspect the exact query, then `accept`.
   6. `FZF_NEXT_READY` means another menu replaced the previous one.
      `FZF_FLOW_ENDED` means no next fzf appeared within the transition timeout.
+  7. `query` records an authenticated hash of the exact AI-entered text and the
+     current socket generation. The workflow consumes this record once.
+  8. Acceptance alone and FZF_AI_SOCKET presence do not establish AI text origin.
 
 Environment:
   FZF_AI_SOCKET overrides the default main-task QAT socket.
+  240-systemTask.sh creates private session/query files under SOCKET.ai/.
+  FZF_AI_SESSION_PATH and FZF_AI_QUERY_PROVENANCE_PATH override helper sidecars.
 EOF
 }
 
@@ -81,6 +88,36 @@ validate_integer() {
 socket_inode() {
   [[ -S "$socket" ]] || return 1
   stat -f '%i' "$socket" 2>/dev/null
+}
+
+write_ai_query_provenance() {
+  local generation="$1"
+  local query="$2"
+  local query_sha256=""
+  local session_token=""
+  local temporary=""
+
+  [[ -f "$session_path" && ! -L "$session_path" ]] || die "no active AI provenance session"
+  session_token="$(<"$session_path")"
+  [[ "$session_token" =~ ^[0-9a-f]{64}$ ]] || die "invalid AI provenance session"
+  query_sha256="$(printf '%s' "$query" | shasum -a 256)"
+  query_sha256="${query_sha256%% *}"
+  [[ "$query_sha256" =~ ^[0-9a-f]{64}$ ]] || die "could not hash AI query"
+  temporary="${query_provenance_path}.$$.$RANDOM.tmp"
+  umask 077
+  if ! jq -cn \
+    --arg token "$session_token" \
+    --arg generation "$generation" \
+    --arg query_sha256 "$query_sha256" \
+    '{kind:"fzf-ai-query",version:1,sessionToken:$token,generation:$generation,querySha256:$query_sha256}' \
+    >"$temporary" || ! chmod 600 "$temporary" || ! mv -f "$temporary" "$query_provenance_path"; then
+    rm -f "$temporary"
+    die "could not publish AI query provenance"
+  fi
+}
+
+remove_ai_query_provenance() {
+  rm -f "$query_provenance_path"
 }
 
 get_state() {
@@ -181,12 +218,17 @@ post_action() {
 
 change_query() {
   local query="$1"
+  local generation=""
 
   [[ "$query" != *$'\n'* && "$query" != *$'\r'* ]] || die "query must be a single line"
+  generation="$(socket_inode)" || die "no active fzf menu"
+  # Publish before POST: acceptance can race the response, or the response can
+  # be lost after mutation. Keep the proof on uncertainty; only OBS consumes it.
+  write_ai_query_provenance "$generation" "$query"
   # fzf's colon form consumes the remaining payload as one argument, avoiding
   # action parsing for parentheses, backslashes, and strings such as +accept.
-  post_action "change-query:${query}"
-  printf 'FZF_QUERY_SET %s\n' "$(jq -Rn --arg query "$query" '$query')"
+  post_action "change-query:${query}" || die "query change could not be confirmed; provenance retained"
+  [[ "$(socket_inode)" == "$generation" ]] || die "fzf menu changed while setting query"
 }
 
 validate_match_position() {
@@ -277,10 +319,13 @@ main() {
 
   require_command curl
   require_command jq
+  require_command shasum
 
   if [[ "${1:-}" == "--socket" ]]; then
     [[ -n "${2:-}" ]] || die "--socket requires a path"
     socket="$2"
+    query_provenance_path="${FZF_AI_QUERY_PROVENANCE_PATH:-${socket}.ai/query}"
+    session_path="${FZF_AI_SESSION_PATH:-${socket}.ai/session}"
     shift 2
   fi
 
@@ -320,9 +365,10 @@ main() {
   query)
     [[ $# -eq 1 ]] || die "query requires exactly one text argument"
     change_query "$1"
+    printf 'FZF_QUERY_SET\n'
     ;;
   clear)
-    post_action clear-query
+    change_query ""
     printf 'FZF_QUERY_CLEARED\n'
     ;;
   cancel)
@@ -338,4 +384,6 @@ main() {
   esac
 }
 
-main "$@"
+if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
+  main "$@"
+fi

@@ -5,16 +5,18 @@
 # every while
 
 # Path to the directory containing the scripts
-SCRIPTS_DIR="$HOME/github/dotfiles-latest/scripts/macos/mac"
-fzf_colors_file="$HOME/github/dotfiles-latest/colorscheme/active/active-fzf-colors.sh"
+export DOTFILES_DIR="${DOTFILES_DIR:-$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/../../../.." && pwd)}"
+SCRIPTS_DIR="$DOTFILES_DIR/scripts/macos/mac"
+fzf_colors_file="$DOTFILES_DIR/colorscheme/active/active-fzf-colors.sh"
 fzf_ai_socket="${TMPDIR:-/tmp}"
 fzf_ai_socket="${fzf_ai_socket%/}/linkarzu-system-task-fzf.sock"
 
 # Expose this fzf and every nested fzf to the local AI helper. fzf's normal
 # terminal interface is unchanged; the Unix socket only provides state and
 # selection actions to processes running as this user.
-export FZF_AI_SOCKET="$fzf_ai_socket"
-export FZF_DEFAULT_OPTS="${FZF_DEFAULT_OPTS:-} --listen=$FZF_AI_SOCKET"
+export FZF_AI_SOCKET="${FZF_AI_SOCKET:-$fzf_ai_socket}"
+printf -v fzf_listen_opt '%q' "--listen=$FZF_AI_SOCKET"
+export FZF_DEFAULT_OPTS="${FZF_DEFAULT_OPTS:-} $fzf_listen_opt"
 
 # Ensure fzf is installed
 if ! command -v fzf &>/dev/null; then
@@ -28,7 +30,11 @@ if [[ -f "$fzf_colors_file" ]]; then
 fi
 
 # List available scripts
-schemes=($(ls "$SCRIPTS_DIR"/*.sh | xargs -n 1 basename))
+schemes=()
+for script in "$SCRIPTS_DIR"/*.sh; do
+  [[ -f "$script" ]] || continue
+  schemes+=("${script##*/}")
+done
 
 # Check if any scripts available
 if [ ${#schemes[@]} -eq 0 ]; then

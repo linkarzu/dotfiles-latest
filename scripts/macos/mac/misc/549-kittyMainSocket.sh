@@ -2,7 +2,17 @@
 
 set -euo pipefail
 
-kitty_bin="/Applications/kitty.app/Contents/MacOS/kitty"
+kitty_bin="${KITTY_BIN:-/Applications/kitty.app/Contents/MacOS/kitty}"
+
+if [[ -n "${KITTY_SOCKET:-}" ]]; then
+  sock="${KITTY_SOCKET#unix:}"
+  if [[ ! -S "$sock" ]]; then
+    printf 'Selected kitty socket is not a Unix socket: %s\n' "$sock" >&2
+    exit 1
+  fi
+  printf '%s\n' "$sock"
+  exit 0
+fi
 
 # QAT windows create their own /tmp/kitty-* sockets. External commands that use
 # the first socket from `ls /tmp/kitty-*` can accidentally control a floating QAT

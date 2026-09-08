@@ -104,9 +104,14 @@ class QatRuntimeTests(unittest.TestCase):
                 if separator:
                     server[key] = value
                 else:
-                    server.pop(key, None)
+                    # Kitty 0.48 background launches pass the deletion marker literally.
+                    server[key] = "_delete_this_env_var_"
                 index += 2
-            command = args[index:]
+            subprocess.run(args[index:], env=server, check=True, timeout=5)
+        ''')
+        self.python_fixture(self.bin / "kitten", '''
+            command = ["kitten", *sys.argv[1:]]
+            server = dict(os.environ)
             assert command[:3] == ["kitten", "quick-access-terminal", "--config"], command
             assert command[3] == server["DOTFILES_DIR"] + "/kitty/quick-access-terminal-center.conf", command
             assert Path(command[3]).is_file()
@@ -116,6 +121,9 @@ class QatRuntimeTests(unittest.TestCase):
                 assert Path(server["QAT_KITTY_CONFIG"]).is_file()
                 index += 2
             assert command[index:index + 3] == ["--instance-group", server.get("QAT_INSTANCE_GROUP", "system-task"), "/bin/bash"], command
+            assert command[index + 3:] == [server["DOTFILES_DIR"] + "/scripts/macos/mac/misc/240-systemTask.sh"], command
+            assert "BASH_ENV" not in server and "ENV" not in server, server.keys()
+            assert all(server.get(key) != "_delete_this_env_var_" for key in keys)
             record("remote", env=server, command=command)
             subprocess.run(command[index + 2:], env=server, check=True, timeout=5)
         ''')
@@ -234,20 +242,20 @@ class QatRuntimeTests(unittest.TestCase):
 
     def test_remote_dashboard_public_url_overrides_or_removes_stale_server_value(self):
         key = "FFMPEG_CLIPS_DASHBOARD_PUBLIC_URL"
-        for value in ("https://dashboard.fixture.invalid/review", None):
+        for value in ("https://dashboard.fixture.invalid/review", "", None):
             for choice, kind in (("070-obsMeetingManager.sh", "obs"), ("120-processVideo.sh", "ffmpeg")):
                 with self.subTest(value=value, choice=choice):
                     env = dict(self.env)
                     if value is not None:
                         env[key] = value
                     _, records = self.invoke(REPO / MAC / "misc/555-skhdQatTask.sh", env, choice=choice)
-                    producer = self.assert_menu_dispatch(records, env, kind)
+                    producer = self.assert_menu_dispatch(records, {**env, key: value or None}, kind)
                     remote = next(item for item in records if item["kind"] == "remote")
-                    if value is None:
+                    if not value:
                         self.assertNotIn(key, remote["env"])
                     else:
                         self.assertEqual(remote["env"][key], value)
-                    self.assertEqual(producer["env"][key], value)
+                    self.assertEqual(producer["env"][key], value or None)
 
     def test_remote_launch_ignores_caller_bootstrap_and_selects_optional_qat_config(self):
         config = self.root / "runtime kitty config.conf"

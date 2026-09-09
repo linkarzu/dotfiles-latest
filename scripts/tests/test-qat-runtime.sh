@@ -25,7 +25,7 @@ SCRIPTS = (
 TMUX_HELPER = Path("kitty/scripts/kitty-tmux-launch.sh")
 ROOT_OPTIONS = (
     "FFMPEG_CLIPS_DASHBOARD_ROOT", "FFMPEG_CLIPS_LIVESTREAM_ROOT", "FFMPEG_CLIPS_RENDER_LOCK",
-    "OBS_MEETING_MANAGER_DATA_DIR", "OBS_MEETING_MANAGER_LIVESTREAM_ROOT",
+    "OBS_MEETING_MANAGER_DATA_DIR", "OBS_MEETING_MANAGER_PEOPLE_DIR", "OBS_MEETING_MANAGER_LIVESTREAM_ROOT",
     "XDG_CACHE_HOME", "XDG_DATA_HOME", "XDG_STATE_HOME", "HF_HOME",
     "HUGGINGFACE_HUB_CACHE", "TORCH_HOME", "FFMPEG_BIN", "FFPROBE_BIN",
     "FONTCONFIG_FILE", "FONTCONFIG_PATH",
@@ -256,6 +256,23 @@ class QatRuntimeTests(unittest.TestCase):
                     else:
                         self.assertEqual(remote["env"][key], value)
                     self.assertEqual(producer["env"][key], value or None)
+
+    def test_remote_people_dir_overrides_or_removes_stale_server_value(self):
+        key = "OBS_MEETING_MANAGER_PEOPLE_DIR"
+        for value in (str(self.root / "selected people 'directory"), "", None):
+            for choice, kind in (("070-obsMeetingManager.sh", "obs"), ("120-processVideo.sh", "ffmpeg")):
+                with self.subTest(value=value, choice=choice):
+                    env = dict(self.env)
+                    env.pop(key)
+                    if value is not None:
+                        env[key] = value
+                    _, records = self.invoke(REPO / MAC / "misc/555-skhdQatTask.sh", env, choice=choice)
+                    self.assert_menu_dispatch(records, {**env, key: value or None}, kind)
+                    remote = next(item for item in records if item["kind"] == "remote")
+                    if value:
+                        self.assertEqual(remote["env"][key], value)
+                    else:
+                        self.assertNotIn(key, remote["env"])
 
     def test_remote_launch_ignores_caller_bootstrap_and_selects_optional_qat_config(self):
         config = self.root / "runtime kitty config.conf"

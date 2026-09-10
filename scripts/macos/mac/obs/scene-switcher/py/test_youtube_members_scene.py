@@ -7,7 +7,7 @@ import tempfile
 import unittest
 from pathlib import Path
 from types import SimpleNamespace
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
 
 MODULE_PATH = Path(__file__).with_name("youtube_members_scene.py")
@@ -64,6 +64,32 @@ class LocalFileClient(Client):
 
 
 class YouTubeMembersSceneTests(unittest.TestCase):
+    def test_main_records_page_after_successful_control_and_disconnects(self):
+        client = MagicMock()
+        with tempfile.TemporaryDirectory() as directory, contextlib.ExitStack() as stack:
+            stack.enter_context(patch.object(youtube_members_scene.sys, "argv", ["members", "--no-auth"]))
+            stack.enter_context(patch.object(youtube_members_scene, "CACHE_DIR", Path(directory)))
+            stack.enter_context(patch.object(youtube_members_scene, "LOCK_PATH", Path(directory) / "page.lock"))
+            stack.enter_context(patch.object(youtube_members_scene.obs, "ReqClient", return_value=client))
+            stack.enter_context(patch.object(youtube_members_scene, "refresh_overlay_if_needed", return_value=False))
+            handle = stack.enter_context(patch.object(youtube_members_scene, "handle_press", return_value=(1, False)))
+            stack.enter_context(patch.object(youtube_members_scene.time, "monotonic_ns", return_value=42))
+            record = stack.enter_context(patch.object(youtube_members_scene, "record_page_observation"))
+            stack.enter_context(patch.object(youtube_members_scene, "update_banner"))
+            youtube_members_scene.main()
+        handle.assert_called_once_with(client, overlay_refreshed=False)
+        record.assert_called_once_with(1, 42)
+        client.disconnect.assert_called_once()
+
+    def test_missing_capture_helper_reports_unavailable_without_breaking_control(self):
+        with tempfile.TemporaryDirectory() as directory, contextlib.ExitStack() as stack:
+            stack.enter_context(patch.dict(youtube_members_scene.os.environ, {"OBS_MEETING_MANAGER_ROOT": directory}))
+            stack.enter_context(patch.object(youtube_members_scene.sys, "path", list(youtube_members_scene.sys.path)))
+            output = stack.enter_context(contextlib.redirect_stderr(io.StringIO()))
+            youtube_members_scene.record_page_observation(1, 42)
+        self.assertIn("status=unavailable", output.getvalue())
+        self.assertIn("display_verified=false", output.getvalue())
+
     def test_password_failure_does_not_expose_command_output(self):
         secret = "SENTINEL-OBS-PASSWORD"
         error = subprocess.CalledProcessError(

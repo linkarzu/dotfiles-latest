@@ -387,6 +387,29 @@ def handle_press(client, overlay_refreshed: bool = False) -> tuple[int, bool]:
     return page, switched_scene
 
 
+def record_page_observation(page: int, requested_monotonic_ns: int) -> None:
+    """Keep diagnostics with the event without making page switching depend on them."""
+    root = Path(os.environ.get(
+        "OBS_MEETING_MANAGER_ROOT",
+        "~/github/dotfiles-private/scripts/macos/mac/obs-meeting-manager",
+    )).expanduser()
+    try:
+        import importlib.util
+        module_path = root / "scripts/macos/mac/obs/members_capture.py"
+        obs_root = str(module_path.parent)
+        if obs_root not in sys.path:
+            sys.path.insert(0, obs_root)
+        spec = importlib.util.spec_from_file_location("members_capture", module_path)
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        saved = module.record_page(page, requested_monotonic_ns)
+        print("phase=members-scene step=page-evidence status="
+              + ("recorded" if saved else "inactive") + " display_verified=false")
+    except Exception as error:
+        print("phase=members-scene step=page-evidence status=unavailable "
+              f"error_type={type(error).__name__} display_verified=false", file=sys.stderr)
+
+
 def write_banner_atomic(contents: bytes) -> None:
     descriptor, temporary_path = tempfile.mkstemp(
         prefix=f".{BANNER_PATH.name}.",
@@ -537,8 +560,10 @@ def main() -> None:
             timeout=OBS_REQUEST_TIMEOUT,
         )
         try:
+            requested_monotonic_ns = time.monotonic_ns()
             overlay_refreshed = refresh_overlay_if_needed(client)
-            handle_press(client, overlay_refreshed=overlay_refreshed)
+            page, _switched = handle_press(client, overlay_refreshed=overlay_refreshed)
+            record_page_observation(page, requested_monotonic_ns)
             update_banner()
         finally:
             client.disconnect()

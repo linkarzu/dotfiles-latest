@@ -3,6 +3,7 @@
 # Filename: ~/github/dotfiles-latest/kitty/scripts/kitty-zoxide-session.sh
 # Select a zoxide entry and switch to an existing kitty session,
 # or create it if it doesn't exist. Also supports active tmux sessions.
+# `--issue-opencode ISSUE PATH` performs a noninteractive OBS issue handoff.
 #
 # Also supports SSH host entries from ~/.ssh/config (and Include files).
 # SSH and tmux entries use prefixes to make them easy to filter and are
@@ -10,8 +11,9 @@
 
 set -euo pipefail
 
-kitty_bin="/Applications/kitty.app/Contents/MacOS/kitty"
+kitty_bin="${KITTY_BIN:-/Applications/kitty.app/Contents/MacOS/kitty}"
 script_path="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)/$(basename -- "${BASH_SOURCE[0]}")"
+script_dir="$(dirname -- "$script_path")"
 work_env_file="$HOME/github/dotfiles-private/work/work-env.sh"
 colorscheme_file="$HOME/github/dotfiles-latest/colorscheme/active/active-colorscheme.sh"
 fzf_colors_file="$HOME/github/dotfiles-latest/colorscheme/active/active-fzf-colors.sh"
@@ -51,7 +53,7 @@ if [[ ! -x "$kitty_bin" ]]; then
   exit 1
 fi
 
-source "$HOME/github/dotfiles-latest/kitty/scripts/kitty-tmux-launch.sh"
+source "$script_dir/kitty-tmux-launch.sh"
 
 if [[ -z "${sock:-}" ]]; then
   echo "No kitty sockets found in /tmp (kitty not running, or remote control not available)."
@@ -312,6 +314,8 @@ fi
 
 focus_or_launch_dir() {
   local selected_path="$1"
+  local requested_session_name="${2:-}"
+  local launch_opencode="${3:-false}"
   local selected_real=""
   local base=""
   local safe_base=""
@@ -319,7 +323,7 @@ focus_or_launch_dir() {
   local short_name=""
   local session_name=""
   local existing_session=""
-  local session_dir="/tmp/kitty-zoxide-sessions"
+  local session_dir="${KITTY_ZOXIDE_SESSION_DIR:-/tmp/kitty-zoxide-sessions}"
   local session_file=""
 
   case "$selected_path" in
@@ -352,25 +356,79 @@ focus_or_launch_dir() {
   safe_base="$(printf "%s" "$base" | tr -cs 'A-Za-z0-9._-' '_')"
   hash="$(hash_path "$selected_real")"
   hash="${hash:0:4}"
-  short_name="z-${safe_base}"
-  session_name="$short_name"
-  if session_exists "$short_name"; then
-    session_name="${short_name}-${hash}"
+  if [[ -n "$requested_session_name" ]]; then
+    session_name="$(printf "%s" "$requested_session_name" | tr -cs 'A-Za-z0-9._-' '_')"
+    if [[ "$session_name" != "$requested_session_name" ]]; then
+      echo "Invalid kitty session name: $requested_session_name" >&2
+      return 1
+    fi
+    if session_exists "$session_name"; then
+      echo "Kitty session name is already used by a different path: $session_name" >&2
+      return 1
+    fi
+  else
+    short_name="z-${safe_base}"
+    session_name="$short_name"
+    if session_exists "$short_name"; then
+      session_name="${short_name}-${hash}"
+    fi
   fi
 
   mkdir -p "$session_dir"
   session_file="${session_dir}/${session_name}.kitty-session"
 
-  cat >"$session_file" <<EOF
+  if [[ "$launch_opencode" == "true" ]]; then
+    cat >"$session_file" <<EOF
+layout tall
+cd ${selected_real}
+launch --title "${session_name}" zsh -lic 'o; exec zsh -l'
+focus
+focus_os_window
+EOF
+  else
+    cat >"$session_file" <<EOF
 layout tall
 cd ${selected_real}
 launch --title "${base}"
 focus
 focus_os_window
 EOF
+  fi
 
   kitty_remote action goto_session "$session_file"
   bump_zoxide_score "$selected_real"
+}
+
+focus_or_launch_issue_opencode() {
+  local issue="$1"
+  local selected_path="$2"
+  local selected_real=""
+  local base=""
+  local safe_base=""
+  local session_name=""
+
+  if [[ ! "$issue" =~ ^[1-9][0-9]*$ ]]; then
+    echo "Issue number must be a positive integer: $issue" >&2
+    return 1
+  fi
+  if [[ ! -d "$selected_path" ]]; then
+    echo "Issue worktree does not exist: $selected_path" >&2
+    return 1
+  fi
+
+  selected_real="$(normalize_path "$selected_path")"
+  case "/${selected_real}/" in
+  *"/issue-${issue}/"*) ;;
+  *)
+    echo "Worktree path does not match issue $issue: $selected_real" >&2
+    return 1
+    ;;
+  esac
+
+  base="$(basename "$selected_real")"
+  safe_base="$(printf "%s" "$base" | tr -cs 'A-Za-z0-9._-' '_')"
+  session_name="z-issue-${issue}-${safe_base}"
+  focus_or_launch_dir "$selected_real" "$session_name" true
 }
 
 focus_or_launch_ssh() {
@@ -394,6 +452,15 @@ EOF
 
   kitty_remote action goto_session "$session_file"
 }
+
+if [[ "${1:-}" == "--issue-opencode" ]]; then
+  if [[ $# -ne 3 ]]; then
+    echo "Usage: $0 --issue-opencode ISSUE_NUMBER ABSOLUTE_WORKTREE_PATH" >&2
+    exit 2
+  fi
+  focus_or_launch_issue_opencode "$2" "$3"
+  exit 0
+fi
 
 set +e
 printf '\033[2J\033[H'

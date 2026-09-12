@@ -150,7 +150,7 @@ shift + cmd - f11 : open "btt://execute_assigned_actions_for_trigger/?uuid=92B63
 # lineid_obs_switchscene_cam_guest1
 shift + alt - f1 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py cam-guest1-live --no-auth"
 # lineid_obs_switchscene_cam_guest2
-shift + alt - f2 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py  --no-auth"
+shift + alt - f2 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py cam-guest2-live --no-auth"
 # lineid_obs_switchscene_cam_guest3
 shift + alt - f3 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py  --no-auth"
 # lineid_obs_switchscene_cam_guest4
@@ -163,7 +163,7 @@ shift + alt - f8 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/mac
 # lineid_obs_switchscene_guest1
 shift + alt - f11 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py screen-guest1-live --no-auth"
 # lineid_obs_switchscene_guest2
-shift + alt - f12 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py  --no-auth"
+shift + alt - f12 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py screen-guest2-live --no-auth"
 # lineid_obs_switchscene_guest3
 shift + alt - f13 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py  --no-auth"
 # lineid_obs_switchscene_guest4

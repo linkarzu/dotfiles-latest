@@ -18,7 +18,7 @@ vim.g.md_heading_bg = vim.env.MD_HEADING_BG
 
 -- Markdown fold spacing: "gapped" shows the real separator lines, while
 -- "gapless" conceals them. Use <leader>mfg to toggle the current buffer.
-vim.g.markdown_fold_spacing = "gapless"
+vim.g.markdown_fold_spacing = "gapped"
 
 -- bootstrap lazy.nvim, LazyVim and your plugins
 require("config.lazy")

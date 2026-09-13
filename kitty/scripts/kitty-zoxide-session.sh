@@ -318,6 +318,7 @@ focus_or_launch_dir() {
   local requested_session_name="${2:-}"
   local launch_opencode="${3:-false}"
   local work_issue="${4:-}"
+  local issue_title_b64="${5:-}"
   local selected_real=""
   local base=""
   local safe_base=""
@@ -384,10 +385,14 @@ focus_or_launch_dir() {
       echo "Issue number must be supplied when launching OpenCode: ${work_issue:-missing}" >&2
       return 1
     fi
+    if [[ -z "$issue_title_b64" || ! "$issue_title_b64" =~ ^[A-Za-z0-9+/]*={0,2}$ ]]; then
+      echo "A base64-encoded issue title must be supplied when launching OpenCode." >&2
+      return 1
+    fi
     cat >"$session_file" <<EOF
 layout tall
 cd ${selected_real}
-launch --title "${session_name}" zsh -lic 'o --prompt "/work-issue ${work_issue}"; exec zsh -l'
+launch --title "${session_name}" --env OPENCODE_OBS_ISSUE_NUMBER=${work_issue} --env OPENCODE_OBS_ISSUE_TITLE_B64=${issue_title_b64} zsh -lic 'o --prompt "/work-issue ${work_issue}"; exec zsh -l'
 focus
 focus_os_window
 EOF
@@ -414,6 +419,10 @@ focus_or_launch_issue_opencode() {
   local branch_leaf=""
   local branch_prefix=""
   local branch_short_slug=""
+  local existing_session=""
+  local issue_json=""
+  local issue_title=""
+  local issue_title_b64=""
   local session_name=""
 
   if [[ ! "$issue" =~ ^[1-9][0-9]*$ ]]; then
@@ -434,6 +443,13 @@ focus_or_launch_issue_opencode() {
     ;;
   esac
 
+  existing_session="$(find_session_by_path "$selected_real" || true)"
+  if [[ -n "$existing_session" ]]; then
+    bump_zoxide_score "$selected_real"
+    kitty_remote action goto_session "$existing_session"
+    return 0
+  fi
+
   branch="$(git -C "$selected_real" symbolic-ref --quiet --short HEAD 2>/dev/null || true)"
   branch_leaf="${branch##*/}"
   branch_prefix="issue-${issue}-"
@@ -451,8 +467,31 @@ focus_or_launch_issue_opencode() {
     return 1
   fi
 
+  if ! command -v gh >/dev/null 2>&1; then
+    echo "gh is required to resolve the current issue title." >&2
+    return 1
+  fi
+  if ! issue_json="$(gh issue view "$issue" --repo linkarzu/obs-meeting-manager --json number,state,title 2>/dev/null)"; then
+    echo "Could not resolve the current title for OBS issue $issue." >&2
+    return 1
+  fi
+  if ! issue_title="$(jq -er --argjson issue "$issue" '
+    select(.number == $issue and .state == "OPEN")
+    | .title
+    | select(type == "string" and length > 0 and length <= 256)
+    | select(explode | all(. >= 32 and . != 127))
+  ' <<<"$issue_json")"; then
+    echo "OBS issue $issue is not open with a bounded nonempty title." >&2
+    return 1
+  fi
+  if [[ "$issue_title" == *$'\n'* || "$issue_title" == *$'\r'* ]]; then
+    echo "OBS issue $issue has a title containing unsupported control characters." >&2
+    return 1
+  fi
+  issue_title_b64="$(printf '%s' "$issue_title" | jq -Rrs '@base64')"
+
   session_name="z-${issue}-omm-${branch_short_slug}"
-  focus_or_launch_dir "$selected_real" "$session_name" true "$issue"
+  focus_or_launch_dir "$selected_real" "$session_name" true "$issue" "$issue_title_b64"
 }
 
 focus_or_launch_ssh() {

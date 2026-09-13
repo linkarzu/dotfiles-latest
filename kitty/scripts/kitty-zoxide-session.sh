@@ -3,7 +3,8 @@
 # Filename: ~/github/dotfiles-latest/kitty/scripts/kitty-zoxide-session.sh
 # Select a zoxide entry and switch to an existing kitty session,
 # or create it if it doesn't exist. Also supports active tmux sessions.
-# `--issue-opencode ISSUE PATH` performs a noninteractive OBS issue handoff.
+# `--issue-opencode ISSUE PATH [BRANCH_SHORT_SLUG]` performs a noninteractive
+# OBS issue handoff.
 #
 # Also supports SSH host entries from ~/.ssh/config (and Include files).
 # SSH and tmux entries use prefixes to make them easy to filter and are
@@ -316,6 +317,7 @@ focus_or_launch_dir() {
   local selected_path="$1"
   local requested_session_name="${2:-}"
   local launch_opencode="${3:-false}"
+  local work_issue="${4:-}"
   local selected_real=""
   local base=""
   local safe_base=""
@@ -378,10 +380,14 @@ focus_or_launch_dir() {
   session_file="${session_dir}/${session_name}.kitty-session"
 
   if [[ "$launch_opencode" == "true" ]]; then
+    if [[ ! "$work_issue" =~ ^[1-9][0-9]*$ ]]; then
+      echo "Issue number must be supplied when launching OpenCode: ${work_issue:-missing}" >&2
+      return 1
+    fi
     cat >"$session_file" <<EOF
 layout tall
 cd ${selected_real}
-launch --title "${session_name}" zsh -lic 'o; exec zsh -l'
+launch --title "${session_name}" zsh -lic 'o --prompt "/work-issue ${work_issue}"; exec zsh -l'
 focus
 focus_os_window
 EOF
@@ -402,9 +408,12 @@ EOF
 focus_or_launch_issue_opencode() {
   local issue="$1"
   local selected_path="$2"
+  local requested_short_slug="${3:-}"
   local selected_real=""
-  local base=""
-  local safe_base=""
+  local branch=""
+  local branch_leaf=""
+  local branch_prefix=""
+  local branch_short_slug=""
   local session_name=""
 
   if [[ ! "$issue" =~ ^[1-9][0-9]*$ ]]; then
@@ -425,10 +434,25 @@ focus_or_launch_issue_opencode() {
     ;;
   esac
 
-  base="$(basename "$selected_real")"
-  safe_base="$(printf "%s" "$base" | tr -cs 'A-Za-z0-9._-' '_')"
-  session_name="z-issue-${issue}-${safe_base}"
-  focus_or_launch_dir "$selected_real" "$session_name" true
+  branch="$(git -C "$selected_real" symbolic-ref --quiet --short HEAD 2>/dev/null || true)"
+  branch_leaf="${branch##*/}"
+  branch_prefix="issue-${issue}-"
+  if [[ "$branch_leaf" != "$branch_prefix"* ]]; then
+    echo "Issue worktree branch does not include a short slug for issue $issue: ${branch:-detached}" >&2
+    return 1
+  fi
+  branch_short_slug="${branch_leaf#"$branch_prefix"}"
+  if [[ ! "$branch_short_slug" =~ ^[A-Za-z0-9][A-Za-z0-9._-]*$ ]]; then
+    echo "Issue branch short slug is not safe for a Kitty session name: $branch_short_slug" >&2
+    return 1
+  fi
+  if [[ -n "$requested_short_slug" && "$requested_short_slug" != "$branch_short_slug" ]]; then
+    echo "Requested issue branch short slug does not match the worktree branch: $requested_short_slug" >&2
+    return 1
+  fi
+
+  session_name="z-${issue}-omm-${branch_short_slug}"
+  focus_or_launch_dir "$selected_real" "$session_name" true "$issue"
 }
 
 focus_or_launch_ssh() {
@@ -454,11 +478,11 @@ EOF
 }
 
 if [[ "${1:-}" == "--issue-opencode" ]]; then
-  if [[ $# -ne 3 ]]; then
-    echo "Usage: $0 --issue-opencode ISSUE_NUMBER ABSOLUTE_WORKTREE_PATH" >&2
+  if [[ $# -lt 3 || $# -gt 4 ]]; then
+    echo "Usage: $0 --issue-opencode ISSUE_NUMBER ABSOLUTE_WORKTREE_PATH [BRANCH_SHORT_SLUG]" >&2
     exit 2
   fi
-  focus_or_launch_issue_opencode "$2" "$3"
+  focus_or_launch_issue_opencode "$2" "$3" "${4:-}"
   exit 0
 fi
 

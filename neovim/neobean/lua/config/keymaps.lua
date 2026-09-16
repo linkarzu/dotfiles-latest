@@ -3431,7 +3431,15 @@ function _G.typst_foldexpr()
   return "="
 end
 
-local function set_markdown_folding()
+local function set_markdown_folding(args)
+  local buf = args and args.buf or vim.api.nvim_get_current_buf()
+  if vim.bo[buf].buftype == "nofile" and vim.api.nvim_buf_get_name(buf):match("fffile preview$") then
+    for _, win in ipairs(vim.fn.win_findbuf(buf)) do
+      vim.wo[win].foldenable = false
+    end
+    return
+  end
+
   vim.opt_local.foldmethod = "expr"
   vim.opt_local.foldexpr = "v:lua.markdown_foldexpr()"
   -- Keep folded headings rendered as the real heading line so EOL codelens stays visible.

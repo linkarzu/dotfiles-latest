@@ -1,4 +1,5 @@
 import type { Plugin } from "@opencode-ai/plugin"
+import { randomUUID } from "node:crypto"
 import { readFile } from "node:fs/promises"
 
 type AttentionReason = "done" | "error" | "permission" | "question"
@@ -380,14 +381,12 @@ export const SketchybarStatusPlugin: Plugin = async ({ client, directory, $ }) =
     }
   }
 
-  async function registerBridge() {
+  function bridgeRegistrationSnapshot() {
     if (!proxyURL) return
-    const windowState = await kittyWindowState()
-    await postBridge("/register", {
+    return {
       instanceID,
       serverURL: proxyURL,
       directory,
-      kittySession: windowState?.sessionName ?? "",
       kittyWindowID: windowID,
       sessions: [...sessions].map(([id, current]) => ({
         id,
@@ -396,18 +395,29 @@ export const SketchybarStatusPlugin: Plugin = async ({ client, directory, $ }) =
         status: current.status,
       })),
       attention: [...bridgeAttention.values()],
+    }
+  }
+
+  async function registerBridge(registration = bridgeRegistrationSnapshot()) {
+    if (!registration) return
+    const windowState = await kittyWindowState()
+    await postBridge("/register", {
+      ...registration,
+      kittySession: windowState?.sessionName ?? "",
     })
   }
 
   function scheduleBridgeRegistration() {
-    bridgeQueue = bridgeQueue.then(registerBridge).catch(() => undefined)
+    const registration = bridgeRegistrationSnapshot()
+    bridgeQueue = bridgeQueue.then(() => registerBridge(registration)).catch(() => undefined)
   }
 
   function queueBridgeEvent(event: Record<string, unknown>) {
     trackBridgeEvent(event)
+    const registration = bridgeRegistrationSnapshot()
     const pending = bridgeQueue
       .then(async () => {
-        await registerBridge()
+        await registerBridge(registration)
         await postBridge("/event", { instanceID, event })
       })
       .catch(() => undefined)
@@ -539,12 +549,19 @@ export const SketchybarStatusPlugin: Plugin = async ({ client, directory, $ }) =
           const pendingRequest = [...bridgeAttention.values()].some((event) => (
             event.sessionID === sessionID && (event.kind === "permission" || event.kind === "question")
           ))
-          const pendingError = bridgeAttention.has(`${sessionID}:error:${sessionID}`)
+          const pendingError = [...bridgeAttention.values()].some((event) => (
+            event.sessionID === sessionID && event.kind === "error"
+          ))
           if (!current.parentID && !pendingRequest && !pendingError && !windowState?.focused) {
             addAttention(current, "done", "done")
           }
           if (!current.parentID && !pendingRequest && !pendingError) {
-            await sendBridgeEvent({ action: "attention", kind: "done", sessionID })
+            await sendBridgeEvent({
+              action: "attention",
+              kind: "done",
+              sessionID,
+              requestID: randomUUID(),
+            })
           }
         }
         break
@@ -557,6 +574,7 @@ export const SketchybarStatusPlugin: Plugin = async ({ client, directory, $ }) =
             action: "attention",
             kind: "error",
             sessionID,
+            requestID: randomUUID(),
             details: {
               message: properties.error?.data?.message ?? properties.error?.message ?? properties.error?.name,
             },

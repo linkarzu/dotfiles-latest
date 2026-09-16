@@ -34,11 +34,13 @@ alert remains queued until it is sent or the session is actually answered,
 continued, switched away from, deleted, or closed.
 
 Replying to any OpenCode notification from Telegram enables global phone mode.
-While phone mode is active, existing and new unresolved notifications from all
-OpenCode processes' currently selected sessions are sent immediately. The next
-prompt submitted locally in any OpenCode session disables phone mode and
-restores the four-minute delay. Telegram-injected prompts and background
-subagent prompts do not disable it.
+While phone mode is active, existing and new unresolved questions, permissions,
+and errors from all OpenCode processes' currently selected sessions are sent
+immediately. Completion notifications wait five seconds and are cancelled if
+the session resumes during that window, preventing transient idle states from
+flooding Telegram. The next prompt submitted locally in any OpenCode session
+disables phone mode and restores the four-minute delay. Telegram-injected
+prompts and background subagent prompts do not disable it.
 Right-clicking the OpenCode SketchyBar item also toggles phone mode; left-click
 opens the session popup.
 Phone-mode responses are instructed to stay within 3,500 characters and use

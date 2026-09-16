@@ -9,6 +9,7 @@ import { pathToFileURL } from "node:url"
 const LOOPBACK_HOST = "127.0.0.1"
 const DEFAULT_PORT = 47653
 const DEFAULT_DELAY_MS = 4 * 60 * 1000
+const PHONE_MODE_COMPLETION_DELAY_MS = 5 * 1000
 const RECENT_LOCAL_ACTIVITY_MS = 90 * 1000
 const INSTANCE_STALE_MS = 60 * 1000
 const TELEGRAM_TEXT_LIMIT = 3900
@@ -357,8 +358,12 @@ export class TelegramBridge {
     let immediate = false
     if (event.action === "attention") {
       const key = alertKey(instanceID, event)
-      const existing = this.state.alerts[key]?.resolvedAt ? undefined : this.state.alerts[key]
-      immediate = selection !== false && (event.kind === "error" || this.state.phoneMode)
+      const previous = this.state.alerts[key]
+      if (previous?.resolvedAt) return
+      const existing = previous
+      immediate = selection !== false && (
+        event.kind === "error" || (this.state.phoneMode && event.kind !== "done")
+      )
       this.state.alerts[key] = {
         id: existing?.id ?? randomBytes(6).toString("hex"),
         key,
@@ -368,7 +373,11 @@ export class TelegramBridge {
         requestID: event.requestID ?? "",
         details: event.details ?? {},
         createdAt: existing?.createdAt ?? this.now(),
-        dueAt: immediate ? this.now() : (existing?.dueAt ?? this.now() + this.attentionDelayMs),
+        dueAt: immediate
+          ? this.now()
+          : (existing?.dueAt ?? (this.state.phoneMode && event.kind === "done"
+              ? this.now() + PHONE_MODE_COMPLETION_DELAY_MS
+              : this.now() + this.attentionDelayMs)),
         sentMessageID: existing?.sentMessageID,
         sentText: existing?.sentText,
         resolvedAt: undefined,
@@ -397,7 +406,10 @@ export class TelegramBridge {
   async activatePhoneMode() {
     this.state.phoneMode = true
     for (const alert of Object.values(this.state.alerts)) {
-      if (!alert.resolvedAt && !alert.sentMessageID) alert.dueAt = this.now()
+      if (alert.resolvedAt || alert.sentMessageID) continue
+      alert.dueAt = alert.kind === "done"
+        ? Math.max(this.now(), alert.createdAt + PHONE_MODE_COMPLETION_DELAY_MS)
+        : this.now()
     }
     await this.saveState()
     await this.flushDueAlerts().catch((error) => console.error("phone mode alert flush failed", error.message))

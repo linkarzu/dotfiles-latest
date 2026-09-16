@@ -290,8 +290,13 @@ test("a later completion creates a fresh alert for the same session", async (con
   context.after(cleanup)
   register(bridge, "one", 5001)
 
-  const attention = { action: "attention", kind: "done", sessionID: "session-1" }
-  await bridge.processPluginEvent({ instanceID: "one", event: attention })
+  const firstAttention = {
+    action: "attention",
+    kind: "done",
+    sessionID: "session-1",
+    requestID: "completion-1",
+  }
+  await bridge.processPluginEvent({ instanceID: "one", event: firstAttention })
   const first = Object.values(bridge.state.alerts)[0]
   first.sentMessageID = 10
   await bridge.processPluginEvent({
@@ -300,11 +305,84 @@ test("a later completion creates a fresh alert for the same session", async (con
   })
 
   now += 1000
-  await bridge.processPluginEvent({ instanceID: "one", event: attention })
-  const second = Object.values(bridge.state.alerts)[0]
+  await bridge.processPluginEvent({
+    instanceID: "one",
+    event: { ...firstAttention, requestID: "completion-2" },
+  })
+  const second = Object.values(bridge.state.alerts).find((alert) => alert.requestID === "completion-2")
   assert.notEqual(second.id, first.id)
   assert.equal(second.sentMessageID, undefined)
   assert.equal(second.dueAt, now + 4 * 60 * 1000)
+})
+
+test("phone mode sends only completions that remain idle and ignores replayed events", async (context) => {
+  let now = 1000
+  let messageID = 100
+  const calls = []
+  const { bridge, cleanup } = await fixture(async (url, options) => {
+    const target = String(url)
+    calls.push({ url: target, body: options?.body && JSON.parse(options.body) })
+    if (target.includes("api.telegram.org")) {
+      return jsonResponse({ ok: true, result: { message_id: messageID++ } })
+    }
+    if (target.includes("/session/status")) return jsonResponse({})
+    if (target.includes("/message")) return jsonResponse([])
+    return jsonResponse({ title: "Long-running session" })
+  }, () => now)
+  context.after(cleanup)
+  register(bridge, "one", 5001)
+  bridge.state.phoneMode = true
+
+  for (let index = 0; index < 20; index++) {
+    await bridge.processPluginEvent({
+      instanceID: "one",
+      event: {
+        action: "attention",
+        kind: "done",
+        sessionID: "session-1",
+        requestID: `transient-${index}`,
+      },
+    })
+    now += 100
+    await bridge.processPluginEvent({
+      instanceID: "one",
+      event: {
+        action: "resolve-session",
+        sessionID: "session-1",
+        kinds: ["done"],
+        resolution: "Session resumed locally",
+      },
+    })
+  }
+  assert.equal(calls.some((call) => call.url.includes("/sendMessage")), false)
+
+  const stable = {
+    action: "attention",
+    kind: "done",
+    sessionID: "session-1",
+    requestID: "stable-completion",
+  }
+  await bridge.processPluginEvent({ instanceID: "one", event: stable })
+  now += 4_999
+  await bridge.flushDueAlerts()
+  assert.equal(calls.some((call) => call.url.includes("/sendMessage")), false)
+
+  now += 1
+  await bridge.flushDueAlerts()
+  assert.equal(calls.filter((call) => call.url.includes("/sendMessage")).length, 1)
+
+  await bridge.processPluginEvent({
+    instanceID: "one",
+    event: {
+      action: "resolve-session",
+      sessionID: "session-1",
+      kinds: ["done"],
+      resolution: "Session resumed locally",
+    },
+  })
+  await bridge.processPluginEvent({ instanceID: "one", event: stable })
+  await bridge.flushDueAlerts()
+  assert.equal(calls.filter((call) => call.url.includes("/sendMessage")).length, 1)
 })
 
 test("revalidates v2 questions through the session API wrapper", async (context) => {
@@ -903,6 +981,10 @@ test("Telegram replies enable global phone mode until the next local prompt", as
   await bridge.continueSession(first, "Continue from Telegram")
 
   assert.equal(bridge.state.phoneMode, true)
+  assert.equal(second.sentMessageID, undefined)
+
+  now += 5_000
+  await bridge.flushDueAlerts()
   assert.ok(second.sentMessageID)
   assert.ok(calls.some((call) => call.body?.text?.includes("session-2")))
 

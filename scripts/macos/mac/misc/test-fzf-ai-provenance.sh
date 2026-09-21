@@ -221,17 +221,18 @@ PY
   fzf_process_mode() { printf 'single\n'; }
   [[ "$(inspect_menu)" == *$'FZF_OPTION 1\tconfirm\tDT -> @distrotube'* ]]
 
-  # A true leaf finishes on the 1s re-open grace. An explicit wait raises both
-  # the grace and transition ceiling for a slow nested panel.
+  # A true leaf finishes on the 1s re-open grace. An explicit slow-panel timeout
+  # raises only the hard ceiling and never makes a dead workflow wait longer.
   (
     source "$PROVENANCE_HELPER"
     socket_ready() { return 1; }
     lsof() { return 1; }
+    sleep() { SECONDS=$((SECONDS + 1)); }
     [[ "$(wait_for_transition 111)" == "FZF_FLOW_ENDED no next fzf menu appeared within 1s" ]]
-    [[ "$(wait_for_transition 111 6)" == "FZF_FLOW_ENDED no next fzf menu appeared within 6s" ]]
+    [[ "$(wait_for_transition 111 6)" == "FZF_FLOW_ENDED no next fzf menu appeared within 1s" ]]
   )
 
-  # Every accepting action passes its optional --wait window to the transition.
+  # Every accepting action passes its optional --wait timeout to the transition.
   (
     wait_for_transition() { printf 'WAIT %s\n' "${2:-default}"; }
     socket_inode() { printf '333\n'; }
@@ -311,6 +312,20 @@ PY
     sleep() { :; }
     [[ "$(wait_for_transition 111 6 222)" == *'FZF_NEXT_READY'* ]]
   )
+  (
+    source "$PROVENANCE_HELPER"
+    ready_polls=0
+    socket_ready() {
+      ready_polls=$((ready_polls + 1))
+      [[ $ready_polls -ge 4 ]]
+    }
+    socket_inode() { printf '222\n'; }
+    lsof() { return 1; }
+    human_handoff_pid() { return 1; }
+    process_alive() { return 0; }
+    sleep() { SECONDS=$((SECONDS + 1)); }
+    [[ "$(wait_for_transition 111 6 222)" == *'FZF_NEXT_READY'* ]]
+  )
 
   # Prompt extraction exposes only the live fzf prompt needed to validate a
   # text-input step, not its potentially private header.
@@ -326,8 +341,11 @@ PY
   # process and accepts a declared human-only terminal boundary.
   (
     flow_query=""
+    flow_wait_log="$HOME/flow-waits"
+    : >"$flow_wait_log"
     wait_for_menu() { printf 'FZF_READY fixture\n'; }
     pick_option() {
+      printf '%s\n' "${2:-default}" >>"$flow_wait_log"
       if [[ "$1" == "confirm" ]]; then
         printf 'FZF_PICKED 1\tconfirm\nFZF_HUMAN_HANDOFF pid=999\n'
       else
@@ -337,7 +355,10 @@ PY
     current_fzf_prompt() { printf 'Livestream title >\n'; }
     change_query() { flow_query="$1"; }
     get_state() { jq -cn --arg query "$flow_query" '{query:$query}'; }
-    accept_selection() { printf 'FZF_ACCEPTED\nFZF_NEXT_READY fixture\n'; }
+    accept_selection() {
+      printf '%s\n' "${1:-default}" >>"$flow_wait_log"
+      printf 'FZF_ACCEPTED\nFZF_NEXT_READY fixture\n'
+    }
     flow_output="$(run_flow_json '[
       {"action":"pick","text":"schedule"},
       {"action":"input","prompt":"Livestream title >","text":"Fast flow"},
@@ -345,6 +366,20 @@ PY
     ]')"
     [[ "$flow_output" == *'FZF_FLOW_STEP 2/3 action=input result=next'* ]]
     [[ "$flow_output" == *'FZF_FLOW_COMPLETE steps=3 result=handoff'* ]]
+    [[ "$(<"$flow_wait_log")" == $'default\ndefault\ndefault' ]]
+  )
+
+  # Only an explicit step-level wait reaches the action as a larger timeout.
+  (
+    flow_wait_log="$HOME/explicit-flow-wait"
+    : >"$flow_wait_log"
+    wait_for_menu() { :; }
+    pick_option() {
+      printf '%s\n' "${2:-default}" >"$flow_wait_log"
+      printf 'FZF_PICKED 1\tslow\nFZF_NEXT_READY fixture\n'
+    }
+    run_flow_json '[{"action":"pick","text":"slow","wait":6}]' >/dev/null
+    [[ "$(<"$flow_wait_log")" == "6" ]]
   )
 
   # Prompt mismatches fail before mutating the live query.

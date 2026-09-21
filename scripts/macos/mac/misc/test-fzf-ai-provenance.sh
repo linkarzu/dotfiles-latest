@@ -288,6 +288,78 @@ PY
     [[ ! -e "$HOME/unexpected-pick-state" && ! -e "$HOME/unexpected-pick-action" ]]
   )
 
+  # A stable non-socket fzf child is an intentional human handoff, while a
+  # socket-visible successor still wins during the short classification grace.
+  (
+    source "$PROVENANCE_HELPER"
+    socket_ready() { return 1; }
+    lsof() { return 1; }
+    human_handoff_pid() { printf '999\n'; }
+    sleep() { :; }
+    [[ "$(wait_for_transition 111 6 222)" == "FZF_HUMAN_HANDOFF pid=999" ]]
+  )
+  (
+    source "$PROVENANCE_HELPER"
+    ready_polls=0
+    socket_ready() {
+      ready_polls=$((ready_polls + 1))
+      [[ $ready_polls -ge 3 ]]
+    }
+    socket_inode() { printf '222\n'; }
+    lsof() { return 1; }
+    human_handoff_pid() { printf '999\n'; }
+    sleep() { :; }
+    [[ "$(wait_for_transition 111 6 222)" == *'FZF_NEXT_READY'* ]]
+  )
+
+  # Prompt extraction exposes only the live fzf prompt needed to validate a
+  # text-input step, not its potentially private header.
+  (
+    fzf_process_pid() { printf '42\n'; }
+    ps() {
+      printf '%s\n' 'fzf --reverse --prompt=Livestream title >  --header=Private header --color=x'
+    }
+    [[ "$(current_fzf_prompt)" == 'Livestream title >' ]]
+  )
+
+  # A complete flow performs validated live picks and text entry in one local
+  # process and accepts a declared human-only terminal boundary.
+  (
+    flow_query=""
+    wait_for_menu() { printf 'FZF_READY fixture\n'; }
+    pick_option() {
+      if [[ "$1" == "confirm" ]]; then
+        printf 'FZF_PICKED 1\tconfirm\nFZF_HUMAN_HANDOFF pid=999\n'
+      else
+        printf 'FZF_PICKED 1\t%s\nFZF_NEXT_READY fixture\n' "$1"
+      fi
+    }
+    current_fzf_prompt() { printf 'Livestream title >\n'; }
+    change_query() { flow_query="$1"; }
+    get_state() { jq -cn --arg query "$flow_query" '{query:$query}'; }
+    accept_selection() { printf 'FZF_ACCEPTED\nFZF_NEXT_READY fixture\n'; }
+    flow_output="$(run_flow_json '[
+      {"action":"pick","text":"schedule"},
+      {"action":"input","prompt":"Livestream title >","text":"Fast flow"},
+      {"action":"pick","text":"confirm","expect":"handoff"}
+    ]')"
+    [[ "$flow_output" == *'FZF_FLOW_STEP 2/3 action=input result=next'* ]]
+    [[ "$flow_output" == *'FZF_FLOW_COMPLETE steps=3 result=handoff'* ]]
+  )
+
+  # Prompt mismatches fail before mutating the live query.
+  (
+    wait_for_menu() { :; }
+    current_fzf_prompt() { printf 'Unexpected prompt >\n'; }
+    change_query() { touch "$HOME/unexpected-flow-query"; }
+    if (run_flow_json '[{"action":"input","prompt":"Livestream title >","text":"Nope"}]') \
+      >/dev/null 2>&1; then
+      echo "mismatched flow prompt unexpectedly succeeded" >&2
+      exit 1
+    fi
+    [[ ! -e "$HOME/unexpected-flow-query" ]]
+  )
+
   printf 'passed\n' >"$HOME/checked"
 )
 export -f fzf

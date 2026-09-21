@@ -15,7 +15,6 @@ set -euo pipefail
 #   fzf-ai.sh wait
 #   fzf-ai.sh inspect
 #   fzf-ai.sh pick "Option text"       # One call: inspect + unique match + accept
-#   fzf-ai.sh pick --wait 6 "070-obsMeetingManager.sh"   # Slow panel detected
 #   printf '%s' '[{"action":"pick","text":"Option text"}]' | fzf-ai.sh flow
 #
 # `pick` inspects the live menu and chooses a unique exact/prefix text match in
@@ -80,8 +79,9 @@ AI protocol:
 
 Flow JSON:
   An array of pick or input actions. Each action validates the current live menu.
-  `wait` defaults to 6. `expect` defaults to `next` and may be `handoff` or
-  `ended` on the final action only.
+  `wait` is an optional hard timeout for a proven slow transition. It does not
+  extend the 1s terminal grace. `expect` defaults to `next` and may be `handoff`
+  or `ended` on the final action only.
 
   [{"action":"pick","text":"070-obsMeetingManager.sh"},
    {"action":"input","prompt":"Livestream title >","text":"My title"},
@@ -224,6 +224,13 @@ human_handoff_pid() {
   printf '%s\n' "${pids%%$'\n'*}"
 }
 
+process_alive() {
+  local pid="$1"
+
+  [[ "$pid" =~ ^[0-9]+$ ]] || return 1
+  kill -0 "$pid" 2>/dev/null
+}
+
 current_fzf_prompt() {
   local pid=""
   local command=""
@@ -320,9 +327,9 @@ validate_match_position() {
 
 wait_for_transition() {
   local old_generation="$1"
-  local window="${2:-${FZF_AI_TRANSITION_GRACE:-1}}"
+  local window="${FZF_AI_TRANSITION_GRACE:-1}"
   local old_parent_pid="${3:-}"
-  local ceiling="${FZF_AI_TRANSITION_TIMEOUT:-3}"
+  local ceiling="${2:-${FZF_AI_TRANSITION_TIMEOUT:-3}}"
   local deadline=0
   local end_window=0
   local generation=""
@@ -333,7 +340,8 @@ wait_for_transition() {
 
   validate_integer "$window"
   validate_integer "$ceiling"
-  # --wait N raises both the grace window and the ceiling for this invocation.
+  # --wait N raises only the hard ceiling. A dead workflow still uses the short
+  # terminal grace, while a live parent may keep preparing a slow successor.
   if [[ "$window" -gt "$ceiling" ]]; then
     ceiling="$window"
   fi
@@ -369,10 +377,16 @@ wait_for_transition() {
         handoff_candidate=""
         handoff_polls=0
       fi
-      # The owning fzf process has exited. Bound the wait for a replacement.
-      if [[ "$gone" == "0" ]]; then
-        gone=1
-        end_window=$((SECONDS + window))
+      if process_alive "$old_parent_pid"; then
+        gone=0
+        end_window=0
+      else
+        # The workflow has exited. Bound only the quiet re-open grace, even
+        # when this action had a larger timeout for a known slow successor.
+        if [[ "$gone" == "0" ]]; then
+          gone=1
+          end_window=$((SECONDS + window))
+        fi
       fi
     fi
     if [[ "$gone" == "1" && $SECONDS -ge $end_window ]]; then
@@ -530,7 +544,8 @@ run_flow_json() {
       (($step | keys_unsorted) - ["action", "text", "prompt", "wait", "expect"] | length == 0) and
       ($step.action == "pick" or $step.action == "input") and
       ($step.text | type == "string") and
-      (($step.wait // 6) | type == "number" and floor == . and . >= 1) and
+      (($step | has("wait") | not) or
+       ($step.wait | type == "number" and floor == . and . >= 1)) and
       (($step.expect // "next") | IN("next", "handoff", "ended")) and
       (if $step.action == "input" then ($step.prompt | type == "string" and length > 0)
        else ($step.text | length > 0 and ($step | has("prompt") | not)) end) and
@@ -544,7 +559,7 @@ run_flow_json() {
     step="$(jq -c ".[$index]" <<<"$payload")"
     action="$(jq -r '.action' <<<"$step")"
     text="$(jq -r '.text' <<<"$step")"
-    wait_seconds="$(jq -r '.wait // 6' <<<"$step")"
+    wait_seconds="$(jq -r '.wait // empty' <<<"$step")"
     expected="$(jq -r '.expect // "next"' <<<"$step")"
 
     if [[ "$action" == "pick" ]]; then

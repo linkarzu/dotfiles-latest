@@ -87,8 +87,8 @@ cmd + alt - f2 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/200-micMut
 #
 # Single-select path menu (fresh live inspect + unique text match + accept):
 #   "$helper" pick "070-obsMeetingManager.sh"
-# For a panel that can take several seconds to open:
-#   "$helper" pick --wait 6 "070-obsMeetingManager.sh"
+# Only when a measured panel exceeds the normal 3s ceiling, give that exact
+# transition a larger hard timeout: `pick --wait 6 "Exact inspected label"`.
 # Use `choose 3` only when selecting the exact option number from the latest
 # inspection.
 #
@@ -115,9 +115,9 @@ cmd + alt - f2 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/200-micMut
 # appeared, so verify the resulting terminal output or external action instead
 # of selecting again. `FZF_HUMAN_HANDOFF` means the application deliberately
 # opened a non-socket fzf; stop AI input and let the user act. `choose`, `pick`,
-# `accept`, and `cancel` accept
-# `--wait SECONDS` for slow nested panels. If no menu is active, reopen this QAT
-# and run `wait`.
+# `accept`, and `cancel` accept `--wait SECONDS` as an explicit hard timeout for
+# a proven slow nested panel; it does not extend the 1s terminal grace. If no
+# menu is active, reopen this QAT and run `wait`.
 #
 # The launcher is also the visibility toggle for the `system-task` QAT. When a
 # selection exits fzf and opens an external UI, let that UI appear and then run

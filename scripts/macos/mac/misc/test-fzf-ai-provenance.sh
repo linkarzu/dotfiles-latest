@@ -337,6 +337,44 @@ PY
     [[ "$(current_fzf_prompt)" == 'Livestream title >' ]]
   )
 
+  # Repeated command-substitution shells collapse to the durable workflow
+  # owner, while a differently named ancestor is not crossed.
+  (
+    process_parent_pid() {
+      case "$1" in
+      10) printf '20\n' ;;
+      20) printf '30\n' ;;
+      30) printf '40\n' ;;
+      *) return 1 ;;
+      esac
+    }
+    process_command() {
+      case "$1" in
+      20 | 30) printf '/bin/bash 240-systemTask.sh\n' ;;
+      40) printf 'kitty-quick-access\n' ;;
+      *) return 1 ;;
+      esac
+    }
+    [[ "$(transition_owner_pid 10)" == "30" ]]
+  )
+
+  # Multi-select flow matches each requested visible name uniquely, selects all
+  # resolved positions, and accepts in one socket action.
+  (
+    multi_fixture='{"query":"","totalCount":2,"matchCount":2,"current":{"position":0,"text":"directory:1\t[saved] Fake Guest Two  @fake-two"},"matches":[{"index":0,"text":"directory:1\t[saved] Fake Guest Two  @fake-two"},{"index":1,"text":"directory:2\t[saved] Web Developer  @web-developer"}],"selected":[]}'
+    get_state() { printf '%s' "$multi_fixture"; }
+    fzf_process_mode() { printf 'multi\n'; }
+    socket_inode() { printf '555\n'; }
+    fzf_process_pid() { printf '10\n'; }
+    transition_owner_pid() { printf '30\n'; }
+    post_action() { printf 'ACTION %s\n' "$1"; }
+    wait_for_transition() { :; }
+    selected="$(select_texts_and_accept '' 'Web Developer' 'Fake Guest Two')"
+    [[ "$selected" == *'ACTION pos(2)+select+pos(1)+select+accept'* ]]
+    [[ "$selected" == *$'FZF_MULTI_PICKED\tdirectory:2\t[saved] Web Developer'* ]]
+    [[ "$selected" == *$'FZF_MULTI_PICKED\tdirectory:1\t[saved] Fake Guest Two'* ]]
+  )
+
   # A complete flow performs validated live picks and text entry in one local
   # process and accepts a declared human-only terminal boundary.
   (
@@ -380,6 +418,18 @@ PY
     }
     run_flow_json '[{"action":"pick","text":"slow","wait":6}]' >/dev/null
     [[ "$(<"$flow_wait_log")" == "6" ]]
+  )
+
+  # Flow forwards multi-select names together without per-option agent turns.
+  (
+    selected_args="$HOME/flow-select-args"
+    wait_for_menu() { :; }
+    select_texts_and_accept() {
+      printf '%s\n' "$@" >"$selected_args"
+      printf 'FZF_MULTI_PICKED\tWeb Developer\nFZF_MULTI_PICKED\tFake Guest Two\nFZF_NEXT_READY fixture\n'
+    }
+    run_flow_json '[{"action":"select","texts":["Web Developer","Fake Guest Two"]}]' >/dev/null
+    [[ "$(<"$selected_args")" == $'\nWeb Developer\nFake Guest Two' ]]
   )
 
   # Prompt mismatches fail before mutating the live query.

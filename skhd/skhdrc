@@ -94,14 +94,16 @@ cmd + alt - f2 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/200-micMut
 #
 # Known multi-menu paths must use one local `flow` invocation instead of one AI
 # tool round trip per menu. Every step still validates the live options or text
-# prompt and fails closed on a mismatch. The final step may explicitly expect a
-# human-only handoff:
+# prompt and fails closed on a mismatch. A `select` step resolves and accepts
+# multiple unique visible-name matches in one live multi-select menu. The final
+# step may explicitly expect a human-only handoff:
 #   printf '%s' '[{"action":"pick","text":"070-obsMeetingManager.sh"},{"action":"pick","text":"schedule"},{"action":"input","prompt":"Livestream title >","text":"My title"},{"action":"pick","text":"confirm","expect":"handoff"}]' | "$helper" flow
 #
 # Multi-select menu (inspect reports mode=multi):
 #   "$helper" mark 2 4
 #   "$helper" inspect          # Verify FZF_SELECTED 2 and 4
 #   "$helper" accept
+# Known multi-select flow: {"action":"select","texts":["Guest One","Guest Two"]}
 #
 # Other controls:
 #   "$helper" unmark 2

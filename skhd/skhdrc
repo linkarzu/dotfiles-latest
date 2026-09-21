@@ -86,11 +86,17 @@ cmd + alt - f2 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/200-micMut
 # a query change or after a nested menu opens; never assume positions carry over.
 #
 # Single-select path menu (fresh live inspect + unique text match + accept):
-#   "$helper" pick "Meeting Manager"
+#   "$helper" pick "070-obsMeetingManager.sh"
 # For a panel that can take several seconds to open:
-#   "$helper" pick --wait 6 "Meeting Manager"
+#   "$helper" pick --wait 6 "070-obsMeetingManager.sh"
 # Use `choose 3` only when selecting the exact option number from the latest
 # inspection.
+#
+# Known multi-menu paths must use one local `flow` invocation instead of one AI
+# tool round trip per menu. Every step still validates the live options or text
+# prompt and fails closed on a mismatch. The final step may explicitly expect a
+# human-only handoff:
+#   printf '%s' '[{"action":"pick","text":"070-obsMeetingManager.sh"},{"action":"pick","text":"schedule"},{"action":"input","prompt":"Livestream title >","text":"My title"},{"action":"pick","text":"confirm","expect":"handoff"}]' | "$helper" flow
 #
 # Multi-select menu (inspect reports mode=multi):
 #   "$helper" mark 2 4
@@ -107,7 +113,9 @@ cmd + alt - f2 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/200-micMut
 # `FZF_NEXT_READY` means the accepted option opened another fzf on the same
 # socket; only then run `inspect` again. `FZF_FLOW_ENDED` means no next fzf
 # appeared, so verify the resulting terminal output or external action instead
-# of selecting again. `choose`, `pick`, `accept`, and `cancel` accept
+# of selecting again. `FZF_HUMAN_HANDOFF` means the application deliberately
+# opened a non-socket fzf; stop AI input and let the user act. `choose`, `pick`,
+# `accept`, and `cancel` accept
 # `--wait SECONDS` for slow nested panels. If no menu is active, reopen this QAT
 # and run `wait`.
 #

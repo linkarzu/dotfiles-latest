@@ -78,13 +78,15 @@ AI protocol:
   8. Acceptance alone and FZF_AI_SOCKET presence do not establish AI text origin.
 
 Flow JSON:
-  An array of pick or input actions. Each action validates the current live menu.
+  An array of pick, input, or multi-select actions. Each action validates the
+  current live menu.
   `wait` is an optional hard timeout for a proven slow transition. It does not
   extend the 1s terminal grace. `expect` defaults to `next` and may be `handoff`
   or `ended` on the final action only.
 
   [{"action":"pick","text":"070-obsMeetingManager.sh"},
    {"action":"input","prompt":"Livestream title >","text":"My title"},
+   {"action":"select","texts":["Guest One","Guest Two"]},
    {"action":"pick","text":"confirm","expect":"handoff"}]
 
 Environment:
@@ -212,6 +214,34 @@ process_parent_pid() {
   parent="${parent%"${parent##*[![:space:]]}"}"
   [[ "$parent" =~ ^[0-9]+$ ]] || return 1
   printf '%s\n' "$parent"
+}
+
+process_command() {
+  local pid="$1"
+
+  [[ "$pid" =~ ^[0-9]+$ ]] || return 1
+  ps -ww -p "$pid" -o command= 2>/dev/null
+}
+
+transition_owner_pid() {
+  local pid="$1"
+  local owner=""
+  local owner_command=""
+  local ancestor=""
+  local ancestor_command=""
+  local depth=0
+
+  owner="$(process_parent_pid "$pid")" || return 1
+  owner_command="$(process_command "$owner")" || return 1
+  while [[ $depth -lt 4 ]]; do
+    ancestor="$(process_parent_pid "$owner" || true)"
+    [[ -n "$ancestor" ]] || break
+    ancestor_command="$(process_command "$ancestor" || true)"
+    [[ -n "$ancestor_command" && "$ancestor_command" == "$owner_command" ]] || break
+    owner="$ancestor"
+    depth=$((depth + 1))
+  done
+  printf '%s\n' "$owner"
 }
 
 human_handoff_pid() {
@@ -409,7 +439,7 @@ choose_option() {
   validate_match_position "$index"
   generation="$(socket_inode)"
   owner_pid="$(fzf_process_pid || true)"
-  parent_pid="$(process_parent_pid "$owner_pid" || true)"
+  parent_pid="$(transition_owner_pid "$owner_pid" || true)"
   post_action "pos(${index})+accept"
   printf 'FZF_CHOSEN %s\n' "$index"
   wait_for_transition "$generation" "$window" "$parent_pid"
@@ -430,7 +460,7 @@ pick_option() {
     || die "no active fzf menu (run 'fzf-ai.sh wait' after opening the QAT)"
   generation="$(socket_inode)"
   owner_pid="$(fzf_process_pid || true)"
-  parent_pid="$(process_parent_pid "$owner_pid" || true)"
+  parent_pid="$(transition_owner_pid "$owner_pid" || true)"
 
   index="$(printf '%s' "$state" | jq -r \
     --arg t "$text" '
@@ -481,6 +511,67 @@ change_marks() {
   printf '\n'
 }
 
+select_texts_and_accept() {
+  local window="$1"
+  local state=""
+  local generation=""
+  local owner_pid=""
+  local parent_pid=""
+  local text=""
+  local resolved=""
+  local index=""
+  local option=""
+  local actions=""
+  local indexes=" "
+  local -a selected_options=()
+  shift
+
+  [[ $# -gt 0 ]] || die "select requires at least one text match"
+  [[ "$(fzf_process_mode)" == "multi" ]] || die "select requires an fzf --multi menu"
+  state="$(get_state 1000 0 2>/dev/null)" \
+    || die "no active fzf menu (run 'fzf-ai.sh wait' after opening the QAT)"
+  generation="$(socket_inode)"
+  owner_pid="$(fzf_process_pid || true)"
+  parent_pid="$(transition_owner_pid "$owner_pid" || true)"
+
+  for text in "$@"; do
+    resolved="$(printf '%s' "$state" | jq -r --arg t "$text" '
+      ([.matches | to_entries[] |
+        select((.value.text | ascii_downcase) == ($t | ascii_downcase))]) as $exact
+      | if ($exact | length) == 1 then $exact
+        elif ($exact | length) > 1 then []
+        else
+          ([.matches | to_entries[] |
+            select((.value.text | ascii_downcase) | startswith($t | ascii_downcase))]) as $prefix
+          | if ($prefix | length) == 1 then $prefix
+            elif ($prefix | length) > 1 then []
+            else [.matches | to_entries[] |
+              select((.value.text | ascii_downcase) | contains($t | ascii_downcase))]
+            end
+        end
+      | if length == 1 then "\(.[0].key + 1)\t\(.[0].value.text)" else "NONE" end')"
+    if [[ "$resolved" == "NONE" || "$resolved" != *$'\t'* ]]; then
+      inspect_menu
+      die "no unique select match for text: $text"
+    fi
+    index="${resolved%%$'\t'*}"
+    option="${resolved#*$'\t'}"
+    [[ "$indexes" != *" $index "* ]] || die "select texts resolve to the same option: $text"
+    indexes+="$index "
+    selected_options+=("$option")
+    if [[ -n "$actions" ]]; then
+      actions+="+"
+    fi
+    actions+="pos(${index})+select"
+  done
+
+  post_action "${actions}+accept"
+  for option in "${selected_options[@]}"; do
+    printf 'FZF_MULTI_PICKED\t%s\n' "$option"
+  done
+  wait_for_transition "$generation" "$window" "$parent_pid"
+}
+
 accept_selection() {
   local window="${1:-}"
   local generation=""
@@ -489,7 +580,7 @@ accept_selection() {
 
   generation="$(socket_inode)"
   owner_pid="$(fzf_process_pid || true)"
-  parent_pid="$(process_parent_pid "$owner_pid" || true)"
+  parent_pid="$(transition_owner_pid "$owner_pid" || true)"
   post_action accept
   printf 'FZF_ACCEPTED\n'
   wait_for_transition "$generation" "$window" "$parent_pid"
@@ -503,7 +594,7 @@ cancel_menu() {
 
   generation="$(socket_inode)"
   owner_pid="$(fzf_process_pid || true)"
-  parent_pid="$(process_parent_pid "$owner_pid" || true)"
+  parent_pid="$(transition_owner_pid "$owner_pid" || true)"
   post_action abort
   printf 'FZF_CANCELLED\n'
   wait_for_transition "$generation" "$window" "$parent_pid"
@@ -534,6 +625,8 @@ run_flow_json() {
   local expected=""
   local actual=""
   local output=""
+  local value=""
+  local -a texts=()
 
   jq -e '
     . as $steps |
@@ -541,14 +634,19 @@ run_flow_json() {
     all(to_entries[];
       . as $entry | .value as $step |
       ($step | type == "object") and
-      (($step | keys_unsorted) - ["action", "text", "prompt", "wait", "expect"] | length == 0) and
-      ($step.action == "pick" or $step.action == "input") and
-      ($step.text | type == "string") and
+      (($step | keys_unsorted) - ["action", "text", "texts", "prompt", "wait", "expect"] | length == 0) and
+      ($step.action | IN("pick", "input", "select")) and
       (($step | has("wait") | not) or
        ($step.wait | type == "number" and floor == . and . >= 1)) and
       (($step.expect // "next") | IN("next", "handoff", "ended")) and
       (if $step.action == "input" then ($step.prompt | type == "string" and length > 0)
-       else ($step.text | length > 0 and ($step | has("prompt") | not)) end) and
+         and ($step.text | type == "string") and ($step | has("texts") | not)
+       elif $step.action == "pick" then ($step.text | type == "string" and length > 0)
+         and ($step | has("prompt") | not) and ($step | has("texts") | not)
+       else ($step.texts | type == "array" and length > 0 and length <= 50)
+         and all($step.texts[]; type == "string" and length > 0)
+         and ($step | has("text") | not) and ($step | has("prompt") | not)
+       end) and
       (if ($step.expect // "next") == "next" then true
        else $entry.key == (($steps | length) - 1) end)
     )' <<<"$payload" >/dev/null || die "flow requires a valid JSON action array"
@@ -558,13 +656,13 @@ run_flow_json() {
   for ((index = 0; index < count; index++)); do
     step="$(jq -c ".[$index]" <<<"$payload")"
     action="$(jq -r '.action' <<<"$step")"
-    text="$(jq -r '.text' <<<"$step")"
+    text="$(jq -r '.text // empty' <<<"$step")"
     wait_seconds="$(jq -r '.wait // empty' <<<"$step")"
     expected="$(jq -r '.expect // "next"' <<<"$step")"
 
     if [[ "$action" == "pick" ]]; then
       output="$(pick_option "$text" "$wait_seconds")" || return 1
-    else
+    elif [[ "$action" == "input" ]]; then
       prompt="$(jq -r '.prompt' <<<"$step")"
       observed_prompt="$(current_fzf_prompt)"
       [[ "$observed_prompt" == "$prompt" ]] \
@@ -574,6 +672,12 @@ run_flow_json() {
       get_state 1 0 | jq -e --arg text "$text" '.query == $text' >/dev/null \
         || die "flow step $((index + 1)) could not verify the exact query"
       output="$(accept_selection "$wait_seconds")" || return 1
+    else
+      texts=()
+      while IFS= read -r value; do
+        texts+=("$value")
+      done < <(jq -r '.texts[]' <<<"$step")
+      output="$(select_texts_and_accept "$wait_seconds" "${texts[@]}")" || return 1
     fi
 
     printf '%s\n' "$output"

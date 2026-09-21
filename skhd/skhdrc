@@ -85,8 +85,12 @@ cmd + alt - f2 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/200-micMut
 # Those numbers are valid only for that inspection. Always inspect again after
 # a query change or after a nested menu opens; never assume positions carry over.
 #
-# Single-select menu:
-#   "$helper" choose 3
+# Single-select path menu (fresh live inspect + unique text match + accept):
+#   "$helper" pick "Meeting Manager"
+# For a panel that can take several seconds to open:
+#   "$helper" pick --wait 6 "Meeting Manager"
+# Use `choose 3` only when selecting the exact option number from the latest
+# inspection.
 #
 # Multi-select menu (inspect reports mode=multi):
 #   "$helper" mark 2 4
@@ -101,9 +105,11 @@ cmd + alt - f2 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/200-micMut
 #   "$helper" help
 #
 # `FZF_NEXT_READY` means the accepted option opened another fzf on the same
-# socket; run `inspect` again. `FZF_FLOW_ENDED` means no next fzf appeared, so
-# verify the resulting terminal output or external action instead of selecting
-# again. If no menu is active, reopen this QAT and run `wait`.
+# socket; only then run `inspect` again. `FZF_FLOW_ENDED` means no next fzf
+# appeared, so verify the resulting terminal output or external action instead
+# of selecting again. `choose`, `pick`, `accept`, and `cancel` accept
+# `--wait SECONDS` for slow nested panels. If no menu is active, reopen this QAT
+# and run `wait`.
 #
 # The launcher is also the visibility toggle for the `system-task` QAT. When a
 # selection exits fzf and opens an external UI, let that UI appear and then run

@@ -220,6 +220,74 @@ PY
   socket_ready() { return 0; }
   fzf_process_mode() { printf 'single\n'; }
   [[ "$(inspect_menu)" == *$'FZF_OPTION 1\tconfirm\tDT -> @distrotube'* ]]
+
+  # A true leaf finishes on the 1s re-open grace. An explicit wait raises both
+  # the grace and transition ceiling for a slow nested panel.
+  (
+    source "$PROVENANCE_HELPER"
+    socket_ready() { return 1; }
+    lsof() { return 1; }
+    [[ "$(wait_for_transition 111)" == "FZF_FLOW_ENDED no next fzf menu appeared within 1s" ]]
+    [[ "$(wait_for_transition 111 6)" == "FZF_FLOW_ENDED no next fzf menu appeared within 6s" ]]
+  )
+
+  # Every accepting action passes its optional --wait window to the transition.
+  (
+    wait_for_transition() { printf 'WAIT %s\n' "${2:-default}"; }
+    socket_inode() { printf '333\n'; }
+    post_action() { printf 'ACTION %s\n' "$1"; }
+    get_state() {
+      printf '%s' '{"query":"","totalCount":2,"matchCount":2,"current":{"position":0,"text":"Run QAT"},"matches":[{"index":0,"text":"Run QAT"},{"index":1,"text":"Prepare livestream media"}],"selected":[]}'
+    }
+    fzf_process_mode() { printf 'single\n'; }
+    [[ "$(choose_option 2 6)" == *$'ACTION pos(2)+accept\nFZF_CHOSEN 2\nWAIT 6'* ]]
+    [[ "$(pick_option 'prepare livestream' 6)" == *$'ACTION pos(2)+accept\nFZF_PICKED 2\tPrepare livestream media\nWAIT 6'* ]]
+    [[ "$(accept_selection 6)" == *$'ACTION accept\nFZF_ACCEPTED\nWAIT 6'* ]]
+    [[ "$(cancel_menu 6)" == *$'ACTION abort\nFZF_CANCELLED\nWAIT 6'* ]]
+  )
+
+  # Exact and unique-prefix text matching is case-insensitive.
+  (
+    pick_fixture='{"query":"","totalCount":2,"matchCount":2,"current":{"position":0,"text":"Run QAT"},"matches":[{"index":0,"text":"Run QAT"},{"index":1,"text":"Prepare livestream media"}],"selected":[]}'
+    get_state() { printf '%s' "$pick_fixture"; }
+    fzf_process_mode() { printf 'single\n'; }
+    socket_inode() { printf '444\n'; }
+    post_action() { printf 'ACTION %s\n' "$1"; }
+    wait_for_transition() { :; }
+    [[ "$(pick_option 'rUn qat')" == $'ACTION pos(1)+accept\nFZF_PICKED 1\tRun QAT' ]]
+    [[ "$(pick_option 'prepare livestream')" == $'ACTION pos(2)+accept\nFZF_PICKED 2\tPrepare livestream media' ]]
+  )
+
+  # Ambiguous prefixes, duplicate exact labels, and missing matches list the
+  # current options and fail without taking action.
+  for text in prepare duplicate zzz; do
+    (
+      pick_fixture='{"query":"","totalCount":5,"matchCount":5,"current":{"position":0,"text":"Run QAT"},"matches":[{"index":0,"text":"Run QAT"},{"index":1,"text":"Prepare livestream media"},{"index":2,"text":"Prepare recordings"},{"index":3,"text":"Duplicate"},{"index":4,"text":"duplicate"}],"selected":[]}'
+      get_state() { printf '%s' "$pick_fixture"; }
+      fzf_process_mode() { printf 'single\n'; }
+      socket_inode() { printf '444\n'; }
+      post_action() { touch "$HOME/unexpected-pick-action"; }
+      if output="$(pick_option "$text" 2>/dev/null)"; then
+        echo "non-unique pick unexpectedly succeeded: $text" >&2
+        exit 1
+      fi
+      [[ "$output" == *$'FZF_OPTION 1\tRun QAT'* ]]
+      [[ ! -e "$HOME/unexpected-pick-action" ]]
+    )
+  done
+
+  # A multi-select menu is refused before state inspection or action.
+  (
+    fzf_process_mode() { printf 'multi\n'; }
+    get_state() { touch "$HOME/unexpected-pick-state"; }
+    post_action() { touch "$HOME/unexpected-pick-action"; }
+    if ( pick_option 'Run QAT' ) 2>/dev/null; then
+      echo "multi-menu pick unexpectedly succeeded" >&2
+      exit 1
+    fi
+    [[ ! -e "$HOME/unexpected-pick-state" && ! -e "$HOME/unexpected-pick-action" ]]
+  )
+
   printf 'passed\n' >"$HOME/checked"
 )
 export -f fzf

@@ -10,12 +10,18 @@ set -euo pipefail
 # local Unix-socket API, allowing an AI to inspect unknown options and perform
 # selections without screenshots, OCR, cursor-key timing, or source knowledge.
 #
-# Recommended AI loop:
+# Recommended fast loop:
 #
 #   fzf-ai.sh wait
 #   fzf-ai.sh inspect
-#   fzf-ai.sh choose 3
-#   fzf-ai.sh inspect          # The next nested fzf, if there is one
+#   fzf-ai.sh pick "Option text"       # One call: inspect + unique match + accept
+#   fzf-ai.sh pick --wait 6 "Meeting Manager"   # Slow-loading panel still detected
+#
+# `pick` inspects the live menu and chooses a unique exact/prefix text match in
+# a single call; on an ambiguous or missing match it prints the option list and
+# exits non-zero. After choose/pick/accept, re-inspect only when it reports
+# FZF_NEXT_READY; on FZF_FLOW_ENDED verify the terminal output or external
+# action instead of selecting again.
 #
 # Multi-select menus:
 #
@@ -24,10 +30,10 @@ set -euo pipefail
 #   fzf-ai.sh inspect          # Verify FZF_SELECTED records
 #   fzf-ai.sh accept
 #
-# `inspect` numbers the current ordered match list from 1. `choose` and `mark`
-# use those displayed numbers, not an item's internal fzf index. The helper
-# never executes arbitrary remote shell commands; the bridge uses fzf's safe
-# `--listen` mode rather than `--listen-unsafe`.
+# `inspect` numbers the current ordered match list from 1. `choose`, `mark`,
+# and `pick` use those displayed numbers, not an item's internal fzf index.
+# The helper never executes arbitrary remote shell commands; the bridge uses
+# fzf's safe `--listen` mode rather than `--listen-unsafe`.
 
 socket_dir="${TMPDIR:-/tmp}"
 socket="${FZF_AI_SOCKET:-${socket_dir%/}/linkarzu-system-task-fzf.sock}"
@@ -42,30 +48,38 @@ Commands:
   wait [SECONDS]           Wait until an fzf menu is ready.
   inspect [LIMIT] [OFFSET] Print menu state and numbered options (default 1000).
   state [LIMIT] [OFFSET]   Print the raw fzf JSON state.
-  choose INDEX             Move to one option and accept it.
+  choose [--wait N] INDEX  Move to one option and accept it.
+  pick [--wait N] "TEXT"   Inspect, pick a unique exact/prefix text match, accept it.
   mark INDEX...            Select one or more options without accepting.
   unmark INDEX...          Deselect one or more options without accepting.
-  accept                   Accept the current item or marked items.
+  accept [--wait N]        Accept the current item or marked items.
+  cancel [--wait N]        Abort the current fzf menu.
   query TEXT               Replace fzf's current search query with TEXT.
   clear                    Clear fzf's current search query.
-  cancel                   Abort the current fzf menu.
   help                     Show this help.
 
 AI protocol:
   1. Run `wait`, then `inspect`; never assume the menu options.
-  2. Use the 1-based FZF_OPTION number with `choose` for single selection.
+  2. For single-selection, use `pick "TEXT"` (or the 1-based FZF_OPTION number
+     with `choose`). On an ambiguous or missing pick match, the option list is
+     printed and the command exits non-zero; fall back to a normal inspect.
   3. For multi-select, use `mark`, inspect again to verify FZF_SELECTED, then
      use `accept`.
-  4. After choose/accept, inspect again. A nested fzf uses the same socket.
+  4. After choose/pick/accept, re-inspect only when it reports
+     `FZF_NEXT_READY`. `FZF_FLOW_ENDED` means no next fzf appeared; verify the
+     terminal output or external action instead of selecting again.
   5. For a text-entry menu, use `query`, inspect the exact query, then `accept`.
-  6. `FZF_NEXT_READY` means another menu replaced the previous one.
-     `FZF_FLOW_ENDED` means no next fzf appeared within the transition timeout.
+  6. A nested fzf uses the same socket and a new generation. Pass
+     `--wait SECONDS` on choose/pick/accept/cancel for a panel that takes a few
+     seconds to appear (e.g. the OBS Meeting Manager main menu).
   7. `query` records an authenticated hash of the exact AI-entered text and the
      current socket generation. The workflow consumes this record once.
   8. Acceptance alone and FZF_AI_SOCKET presence do not establish AI text origin.
 
 Environment:
   FZF_AI_SOCKET overrides the default main-task QAT socket.
+  FZF_AI_TRANSITION_GRACE overrides the default re-open wait (1) for a next fzf.
+  FZF_AI_TRANSITION_TIMEOUT overrides the default transition ceiling (3).
   240-systemTask.sh creates private session/query files under SOCKET.ai/.
   FZF_AI_SESSION_PATH and FZF_AI_QUERY_PROVENANCE_PATH override helper sidecars.
 EOF
@@ -145,7 +159,7 @@ wait_for_menu() {
       printf 'FZF_READY socket=%s generation=%s\n' "$socket" "$(socket_inode)"
       return 0
     fi
-    sleep 0.1
+    sleep 0.05
   done
 
   die "no active fzf menu appeared within ${timeout}s (socket: $socket)"
@@ -178,9 +192,9 @@ inspect_menu() {
 
   validate_integer "$limit"
   [[ "$offset" =~ ^[0-9]+$ ]] || die "offset must be zero or a positive integer"
-  socket_ready || die "no active fzf menu (run 'fzf-ai.sh wait' after opening the QAT)"
 
-  state="$(get_state "$limit" "$offset")"
+  state="$(get_state "$limit" "$offset" 2>/dev/null)" \
+    || die "no active fzf menu (run 'fzf-ai.sh wait' after opening the QAT)"
   mode="$(fzf_process_mode)"
   generation="$(socket_inode)"
 
@@ -208,7 +222,9 @@ inspect_menu() {
 post_action() {
   local action="$1"
 
-  socket_ready || die "no active fzf menu"
+  # No readiness GET: a dead menu is reported by the same stat and error text,
+  # while a live menu that rejects the action still surfaces curl's failure.
+  [[ -S "$socket" ]] || die "no active fzf menu"
   curl --silent --show-error --fail \
     --unix-socket "$socket" \
     --request POST \
@@ -242,33 +258,96 @@ validate_match_position() {
 
 wait_for_transition() {
   local old_generation="$1"
-  local timeout="${2:-3}"
-  local deadline=$((SECONDS + timeout))
+  local window="${2:-${FZF_AI_TRANSITION_GRACE:-1}}"
+  local ceiling="${FZF_AI_TRANSITION_TIMEOUT:-3}"
+  local deadline=0
+  local end_window=0
   local generation=""
+  local gone=0
 
+  validate_integer "$window"
+  validate_integer "$ceiling"
+  # --wait N raises both the grace window and the ceiling for this invocation.
+  if [[ "$window" -gt "$ceiling" ]]; then
+    ceiling="$window"
+  fi
+  deadline=$((SECONDS + ceiling))
   while [[ $SECONDS -lt $deadline ]]; do
     if socket_ready; then
       generation="$(socket_inode)"
-      if [[ "$generation" != "$old_generation" ]]; then
+      if [[ -n "$generation" && "$generation" != "$old_generation" ]]; then
         printf 'FZF_NEXT_READY socket=%s generation=%s\n' "$socket" "$generation"
         return 0
       fi
+      # The previous fzf is still alive on the old generation: keep polling.
+      gone=0
+      end_window=0
+    elif ! lsof -t "$socket" >/dev/null 2>&1; then
+      # The owning fzf process has exited. Bound the wait for a replacement.
+      if [[ "$gone" == "0" ]]; then
+        gone=1
+        end_window=$((SECONDS + window))
+      fi
     fi
-    sleep 0.1
+    if [[ "$gone" == "1" && $SECONDS -ge $end_window ]]; then
+      printf 'FZF_FLOW_ENDED no next fzf menu appeared within %ss\n' "$window"
+      return 0
+    fi
+    sleep 0.05
   done
 
-  printf 'FZF_FLOW_ENDED no next fzf menu appeared within %ss\n' "$timeout"
+  printf 'FZF_FLOW_ENDED no next fzf menu appeared within %ss\n' "$ceiling"
 }
 
 choose_option() {
   local index="$1"
+  local window="${2:-}"
   local generation=""
 
   validate_match_position "$index"
   generation="$(socket_inode)"
   post_action "pos(${index})+accept"
   printf 'FZF_CHOSEN %s\n' "$index"
-  wait_for_transition "$generation"
+  wait_for_transition "$generation" "$window"
+}
+
+pick_option() {
+  local text="${1:-}"
+  local window="${2:-}"
+  local state=""
+  local generation=""
+  local index=""
+
+  [[ -n "$text" ]] || die "pick requires a text match"
+  [[ "$(fzf_process_mode)" == "single" ]] || die "pick requires a single-select fzf menu"
+  state="$(get_state 1000 0 2>/dev/null)" \
+    || die "no active fzf menu (run 'fzf-ai.sh wait' after opening the QAT)"
+  generation="$(socket_inode)"
+
+  index="$(printf '%s' "$state" | jq -r \
+    --arg t "$text" '
+      ([.matches | to_entries[] |
+        select((.value.text | ascii_downcase) == ($t | ascii_downcase))]) as $exact
+      | if ($exact | length) == 1 then
+          $exact[0].key + 1
+        elif ($exact | length) > 1 then
+          "NONE"
+        else
+          ([.matches | to_entries[] |
+            select((.value.text | ascii_downcase) | startswith($t | ascii_downcase))]) as $pre
+          | if ($pre | length) == 1 then $pre[0].key + 1 else "NONE" end
+        end')"
+
+  if [[ -z "$index" || "$index" == "NONE" ]]; then
+    inspect_menu
+    die "no unique pick match for text: $text"
+  fi
+  [[ "$index" =~ ^[0-9]+$ ]] || die "pick could not resolve the match for: $text"
+  validate_match_position "$index"
+  post_action "pos(${index})+accept"
+  printf 'FZF_PICKED %s\t%s\n' "$index" \
+    "$(printf '%s' "$state" | jq -r --argjson i $((index - 1)) '.matches[$i].text')"
+  wait_for_transition "$generation" "$window"
 }
 
 change_marks() {
@@ -295,21 +374,23 @@ change_marks() {
 }
 
 accept_selection() {
+  local window="${1:-}"
   local generation=""
 
   generation="$(socket_inode)"
   post_action accept
   printf 'FZF_ACCEPTED\n'
-  wait_for_transition "$generation"
+  wait_for_transition "$generation" "$window"
 }
 
 cancel_menu() {
+  local window="${1:-}"
   local generation=""
 
   generation="$(socket_inode)"
   post_action abort
   printf 'FZF_CANCELLED\n'
-  wait_for_transition "$generation"
+  wait_for_transition "$generation" "$window"
 }
 
 main() {
@@ -351,7 +432,24 @@ main() {
     ;;
   choose)
     [[ -n "${1:-}" ]] || die "choose requires an option number"
-    choose_option "$1"
+    if [[ "$1" == "--wait" ]]; then
+      [[ -n "${2:-}" ]] || die "--wait requires seconds"
+      validate_integer "$2"
+      [[ -n "${3:-}" ]] || die "choose requires an option number"
+      choose_option "$3" "$2"
+    else
+      choose_option "$1"
+    fi
+    ;;
+  pick)
+    if [[ "${1:-}" == "--wait" ]]; then
+      [[ -n "${2:-}" ]] || die "--wait requires seconds"
+      validate_integer "$2"
+      [[ -n "${3:-}" ]] || die "pick requires a text match"
+      pick_option "$3" "$2"
+    else
+      pick_option "${1:-}"
+    fi
     ;;
   mark)
     change_marks MARKED select "$@"
@@ -360,7 +458,13 @@ main() {
     change_marks UNMARKED deselect "$@"
     ;;
   accept)
-    accept_selection
+    if [[ "${1:-}" == "--wait" ]]; then
+      [[ -n "${2:-}" ]] || die "--wait requires seconds"
+      validate_integer "$2"
+      accept_selection "$2"
+    else
+      accept_selection
+    fi
     ;;
   query)
     [[ $# -eq 1 ]] || die "query requires exactly one text argument"
@@ -372,7 +476,13 @@ main() {
     printf 'FZF_QUERY_CLEARED\n'
     ;;
   cancel)
-    cancel_menu
+    if [[ "${1:-}" == "--wait" ]]; then
+      [[ -n "${2:-}" ]] || die "--wait requires seconds"
+      validate_integer "$2"
+      cancel_menu "$2"
+    else
+      cancel_menu
+    fi
     ;;
   help | -h | --help)
     usage

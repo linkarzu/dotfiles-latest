@@ -55,7 +55,7 @@ ctrl + cmd - f17 : $HOME/github/dotfiles-latest/scripts/macos/mac/misc/550-skhdS
 ctrl + cmd - f18 : $HOME/github/dotfiles-latest/scripts/macos/mac/misc/550-skhdSession.sh "$HOME/github/dotfiles-latest/kitty/sessions/networking.kitty-session"
 # ctrl + cmd - f18
 # ctrl + alt - f19 : $HOME/github/dotfiles-latest/scripts/macos/mac/misc/550-skhdSession.sh "$HOME/github/dotfiles-latest/kitty/sessions/glove80.kitty-session"
-ctrl + alt - f19 : $HOME/github/dotfiles-latest/scripts/macos/mac/misc/550-skhdSession.sh "$HOME/github/dotfiles-latest/kitty/sessions/toucan.kitty-session"
+ctrl + alt - f19 : $HOME/github/dotfiles-latest/scripts/macos/mac/misc/550-skhdSession.sh "$HOME/github/dotfiles-latest/kitty/sessions/omm.kitty-session"
 ctrl + cmd - f2 : $HOME/github/dotfiles-latest/scripts/macos/mac/misc/550-skhdSession.sh "$HOME/github/dotfiles-latest/kitty/sessions/home.kitty-session"
 ctrl + cmd - f3 : $HOME/github/dotfiles-latest/scripts/macos/mac/misc/550-skhdSession.sh "$HOME/github/dotfiles-latest/kitty/sessions/dotfiles.kitty-session"
 ctrl + cmd - f5 : $HOME/github/dotfiles-latest/scripts/macos/mac/misc/550-skhdSession.sh "$HOME/github/dotfiles-latest/kitty/sessions/blogpost.kitty-session"

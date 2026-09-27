@@ -9,6 +9,19 @@ local DEFAULT_DND_ITEM = "focus-mode-activity-com.apple.donotdisturb.mode.defaul
 local MAX_NODES = 300
 local retry
 local writeResult
+-- Pending timers must stay referenced: an unreferenced hs.timer can be
+-- garbage-collected before it fires, which silently drops the whole flow.
+local pendingTimers = {}
+
+local function after(seconds, fn)
+	local timer
+	timer = hs.timer.doAfter(seconds, function()
+		pendingTimers[timer] = nil
+		fn()
+	end)
+	pendingTimers[timer] = true
+	return timer
+end
 
 local function attribute(element, name)
 	local ok, value = pcall(function()
@@ -93,7 +106,7 @@ local function pressDirectFocusToggle(root, originalMouse, targetState)
 			writeResult(false, "Could not press the Do Not Disturb control")
 			return true
 		end
-		hs.timer.doAfter(0.2, function()
+		after(0.2, function()
 			hs.eventtap.keyStroke({}, "escape", 0)
 			hs.mouse.absolutePosition(originalMouse)
 			writeResult(true, "Pressed direct Do Not Disturb control (prior AXValue " .. tostring(priorValue) .. ")")
@@ -132,7 +145,7 @@ retry = function(deadline, action, timeoutMessage, onTimeout)
 		end
 		return
 	end
-	hs.timer.doAfter(0.05, function()
+	after(0.05, function()
 		retry(deadline, action, timeoutMessage, onTimeout)
 	end)
 end
@@ -171,7 +184,7 @@ function M.pressFocus(targetState)
 
 	hs.eventtap.keyStroke({}, "escape", 0)
 	hs.mouse.absolutePosition({ x = menuX, y = screenFrame.y })
-	hs.timer.doAfter(0.4, function()
+	after(0.4, function()
 		menuItem = findByIdentifier(root, CONTROL_CENTER_ITEM, 8)
 		if not menuItem or not perform(menuItem, "AXPress") then
 			hs.mouse.absolutePosition(originalMouse)
@@ -193,7 +206,7 @@ function M.pressFocus(targetState)
 				writeResult(false, "Could not press the Focus control")
 				return true
 			end
-			hs.timer.doAfter(0.2, function()
+			after(0.2, function()
 				hs.eventtap.keyStroke({}, "escape", 0)
 				hs.mouse.absolutePosition(originalMouse)
 				writeResult(true, "Pressed Focus control (prior AXValue " .. tostring(priorValue) .. ")")

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Right click any GPU item for the stats and top GPU processes popup.
-GPU_CLICK_SCRIPT="ACTIVITY_MONITOR_CLICK_SCRIPT=\"$ACTIVITY_MONITOR_CLICK_SCRIPT\" $PLUGIN_DIR/gpu_click.sh"
+GPU_CLICK_SCRIPT="ACTIVITY_MONITOR_CLICK_SCRIPT=\"$ACTIVITY_MONITOR_CLICK_SCRIPT\" $PLUGIN_DIR/usage_click.sh gpu.util"
 
 # Must match GPU_TOP_PROCS in helper/gpu.h.
 GPU_POPUP_PROCS=8

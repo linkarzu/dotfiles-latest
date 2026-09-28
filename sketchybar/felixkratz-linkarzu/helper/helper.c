@@ -3,6 +3,7 @@
 #include "ram.h"
 #include "sketchybar.h"
 
+struct apps g_apps;
 struct cpu g_cpu;
 struct gpu g_gpu;
 struct ram g_ram;
@@ -16,12 +17,12 @@ void handler(env env) {
 
   if ((strcmp(name, "cpu.percent") == 0)) {
     // CPU graph updates
-    cpu_update(&g_cpu);
+    cpu_update(&g_cpu, &g_apps);
 
     if (strlen(g_cpu.command) > 0) sketchybar(g_cpu.command);
   }
   else if ((strcmp(name, "swap.percent") == 0)) {
-    ram_update(&g_ram);
+    ram_update(&g_ram, &g_apps);
 
     if (strlen(g_ram.command) > 0) sketchybar(g_ram.command);
   }
@@ -33,6 +34,7 @@ void handler(env env) {
 }
 
 int main (int argc, char** argv) {
+  apps_init(&g_apps);
   cpu_init(&g_cpu);
   gpu_init(&g_gpu);
   ram_init(&g_ram);

@@ -4,12 +4,13 @@
 #include <mach/mach.h>
 #include <stdbool.h>
 #include <time.h>
+#include "apps.h"
 
 #define MAX_TOPPROC_LEN 28
 #define TOPPROC_ELLIPSIS_LEN 3
 
-static const char TOPPROC[] = { "/bin/ps -Aceo pid,pcpu,comm -r" }; 
-static const char FILTER_PATTERN[] = { "com.apple." };
+// Must match CPU_POPUP_APPS in items/cpu.sh.
+#define CPU_TOP_APPS 8
 
 struct cpu {
   host_t host;
@@ -19,7 +20,7 @@ struct cpu {
   bool has_prev_load;
   uint32_t topproc_max_len;
 
-  char command[256];
+  char command[4096];
 };
 
 static inline void cpu_init(struct cpu* cpu) {
@@ -38,10 +39,69 @@ static inline void cpu_init(struct cpu* cpu) {
     }
   }
 
-  snprintf(cpu->command, 100, "");
+  snprintf(cpu->command, sizeof(cpu->command), "");
 }
 
-static inline void cpu_update(struct cpu* cpu) {
+// Shortens the top app name so it fits inside the graph.
+static inline void cpu_topproc_label(struct cpu* cpu,
+                                     const char* name,
+                                     char* out) {
+  uint32_t caret = 0;
+  for (uint32_t i = 0; name[i] != '\0' && caret < cpu->topproc_max_len; i++) {
+    out[caret++] = name[i];
+  }
+  out[caret] = '\0';
+  if (strlen(name) > cpu->topproc_max_len) strcat(out, "...");
+}
+
+// Appends the top apps by CPU share of the whole machine, plus whatever the
+// readable apps don't account for: root processes like WindowServer and
+// processes that started and exited between two updates.
+static inline void cpu_append_top_apps(struct cpu* cpu,
+                                       struct apps* apps,
+                                       double total_percent,
+                                       size_t* length) {
+  qsort(apps->usage, apps->usage_count, sizeof(struct app_usage),
+        apps_compare_cpu);
+
+  double apps_percent = 0;
+  for (uint32_t i = 0; i < apps->usage_count; i++) {
+    apps_percent += apps->usage[i].cpu_percent;
+  }
+
+  for (uint32_t i = 0; i < CPU_TOP_APPS; i++) {
+    size_t remaining = sizeof(cpu->command) - *length;
+    int written;
+    struct app_usage* app = i < apps->usage_count ? &apps->usage[i] : NULL;
+    if (app && app->cpu_percent >= 0.1) {
+      char name[APP_NAME_LEN + sizeof(APP_NAME_ELLIPSIS) + 16];
+      apps_row_name(app, name, sizeof(name));
+      written = snprintf(cpu->command + *length, remaining,
+                         " --set cpu.popup.app.%u drawing=on "
+                         "icon='%s' label='%.1f%%' label.color=%s",
+                         i + 1,
+                         name,
+                         app->cpu_percent,
+                         apps_color(app->cpu_percent, 10, 25, 50));
+    } else {
+      written = snprintf(cpu->command + *length, remaining,
+                         " --set cpu.popup.app.%u drawing=off", i + 1);
+    }
+    if (written < 0 || (size_t)written >= remaining) return;
+    *length += written;
+  }
+
+  double other_percent = total_percent - apps_percent;
+  if (other_percent < 0) other_percent = 0;
+  size_t remaining = sizeof(cpu->command) - *length;
+  int written = snprintf(cpu->command + *length, remaining,
+                         " --set cpu.popup.other label='%.1f%%' label.color=%s",
+                         other_percent,
+                         apps_color(other_percent, 10, 25, 50));
+  if (written > 0 && (size_t)written < remaining) *length += written;
+}
+
+static inline void cpu_update(struct cpu* cpu, struct apps* apps) {
   kern_return_t error = host_statistics(cpu->host,
                                         HOST_CPU_LOAD_INFO,
                                         (host_info_t)&cpu->load,
@@ -51,6 +111,9 @@ static inline void cpu_update(struct cpu* cpu) {
     printf("Error: Could not read cpu host statistics.\n");
     return;
   }
+
+  // Sample apps on every update so their CPU time covers the same interval.
+  bool has_apps = apps_sample(apps, true);
 
   if (cpu->has_prev_load) {
     uint32_t delta_user = cpu->load.cpu_ticks[CPU_STATE_USER]
@@ -72,64 +135,47 @@ static inline void cpu_update(struct cpu* cpu) {
 
     double total_perc = user_perc + sys_perc;
 
-    FILE* file;
-    char line[1024];
-
-    file = popen(TOPPROC, "r");
-    if (!file) {
-      printf("Error: TOPPROC command errored out...\n" );
-      return;
-    }
-
-    fgets(line, sizeof(line), file);
-    fgets(line, sizeof(line), file);
-
-    char* start = strstr(line, FILTER_PATTERN);
-    char topproc[MAX_TOPPROC_LEN + TOPPROC_ELLIPSIS_LEN + 1];
-    uint32_t caret = 0;
-    for (int i = 0; i < sizeof(line); i++) {
-      if (start && i == start - line) {
-        i+=9;
-        continue;
+    // The label above the graph names the app using the most CPU.
+    char topproc[MAX_TOPPROC_LEN + TOPPROC_ELLIPSIS_LEN + 1] = "";
+    struct app_usage* top_app = NULL;
+    for (uint32_t i = 0; i < apps->usage_count; i++) {
+      if (!top_app || apps->usage[i].cpu_percent > top_app->cpu_percent) {
+        top_app = &apps->usage[i];
       }
-
-      if (caret >= cpu->topproc_max_len
-          && caret < cpu->topproc_max_len + TOPPROC_ELLIPSIS_LEN) {
-        topproc[caret++] = '.';
-        continue;
-      }
-      if (caret >= cpu->topproc_max_len + TOPPROC_ELLIPSIS_LEN) break;
-      topproc[caret++] = line[i];
-      if (line[i] == '\0') break;
     }
+    if (has_apps && top_app) cpu_topproc_label(cpu, top_app->name, topproc);
 
-    topproc[cpu->topproc_max_len + TOPPROC_ELLIPSIS_LEN] = '\0';
+    const char* color = apps_color(total_perc * 100., 10, 30, 70);
 
-    pclose(file);
+    double load[3] = { 0, 0, 0 };
+    getloadavg(load, 3);
 
-    char color[16];
-    if (total_perc >= .7) {
-      snprintf(color, 16, "%s", getenv("RED"));
-    } else if (total_perc >= .3) {
-      snprintf(color, 16, "%s", getenv("ORANGE"));
-    } else if (total_perc >= .1) {
-      snprintf(color, 16, "%s", getenv("YELLOW"));
-    } else {
-      snprintf(color, 16, "%s", getenv("LABEL_COLOR"));
+    int written = snprintf(cpu->command, sizeof(cpu->command),
+                           "--push cpu.sys %.2f "
+                           "--push cpu.user %.2f "
+                           "--set cpu.top label='%s' "
+                           "--set cpu.percent label=%.0f%% label.color=%s "
+                           "--set cpu.popup.usage label='%.0f%%' label.color=%s "
+                           "--set cpu.popup.split label='%.0f%% / %.0f%%' "
+                           "--set cpu.popup.load label='%.1f %.1f %.1f'",
+                           sys_perc,
+                           user_perc,
+                           topproc,
+                           total_perc*100.,
+                           color,
+                           total_perc*100.,
+                           color,
+                           user_perc*100.,
+                           sys_perc*100.,
+                           load[0], load[1], load[2]);
+
+    size_t length = written > 0 ? (size_t)written : 0;
+    if (has_apps && length < sizeof(cpu->command)) {
+      cpu_append_top_apps(cpu, apps, total_perc * 100., &length);
     }
-
-    snprintf(cpu->command, 256, "--push cpu.sys %.2f "
-                                "--push cpu.user %.2f "
-                                "--set cpu.top label='%s' "
-                                "--set cpu.percent label=%.0f%% label.color=%s ",
-                                sys_perc,
-                                user_perc,
-                                topproc,
-                                total_perc*100.,
-                                color          );
   }
   else {
-    snprintf(cpu->command, 256, "");
+    snprintf(cpu->command, sizeof(cpu->command), "");
   }
 
   cpu->prev_load = cpu->load;

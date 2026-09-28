@@ -1,8 +1,10 @@
 #include "cpu.h"
+#include "gpu.h"
 #include "ram.h"
 #include "sketchybar.h"
 
 struct cpu g_cpu;
+struct gpu g_gpu;
 struct ram g_ram;
 
 void handler(env env) {
@@ -23,10 +25,16 @@ void handler(env env) {
 
     if (strlen(g_ram.command) > 0) sketchybar(g_ram.command);
   }
+  else if ((strcmp(name, "gpu.temp") == 0)) {
+    gpu_update(&g_gpu);
+
+    if (strlen(g_gpu.command) > 0) sketchybar(g_gpu.command);
+  }
 }
 
 int main (int argc, char** argv) {
   cpu_init(&g_cpu);
+  gpu_init(&g_gpu);
   ram_init(&g_ram);
 
   if (argc < 2) {

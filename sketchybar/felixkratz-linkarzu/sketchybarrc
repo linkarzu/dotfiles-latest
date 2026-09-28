@@ -17,7 +17,7 @@ FONT="MesloLGM Nerd Font"
 # decreased it
 PADDINGS=1
 
-# Set to 100 for the original graph width; 50 makes CPU and RAM graphs half as wide.
+# Set to 100 for the original graph width; 50 makes CPU, RAM and GPU graphs half as wide.
 USAGE_GRAPH_WIDTH_PERCENT=50
 USAGE_GRAPH_WIDTH=$(((75 * USAGE_GRAPH_WIDTH_PERCENT + 50) / 100))
 
@@ -29,7 +29,7 @@ export CPU_TOPPROC_MAX_CHARS
 # Set to on to show the top CPU process above the graph.
 SHOW_CPU_PROCESS=off
 
-# Open and focus Activity Monitor when a CPU or RAM widget is clicked.
+# Open and focus Activity Monitor when a CPU, RAM or GPU widget is clicked.
 ACTIVITY_MONITOR_CLICK_SCRIPT="open -a 'Activity Monitor'"
 
 # Setting up and starting the helper process
@@ -164,6 +164,9 @@ source "$ITEM_DIR/cpu.sh"
 
 # RAM and swap usage indicator
 source "$ITEM_DIR/ram.sh"
+
+# GPU usage and SoC temperature indicator
+source "$ITEM_DIR/gpu.sh"
 
 source "$ITEM_DIR/timer.sh"
 source "$ITEM_DIR/opencode.sh"

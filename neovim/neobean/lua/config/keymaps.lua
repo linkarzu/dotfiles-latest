@@ -4387,6 +4387,15 @@ end, { desc = "Decrease headings in visual selection" })
 --   end,
 -- })
 
+-- Schedule livestreams from a block in my notes (<leader>my keymaps and
+-- ;livestream snippets). The code and guest data live in my private OBS Meeting
+-- Manager repo, so nothing happens if that repo is not on this machine
+local obs_livestream =
+  vim.fn.expand("~/github/dotfiles-private/scripts/macos/mac/obs-meeting-manager/neovim/obs-livestream.lua")
+if vim.uv.fs_stat(obs_livestream) then
+  dofile(obs_livestream).setup()
+end
+
 -- ############################################################################
 --                       End of markdown section
 -- ############################################################################

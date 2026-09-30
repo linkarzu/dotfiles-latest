@@ -44,14 +44,16 @@ set_custom_text() {
     padding_right=3
 }
 
-# The state file holds "done" once the members scene was shown this stream,
-# otherwise the streaming minute of the last reminder. It is removed when the
+# The state file holds "done" once the members scene was shown after a
+# reminder this stream, otherwise the streaming minute of the last reminder. It is removed when the
 # banner goes away and by the start/stop recording scripts.
 show_streaming_reminder() {
   local state=""
   [[ -f "$streaming_reminder_state" ]] && state=$(<"$streaming_reminder_state")
 
-  if [[ "$banner_text" == "$members_scene" ]]; then
+  # The members scene only counts after the first reminder, so an early or
+  # accidental switch never skips the minute-16 thank-you reminder.
+  if [[ "$banner_text" == "$members_scene" && "$state" =~ ^[0-9]+$ ]]; then
     printf 'done\n' >"$streaming_reminder_state"
     return
   fi

@@ -104,7 +104,8 @@ press_focus_toggle() {
   rm -f "$HAMMERSPOON_RESULT"
   hs -c "return require(\"dnd\").pressFocus(\"$target_state\")" >/dev/null
 
-  for _ in {1..120}; do
+  # Hammerspoon's slowest path (menu fallback plus the 6 s control search) takes ~12.5 s.
+  for _ in {1..150}; do
     if [[ -f "$HAMMERSPOON_RESULT" ]]; then
       result="$(<"$HAMMERSPOON_RESULT")"
       if [[ "$result" == ok:* ]]; then
@@ -146,11 +147,14 @@ turn_off() {
     return 0
   fi
 
-  press_focus_toggle off
-  if wait_for_status "off"; then
-    echo "off"
-    return 0
-  fi
+  # Control Center can be slow to expose the control (for example right after
+  # a livestream); a second full attempt reopens the menu from scratch.
+  for _ in {1..2}; do
+    if press_focus_toggle off && wait_for_status "off"; then
+      echo "off"
+      return 0
+    fi
+  done
 
   echo "Failed to disable Do Not Disturb" >&2
   return 1

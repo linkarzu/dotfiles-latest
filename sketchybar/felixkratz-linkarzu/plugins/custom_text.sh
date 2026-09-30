@@ -9,9 +9,14 @@ source "$CONFIG_DIR/colors.sh"
 youtube_banner="$HOME/github/dotfiles-latest/youtube-banner.txt"
 streaming_time_script="$HOME/github/dotfiles-private/scripts/macos/mac/obs/streaming-time/py/streaming-time.py"
 streaming_reminder_state="${TMPDIR:-/tmp}/sketchybar-streaming-16-minute-reminder"
-# Remind from minute 16 every 15 minutes until this scene is shown.
+# Remind from minute 16 every 15 minutes until the reminder's checkbox is
+# ticked or this scene is shown.
 members_scene="youtube-members"
 reminder_interval_minutes=15
+reminder_source="$(dirname "${BASH_SOURCE[0]}")/stream_reminder.swift"
+# Built outside the sketchybar config directory so it doesn't trigger hotload.
+reminder_bin="${XDG_CACHE_HOME:-$HOME/.cache}/sketchybar/stream-reminder"
+fallback_alert='display alert "Stream reminder" message "Thank YouTube members." as informational buttons {"OK"} default button "OK"'
 
 format_streaming_time() {
   local minutes="$1"
@@ -44,9 +49,37 @@ set_custom_text() {
     padding_right=3
 }
 
-# The state file holds "done" once the members scene was shown after a
-# reminder this stream, otherwise the streaming minute of the last reminder. It is removed when the
-# banner goes away and by the start/stop recording scripts.
+ensure_reminder_bin() {
+  if [[ -x "$reminder_bin" && "$reminder_bin" -nt "$reminder_source" ]]; then
+    return 0
+  fi
+  mkdir -p "$(dirname "$reminder_bin")" &&
+    swiftc -O -o "$reminder_bin.$$" "$reminder_source" &&
+    mv -f "$reminder_bin.$$" "$reminder_bin"
+}
+
+# Runs in the background: shows the alert and records "done" if the checkbox
+# was ticked. Falls back to a plain alert if the Swift helper can't be built.
+show_reminder_alert() {
+  local result=""
+
+  if ensure_reminder_bin; then
+    result=$("$reminder_bin")
+  else
+    rm -f "$reminder_bin.$$"
+    osascript -e 'activate' -e "$fallback_alert"
+  fi
+
+  # Skip if the stream ended while the alert was open.
+  if [[ "$result" == "thanked" && -f "$streaming_reminder_state" ]]; then
+    printf 'done\n' >"$streaming_reminder_state"
+  fi
+}
+
+# The state file holds "done" once the checkbox was ticked or the members
+# scene was shown after a reminder this stream, otherwise the streaming minute
+# of the last reminder. It is removed when the banner goes away and by the
+# start/stop recording scripts.
 show_streaming_reminder() {
   local state=""
   [[ -f "$streaming_reminder_state" ]] && state=$(<"$streaming_reminder_state")
@@ -68,13 +101,13 @@ show_streaming_reminder() {
   fi
 
   # Don't stack a new alert on top of one that is still open.
-  if pgrep -f 'display alert "Stream reminder"' >/dev/null; then
+  if pgrep -f "$reminder_bin|display alert \"Stream reminder\"" >/dev/null; then
     return
   fi
 
   printf '%s\n' "$streaming_minutes" >"$streaming_reminder_state"
   # Same style as the OBS Meeting Manager alerts: stays until OK is clicked.
-  osascript -e 'activate' -e 'display alert "Stream reminder" message "Thank YouTube members." as informational buttons {"OK"} default button "OK"' >/dev/null 2>&1 &
+  show_reminder_alert >/dev/null 2>&1 &
 }
 
 if [ -f "$youtube_banner" ]; then

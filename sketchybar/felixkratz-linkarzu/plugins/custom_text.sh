@@ -45,7 +45,8 @@ show_streaming_reminder() {
   if [ "$streaming_minutes" -ge 16 ]; then
     if [ ! -f "$streaming_reminder_state" ]; then
       touch "$streaming_reminder_state"
-      osascript -e 'display dialog "Thank YouTube members." with title "Stream reminder" buttons {"OK"} default button "OK" giving up after 15' >/dev/null 2>&1 &
+      # Same style as the OBS Meeting Manager alerts: stays until OK is clicked.
+      osascript -e 'activate' -e 'display alert "Stream reminder" message "Thank YouTube members." as informational buttons {"OK"} default button "OK"' >/dev/null 2>&1 &
     fi
   else
     rm -f "$streaming_reminder_state"

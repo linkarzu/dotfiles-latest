@@ -103,34 +103,41 @@ static inline void ram_update(struct ram* ram, struct apps* apps) {
   if (ram_percent > 1.) ram_percent = 1.;
   if (swap_percent > 1.) swap_percent = 1.;
 
+  // Swap only matters when macOS is short on memory, so color it by pressure.
   const char* pressure_label = "Normal";
-  const char* pressure_color = apps_color(0, 1, 2, 3);
+  const char* pressure_color = usage_color(0, 1, 2);
   if (pressure >= 4) {
     pressure_label = "Critical";
-    pressure_color = apps_color(3, 1, 2, 3);
+    pressure_color = usage_color(3, 1, 2);
   } else if (pressure >= 2) {
     pressure_label = "Warning";
-    pressure_color = apps_color(2, 1, 2, 3);
+    pressure_color = usage_color(2, 1, 2);
   }
+
+  // Color by the shown value so the label and its color always agree.
+  int percent = (int)(ram_percent * 100. + 0.5);
+  const char* color = usage_color(percent,
+                                  USAGE_YELLOW_PERCENT,
+                                  USAGE_RED_PERCENT);
 
   int written = snprintf(
     ram->command, sizeof(ram->command),
-    "--push ram.used %.2f "
-    "--push swap.used %.2f "
-    "--set ram.top label='ram %.0f%%' "
-    "--set swap.percent label='swp %.0fG' "
+    "--push ram.swap %.2f "
+    "--push ram.graph %.2f "
+    "--set ram.top label='R %.0fG' label.color=%s "
+    "--set ram.percent label='%d%%' label.color=%s "
     "--set ram.popup.used label='%.1f / %.0f GB' label.color=%s "
     "--set ram.popup.wired label='%.1f GB' "
     "--set ram.popup.compressed label='%.1f GB' "
     "--set ram.popup.cached label='%.1f GB' "
     "--set ram.popup.swap label='%.1f GB' "
     "--set ram.popup.pressure label='%s' label.color=%s",
-    ram_percent,
     swap_percent,
-    ram_percent * 100.,
-    swap_gib,
+    ram_percent,
+    swap_gib, pressure_color,
+    percent, color,
     used_bytes / gib, ram->memory_size / gib,
-    apps_color(ram_percent * 100., 50, 70, 90),
+    color,
     (double)vm_stats.wire_count * ram->page_size / gib,
     (double)vm_stats.compressor_page_count * ram->page_size / gib,
     (double)vm_stats.external_page_count * ram->page_size / gib,

@@ -2,11 +2,13 @@
 #include "gpu.h"
 #include "ram.h"
 #include "sketchybar.h"
+#include "temps.h"
 
 struct apps g_apps;
 struct cpu g_cpu;
 struct gpu g_gpu;
 struct ram g_ram;
+struct temps g_temps;
 
 void handler(env env) {
   // Environment variables passed from sketchybar can be accessed as seen below
@@ -17,17 +19,17 @@ void handler(env env) {
 
   if ((strcmp(name, "cpu.percent") == 0)) {
     // CPU graph updates
-    cpu_update(&g_cpu, &g_apps);
+    cpu_update(&g_cpu, &g_apps, &g_temps);
 
     if (strlen(g_cpu.command) > 0) sketchybar(g_cpu.command);
   }
-  else if ((strcmp(name, "swap.percent") == 0)) {
+  else if ((strcmp(name, "ram.percent") == 0)) {
     ram_update(&g_ram, &g_apps);
 
     if (strlen(g_ram.command) > 0) sketchybar(g_ram.command);
   }
-  else if ((strcmp(name, "gpu.temp") == 0)) {
-    gpu_update(&g_gpu);
+  else if ((strcmp(name, "gpu.percent") == 0)) {
+    gpu_update(&g_gpu, &g_temps);
 
     if (strlen(g_gpu.command) > 0) sketchybar(g_gpu.command);
   }

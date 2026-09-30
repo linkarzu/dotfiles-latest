@@ -21,12 +21,21 @@ PADDINGS=1
 USAGE_GRAPH_WIDTH_PERCENT=50
 USAGE_GRAPH_WIDTH=$(((75 * USAGE_GRAPH_WIDTH_PERCENT + 50) / 100))
 
+# Shared look of the CPU, RAM and GPU widgets. The top line is the name plus a
+# secondary value, the bottom line is the usage percentage by itself. The
+# graph line matches the percentage, the secondary line is CPU system time and
+# swap.
+USAGE_GRAPH_COLOR=$MAGENTA
+USAGE_GRAPH_SECONDARY_COLOR=$BLUE
+USAGE_TOP_FONT="$FONT:Heavy:10"
+USAGE_PERCENT_FONT="$FONT:Heavy:11"
+
 # Keep the CPU process label within the graph, reserving three characters for "...".
 CPU_TOPPROC_MAX_CHARS=$(((USAGE_GRAPH_WIDTH - 9) / 3))
 ((CPU_TOPPROC_MAX_CHARS < 1)) && CPU_TOPPROC_MAX_CHARS=1
 export CPU_TOPPROC_MAX_CHARS
 
-# Set to on to show the top CPU process above the graph.
+# Set to on to show the top CPU process above the graph instead of "C <temp>".
 SHOW_CPU_PROCESS=off
 
 # Open and focus Activity Monitor when a CPU, RAM or GPU widget is clicked.

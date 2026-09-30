@@ -194,6 +194,23 @@ static inline const char* apps_color(double value,
   return color ? color : "0xffffffff";
 }
 
+// Shared by the CPU, RAM and GPU bar labels so they all color the same way.
+#define USAGE_YELLOW_PERCENT 50
+#define USAGE_RED_PERCENT 85
+#define USAGE_YELLOW_CELSIUS 70
+#define USAGE_RED_CELSIUS 90
+
+// White when normal, yellow above the first threshold, red above the second.
+static inline const char* usage_color(double value,
+                                      double yellow,
+                                      double red) {
+  const char* color;
+  if (value > red) color = getenv("RED");
+  else if (value > yellow) color = getenv("YELLOW");
+  else color = getenv("WHITE");
+  return color ? color : "0xffffffff";
+}
+
 // Popup row name, with the process count when an app has more than one.
 static inline void apps_row_name(struct app_usage* app,
                                  char* out,

@@ -7,6 +7,10 @@ local FOCUS_TILE = "controlcenter-focus-modes"
 local FOCUS_MENU_ITEM = "com.apple.menuextra.focusmode"
 local DEFAULT_DND_ITEM = "focus-mode-activity-com.apple.donotdisturb.mode.default"
 local MAX_NODES = 300
+-- During a livestream Control Center shows extra tiles (Now Playing, screen
+-- recording), which can push the Do Not Disturb item past a small node budget.
+local DND_SEARCH_NODES = 3000
+local DND_SEARCH_SECONDS = 6
 local retry
 local writeResult
 -- Pending timers must stay referenced: an unreferenced hs.timer can be
@@ -30,12 +34,13 @@ local function attribute(element, name)
 	return ok and value or nil
 end
 
-local function descendants(root, maxDepth)
+local function descendants(root, maxDepth, maxNodes)
 	local results = {}
 	local visited = 0
+	maxNodes = maxNodes or MAX_NODES
 
 	local function visit(element, depth)
-		if depth > maxDepth or visited >= MAX_NODES then
+		if depth > maxDepth or visited >= maxNodes then
 			return
 		end
 		visited = visited + 1
@@ -49,8 +54,8 @@ local function descendants(root, maxDepth)
 	return results
 end
 
-local function findByIdentifier(root, identifier, maxDepth)
-	for _, element in ipairs(descendants(root, maxDepth)) do
+local function findByIdentifier(root, identifier, maxDepth, maxNodes)
+	for _, element in ipairs(descendants(root, maxDepth, maxNodes)) do
 		if attribute(element, "AXIdentifier") == identifier then
 			return element
 		end
@@ -80,8 +85,10 @@ local function pressDirectFocusToggle(root, originalMouse, targetState)
 	if not menuItem or not perform(menuItem, "AXPress") then
 		return false
 	end
-	retry(hs.timer.secondsSinceEpoch() + 3, function()
-		local dndItem = findByIdentifier(root, DEFAULT_DND_ITEM, 12)
+	retry(hs.timer.secondsSinceEpoch() + DND_SEARCH_SECONDS, function()
+		-- Search the opened Focus menu first, then the rest of Control Center.
+		local dndItem = findByIdentifier(menuItem, DEFAULT_DND_ITEM, 12, DND_SEARCH_NODES)
+			or findByIdentifier(root, DEFAULT_DND_ITEM, 14, DND_SEARCH_NODES)
 		if not dndItem then
 			return false
 		end

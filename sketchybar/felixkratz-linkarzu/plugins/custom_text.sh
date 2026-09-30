@@ -9,6 +9,9 @@ source "$CONFIG_DIR/colors.sh"
 youtube_banner="$HOME/github/dotfiles-latest/youtube-banner.txt"
 streaming_time_script="$HOME/github/dotfiles-private/scripts/macos/mac/obs/streaming-time/py/streaming-time.py"
 streaming_reminder_state="${TMPDIR:-/tmp}/sketchybar-streaming-16-minute-reminder"
+# Remind from minute 16 every 15 minutes until this scene is shown.
+members_scene="youtube-members"
+reminder_interval_minutes=15
 
 format_streaming_time() {
   local minutes="$1"
@@ -41,16 +44,35 @@ set_custom_text() {
     padding_right=3
 }
 
+# The state file holds "done" once the members scene was shown this stream,
+# otherwise the streaming minute of the last reminder. It is removed when the
+# banner goes away and by the start/stop recording scripts.
 show_streaming_reminder() {
-  if [ "$streaming_minutes" -ge 16 ]; then
-    if [ ! -f "$streaming_reminder_state" ]; then
-      touch "$streaming_reminder_state"
-      # Same style as the OBS Meeting Manager alerts: stays until OK is clicked.
-      osascript -e 'activate' -e 'display alert "Stream reminder" message "Thank YouTube members." as informational buttons {"OK"} default button "OK"' >/dev/null 2>&1 &
-    fi
-  else
-    rm -f "$streaming_reminder_state"
+  local state=""
+  [[ -f "$streaming_reminder_state" ]] && state=$(<"$streaming_reminder_state")
+
+  if [[ "$banner_text" == "$members_scene" ]]; then
+    printf 'done\n' >"$streaming_reminder_state"
+    return
   fi
+
+  if [[ "$state" == "done" || "$streaming_minutes" -lt 16 ]]; then
+    return
+  fi
+
+  if [[ "$state" =~ ^[0-9]+$ ]] &&
+    ((streaming_minutes >= state && streaming_minutes - state < reminder_interval_minutes)); then
+    return
+  fi
+
+  # Don't stack a new alert on top of one that is still open.
+  if pgrep -f 'display alert "Stream reminder"' >/dev/null; then
+    return
+  fi
+
+  printf '%s\n' "$streaming_minutes" >"$streaming_reminder_state"
+  # Same style as the OBS Meeting Manager alerts: stays until OK is clicked.
+  osascript -e 'activate' -e 'display alert "Stream reminder" message "Thank YouTube members." as informational buttons {"OK"} default button "OK"' >/dev/null 2>&1 &
 }
 
 if [ -f "$youtube_banner" ]; then

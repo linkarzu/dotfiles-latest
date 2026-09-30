@@ -91,8 +91,11 @@ cpu_graph=(
   popup.height=20
   # Draw the shared 0-100% frame once, above both graph layers.
   background.border_width=1
-  background.border_color=$GREY
+  background.border_color=$USAGE_GRAPH_BORDER_COLOR
   background.corner_radius=0
+  # sketchybar draws the graph 1pt right of its background, move the frame
+  # along so the graph fills it edge to edge.
+  background.x_offset=1
 )
 
 cpu_popup_row=(

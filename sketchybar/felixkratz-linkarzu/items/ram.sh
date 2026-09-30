@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Right click any RAM item for the stats and top apps popup.
-RAM_CLICK_SCRIPT="ACTIVITY_MONITOR_CLICK_SCRIPT=\"$ACTIVITY_MONITOR_CLICK_SCRIPT\" $PLUGIN_DIR/usage_click.sh swap.used"
+RAM_CLICK_SCRIPT="ACTIVITY_MONITOR_CLICK_SCRIPT=\"$ACTIVITY_MONITOR_CLICK_SCRIPT\" $PLUGIN_DIR/usage_click.sh ram.graph"
 
 # Must match RAM_TOP_APPS in helper/ram.h.
 RAM_POPUP_APPS=8
@@ -10,10 +10,11 @@ RAM_POPUP_APPS=8
 ram_graph_padding_right=4
 ram_overlay_padding=$((-USAGE_GRAPH_WIDTH - PADDINGS))
 
+# RAM name and swap used, the swap color follows memory pressure.
 ram_top=(
-  label.font="$FONT:Heavy:8"
-  label="ram 0%"
-  label.y_offset=5
+  label.font="$USAGE_TOP_FONT"
+  label="R 0G"
+  label.y_offset=7
   label.width=$USAGE_GRAPH_WIDTH
   label.align=right
   label.padding_left=0
@@ -24,9 +25,9 @@ ram_top=(
   click_script="$RAM_CLICK_SCRIPT"
 )
 
-swap_percent=(
-  label.font="$FONT:Heavy:8"
-  label="swp 0G"
+ram_percent=(
+  label.font="$USAGE_PERCENT_FONT"
+  label="0%"
   label.y_offset=-5
   label.width=$USAGE_GRAPH_WIDTH
   label.align=right
@@ -40,10 +41,11 @@ swap_percent=(
   mach_helper="$HELPER"
 )
 
-ram_used=(
+# Swap used as a share of RAM size, drawn under RAM used.
+ram_swap=(
   width=0
+  graph.color=$USAGE_GRAPH_SECONDARY_COLOR
   padding_right=$ram_graph_padding_right
-  graph.color=$ORANGE
   label.drawing=off
   icon.drawing=off
   click_script="$RAM_CLICK_SCRIPT"
@@ -52,9 +54,10 @@ ram_used=(
   background.color=$TRANSPARENT
 )
 
-swap_used=(
+# RAM used, without reclaimable file cache.
+ram_graph=(
+  graph.color=$USAGE_GRAPH_COLOR
   padding_right=$ram_graph_padding_right
-  graph.color=$GREEN
   label.drawing=off
   icon.drawing=off
   click_script="$RAM_CLICK_SCRIPT"
@@ -77,7 +80,7 @@ ram_popup_row=(
   label.width=100
   label.align=right
   label.padding_right=10
-  click_script="sketchybar --set swap.used popup.drawing=off; $ACTIVITY_MONITOR_CLICK_SCRIPT"
+  click_script="sketchybar --set ram.graph popup.drawing=off; $ACTIVITY_MONITOR_CLICK_SCRIPT"
 )
 
 ram_popup_header=(
@@ -87,42 +90,42 @@ ram_popup_header=(
 )
 
 # Change USAGE_GRAPH_WIDTH_PERCENT in sketchybarrc (100 = original 75-point width).
-sketchybar --add graph ram.used right "$USAGE_GRAPH_WIDTH" \
-  --set ram.used "${ram_used[@]}" \
+sketchybar --add graph ram.swap right "$USAGE_GRAPH_WIDTH" \
+  --set ram.swap "${ram_swap[@]}" \
   \
-  --add graph swap.used right "$USAGE_GRAPH_WIDTH" \
-  --set swap.used "${swap_used[@]}" \
+  --add graph ram.graph right "$USAGE_GRAPH_WIDTH" \
+  --set ram.graph "${ram_graph[@]}" \
   \
   --add item ram.top right \
   --set ram.top "${ram_top[@]}" \
   \
-  --add item swap.percent right \
-  --set swap.percent "${swap_percent[@]}"
+  --add item ram.percent right \
+  --set ram.percent "${ram_percent[@]}"
 
 # Popup rows are filled in by the helper on every update. App memory is the
 # memory footprint, the same value as Activity Monitor's Memory column.
-sketchybar --add item ram.popup.used popup.swap.used \
+sketchybar --add item ram.popup.used popup.ram.graph \
   --set ram.popup.used "${ram_popup_row[@]}" icon="Used" label="--" \
   \
-  --add item ram.popup.wired popup.swap.used \
+  --add item ram.popup.wired popup.ram.graph \
   --set ram.popup.wired "${ram_popup_row[@]}" icon="Wired" label="--" \
   \
-  --add item ram.popup.compressed popup.swap.used \
+  --add item ram.popup.compressed popup.ram.graph \
   --set ram.popup.compressed "${ram_popup_row[@]}" icon="Compressed" label="--" \
   \
-  --add item ram.popup.cached popup.swap.used \
+  --add item ram.popup.cached popup.ram.graph \
   --set ram.popup.cached "${ram_popup_row[@]}" icon="Cached files" label="--" \
   \
-  --add item ram.popup.swap popup.swap.used \
+  --add item ram.popup.swap popup.ram.graph \
   --set ram.popup.swap "${ram_popup_row[@]}" icon="Swap used" label="--" \
   \
-  --add item ram.popup.pressure popup.swap.used \
+  --add item ram.popup.pressure popup.ram.graph \
   --set ram.popup.pressure "${ram_popup_row[@]}" icon="Memory pressure" label="--" \
   \
-  --add item ram.popup.header popup.swap.used \
+  --add item ram.popup.header popup.ram.graph \
   --set ram.popup.header "${ram_popup_header[@]}" icon="Top apps (all processes)" label="footprint"
 
 for ((i = 1; i <= RAM_POPUP_APPS; i++)); do
-  sketchybar --add item "ram.popup.app.$i" popup.swap.used \
+  sketchybar --add item "ram.popup.app.$i" popup.ram.graph \
     --set "ram.popup.app.$i" "${ram_popup_row[@]}" icon="Sampling..." label="" drawing=$([ "$i" = 1 ] && echo on || echo off)
 done

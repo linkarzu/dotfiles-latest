@@ -1,6 +1,5 @@
 #include <CoreFoundation/CoreFoundation.h>
 #include <IOKit/IOKitLib.h>
-#include <IOKit/hidsystem/IOHIDEventSystemClient.h>
 #include <libproc.h>
 #include <mach/mach_time.h>
 #include <objc/message.h>
@@ -8,28 +7,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-// Private IOHID API used to read the Apple Silicon die temperature sensors.
-typedef struct __IOHIDEvent* IOHIDEventRef;
-typedef struct __IOHIDServiceClient* IOHIDServiceClientRef;
-IOHIDEventSystemClientRef IOHIDEventSystemClientCreate(CFAllocatorRef allocator);
-int IOHIDEventSystemClientSetMatching(IOHIDEventSystemClientRef client,
-                                      CFDictionaryRef match);
-IOHIDEventRef IOHIDServiceClientCopyEvent(IOHIDServiceClientRef service,
-                                          int64_t type,
-                                          int32_t options,
-                                          int64_t timestamp);
-CFStringRef IOHIDServiceClientCopyProperty(IOHIDServiceClientRef service,
-                                           CFStringRef property);
-double IOHIDEventGetFloatValue(IOHIDEventRef event, int32_t field);
+#include "apps.h"
+#include "temps.h"
 
 // Metal, used once to read how much unified memory the GPU may use.
 typedef struct objc_object* id;
 id MTLCreateSystemDefaultDevice(void);
-
-#define HID_EVENT_TYPE_TEMPERATURE 15
-#define HID_TEMPERATURE_FIELD (HID_EVENT_TYPE_TEMPERATURE << 16)
-#define DIE_SENSOR_PREFIX "PMU tdie"
 
 // Must match the number of gpu.popup.proc.N items in items/gpu.sh.
 #define GPU_TOP_PROCS 8
@@ -53,8 +36,6 @@ struct gpu_sample {
 };
 
 struct gpu {
-  IOHIDEventSystemClientRef hid_client;
-  CFArrayRef sensors;
   mach_timebase_info_data_t timebase;
   uint64_t memory_limit;
 
@@ -68,8 +49,6 @@ struct gpu {
 };
 
 static inline void gpu_init(struct gpu* gpu) {
-  gpu->hid_client = NULL;
-  gpu->sensors = NULL;
   gpu->proc_count = 0;
   gpu->procs_timestamp = 0;
   gpu->has_prev_procs = false;
@@ -83,28 +62,6 @@ static inline void gpu_init(struct gpu* gpu) {
       device, sel_registerName("recommendedMaxWorkingSetSize"));
   }
   snprintf(gpu->command, sizeof(gpu->command), "");
-
-  // Vendor temperature sensors: usage page 0xff00, usage 5.
-  int page = 0xff00;
-  int usage = 5;
-  CFNumberRef page_ref = CFNumberCreate(NULL, kCFNumberIntType, &page);
-  CFNumberRef usage_ref = CFNumberCreate(NULL, kCFNumberIntType, &usage);
-  const void* keys[] = { CFSTR("PrimaryUsagePage"), CFSTR("PrimaryUsage") };
-  const void* values[] = { page_ref, usage_ref };
-  CFDictionaryRef match = CFDictionaryCreate(NULL, keys, values, 2,
-                                             &kCFTypeDictionaryKeyCallBacks,
-                                             &kCFTypeDictionaryValueCallBacks);
-
-  gpu->hid_client = IOHIDEventSystemClientCreate(kCFAllocatorDefault);
-  if (gpu->hid_client) {
-    IOHIDEventSystemClientSetMatching(gpu->hid_client, match);
-    gpu->sensors = IOHIDEventSystemClientCopyServices(gpu->hid_client);
-  }
-  if (!gpu->sensors) printf("Error: Could not read temperature sensors.\n");
-
-  CFRelease(match);
-  CFRelease(usage_ref);
-  CFRelease(page_ref);
 }
 
 static inline uint64_t gpu_now_ns(struct gpu* gpu) {
@@ -244,51 +201,6 @@ static inline bool gpu_read_accelerators(struct gpu_sample* sample,
   return sample->utilization >= 0;
 }
 
-// Returns the hottest SoC die sensor in Celsius, or -1 on error.
-static inline double gpu_read_temperature(struct gpu* gpu) {
-  if (!gpu->sensors) return -1;
-
-  double hottest = -1;
-  CFIndex count = CFArrayGetCount(gpu->sensors);
-  for (CFIndex i = 0; i < count; i++) {
-    IOHIDServiceClientRef sensor =
-      (IOHIDServiceClientRef)CFArrayGetValueAtIndex(gpu->sensors, i);
-
-    CFStringRef name_ref = IOHIDServiceClientCopyProperty(sensor,
-                                                          CFSTR("Product"));
-    if (!name_ref) continue;
-    char name[64];
-    bool is_die = CFStringGetCString(name_ref, name, sizeof(name),
-                                     kCFStringEncodingUTF8)
-                  && strncmp(name, DIE_SENSOR_PREFIX,
-                             strlen(DIE_SENSOR_PREFIX)) == 0;
-    CFRelease(name_ref);
-    if (!is_die) continue;
-
-    IOHIDEventRef event = IOHIDServiceClientCopyEvent(
-      sensor, HID_EVENT_TYPE_TEMPERATURE, 0, 0);
-    if (!event) continue;
-    double celsius = IOHIDEventGetFloatValue(event, HID_TEMPERATURE_FIELD);
-    CFRelease(event);
-
-    // Ignore uncalibrated sensors that report nonsense values.
-    if (celsius > 0 && celsius < 150 && celsius > hottest) hottest = celsius;
-  }
-  return hottest;
-}
-
-static inline const char* gpu_color(double value,
-                                    double yellow,
-                                    double orange,
-                                    double red) {
-  const char* color;
-  if (value >= red) color = getenv("RED");
-  else if (value >= orange) color = getenv("ORANGE");
-  else if (value >= yellow) color = getenv("YELLOW");
-  else color = getenv("LABEL_COLOR");
-  return color ? color : "0xffffffff";
-}
-
 static inline int gpu_compare_percent(const void* a, const void* b) {
   double left = ((const struct gpu_proc*)a)->percent;
   double right = ((const struct gpu_proc*)b)->percent;
@@ -329,7 +241,7 @@ static inline void gpu_append_top_procs(struct gpu* gpu,
                          i + 1,
                          top[i].name,
                          top[i].percent,
-                         gpu_color(top[i].percent, 10, 30, 70));
+                         apps_color(top[i].percent, 10, 30, 70));
     } else if (i == 0) {
       written = snprintf(gpu->command + *length, remaining,
                          " --set gpu.popup.proc.1 drawing=on "
@@ -343,7 +255,7 @@ static inline void gpu_append_top_procs(struct gpu* gpu,
   }
 }
 
-static inline void gpu_update(struct gpu* gpu) {
+static inline void gpu_update(struct gpu* gpu, struct temps* temps) {
   struct gpu_sample sample = { -1, -1, -1, 0, -1 };
   struct gpu_proc procs[GPU_MAX_PROCS];
   uint32_t proc_count = 0;
@@ -355,13 +267,11 @@ static inline void gpu_update(struct gpu* gpu) {
     return;
   }
   if (sample.utilization > 100) sample.utilization = 100;
-  sample.temperature = gpu_read_temperature(gpu);
+  sample.temperature = temps_average(temps, &temps->gpu);
 
-  char temperature_label[16] = "--°";
-  if (sample.temperature >= 0) {
-    snprintf(temperature_label, sizeof(temperature_label),
-             "%.0f°", sample.temperature);
-  }
+  char temperature_label[16];
+  temps_label(sample.temperature, temperature_label,
+              sizeof(temperature_label));
   double gib = 1024. * 1024. * 1024.;
   char memory_label[32];
   if (gpu->memory_limit > 0) {
@@ -372,21 +282,25 @@ static inline void gpu_update(struct gpu* gpu) {
              sample.memory_in_use / gib);
   }
 
-  const char* utilization_color = gpu_color(sample.utilization, 10, 30, 70);
-  const char* temperature_color = gpu_color(sample.temperature, 70, 85, 95);
+  const char* utilization_color = usage_color(sample.utilization,
+                                              USAGE_YELLOW_PERCENT,
+                                              USAGE_RED_PERCENT);
+  const char* temperature_color = usage_color((int)(sample.temperature + 0.5),
+                                              USAGE_YELLOW_CELSIUS,
+                                              USAGE_RED_CELSIUS);
 
   int written = snprintf(
     gpu->command, sizeof(gpu->command),
-    "--push gpu.util %.2f "
-    "--set gpu.top label='gpu %d%%' label.color=%s "
-    "--set gpu.temp label='%s' label.color=%s "
+    "--push gpu.graph %.2f "
+    "--set gpu.top label='G %s' label.color=%s "
+    "--set gpu.percent label='%d%%' label.color=%s "
     "--set gpu.popup.util label='%d%%' label.color=%s "
     "--set gpu.popup.stages label='%d%% / %d%%' "
     "--set gpu.popup.memory label='%s' "
     "--set gpu.popup.temp label='%sC' label.color=%s",
     sample.utilization / 100.,
-    sample.utilization, utilization_color,
     temperature_label, temperature_color,
+    sample.utilization, utilization_color,
     sample.utilization, utilization_color,
     sample.renderer, sample.tiler,
     memory_label,

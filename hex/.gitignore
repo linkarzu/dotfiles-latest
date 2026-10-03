@@ -3,3 +3,7 @@ node_modules
 .hex-sdk
 # The root .gitignore ignores package.json, but this one adds @types/bun
 !package.json
+# HEX scaffold, recreated by `hex commands init`
+AGENTS.md
+.agents
+bun.lock

@@ -481,6 +481,25 @@ vim.api.nvim_create_autocmd({ "BufReadPost", "BufWritePost", "FileChangedShellPo
   end,
 })
 
+-- Daily notes reloaded after an outside change are saved right away, so the
+-- format-on-save chain (prettier wrapping, boundary newlines) also applies to
+-- lines that voice-inbox or the Meeting Manager wrote. Limited to daily notes
+-- so files changed by git or other tools are never written behind my back
+local format_on_reload_dirs = {
+  vim.fs.normalize(vim.fn.expand("~/github/notes/250-daily")),
+  vim.fs.normalize(vim.fn.expand("~/github/obsidian_main/250-daily")),
+}
+
+local function formats_on_reload(buf)
+  local path = vim.fs.normalize(vim.api.nvim_buf_get_name(buf))
+  for _, dir in ipairs(format_on_reload_dirs) do
+    if vim.startswith(path, dir .. "/") then
+      return true
+    end
+  end
+  return false
+end
+
 local function reload_changed_buffers()
   for _, buf in ipairs(vim.api.nvim_list_bufs()) do
     if vim.api.nvim_buf_is_loaded(buf) and vim.bo[buf].buftype == "" then
@@ -490,7 +509,14 @@ local function reload_changed_buffers()
         for _, win in ipairs(vim.fn.win_findbuf(buf)) do
           saved[win] = save_heading_folds(win)
         end
+        local tick = vim.api.nvim_buf_get_changedtick(buf)
         pcall(vim.cmd.checktime, tostring(buf))
+        local reloaded = vim.api.nvim_buf_get_changedtick(buf) ~= tick
+        if reloaded and not vim.bo[buf].modified and formats_on_reload(buf) then
+          vim.api.nvim_buf_call(buf, function()
+            pcall(vim.cmd, "silent write")
+          end)
+        end
         known_mtime[buf] = file_mtime(buf)
         for win, state in pairs(saved) do
           if vim.api.nvim_win_is_valid(win) and vim.api.nvim_win_get_buf(win) == buf then

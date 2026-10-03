@@ -3444,12 +3444,10 @@ local function set_markdown_folding(args)
   vim.opt_local.foldexpr = "v:lua.markdown_foldexpr()"
   -- Keep folded headings rendered as the real heading line so EOL codelens stays visible.
   vim.opt_local.foldtext = ""
-  local path = vim.fs.normalize(vim.api.nvim_buf_get_name(0))
-  local daily_note_dir = vim.fs.normalize(vim.fn.expand("~/github/obsidian_main/250-daily"))
-  local is_daily_note = path == daily_note_dir or vim.startswith(path, daily_note_dir .. "/")
-  vim.opt_local.foldlevel = is_daily_note and 99 or 1
+  -- Every note opens folded, daily notes included
+  vim.opt_local.foldlevel = 1
   pcall(vim.cmd, "normal! zX")
-  set_markdown_fold_spacing(not is_daily_note)
+  set_markdown_fold_spacing(true)
 end
 
 local function set_typst_folding()

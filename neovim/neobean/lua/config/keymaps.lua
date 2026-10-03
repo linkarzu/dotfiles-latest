@@ -3448,7 +3448,7 @@ local function set_markdown_folding(args)
   local daily_note_dir = vim.fs.normalize(vim.fn.expand("~/github/obsidian_main/250-daily"))
   local is_daily_note = path == daily_note_dir or vim.startswith(path, daily_note_dir .. "/")
   vim.opt_local.foldlevel = is_daily_note and 99 or 1
-  vim.cmd("normal! zX")
+  pcall(vim.cmd, "normal! zX")
   set_markdown_fold_spacing(not is_daily_note)
 end
 

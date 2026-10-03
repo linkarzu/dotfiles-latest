@@ -438,6 +438,13 @@ return {
           frecency = true,
         },
         win = {
+          -- Show markdown headings unfolded in the preview, like fff does.
+          -- snacks re-applies these options every time it swaps the preview buffer
+          preview = {
+            wo = {
+              foldenable = false,
+            },
+          },
           input = {
             keys = {
               -- to close the picker on ESC instead of going to normal mode,

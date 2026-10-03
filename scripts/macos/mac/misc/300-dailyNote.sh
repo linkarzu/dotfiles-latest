@@ -68,11 +68,21 @@ else
 fi
 
 # Get current date components
-current_year=$(date +"%Y")
-current_month_num=$(date +"%m")
-current_month_abbr=$(date +"%b")
-current_day=$(date +"%d")
-current_weekday=$(date +"%A")
+# DAILY_NOTE_DATE=YYYY-MM-DD targets another day's note, used by voice-inbox
+# so a capture lands in the note of the day it was recorded
+date_args=()
+if [ -n "${DAILY_NOTE_DATE:-}" ]; then
+  if ! date -j -f "%Y-%m-%d" "$DAILY_NOTE_DATE" +"%Y" >/dev/null 2>&1; then
+    echo "Invalid DAILY_NOTE_DATE: $DAILY_NOTE_DATE" >&2
+    exit 1
+  fi
+  date_args=(-j -f "%Y-%m-%d" "$DAILY_NOTE_DATE")
+fi
+current_year=$(date "${date_args[@]}" +"%Y")
+current_month_num=$(date "${date_args[@]}" +"%m")
+current_month_abbr=$(date "${date_args[@]}" +"%b")
+current_day=$(date "${date_args[@]}" +"%d")
+current_weekday=$(date "${date_args[@]}" +"%A")
 
 # Construct the directory structure and filename
 note_dir=${main_note_dir}/${current_year}/${current_month_num}-${current_month_abbr}

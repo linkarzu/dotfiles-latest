@@ -38,6 +38,7 @@ brew "coreutils"
 brew "node"
 brew "go"
 brew "rustup"
+brew "dotnet"
 brew "python"
 brew "lua"
 brew "luarocks"
@@ -67,6 +68,7 @@ cask "visual-studio-code"
 cask "neovide-app"
 cask "font-jetbrains-mono-nerd-font"
 cask "font-meslo-lg-nerd-font"
+cask "font-caskaydia-cove-nerd-font"
 
 # ---------------------------------------------------------------------------
 # Optional — mirrors optional_pacman_packages in the Arch bootstrap.

@@ -10,6 +10,10 @@
 # Don't auto-update Homebrew on every `brew` invocation
 export HOMEBREW_NO_AUTO_UPDATE="1"
 
+if command -v brew &>/dev/null && [ -d "$(brew --prefix)/opt/dotnet/libexec" ]; then
+  export DOTNET_ROOT="$(brew --prefix)/opt/dotnet/libexec"
+fi
+
 # Open man pages in neovim, if neovim is installed
 if command -v nvim &>/dev/null; then
   export MANPAGER='nvim +Man!'

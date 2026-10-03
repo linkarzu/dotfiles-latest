@@ -36,7 +36,8 @@ ensure_dir ~/.config/skhd
 create_symlink() {
   local source_path=$1
   local target_path=$2
-  local backup_needed=true
+  local backup_path
+  local backup_number=1
 
   if [ ! -e "$source_path" ] && [ ! -L "$source_path" ]; then
     if [ "${DOTFILES_SYMLINK_VERBOSE:-0}" = "1" ]; then
@@ -49,19 +50,6 @@ create_symlink() {
 
   # echo
 
-  # Check if the target is a file and contains the unique identifier
-  if [ -f "$target_path" ] && grep -q "UNIQUE_ID=do_not_delete_this_line" "$target_path"; then
-    # echo "$target_path is a FILE and contains UNIQUE_ID"
-    backup_needed=false
-  fi
-
-  # Check if the target is a directory and contains the UNIQUE_ID.sh file with the unique identifier
-  if [ -d "$target_path" ] && [ -f "$target_path/UNIQUE_ID.sh" ]; then
-    if grep -q "UNIQUE_ID=do_not_delete_this_line" "$target_path/UNIQUE_ID.sh"; then
-      # echo "$target_path is a DIRECTORY and contains UNIQUE_ID"
-      backup_needed=false
-    fi
-  fi
   # Check if symlink already exists and points to the correct source
   if [ -L "$target_path" ]; then
     if [ "$(readlink "$target_path")" = "$source_path" ]; then
@@ -73,16 +61,13 @@ create_symlink() {
     fi
   fi
 
-  # Force mode: overwrite any existing real target instead of backing it up.
-  # Enabled by exporting DOTFILES_SYMLINK_FORCE=1 (the macOS bootstrap does this).
-  if [ "${DOTFILES_SYMLINK_FORCE:-0}" = "1" ] && [ -e "$target_path" ] && [ ! -L "$target_path" ]; then
-    echo -e "${boldYellow}Force-overwriting existing '$target_path' (no backup)${noColor}"
-    rm -rf "$target_path"
-  fi
-
-  # Backup the target if it's not a symlink and backup is needed
-  if [ -e "$target_path" ] && [ ! -L "$target_path" ] && [ "$backup_needed" = true ]; then
-    local backup_path="${target_path}_backup_$(date +%Y%m%d%H%M%S)"
+  # Preserve every real file or directory before replacing it with a link.
+  if [ -e "$target_path" ] && [ ! -L "$target_path" ]; then
+    backup_path="${target_path}_backup_$(date +%Y%m%d%H%M%S)"
+    while [ -e "$backup_path" ] || [ -L "$backup_path" ]; do
+      backup_path="${target_path}_backup_$(date +%Y%m%d%H%M%S)_$backup_number"
+      backup_number=$((backup_number + 1))
+    done
     echo -e "${boldYellow}Backing up your existing file '$target_path' to '$backup_path'${noColor}"
     mv "$target_path" "$backup_path"
   fi

@@ -62,11 +62,11 @@ fi
 ensure_canonical_repo_path() {
   mkdir -p "$HOME/github"
 
-  if [[ "$repo_dir" == "$canonical_repo_dir" ]]; then
-    return
-  fi
-
   if [[ -e "$canonical_repo_dir" || -L "$canonical_repo_dir" ]]; then
+    if [[ -d "$canonical_repo_dir" ]] &&
+      [[ "$(cd -P "$canonical_repo_dir" && pwd)" == "$(cd -P "$repo_dir" && pwd)" ]]; then
+      return
+    fi
     die "$canonical_repo_dir already exists, but this script is running from $repo_dir. Run the installer from $canonical_repo_dir."
   fi
 
@@ -128,11 +128,48 @@ setup_rust() {
     return
   fi
 
-  if ! rustup default >/dev/null 2>&1; then
-    rustup default stable
+  rustup default stable
+  rustup component add rustfmt clippy rust-analyzer rust-src
+  export PATH="$HOME/.cargo/bin:$PATH"
+}
+
+setup_dotnet() {
+  local dotnet_root
+  dotnet_root="$(brew --prefix)/opt/dotnet/libexec"
+  if [[ -d "$dotnet_root" ]]; then
+    export DOTNET_ROOT="$dotnet_root"
+  fi
+}
+
+setup_keyboard_shortcut() {
+  local preferences="$HOME/Library/Preferences/com.apple.symbolichotkeys.plist"
+
+  # macOS's input-source shortcut consumes Ctrl+Space before Ghostty sees it.
+  if [[ "$(plutil -extract AppleSymbolicHotKeys.60.enabled raw -o - "$preferences" 2>/dev/null || true)" == "false" ]]; then
+    return
   fi
 
-  rustup component add rustfmt clippy rust-analyzer >/dev/null 2>&1 || true
+  if [[ -f "$preferences" ]]; then
+    cp -p "$preferences" "${preferences}.dotfiles-backup-$(date +%Y%m%d%H%M%S)"
+  fi
+
+  log "Disabling the macOS input-source Ctrl+Space shortcut."
+  defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 60 \
+    '{ enabled = 0; value = { parameters = (32, 49, 262144); type = standard; }; }'
+  killall SystemUIServer 2>/dev/null || true
+}
+
+disable_old_tmux_cleanup() {
+  local service="gui/$(id -u)/com.linkarzu.tmuxKillSessions"
+
+  # Older setups killed idle sessions after 110 minutes, including Playground.
+  if ! launchctl print "gui/$(id -u)" >/dev/null 2>&1; then
+    return
+  fi
+  launchctl disable "$service"
+  if launchctl print "$service" >/dev/null 2>&1; then
+    launchctl bootout "$service"
+  fi
 }
 
 setup_npm_prefix() {
@@ -179,11 +216,9 @@ install_tpm() {
 }
 
 apply_symlinks() {
-  # DOTFILES_SYMLINK_FORCE=1 overwrites any existing real configs (e.g. an
-  # existing ~/.config/nvim) in place instead of backing them up, so this
-  # repo becomes the single source of truth on the macbook.
-  log "Applying dotfile symlinks (force-overwriting existing configs, no backups)."
-  DOTFILES_SYMLINK_VERBOSE=1 DOTFILES_SYMLINK_FORCE=1 zsh -c "source '$canonical_repo_dir/zshrc/modules/colors.sh'; source '$canonical_repo_dir/zshrc/modules/symlinks.sh'"
+  log "Applying dotfile symlinks (backing up existing configs)."
+  DOTFILES_REPO_DIR="$canonical_repo_dir" DOTFILES_SYMLINK_VERBOSE=1 zsh -c \
+    'source "$DOTFILES_REPO_DIR/zshrc/modules/colors.sh"; source "$DOTFILES_REPO_DIR/zshrc/modules/symlinks.sh"'
 }
 
 setup_shell() {
@@ -256,6 +291,9 @@ main() {
   install_homebrew
   install_packages
   setup_rust
+  setup_dotnet
+  setup_keyboard_shortcut
+  disable_old_tmux_cleanup
   setup_npm_prefix
   setup_go_tools
   install_tpm

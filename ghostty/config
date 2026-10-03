@@ -104,7 +104,7 @@ custom-shader = shaders/cursor_smear.glsl
 #
 # This assumes you installed tmux through brew if using macos
 # command = zsh --login -c "if command -v tmux >/dev/null 2>&1; then exec tmux new-session -As main; else exec zsh; fi"
-command = zsh --login -c "if command -v tmux >/dev/null 2>&1; then $HOME/github/dotfiles-latest/tmux/tools/prime/tmux-sessionizer.sh $HOME/github/dotfiles-latest || (tmux attach 2>/dev/null || tmux); else exec zsh; fi"
+command = zsh --login -c "if command -v tmux >/dev/null 2>&1; then $HOME/github/dotfiles-latest/tmux/tools/prime/tmux-sessionizer.sh $HOME/github/dotfiles-latest || (tmux attach 2>/dev/null || tmux); fi; exec zsh --login"
 
 # Horizontal window padding. This applies padding between the terminal cells
 # and the left and right window borders. The value is in points, meaning that
@@ -166,16 +166,16 @@ macos-titlebar-style = hidden
 
 # Confirms that a surface should be closed before closing it. This defaults to
 # true. If set to false, surfaces will close without any confirmation.
-confirm-close-surface = false
+confirm-close-surface = true
+quit-after-last-window-closed = false
 
 # Toggle the "quick" terminal. The quick terminal is a terminal that
 # appears on demand from a keybinding, often sliding in from a screen
 # edge such as the top. This is useful for quick access to a terminal
 # without having to open a new window or tab.
 #
-# When the quick terminal loses focus, it disappears. The terminal state
-# is preserved between appearances, so you can always press the keybinding
-# to bring it back up.
+# By default the quick terminal disappears when it loses focus. Autohide is
+# disabled below so it stays visible until toggled explicitly.
 #
 # The quick terminal has some limitations:
 #
@@ -200,6 +200,7 @@ confirm-close-surface = false
 #  information.
 # keybind = global:cmd+s=toggle_quick_terminal
 keybind = cmd+s=toggle_quick_terminal
+quick-terminal-autohide = false
 
 # If `true`, the *Option* key will be treated as *Alt*. This makes terminal
 # sequences expecting *Alt* to work properly, but will break Unicode input
@@ -214,7 +215,36 @@ keybind = cmd+s=toggle_quick_terminal
 # will be treated as *Alt* regardless of this setting. (i.e. `alt+ctrl+a`).
 # 
 # This does not work with GLFW builds.
-macos-option-as-alt = right
+macos-option-as-alt = true
+
+# Send Option/Meta+letters as legacy Meta keys for tmux's window chooser.
+# This avoids layout-dependent Option characters on macOS.
+keybind = alt+a=esc:a
+keybind = alt+b=esc:b
+keybind = alt+c=esc:c
+keybind = alt+d=esc:d
+keybind = alt+e=esc:e
+keybind = alt+f=esc:f
+keybind = alt+g=esc:g
+keybind = alt+h=esc:h
+keybind = alt+i=esc:i
+keybind = alt+j=esc:j
+keybind = alt+k=esc:k
+keybind = alt+l=esc:l
+keybind = alt+m=esc:m
+keybind = alt+n=esc:n
+keybind = alt+o=esc:o
+keybind = alt+p=esc:p
+keybind = alt+q=esc:q
+keybind = alt+r=esc:r
+keybind = alt+s=esc:s
+keybind = alt+t=esc:t
+keybind = alt+u=esc:u
+keybind = alt+v=esc:v
+keybind = alt+w=esc:w
+keybind = alt+x=esc:x
+keybind = alt+y=esc:y
+keybind = alt+z=esc:z
 
 # Duration (in seconds) of the quick terminal enter and exit animation.
 # Set it to 0 to disable animation completely. This can be changed at
@@ -223,8 +253,8 @@ macos-option-as-alt = right
 quick-terminal-animation-duration = 0.08
 # quick-terminal-animation-duration = 0
 
-keybind = super+i=inspector:toggle
-keybind = super+r=reload_config
+keybind = cmd+i=inspector:toggle
+keybind = cmd+r=reload_config
 
 # This doesn't work when in tmux, if outside tmux the regular ctrl+l works
 # keybind = super+k=clear_screen

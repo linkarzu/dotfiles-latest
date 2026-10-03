@@ -5,7 +5,7 @@ Fresh Arch install icin hedef akisi:
 ```bash
 sudo pacman -Syu --needed git curl
 mkdir -p ~/github
-git clone https://github.com/bulutcan99/dotfiles-latest.git ~/github/dotfiles-latest
+git clone --branch bootstrap/reproduce-workflow-20261003 https://github.com/bulutcan99/dotfiles-latest.git ~/github/dotfiles-latest
 cd ~/github/dotfiles-latest
 ./install.sh
 ```
@@ -18,11 +18,11 @@ git remote set-url origin git@github.com:bulutcan99/dotfiles-latest.git
 
 Script sunlari yapar:
 
-- Arch paketlerini kurar: zsh, tmux, neovim, lazygit, ripgrep, fd, fzf, zoxide, starship, yazi, btop, fastfetch, kitty, ghostty, Rust tooling ve temel build araclari.
+- Arch paketlerini kurar: Ghostty, tmux, Neovim, CaskaydiaCove Nerd Font, Rust ve .NET SDK dahil kullandigim CLI araclari.
 - Repo yolunu `~/github/dotfiles-latest` olarak garanti eder.
-- Dotfile symlinklerini uygular ve mevcut dosyalari yedekler.
+- Dotfile symlinklerini uygular ve mevcut dosya/dizinleri zaman damgali olarak yedekler.
 - `~/.config/nvim` ve `~/.config/lazyvim` yollarini bu repo icindeki tek Nvim configine baglar.
-- Rust stable toolchain, `rustfmt`, `clippy` ve LazyVim plugin sync adimlarini calistirir.
+- Rust stable toolchain, `rustfmt`, `clippy`, `rust-analyzer`, `rust-src`, tmux eklentileri ve LazyVim plugin sync adimlarini calistirir.
 - Login shell'i zsh yapar.
 
 Opsiyonlar:

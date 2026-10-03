@@ -12,6 +12,7 @@ pacman_packages=(
   clang
   cmake
   curl
+  dotnet-sdk
   eza
   fastfetch
   fd
@@ -39,15 +40,15 @@ pacman_packages=(
   python
   python-pip
   ripgrep
-  rust-analyzer
   rustup
-  sesh
   shfmt
   shellcheck
   starship
   stylua
   tar
   tmux
+  tree-sitter-cli
+  ttf-cascadia-code-nerd
   ttf-jetbrains-mono-nerd
   unzip
   wget
@@ -140,11 +141,11 @@ fi
 ensure_canonical_repo_path() {
   mkdir -p "$HOME/github"
 
-  if [[ "$repo_dir" == "$canonical_repo_dir" ]]; then
-    return
-  fi
-
   if [[ -e "$canonical_repo_dir" || -L "$canonical_repo_dir" ]]; then
+    if [[ -d "$canonical_repo_dir" ]] &&
+      [[ "$(cd -P "$canonical_repo_dir" && pwd)" == "$(cd -P "$repo_dir" && pwd)" ]]; then
+      return
+    fi
     die "$canonical_repo_dir already exists, but this script is running from $repo_dir. Run the installer from $canonical_repo_dir."
   fi
 
@@ -189,11 +190,9 @@ setup_rust() {
     return
   fi
 
-  if ! rustup default >/dev/null 2>&1; then
-    rustup default stable
-  fi
-
-  rustup component add rustfmt clippy >/dev/null 2>&1 || true
+  rustup default stable
+  rustup component add rustfmt clippy rust-analyzer rust-src
+  export PATH="$HOME/.cargo/bin:$PATH"
 }
 
 setup_npm_prefix() {
@@ -223,9 +222,34 @@ setup_go_tools() {
   go install github.com/joshmedeski/sesh/v2@latest
 }
 
+install_tpm() {
+  local tpm_dir="$HOME/.tmux/plugins/tpm"
+
+  if [[ ! -d "$tpm_dir" ]]; then
+    log "Cloning tmux plugin manager (tpm)."
+    git clone --depth 1 https://github.com/tmux-plugins/tpm "$tpm_dir"
+  fi
+}
+
+install_tmux_plugins() {
+  local installer="$HOME/.tmux/plugins/tpm/bin/install_plugins"
+
+  if [[ ! -x "$installer" ]]; then
+    die "TPM installer is missing: $installer"
+  fi
+
+  log "Installing tmux plugins via tpm."
+  "$installer"
+
+  if tmux info >/dev/null 2>&1; then
+    tmux source-file "$HOME/.tmux.conf"
+  fi
+}
+
 apply_symlinks() {
   log "Applying dotfile symlinks."
-  DOTFILES_SYMLINK_VERBOSE=1 zsh -c "source '$canonical_repo_dir/zshrc/modules/colors.sh'; source '$canonical_repo_dir/zshrc/modules/symlinks.sh'"
+  DOTFILES_REPO_DIR="$canonical_repo_dir" DOTFILES_SYMLINK_VERBOSE=1 zsh -c \
+    'source "$DOTFILES_REPO_DIR/zshrc/modules/colors.sh"; source "$DOTFILES_REPO_DIR/zshrc/modules/symlinks.sh"'
 }
 
 setup_shell() {
@@ -268,9 +292,11 @@ main() {
   setup_rust
   setup_npm_prefix
   setup_go_tools
+  install_tpm
   apply_symlinks
   setup_shell
   sync_neovim
+  install_tmux_plugins
 
   log "Arch bootstrap complete. Restart the terminal or run: exec zsh"
 }

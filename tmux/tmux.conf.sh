@@ -39,7 +39,7 @@ set -sg terminal-overrides ",*:RGB"
 #
 # After reloading the configuration, you also have to kill the tmux session for
 # these changes to take effect
-set -g default-terminal "${TERM}"
+set -g default-terminal "tmux-256color"
 
 # # undercurl support
 # # I recently switched to Ghostty and I think this is not needed anymore
@@ -196,7 +196,10 @@ bind - split-window -v
 # 'p' is normally used to go to the previous window, but I won't use it
 # ctrl+b c -> new window
 # ctrl+b , -> rename current window
-# ctrl+b w -> show list of windows and sessions
+# ctrl+b w -> tmux window chooser. M-a means Option+a on macOS, Meta/Alt+a on Linux.
+bind w choose-tree -Zw
+# Redraw the attached terminal if Ghostty leaves stale rows on screen.
+bind R refresh-client
 unbind p
 bind u select-window -t 1
 bind i select-window -t 2

@@ -10,6 +10,15 @@
 # now changes have to be explicitly pulled with the alias 'pulldeez' that pulls
 # the changes and then sources the zshrc file
 
+if [[ "$(uname -s)" == Darwin ]] && ! command -v brew >/dev/null 2>&1; then
+  for brew_bin in /opt/homebrew/bin/brew /usr/local/bin/brew; do
+    if [[ -x "$brew_bin" ]]; then
+      eval "$("$brew_bin" shellenv)"
+      break
+    fi
+  done
+fi
+
 source ~/github/dotfiles-latest/zshrc/zshrc-common.sh
 
 # Detect OS
@@ -35,6 +44,8 @@ fi
 
 export PATH="$HOME/.local/bin:$PATH"
 export PATH="$HOME/.npm-global/bin:$PATH"
+export PATH="$HOME/.cargo/bin:$PATH"
+export PATH="$HOME/go/bin:$PATH"
 
 # fzf display defaults (shared across OSes)
 export FZF_DEFAULT_OPTS="

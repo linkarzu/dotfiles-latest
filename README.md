@@ -1,18 +1,22 @@
 # Contents
 
-## Bulutcan Arch bootstrap
+## Bulutcan workflow bootstrap
 
-Bu forkta yeni Arch Linux kurulumunu hizlandiran bootstrap akisi var:
+`./install.sh` işletim sistemini algılar ve macOS veya Arch tabanlı Linux'ta
+Ghostty, tmux, Neovim, Rust/.NET araçları, fontlar ve dotfile bağlantılarını kurar.
+Mevcut ayar dosyalarını değiştirmeden önce zaman damgalı yedeklerini alır.
 
 ```bash
-sudo pacman -Syu --needed git curl
 mkdir -p ~/github
-git clone https://github.com/bulutcan99/dotfiles-latest.git ~/github/dotfiles-latest
+git clone --branch bootstrap/reproduce-workflow-20261003 https://github.com/bulutcan99/dotfiles-latest.git ~/github/dotfiles-latest
 cd ~/github/dotfiles-latest
 ./install.sh
 ```
 
-Detaylar ve opsiyonlar: [ARCH_BOOTSTRAP.md](./ARCH_BOOTSTRAP.md)
+macOS'te Git ve derleyici araçları yoksa önce `xcode-select --install`
+çalıştırın. Arch'ta Git yoksa önce `sudo pacman -Syu --needed git`
+çalıştırın. Ayrıntılar: [macOS](./scripts/macos/README.md) ve
+[Arch Linux](./ARCH_BOOTSTRAP.md).
 
 <!-- toc -->
 

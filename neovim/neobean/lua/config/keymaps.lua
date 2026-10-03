@@ -3480,6 +3480,17 @@ vim.api.nvim_create_autocmd("BufWipeout", {
 })
 
 local function ensure_heading_folding()
+  -- The snacks picker preview disables folds (see plugins/snacks.lua). A loaded buffer
+  -- that was never shown in the target window inherits that foldenable=false when
+  -- opened there, so remember it was previewed and re-enable folds on the next open
+  if vim.w.snacks_picker_preview then
+    vim.b.heading_folds_disabled_by_preview = true
+    return
+  end
+  if vim.b.heading_folds_disabled_by_preview then
+    vim.b.heading_folds_disabled_by_preview = nil
+    vim.wo.foldenable = true
+  end
   if vim.bo.filetype == "markdown" then
     if vim.wo.foldmethod ~= "expr" or vim.wo.foldexpr ~= "v:lua.markdown_foldexpr()" or vim.wo.foldtext ~= "" then
       set_markdown_folding()

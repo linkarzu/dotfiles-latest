@@ -400,3 +400,117 @@ vim.api.nvim_create_autocmd({ "BufEnter", "CursorHold", "InsertLeave", "LspAttac
     refresh_markdown_codelens(args.buf)
   end,
 })
+
+-- Reload files changed outside Neovim while it stays focused, like a
+-- voice-inbox task or a Meeting Manager livestream block added to the daily
+-- note. LazyVim only runs checktime on FocusGained/TermClose/TermLeave, so an
+-- already focused buffer never noticed. Only in normal mode, so it never
+-- interrupts typing; auto-save keeps buffers saved, and autoread then reloads
+-- them silently
+--
+-- A reload fires FileType again, and the heading folding in keymaps.lua resets
+-- folds with zX, so the open/closed state of each heading is saved before the
+-- reload and restored after it. Headings are matched by their text, not their
+-- line number, because the external change usually adds lines above them
+local heading_patterns = { markdown = "^#+%s", typst = "^=+%s" }
+
+local function heading_lines(win)
+  local buf = vim.api.nvim_win_get_buf(win)
+  local pattern = heading_patterns[vim.bo[buf].filetype]
+  local headings, seen = {}, {}
+  if not pattern then
+    return headings
+  end
+  for lnum, text in ipairs(vim.api.nvim_buf_get_lines(buf, 0, -1, false)) do
+    if text:match(pattern) then
+      seen[text] = (seen[text] or 0) + 1
+      table.insert(headings, { lnum = lnum, key = text .. "\0" .. seen[text] })
+    end
+  end
+  return headings
+end
+
+local function save_heading_folds(win)
+  return vim.api.nvim_win_call(win, function()
+    local state = { view = vim.fn.winsaveview(), folds = {} }
+    for _, heading in ipairs(heading_lines(win)) do
+      local closed_at = vim.fn.foldclosed(heading.lnum)
+      -- Inside a closed parent the heading's own state is unknown, skip it
+      if closed_at == -1 or closed_at == heading.lnum then
+        state.folds[heading.key] = closed_at == heading.lnum
+      end
+    end
+    return state
+  end)
+end
+
+local function restore_heading_folds(win, state)
+  vim.api.nvim_win_call(win, function()
+    local headings = heading_lines(win)
+    -- Open top-down so parents open before their children are checked, then
+    -- close bottom-up so children close before a parent hides them
+    for _, heading in ipairs(headings) do
+      if state.folds[heading.key] == false and vim.fn.foldclosed(heading.lnum) ~= -1 then
+        pcall(vim.cmd, heading.lnum .. "foldopen")
+      end
+    end
+    for index = #headings, 1, -1 do
+      local heading = headings[index]
+      if state.folds[heading.key] == true and vim.fn.foldclosed(heading.lnum) == -1 then
+        pcall(vim.cmd, heading.lnum .. "foldclose")
+      end
+    end
+    vim.fn.winrestview(state.view)
+  end)
+end
+
+-- mtime of each buffer's file as last seen, to only do the fold work when the
+-- file really changed on disk
+local known_mtime = {}
+
+local function file_mtime(buf)
+  local name = vim.api.nvim_buf_get_name(buf)
+  local stat = name ~= "" and vim.uv.fs_stat(name) or nil
+  return stat and (stat.mtime.sec .. "." .. stat.mtime.nsec) or nil
+end
+
+vim.api.nvim_create_autocmd({ "BufReadPost", "BufWritePost", "FileChangedShellPost" }, {
+  group = augroup("external_reload_mtime"),
+  callback = function(args)
+    known_mtime[args.buf] = file_mtime(args.buf)
+  end,
+})
+
+local function reload_changed_buffers()
+  for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+    if vim.api.nvim_buf_is_loaded(buf) and vim.bo[buf].buftype == "" then
+      local mtime = file_mtime(buf)
+      if mtime and known_mtime[buf] and mtime ~= known_mtime[buf] then
+        local saved = {}
+        for _, win in ipairs(vim.fn.win_findbuf(buf)) do
+          saved[win] = save_heading_folds(win)
+        end
+        pcall(vim.cmd.checktime, tostring(buf))
+        known_mtime[buf] = file_mtime(buf)
+        for win, state in pairs(saved) do
+          if vim.api.nvim_win_is_valid(win) and vim.api.nvim_win_get_buf(win) == buf then
+            restore_heading_folds(win, state)
+          end
+        end
+      elseif mtime and not known_mtime[buf] then
+        known_mtime[buf] = mtime
+      end
+    end
+  end
+end
+
+local checktime_timer = vim.uv.new_timer()
+checktime_timer:start(
+  2000,
+  2000,
+  vim.schedule_wrap(function()
+    if vim.api.nvim_get_mode().mode == "n" and vim.fn.getcmdwintype() == "" then
+      reload_changed_buffers()
+    end
+  end)
+)

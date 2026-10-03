@@ -3,8 +3,10 @@
 # Toggles "virgin mode", triggered by voice through HEX
 # (~/.config/hex/hex.config.ts) with "virgin mode on|off".
 #
+#   Both first focus kitty and switch to its home session.
+#
 #   on  -> kitty cursor-trail-lightning, opacity 0.75,
-#          says "virgin mode activated", demon-slayer-tanjiro wallpaper
+#          says "virgin mode activated", anime-purple-eyes wallpaper
 #   off -> kitty cursor-trail-blaze, opacity 0.83,
 #          says "virgin mode deactivated", colorscheme's wallpaper
 #
@@ -15,9 +17,25 @@
 
 set -euo pipefail
 
+# HEX runs this with PATH=/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin, and
+# 500-switchApp.sh needs yabai and jq from Homebrew
+export PATH="/opt/homebrew/bin:$PATH"
+
 DOTFILES_DIR="${DOTFILES_DIR:-$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/../../../.." && pwd)}"
+misc_dir="$DOTFILES_DIR/scripts/macos/mac/misc"
 kitty_conf="$DOTFILES_DIR/kitty/kitty.conf"
-virgin_wallpaper="$HOME/Library/Mobile Documents/com~apple~CloudDocs/Images/wallpapers/official/demon-slayer-tanjiro.webp"
+virgin_wallpaper="$HOME/Library/Mobile Documents/com~apple~CloudDocs/Images/wallpapers/official/anime-purple-eyes.jpg"
+
+# Focuses kitty and switches to its home session, then waits a moment so the
+# change happens in front of you. Failures only warn, so the HEX
+# transformation still treats the command as handled instead of pasting it.
+show_kitty_home() {
+  "$misc_dir/500-switchApp.sh" kitty >/dev/null 2>&1 ||
+    echo "Could not focus kitty" >&2
+  "$misc_dir/550-skhdSession.sh" "$DOTFILES_DIR/kitty/sessions/home.kitty-session" >/dev/null 2>&1 ||
+    echo "Could not switch to the home kitty session" >&2
+  sleep 1
+}
 
 # Runs an awk program over kitty.conf and writes the result back through the
 # existing file so its permissions and inode are kept.
@@ -85,6 +103,7 @@ announce() {
 
 case "${1:-}" in
 on)
+  show_kitty_home
   set_kitty_shader cursor-trail-lightning
   set_kitty_opacity 0.75
   reload_kitty
@@ -92,6 +111,7 @@ on)
   set_wallpaper "$virgin_wallpaper"
   ;;
 off)
+  show_kitty_home
   set_kitty_shader cursor-trail-blaze
   set_kitty_opacity 0.83
   reload_kitty

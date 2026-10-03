@@ -132,7 +132,7 @@ fi
 # The +cd below is used to change the :pwd within Neovim. I need to change it
 # when it starts so that I can search for tasks, video ideas, etc with snacks in
 # that directory
-launch_cmd="launch --title \"${note_name}\" /bin/zsh -i -c 'export MD_HEADING_BG=transparent; NVIM_APPNAME=neobean nvim +cd\\\ \"${main_repo_dir}\" +norm\\\ G \"${full_path}\"'"
+launch_cmd="launch --title \"${note_name}\" /bin/zsh -i -c 'export MD_HEADING_BG=transparent; NVIM_APPNAME=neobean nvim +cd\\\ \"${main_repo_dir}\" +norm\\\ gg \"${full_path}\"'"
 # launch_cmd="launch --title \"${note_name}\" /bin/zsh -i -c 'export MD_HEADING_BG=transparent; NVIM_APPNAME=neobean nvim +norm\\\ G \"${full_path}\"'"
 
 # Safely update the lines below the marker comments in the kitty session file

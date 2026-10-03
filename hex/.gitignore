@@ -1,0 +1,5 @@
+node_modules
+# Managed by HEX, refreshed from the app bundle
+.hex-sdk
+# The root .gitignore ignores package.json, but this one adds @types/bun
+!package.json

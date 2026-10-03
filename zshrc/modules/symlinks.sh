@@ -111,6 +111,7 @@ create_symlink ~/github/dotfiles-latest/sesh ~/.config/sesh
 create_symlink ~/github/dotfiles-latest/aerospace ~/.config/aerospace
 create_symlink ~/github/dotfiles-latest/kitty ~/.config/kitty
 create_symlink ~/github/dotfiles-latest/opencode ~/.config/opencode
+create_symlink ~/github/dotfiles-latest/hex ~/.config/hex
 create_symlink ~/github/dotfiles-latest/skhd ~/.config/skhd
 create_symlink ~/github/dotfiles-latest/emacs ~/.config/emacs
 

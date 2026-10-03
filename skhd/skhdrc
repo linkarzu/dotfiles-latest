@@ -202,7 +202,6 @@ shift + alt + ctrl - f6 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scri
 shift + alt + ctrl - f7 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py cam-main-chat --no-auth"
 # shift + alt + ctrl - f8 : 
 # shift + alt + ctrl - f9 : 
-shift + ctrl + alt + cmd - z : /bin/zsh -c "python3 $HOME/github/dotfiles-private/scripts/macos/mac/obs/censor-beep/py/play-censor-beep.py --input 91-censor-beep"
 
 # Yabai manage
 shift + alt + ctrl - f10 : yabai -m window --close

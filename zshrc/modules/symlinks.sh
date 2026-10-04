@@ -1,24 +1,16 @@
 # ~/.config is used by neovim, alacritty and karabiner
-mkdir -p ~/.config
-# Alacritty is inside its own dir
-mkdir -p ~/.config/alacritty
-# Kitty is inside its own dir
-mkdir -p ~/.config/kitty/
-mkdir -p ~/.config/wezterm/
-mkdir -p ~/.config/ghostty
+# Alacritty, Kitty, etc are inside their own dir
 # Creating obsidian directory
 # Even if you don't use obsidian, don't remove this dir to avoid warnings
-mkdir -p ~/github/obsidian_main
-mkdir -p ~/.config/neovide
-mkdir -p ~/.config/rio
-mkdir -p ~/.config/yazi
-mkdir -p ~/.config/btop
-mkdir -p ~/.config/fastfetch
-mkdir -p ~/.config/sesh
-mkdir -p ~/.config/eligere
-mkdir -p ~/.config/aerospace
-mkdir -p ~/.config/skhd
-mkdir -p ~/.config/emacs
+# NOTE: Only call mkdir for dirs that are missing, this runs on every shell
+# start and each mkdir is a separate process
+for dir in ~/.config ~/.config/alacritty ~/.config/kitty ~/.config/wezterm \
+  ~/.config/ghostty ~/github/obsidian_main ~/.config/neovide ~/.config/rio \
+  ~/.config/yazi ~/.config/btop ~/.config/fastfetch ~/.config/sesh \
+  ~/.config/eligere ~/.config/aerospace ~/.config/skhd ~/.config/emacs; do
+  [[ -d $dir ]] || mkdir -p "$dir"
+done
+unset dir
 
 # Create the symlinks I normally use
 # ~/.config dir holds nvim, neofetch, alacritty configs
@@ -26,12 +18,25 @@ mkdir -p ~/.config/emacs
 # This will update the symlink even if its pointing to another file
 # If the file exists, it will create a backup in the same dir
 # echo "1"
+zmodload -F zsh/stat b:zstat
 create_symlink() {
   local source_path=$1
   local target_path=$2
   local backup_needed=true
+  local current_link
 
-  # echo
+  # Fast path, check if symlink already exists and points to the correct
+  # source. zstat is a zsh builtin, so this doesn't fork readlink or grep,
+  # which matters because this runs for every symlink on every shell start
+  if [[ -L $target_path ]]; then
+    zstat -A current_link +link -- "$target_path"
+    if [[ $current_link == "$source_path" ]]; then
+      # echo "$target_path exists and is correct, no action needed"
+      return 0
+    fi
+    echo -e "${boldYellow}'$target_path' is a symlink"
+    echo -e "but it points to a different source, updating it${noColor}"
+  fi
 
   # Check if the target is a file and contains the unique identifier
   if [ -f "$target_path" ] && grep -q "UNIQUE_ID=do_not_delete_this_line" "$target_path"; then
@@ -46,17 +51,6 @@ create_symlink() {
       backup_needed=false
     fi
   fi
-  # Check if symlink already exists and points to the correct source
-  if [ -L "$target_path" ]; then
-    if [ "$(readlink "$target_path")" = "$source_path" ]; then
-      # echo "$target_path exists and is correct, no action needed"
-      return 0
-    else
-      echo -e "${boldYellow}'$target_path' is a symlink"
-      echo -e "but it points to a different source, updating it${noColor}"
-    fi
-  fi
-
   # Backup the target if it's not a symlink and backup is needed
   if [ -e "$target_path" ] && [ ! -L "$target_path" ] && [ "$backup_needed" = true ]; then
     local backup_path="${target_path}_backup_$(date +%Y%m%d%H%M%S)"

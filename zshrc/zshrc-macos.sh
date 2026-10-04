@@ -1,3 +1,8 @@
+# `brew shellenv` in ~/.zprofile sets HOMEBREW_PREFIX for login shells, this
+# fallback covers non-login shells. Use $HOMEBREW_PREFIX instead of
+# $(brew --prefix) in this file, each brew call adds ~20ms to shell startup
+export HOMEBREW_PREFIX="${HOMEBREW_PREFIX:-/opt/homebrew}"
+
 # This below compiles my Downloads Folder Action AppleScript into a .scpt file
 # and places it where macOS expects Folder Action Scripts to live.
 #
@@ -208,7 +213,21 @@ fi
 #############################################################################
 
 # This is set in ~/github/dotfiles-latest/colorscheme/colorscheme-vars.sh
-~/github/dotfiles-latest/zshrc/colorscheme-set.sh "$colorscheme_profile"
+#
+# Only run colorscheme-set.sh when the active colorscheme doesn't match the
+# profile (for example after pulling changes from another machine) or when a
+# Helium wallpaper update is still pending. Otherwise the script has nothing
+# to do but still costs ~80ms (it hashes the wallpaper images with shasum).
+# $(<file) is a zsh builtin read, so the comparison itself doesn't fork
+# The colorscheme selector always runs the script directly
+colorscheme_list_file=~/github/dotfiles-latest/colorscheme/list/$colorscheme_profile
+colorscheme_active_file=~/github/dotfiles-latest/colorscheme/active/active-colorscheme.sh
+if [[ ! -f $colorscheme_active_file ]] ||
+  [[ "$(<$colorscheme_list_file)" != "$(<$colorscheme_active_file)" ]] ||
+  [[ -f "$HOME/Library/Application Support/net.imput.helium/Default/.linkarzu-theme-update-pending" ]]; then
+  ~/github/dotfiles-latest/zshrc/colorscheme-set.sh "$colorscheme_profile"
+fi
+unset colorscheme_list_file colorscheme_active_file
 
 #############################################################################
 
@@ -345,7 +364,7 @@ fi
 #
 # This is in case luaver was installed through homebrew
 # If the file is not empty, then source it
-[ -s $(brew --prefix)/opt/luaver/bin/luaver ] && . $(brew --prefix)/opt/luaver/bin/luaver
+[ -s $HOMEBREW_PREFIX/opt/luaver/bin/luaver ] && . $HOMEBREW_PREFIX/opt/luaver/bin/luaver
 # This is in case it the repo was cloned with the following command
 # git clone https://github.com/DhavalKapil/luaver.git ~/.luaver
 # If the file is not empty, then source it
@@ -355,14 +374,10 @@ fi
 
 # Brew autocompletion settings
 # https://docs.brew.sh/Shell-Completion#configuring-completions-in-zsh
-# -v makes command display a description of how the shell would
-# invoke the command, so you're checking if the command exists and is executable.
-if command -v brew &>/dev/null; then
-  FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
-
-  autoload -Uz compinit
-  compinit
-fi
+# NOTE: The brew site-functions dir is added to fpath, and compinit is run, in
+# ~/github/dotfiles-latest/zshrc/modules/autocompletion.sh
+# Don't run compinit again here, it made ~/.zcompdump get rebuilt on every
+# shell start
 
 #############################################################################
 #                       Command line tools
@@ -451,8 +466,8 @@ fi
 # Insert mode to type and edit text
 # Normal mode to use vim commands
 # test {really} long (command) using a { lot } of symbols {page} and {abc} and other ones [find] () "test page" {'command 2'}
-if [ -f "$(brew --prefix)/opt/zsh-vi-mode/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh" ]; then
-  source $(brew --prefix)/opt/zsh-vi-mode/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh
+if [ -f "$HOMEBREW_PREFIX/opt/zsh-vi-mode/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh" ]; then
+  source $HOMEBREW_PREFIX/opt/zsh-vi-mode/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh
   # Following 4 lines modify the escape key to `kj`
   ZVM_VI_ESCAPE_BINDKEY=kj
   ZVM_VI_INSERT_ESCAPE_BINDKEY=$ZVM_VI_ESCAPE_BINDKEY
@@ -516,8 +531,8 @@ fi
 
 # https://github.com/zsh-users/zsh-autosuggestions
 # Right arrow to accept suggestion
-if [ -f "$(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh" ]; then
-  source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+if [ -f "$HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh" ]; then
+  source $HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 fi
 
 # Changed from z.lua to zoxide, as it's more maintaned
@@ -548,27 +563,27 @@ fi
 
 # Source Google Cloud SDK configurations, if Homebrew and the SDK are installed
 if command -v brew &>/dev/null; then
-  if [ -f "$(brew --prefix)/share/google-cloud-sdk/path.zsh.inc" ]; then
-    source "$(brew --prefix)/share/google-cloud-sdk/path.zsh.inc"
+  if [ -f "$HOMEBREW_PREFIX/share/google-cloud-sdk/path.zsh.inc" ]; then
+    source "$HOMEBREW_PREFIX/share/google-cloud-sdk/path.zsh.inc"
   fi
-  if [ -f "$(brew --prefix)/share/google-cloud-sdk/completion.zsh.inc" ]; then
-    source "$(brew --prefix)/share/google-cloud-sdk/completion.zsh.inc"
+  if [ -f "$HOMEBREW_PREFIX/share/google-cloud-sdk/completion.zsh.inc" ]; then
+    source "$HOMEBREW_PREFIX/share/google-cloud-sdk/completion.zsh.inc"
   fi
 fi
 
-# Initialize kubernetes kubectl completion if kubectl is installed
+# kubectl completion
 # https://kubernetes.io/docs/tasks/tools/install-kubectl-macos/#enable-shell-autocompletion
-if command -v kubectl &>/dev/null; then
-  source <(kubectl completion zsh)
-fi
+# NOTE: Not sourcing `kubectl completion zsh` anymore, the brew kubernetes-cli
+# formula already installs _kubectl into $HOMEBREW_PREFIX/share/zsh/site-functions,
+# which compinit picks up. Generating it on every shell start was ~30ms+
 
 # Check if chruby is installed
 # Source chruby scripts if they exist
 # Working instructions to install on macos can be found on the jekyll site
 # https://jekyllrb.com/docs/installation/macos/
-if [ -f "$(brew --prefix)/opt/chruby/share/chruby/chruby.sh" ]; then
-  source "$(brew --prefix)/opt/chruby/share/chruby/chruby.sh"
-  source "$(brew --prefix)/opt/chruby/share/chruby/auto.sh"
+if [ -f "$HOMEBREW_PREFIX/opt/chruby/share/chruby/chruby.sh" ]; then
+  source "$HOMEBREW_PREFIX/opt/chruby/share/chruby/chruby.sh"
+  source "$HOMEBREW_PREFIX/opt/chruby/share/chruby/auto.sh"
   # Set default Ruby version using chruby
   # Replace 'ruby-3.1.3' with the version you have or want to use
   # You can also put a conditional check here if you want

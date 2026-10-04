@@ -17,6 +17,39 @@ local function save_buffer(buf)
   end)
 end
 
+-- Task text without the checkbox and the `done:`/`untoggled` labels
+local function task_text(chunk)
+  local text = {}
+  for i, line in ipairs(chunk) do
+    line = line:gsub("[`%[]done:[^`%]]*[`%]]%s?", ""):gsub("[`%[]untoggled[`%]]%s?", "")
+    if i == 1 then
+      line = line:gsub("^%s*%- %[[x ]%]%s*", "")
+    end
+    table.insert(text, line)
+  end
+  return vim.trim(table.concat(text, "\n"))
+end
+
+-- Append each completed or undone task to a local JSONL log in Neovim's state
+-- directory so other local tools can read it. Never blocks the toggle.
+local function log_task(buf, state, text)
+  pcall(function()
+    local dir = vim.fn.stdpath("state")
+    vim.fn.mkdir(dir, "p")
+    local file = io.open(dir .. "/markdown-tasks.jsonl", "a")
+    if not file then
+      return
+    end
+    file:write(vim.json.encode({
+      time = os.date("!%Y-%m-%dT%H:%M:%SZ"),
+      state = state,
+      note = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(buf), ":t"),
+      text = text,
+    }) .. "\n")
+    file:close()
+  end)
+end
+
 local function get_task_context(opts)
   opts = opts or {}
 
@@ -124,6 +157,7 @@ function M.toggle_done(opts)
   for i = chunk_start, chunk_end do
     table.insert(chunk, lines[i + 1])
   end
+  local text = task_text(chunk)
   ------------------------------------------------------------------------------
   -- 2. Check if chunk has [done: ...] or [untoggled], then transform them
   ------------------------------------------------------------------------------
@@ -251,6 +285,7 @@ function M.toggle_done(opts)
       end)
     end
   end
+  log_task(buf, has_done_index and "undone" or "done", text)
   -- Write changes and restore view to preserve folds
   -- "Update" saves only if the buffer has been modified since the last save
   save_buffer(buf)

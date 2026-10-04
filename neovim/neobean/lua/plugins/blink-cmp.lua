@@ -45,6 +45,8 @@ return {
     -- NOTE: by default lazyvim already includes the lazydev source, so not adding it here again
     opts.sources = vim.tbl_deep_extend("force", opts.sources or {}, {
       default = { "lsp", "path", "snippets", "buffer", "dadbod", "emoji", "dictionary" },
+      -- org buffers get the org source on top of the default ones
+      per_filetype = { org = { inherit_defaults = true, "org" } },
       providers = {
         lsp = {
           name = "lsp",
@@ -192,6 +194,12 @@ return {
             --   return items
             -- end,
           },
+        },
+        -- https://github.com/xheisenbugx/org.nvim
+        -- TODO keywords, tags, #+ keywords, src block languages, links, etc
+        org = {
+          name = "Org",
+          module = "org.completion.blink",
         },
         -- -- Third class citizen mf always talking shit
         -- copilot = {

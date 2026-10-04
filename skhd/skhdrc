@@ -25,7 +25,7 @@ shift + ctrl - f18 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-sw
 # shift + ctrl - f19 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" 'Brave Browser'
 shift + ctrl - f19 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" 'Helium'
 ctrl + alt - f18 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" "YouTube Studio"
-ctrl + alt - f12 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" 'ChatGPT'
+ctrl + alt - f12 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" 'Claude'
 ctrl + alt - f13 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" 'System Settings'
 
 # ctrl + alt - f1 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" zoom.us

@@ -80,5 +80,7 @@ else
   ")" || fail "Hammerspoon could not set mirror resolution"
   result="${result##*$'\n'}"
   [[ "$result" == ok:* ]] || fail "${result#error:}"
+  # yabairc picks its paddings from the resolution, so reload it for this mode
+  "$DOTFILES_DIR/yabai/yabai_restart.sh"
   notify "$message"
 fi

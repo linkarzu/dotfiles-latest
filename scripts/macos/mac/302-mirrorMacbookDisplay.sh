@@ -7,6 +7,14 @@ DOTFILES_DIR="${DOTFILES_DIR:-$HOME/github/dotfiles-latest}"
 HS_BIN="${HS_BIN:-$(command -v hs || true)}"
 YABAI_BIN="${YABAI_BIN:-$(command -v yabai || true)}"
 MIRROR_HELPER="${MIRROR_HELPER:-$DOTFILES_DIR/scripts/macos/mac/misc/displayMirrorRecovery.swift}"
+# Built-in HiDPI size while mirrored; smaller means bigger text (default is 1512x982)
+MIRROR_RESOLUTION="${MIRROR_RESOLUTION:-1147x745}"
+[[ "$MIRROR_RESOLUTION" =~ ^([0-9]+)x([0-9]+)$ ]] || {
+  printf 'Invalid MIRROR_RESOLUTION: %s\n' "$MIRROR_RESOLUTION" >&2
+  exit 1
+}
+mirror_w="${BASH_REMATCH[1]}"
+mirror_h="${BASH_REMATCH[2]}"
 
 notify() {
   /usr/bin/osascript -e "display notification \"$1\" with title \"Display toggle\"" >/dev/null
@@ -29,24 +37,24 @@ fi
 
 state="$("$MIRROR_HELPER" status)" || fail "Could not read display mirror state"
 case "$state" in
-  mirrored)
-    "$MIRROR_HELPER" unmirror || fail "Could not stop display mirroring"
-    expected_displays=2
-    message="External display restored"
-    ;;
-  extended)
-    result="$("$HS_BIN" -c '
+mirrored)
+  "$MIRROR_HELPER" unmirror || fail "Could not stop display mirroring"
+  expected_displays=2
+  message="External display restored"
+  ;;
+extended)
+  result="$("$HS_BIN" -c '
       local ok, response = displayMirrorToggle.start()
       print((ok and "ok:" or "error:") .. response)
     ')" || fail "Hammerspoon could not start display mirroring"
-    result="${result##*$'\n'}"
-    [[ "$result" == "ok:mirrored" ]] || fail "${result#error:}"
-    expected_displays=1
-    message="MacBook display mirror enabled"
-    ;;
-  *)
-    fail "Unexpected display mirror state: $state"
-    ;;
+  result="${result##*$'\n'}"
+  [[ "$result" == "ok:mirrored" ]] || fail "${result#error:}"
+  expected_displays=1
+  message="MacBook display mirror enabled"
+  ;;
+*)
+  fail "Unexpected display mirror state: $state"
+  ;;
 esac
 
 for _ in {1..50}; do
@@ -66,5 +74,11 @@ if [[ "$state" == "mirrored" ]]; then
   [[ "$result" == ok:* ]] || fail "${result#error:}"
   "$DOTFILES_DIR/yabai/yabai_restart.sh"
 else
+  result="$("$HS_BIN" -c "
+    local ok, response = displayMirrorToggle.setMirrorMode($mirror_w, $mirror_h)
+    print((ok and 'ok:' or 'error:') .. response)
+  ")" || fail "Hammerspoon could not set mirror resolution"
+  result="${result##*$'\n'}"
+  [[ "$result" == ok:* ]] || fail "${result#error:}"
   notify "$message"
 fi

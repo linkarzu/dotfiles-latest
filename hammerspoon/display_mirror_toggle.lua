@@ -38,6 +38,25 @@ function M.start()
 	return true, "mirrored"
 end
 
+-- Called once mirroring settled, so macOS does not override the mode again.
+function M.setMirrorMode(w, h)
+	local builtIn = displays()
+	if not builtIn then
+		return false, "Built-in display not found"
+	end
+	local mode = builtIn:currentMode()
+	if not mode then
+		return false, "Could not read built-in display mode"
+	end
+	if mode.w == w and mode.h == h and mode.scale == 2 then
+		return true, "Mirror mode already set"
+	end
+	if not builtIn:setMode(w, h, 2, mode.freq, mode.depth) then
+		return false, string.format("Could not set built-in display to %dx%d", w, h)
+	end
+	return true, "Mirror mode set"
+end
+
 function M.restoreMode()
 	local mode = hs.settings.get(modeKey)
 	if not mode then

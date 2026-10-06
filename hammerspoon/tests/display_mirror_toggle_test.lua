@@ -77,6 +77,19 @@ local ok, err = xpcall(function()
 	success, state = module.restoreMode()
 	assert(not success and state == "Could not restore built-in display mode")
 	assert(settings["linkarzu.displayMirrorToggle.builtInMode"] ~= nil)
+
+	builtIn = screen("Built-in Retina Display")
+	module = loadModule({ builtIn })
+	success, state = module.setMirrorMode(1352, 878)
+	assert(success and state == "Mirror mode set")
+	assert(table.concat(builtIn.modeArguments, ",") == "1352,878,2,60,8")
+	success, state = module.setMirrorMode(1512, 982)
+	assert(success and state == "Mirror mode already set" and builtIn.modeCalls == 1)
+
+	builtIn = screen("Built-in Retina Display", true, false)
+	module = loadModule({ builtIn })
+	success, state = module.setMirrorMode(1352, 878)
+	assert(not success and state == "Could not set built-in display to 1352x878")
 end, debug.traceback)
 
 hs = savedHs

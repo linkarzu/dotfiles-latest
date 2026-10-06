@@ -122,7 +122,14 @@ return {
             },
             finder = "grep",
             format = "file",
-            transform = add_mtime,
+            transform = function(item)
+              -- Hide the Templater placeholder task from my templates
+              -- item.line is resolved lazily, so match against item.text
+              if item.text and item.text:find("<% tp.file.cursor() %>", 1, true) then
+                return false
+              end
+              return add_mtime(item)
+            end,
             matcher = {
               sort_empty = true,
             },
@@ -130,7 +137,7 @@ return {
             supports_live = false,
             layout = "ivy_split",
             actions = {
-              task_done = function(picker, item)
+              task_done =function(picker, item)
                 picker:norm(function()
                   item = item or picker:current()
                   local path = item and Snacks.picker.util.path(item)

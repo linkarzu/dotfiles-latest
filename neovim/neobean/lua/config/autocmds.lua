@@ -540,3 +540,32 @@ checktime_timer:start(
     end
   end)
 )
+
+-- After a save in ~/github/notes, run the voice-inbox LaunchAgent right away,
+-- so the phone task page shows the change within seconds instead of on the
+-- next minute. Debounced because auto-save writes often. Only with a UI, the
+-- headless Neovim that voice-inbox uses for toggle_done never triggers it
+-- ~/github/voice-inbox/mac/voice_inbox_pull.py
+local voice_inbox_notes_dir = vim.fs.normalize(vim.fn.expand("~/github/notes"))
+local voice_inbox_timer = vim.uv.new_timer()
+vim.api.nvim_create_autocmd("BufWritePost", {
+  group = augroup("voice_inbox_sync"),
+  pattern = "*.md",
+  callback = function(args)
+    if #vim.api.nvim_list_uis() == 0 then
+      return
+    end
+    local path = vim.fs.normalize(vim.api.nvim_buf_get_name(args.buf))
+    if not vim.startswith(path, voice_inbox_notes_dir .. "/") then
+      return
+    end
+    voice_inbox_timer:stop()
+    voice_inbox_timer:start(
+      3000,
+      0,
+      vim.schedule_wrap(function()
+        vim.system({ "/bin/launchctl", "kickstart", "gui/" .. vim.uv.getuid() .. "/com.linkarzu.voice-inbox-pull" })
+      end)
+    )
+  end,
+})

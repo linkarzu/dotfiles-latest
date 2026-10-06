@@ -32,7 +32,7 @@ end
 
 -- Append each completed or undone task to a local JSONL log in Neovim's state
 -- directory so other local tools can read it. Never blocks the toggle.
-local function log_task(buf, state, text)
+local function log_task(buf, state, text, time)
   pcall(function()
     local dir = vim.fn.stdpath("state")
     vim.fn.mkdir(dir, "p")
@@ -41,7 +41,7 @@ local function log_task(buf, state, text)
       return
     end
     file:write(vim.json.encode({
-      time = os.date("!%Y-%m-%dT%H:%M:%SZ"),
+      time = time or os.date("!%Y-%m-%dT%H:%M:%SZ"),
       state = state,
       note = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(buf), ":t"),
       text = text,
@@ -90,6 +90,10 @@ end
 -- appended to it at the top lamw25wmal
 --
 -- If an item is moved to that heading, it will be added the `done` label
+--
+-- opts.timestamp ("%y%m%d-%H%M") and opts.log_time (UTC ISO) replace the
+-- current time, voice-inbox passes them so a task ticked on the phone gets the
+-- time of the tick, not the time the Mac applied it
 function M.toggle_done(opts)
   local context = get_task_context(opts)
   if not context then
@@ -100,7 +104,7 @@ function M.toggle_done(opts)
   -- NOTE: Customize the completion label
   local label_done = "done:"
   -- NOTE: Customize the timestamp format
-  local timestamp = os.date("%y%m%d-%H%M")
+  local timestamp = opts and opts.timestamp or os.date("%y%m%d-%H%M")
   -- local timestamp = os.date("%y%m%d")
   -- NOTE: Customize the heading and its level
   local tasks_heading = "## Completed Tasks"
@@ -285,7 +289,7 @@ function M.toggle_done(opts)
       end)
     end
   end
-  log_task(buf, has_done_index and "undone" or "done", text)
+  log_task(buf, has_done_index and "undone" or "done", text, opts and opts.log_time)
   -- Write changes and restore view to preserve folds
   -- "Update" saves only if the buffer has been modified since the last save
   save_buffer(buf)

@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 
-"""Switch to the YouTube members scene or advance its active overlay page."""
+"""Switch to the YouTube members scene or advance its active overlay page.
+
+With OBS Studio Mode on, the scene only loads into the preview, so the live
+output, the page evidence and the SketchyBar banner stay unchanged.
+"""
 
 import argparse
 import fcntl
@@ -15,6 +19,7 @@ from typing import Optional
 from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 
 from component_diagnostics import install_diagnostics
+import studio_mode
 
 
 HERE = Path(__file__).resolve().parent
@@ -267,28 +272,30 @@ def set_and_verify_scene(
     current_scene: Optional[str] = None,
     timeout: Optional[float] = None,
     poll_interval: Optional[float] = None,
+    preview: bool = False,
 ) -> bool:
     timeout = VERIFY_TIMEOUT if timeout is None else timeout
     poll_interval = POLL_INTERVAL if poll_interval is None else poll_interval
+    step = studio_mode.target_name(preview)
     if current_scene is None:
-        current_scene = client.get_current_program_scene().current_program_scene_name
+        current_scene = studio_mode.current_scene(client, preview)
     if current_scene == SCENE_NAME:
         print(
-            "phase=members-scene step=program-scene status=success "
+            f"phase=members-scene step={step} status=success "
             f"attempt=1 observed={SCENE_NAME} action=verified-no-op"
         )
         return False
     print(
-        "phase=members-scene step=program-scene status=start "
+        f"phase=members-scene step={step} status=start "
         f"expected={SCENE_NAME} timeout_seconds={timeout:g}"
     )
     request_error = None
     try:
-        client.set_current_program_scene(SCENE_NAME)
+        studio_mode.request_scene(client, SCENE_NAME, preview)
     except Exception as error:
         request_error = error
         print(
-            "phase=members-scene step=program-scene status=uncertain "
+            f"phase=members-scene step={step} status=uncertain "
             f"error_type={type(error).__name__} action=reconcile-authoritative-obs-state"
         )
     deadline = time.monotonic() + timeout
@@ -298,13 +305,13 @@ def set_and_verify_scene(
     while True:
         attempt += 1
         try:
-            last_observed = client.get_current_program_scene().current_program_scene_name
+            last_observed = studio_mode.current_scene(client, preview)
             last_error = None
         except Exception as error:
             last_error = error
         if last_error is None and last_observed == SCENE_NAME:
             print(
-                "phase=members-scene step=program-scene status=success "
+                f"phase=members-scene step={step} status=success "
                 f"attempt={attempt} observed={SCENE_NAME} "
                 f"request_status={'error-reconciled' if request_error else 'accepted'}"
             )
@@ -316,7 +323,7 @@ def set_and_verify_scene(
                 else f"observed={last_observed}"
             )
             print(
-                "phase=members-scene step=program-scene status=timeout "
+                f"phase=members-scene step={step} status=timeout "
                 f"attempt={attempt} expected={SCENE_NAME} {evidence} "
                 f"request_error_type={type(request_error).__name__ if request_error else 'none'} "
                 f"timeout_seconds={timeout:g}",
@@ -325,7 +332,7 @@ def set_and_verify_scene(
             raise RuntimeError("OBS members scene could not be authoritatively verified.")
         if attempt == 1:
             print(
-                "phase=members-scene step=program-scene status=waiting "
+                f"phase=members-scene step={step} status=waiting "
                 f"attempt={attempt} observed={last_observed}"
             )
         time.sleep(poll_interval)
@@ -365,17 +372,27 @@ def refresh_overlay_if_needed(client) -> bool:
     return True
 
 
-def handle_press(client, overlay_refreshed: bool = False) -> tuple[int, bool]:
-    current_scene = client.get_current_program_scene().current_program_scene_name
+def handle_press(
+    client, overlay_refreshed: bool = False, preview: bool = False
+) -> tuple[int, bool]:
+    current_scene = studio_mode.current_scene(client, preview)
     overlay_mtime = MEMBERS_HTML_PATH.stat().st_mtime_ns
     if current_scene != SCENE_NAME:
         page = 0
         if not overlay_refreshed:
             set_and_verify_browser_page(client, page, overlay_mtime)
-        switched_scene = set_and_verify_scene(client, current_scene=current_scene)
-        print(f"[+] Switched to {SCENE_NAME} on page 1")
+        switched_scene = set_and_verify_scene(
+            client, current_scene=current_scene, preview=preview
+        )
+        print(
+            f"[+] Loaded {SCENE_NAME} on page 1 in the Studio Mode preview"
+            if preview
+            else f"[+] Switched to {SCENE_NAME} on page 1"
+        )
     else:
-        switched_scene = set_and_verify_scene(client, current_scene=current_scene)
+        switched_scene = set_and_verify_scene(
+            client, current_scene=current_scene, preview=preview
+        )
         if overlay_refreshed:
             page = 0
             print(f"[+] Reset {SCENE_NAME} to page 1 after refresh")
@@ -561,10 +578,15 @@ def main() -> None:
         )
         try:
             requested_monotonic_ns = time.monotonic_ns()
+            preview = studio_mode.preview_mode(client)
             overlay_refreshed = refresh_overlay_if_needed(client)
-            page, _switched = handle_press(client, overlay_refreshed=overlay_refreshed)
-            record_page_observation(page, requested_monotonic_ns)
-            update_banner()
+            page, _switched = handle_press(
+                client, overlay_refreshed=overlay_refreshed, preview=preview
+            )
+            # A preview load is not on air: no page evidence, banner stays live.
+            if not preview:
+                record_page_observation(page, requested_monotonic_ns)
+                update_banner()
         finally:
             client.disconnect()
 

@@ -77,9 +77,48 @@ class YouTubeMembersSceneTests(unittest.TestCase):
             record = stack.enter_context(patch.object(youtube_members_scene, "record_page_observation"))
             stack.enter_context(patch.object(youtube_members_scene, "update_banner"))
             youtube_members_scene.main()
-        handle.assert_called_once_with(client, overlay_refreshed=False)
+        handle.assert_called_once_with(client, overlay_refreshed=False, preview=False)
         record.assert_called_once_with(1, 42)
         client.disconnect.assert_called_once()
+
+    def test_main_in_studio_mode_loads_preview_without_evidence_or_banner(self):
+        client = MagicMock()
+        client.get_studio_mode_enabled.return_value = SimpleNamespace(studio_mode_enabled=True)
+        with tempfile.TemporaryDirectory() as directory, contextlib.ExitStack() as stack:
+            stack.enter_context(patch.object(youtube_members_scene.sys, "argv", ["members", "--no-auth"]))
+            stack.enter_context(patch.object(youtube_members_scene, "CACHE_DIR", Path(directory)))
+            stack.enter_context(patch.object(youtube_members_scene, "LOCK_PATH", Path(directory) / "page.lock"))
+            stack.enter_context(patch.object(youtube_members_scene.obs, "ReqClient", return_value=client))
+            stack.enter_context(patch.object(youtube_members_scene, "refresh_overlay_if_needed", return_value=False))
+            handle = stack.enter_context(patch.object(youtube_members_scene, "handle_press", return_value=(0, True)))
+            record = stack.enter_context(patch.object(youtube_members_scene, "record_page_observation"))
+            banner = stack.enter_context(patch.object(youtube_members_scene, "update_banner"))
+            youtube_members_scene.main()
+        handle.assert_called_once_with(client, overlay_refreshed=False, preview=True)
+        record.assert_not_called()
+        banner.assert_not_called()
+        client.disconnect.assert_called_once()
+
+    def test_preview_press_loads_members_into_preview_only(self):
+        client = Client("starting-soon")
+        client.preview_scene = "screen-main-live"
+        client.get_current_preview_scene = lambda: SimpleNamespace(
+            current_preview_scene_name=client.preview_scene
+        )
+        client.set_current_preview_scene = lambda scene: setattr(client, "preview_scene", scene)
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            html_path = Path(temporary_directory) / "index.html"
+            html_path.write_text("overlay", encoding="utf-8")
+            with patch.object(
+                youtube_members_scene, "PAGE_STATE_PATH", Path(temporary_directory) / "page.txt"
+            ), patch.object(youtube_members_scene, "MEMBERS_HTML_PATH", html_path):
+                page, switched = youtube_members_scene.handle_press(client, preview=True)
+
+        self.assertTrue(switched)
+        self.assertEqual(page, 0)
+        self.assertEqual(client.preview_scene, "youtube-members")
+        self.assertEqual(client.current_scene, "starting-soon")
+        self.assertEqual(client.scene_calls, [])
 
     def test_missing_capture_helper_reports_unavailable_without_breaking_control(self):
         with tempfile.TemporaryDirectory() as directory, contextlib.ExitStack() as stack:

@@ -171,7 +171,8 @@ shift + alt - f2 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/mac
 shift + alt - f3 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py  --no-auth"
 # lineid_obs_switchscene_cam_guest4
 shift + alt - f4 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py  --no-auth"
-# shift + alt - f5 : 
+# Leave Starting Soon: send the Studio Mode preview live, Studio Mode off (Toucan Enter-O-T)
+shift + alt - f5 : /bin/zsh -c "mkdir -p $HOME/.cache/obs-meeting-manager && python3 $HOME/github/dotfiles-private/scripts/macos/mac/obs-meeting-manager/scripts/macos/mac/obs/livestream/py/livestream_runtime.py leave-starting-soon >> $HOME/.cache/obs-meeting-manager/leave-starting-soon.log 2>&1"
 shift + alt - f6 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/youtube_members_scene.py --no-auth"
 # shift + alt - f7 : 
 # lineid_obs_switchscene_guest

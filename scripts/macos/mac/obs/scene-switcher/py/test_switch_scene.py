@@ -8,6 +8,7 @@ import unittest
 from datetime import datetime
 from pathlib import Path
 from types import ModuleType, SimpleNamespace
+import unittest.mock
 from unittest.mock import Mock, patch
 
 
@@ -380,6 +381,60 @@ class SwitchSceneTests(unittest.TestCase):
         self.assertNotIn("primary OBS failure", stdout + stderr)
         self.assertNotIn("disconnect failure", stdout + stderr)
         cleanup_client.disconnect.assert_called_once_with()
+
+    def test_studio_mode_loads_preview_and_leaves_live_scene_and_banner(self):
+        client = Mock()
+        client.get_studio_mode_enabled.return_value = SimpleNamespace(
+            studio_mode_enabled=True
+        )
+        client.get_current_preview_scene.return_value = SimpleNamespace(
+            current_preview_scene_name="requested-scene"
+        )
+        with patch.object(
+            switch_scene, "write_banner_atomic"
+        ) as write_banner, patch.object(
+            switch_scene, "trigger_sketchybar_update"
+        ) as trigger:
+            status, stdout, stderr = self.run_main(client, banner=True)
+
+        self.assertEqual(status, 0)
+        self.assertEqual(stderr, "")
+        self.assertIn("step=preview-scene status=success", stdout)
+        self.assertIn("Studio Mode preview: requested-scene", stdout)
+        client.set_current_preview_scene.assert_called_once_with("requested-scene")
+        client.set_current_program_scene.assert_not_called()
+        write_banner.assert_not_called()
+        trigger.assert_not_called()
+
+    def test_unreadable_studio_mode_requests_no_scene(self):
+        client = Mock()
+        client.get_studio_mode_enabled.side_effect = TimeoutError("no reply")
+
+        status, _stdout, stderr = self.run_main(client)
+
+        self.assertEqual(status, 1)
+        self.assertIn("Studio Mode state could not be read", stderr)
+        client.set_current_program_scene.assert_not_called()
+        client.set_current_preview_scene.assert_not_called()
+        client.disconnect.assert_called_once_with()
+
+    def test_banner_only_publishes_banner_without_touching_obs(self):
+        with patch.object(switch_scene, "create_obs_client") as create, patch.object(
+            switch_scene.os.path, "exists", return_value=True
+        ), patch.object(switch_scene, "write_banner_atomic") as write_banner, patch.object(
+            switch_scene, "trigger_sketchybar_update"
+        ) as trigger, patch.object(
+            sys, "argv", [str(MODULE_PATH), "live-scene", "--banner-only"]
+        ), patch(
+            "builtins.open", unittest.mock.mock_open(read_data=b"previous")
+        ):
+            status = switch_scene.main()
+
+        self.assertEqual(status, 0)
+        create.assert_not_called()
+        write_banner.assert_called_once()
+        self.assertEqual(write_banner.call_args.args[1], b"live-scene")
+        trigger.assert_called_once_with("live-scene")
 
     def test_unresolved_scene_does_not_publish_banner(self):
         client = Mock()

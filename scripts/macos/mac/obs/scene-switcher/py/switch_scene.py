@@ -11,6 +11,11 @@
 # NOTE: If you have auth disabled in OBS, you can call this script with the
 # --no-auth flag, so that it does not try to get the secret from 1password
 
+# NOTE: With OBS Studio Mode on, the scene only loads into the preview and the
+# live output stays put; the SketchyBar banner keeps showing the live scene.
+# --banner-only skips OBS and only publishes the banner for a scene that some
+# other tool already put live.
+
 import json
 import os
 import sys
@@ -20,6 +25,7 @@ import time
 from pathlib import Path
 
 from component_diagnostics import install_diagnostics
+import studio_mode
 
 # --- Vars ---
 onepassword_secret = "op://helixdeeznuts/obs-websocket-password/credential"
@@ -110,11 +116,6 @@ def create_obs_client(**kwargs):
     return client
 
 
-def current_program_scene(client):
-    response = client.get_current_program_scene()
-    return response.current_program_scene_name
-
-
 def switch_scene(scene_name, timeout=None, poll_interval=None):
     host = "localhost"
     port = 4455
@@ -136,18 +137,20 @@ def switch_scene(scene_name, timeout=None, poll_interval=None):
             password=password,
             timeout=OBS_REQUEST_TIMEOUT,
         )
+        preview = studio_mode.preview_mode(client)
+        step = studio_mode.target_name(preview)
         print(
-            "phase=scene-switch step=program-scene status=start "
+            f"phase=scene-switch step={step} status=start "
             f"expected={scene_name} timeout_seconds={timeout:g} "
             f"request_timeout_seconds={OBS_REQUEST_TIMEOUT:g}"
         )
         request_error = None
         try:
-            client.set_current_program_scene(scene_name)
+            studio_mode.request_scene(client, scene_name, preview)
         except Exception as e:
             request_error = e
             print(
-                "phase=scene-switch step=program-scene status=uncertain "
+                f"phase=scene-switch step={step} status=uncertain "
                 f"request_status=error error_type={type(e).__name__} "
                 "action=reconcile-authoritative-obs-state"
             )
@@ -159,14 +162,14 @@ def switch_scene(scene_name, timeout=None, poll_interval=None):
         while True:
             attempt += 1
             try:
-                last_observed = current_program_scene(client)
+                last_observed = studio_mode.current_scene(client, preview)
                 last_query_error = None
             except Exception as e:
                 last_observed = "unavailable"
                 last_query_error = e
             if last_query_error is None and last_observed == scene_name:
                 print(
-                    "phase=scene-switch step=program-scene status=success "
+                    f"phase=scene-switch step={step} status=success "
                     f"attempt={attempt} expected={scene_name} observed={last_observed} "
                     f"request_status={'error-reconciled' if request_error else 'accepted'}"
                 )
@@ -178,7 +181,7 @@ def switch_scene(scene_name, timeout=None, poll_interval=None):
                     else f"observed={last_observed}"
                 )
                 print(
-                    "phase=scene-switch step=program-scene status=timeout "
+                    f"phase=scene-switch step={step} status=timeout "
                     f"attempt={attempt} expected={scene_name} {query_evidence} "
                     f"request_status={'error' if request_error else 'accepted'} "
                     f"request_error_type={type(request_error).__name__ if request_error else 'none'} "
@@ -186,8 +189,8 @@ def switch_scene(scene_name, timeout=None, poll_interval=None):
                     file=sys.stderr,
                 )
                 raise RuntimeError(
-                    "OBS program scene could not be authoritatively verified "
-                    f"within {timeout:g} seconds."
+                    f"OBS {'preview' if preview else 'program'} scene could not be "
+                    f"authoritatively verified within {timeout:g} seconds."
                 )
             if attempt == 1:
                 query_evidence = (
@@ -196,7 +199,7 @@ def switch_scene(scene_name, timeout=None, poll_interval=None):
                     else f"observed={last_observed}"
                 )
                 print(
-                    "phase=scene-switch step=program-scene status=waiting "
+                    f"phase=scene-switch step={step} status=waiting "
                     f"attempt={attempt} expected={scene_name} {query_evidence}"
                 )
             time.sleep(poll_interval)
@@ -211,7 +214,11 @@ def switch_scene(scene_name, timeout=None, poll_interval=None):
                 if primary_error is None:
                     raise RuntimeError(sanitized_error(e, password)) from None
 
-    print(f"Switched to scene: {scene_name}")
+    if preview:
+        print(f"Loaded scene in the Studio Mode preview: {scene_name} (live output unchanged)")
+    else:
+        print(f"Switched to scene: {scene_name}")
+    return preview
 
 
 def trigger_sketchybar_update(expected_label, *, step="banner"):
@@ -297,11 +304,15 @@ def main():
         return 1
 
     scene_name = sys.argv[1]
-    try:
-        switch_scene(scene_name)
-    except Exception as e:
-        print(f"Error: {str(e)}", file=sys.stderr)
-        return 1
+    if "--banner-only" not in sys.argv:
+        try:
+            preview = switch_scene(scene_name)
+        except Exception as e:
+            print(f"Error: {str(e)}", file=sys.stderr)
+            return 1
+        # The banner names the live scene, which a preview load leaves alone.
+        if preview:
+            return 0
 
     # If the banner file exists:
     # - Save the scene name to the file

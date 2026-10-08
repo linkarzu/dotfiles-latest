@@ -51,15 +51,15 @@ edit_kitty_conf() {
 set_kitty_shader() {
   local shader="$1"
 
-  if ! grep -Eq "^#? *custom_shaders +${shader} *$" "$kitty_conf"; then
+  if ! grep -Eq "^#* *custom_shaders +${shader} *$" "$kitty_conf"; then
     echo "Shader '$shader' is not listed in $kitty_conf" >&2
     return 1
   fi
 
   edit_kitty_conf -v want="$shader" '
-    /^#? *custom_shaders / {
+    /^#* *custom_shaders / {
       name = $0
-      sub(/^#? *custom_shaders +/, "", name)
+      sub(/^#* *custom_shaders +/, "", name)
       sub(/ +$/, "", name)
       print (name == want ? "" : "# ") "custom_shaders " name
       next

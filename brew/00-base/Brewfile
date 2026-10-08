@@ -34,6 +34,7 @@ cask "kitty"
 cask "wezterm"
 cask "ghostty"
 cask "coconutbattery"
+cask "claude-code"
 
 brew "jq"
 brew "sketchybar"

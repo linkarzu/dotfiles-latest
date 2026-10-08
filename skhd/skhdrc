@@ -137,6 +137,8 @@ cmd + alt - f5 : open "btt://execute_assigned_actions_for_trigger/?uuid=9A1CFA49
 cmd + alt - f6 : /Applications/kitty.app/Contents/MacOS/kitty @ --to "unix:$($HOME/github/dotfiles-latest/scripts/macos/mac/misc/549-kittyMainSocket.sh)" action launch --type=background kitten quick-access-terminal
 cmd + alt - f7 : /bin/zsh -c "/opt/homebrew/bin/SwitchAudioSource -s 'AirPods Pro'; /opt/homebrew/bin/SwitchAudioSource -t input -s 'AirPods Pro'"
 cmd + alt - f8 : /Applications/kitty.app/Contents/MacOS/kitty @ --to "unix:$($HOME/github/dotfiles-latest/scripts/macos/mac/misc/549-kittyMainSocket.sh)" action goto_session -1
+# Toucan hold-O, open Claude Code in a new tab of the focused kitty session
+shift + ctrl + alt + cmd - z : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/562-skhdKittyClaude.sh"
 # Tmux copy mode (kitty scrollback)
 # I don't need to focus kitty or anything, I'm assuming I'll be on kitty already, so just send the keys
 cmd + alt - f9 : osascript -e 'tell application "System Events" to keystroke "i" using {command down, option down}'

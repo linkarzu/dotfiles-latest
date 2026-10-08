@@ -420,20 +420,10 @@ if [ -f ~/.fzf.zsh ]; then
   export FZF_DEFAULT_OPTS='--color=fg:#ebfafa,bg:#09090d,hl:#37f499 --color=fg+:#ebfafa,bg+:#0D1116,hl+:#37f499 --color=info:#04d1f9,prompt:#04d1f9,pointer:#7081d0 --color=marker:#7081d0,spinner:#f7c67f,header:#323449'
 fi
 
-# # Starship
-# # Not sure if counts a CLI tool, because it only makes my prompt more useful
-# # https://starship.rs/config/#prompt
-# # I was getting this error
-# # starship_zle-keymap-select-wrapped:1: maximum nested function level reached; increase FUNCNEST?
-# # Check that the function `starship_zle-keymap-select()` is defined
-# # https://github.com/starship/starship/issues/3418
-if command -v starship &>/dev/null; then
-  type starship_zle-keymap-select >/dev/null ||
-    {
-      export STARSHIP_CONFIG=$HOME/github/dotfiles-latest/starship-config/active-config.toml
-      eval "$(starship init zsh)" >/dev/null 2>&1
-    }
-fi
+# Prompt
+# Native zsh prompt, starship was removed because it forked 2 processes on
+# every prompt (~27ms inside a git repo) for git info I never looked at
+source ~/github/dotfiles-latest/zshrc/modules/prompt.sh
 
 # eza
 # ls replacement
@@ -461,74 +451,31 @@ if command -v bat &>/dev/null; then
   alias cata='bat --show-all --paging=never --style=plain'
 fi
 
-# Zsh Vi Mode
-# vi(vim) mode plugin for ZSH
-# https://github.com/jeffreytse/zsh-vi-mode
-# Insert mode to type and edit text
-# Normal mode to use vim commands
-# test {really} long (command) using a { lot } of symbols {page} and {abc} and other ones [find] () "test page" {'command 2'}
-if [ -f "$HOMEBREW_PREFIX/opt/zsh-vi-mode/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh" ]; then
-  source $HOMEBREW_PREFIX/opt/zsh-vi-mode/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh
-  # Following 4 lines modify the escape key to `kj`
-  ZVM_VI_ESCAPE_BINDKEY=kj
-  ZVM_VI_INSERT_ESCAPE_BINDKEY=$ZVM_VI_ESCAPE_BINDKEY
-  ZVM_VI_VISUAL_ESCAPE_BINDKEY=$ZVM_VI_ESCAPE_BINDKEY
-  ZVM_VI_OPPEND_ESCAPE_BINDKEY=$ZVM_VI_ESCAPE_BINDKEY
+# Keybindings
+# zsh-vi-mode was removed, it added ~40ms before the first prompt and I never
+# used vi mode in the shell. Plain emacs keys: ctrl-a/ctrl-e line start/end,
+# alt-b/alt-f word back/forward, ctrl-w delete word
+#
+# zsh picks vi keys on its own if EDITOR or VISUAL contains "vi", so set emacs
+# explicitly
+bindkey -e
 
-  # Function to switch to the left tmux pane and maximize it
-  function tmux_left_pane() {
-    # This defines if the tmux pane created by neovim is on the right or
-    # bottom, make sure you also configure the neovi keymap to match
-    export TMUX_PANE_DIRECTION="right"
-    if [[ $TMUX_PANE_DIRECTION == "right" ]]; then
-      tmux select-pane -L # Move to the left (opposite of right)
-    elif [[ $TMUX_PANE_DIRECTION == "bottom" ]]; then
-      tmux select-pane -U # Move to the top (opposite of bottom)
-    fi
-    tmux resize-pane -Z
-    # zle reset-prompt # Refresh the prompt after switching panes
-  }
-
-  # Register the function as a ZLE widget
-  # zle -N tmux_left_pane
-  zvm_define_widget tmux_left_pane
-
-  function zvm_after_lazy_keybindings() {
-    # Remap to go to the beginning of the line
-    zvm_bindkey vicmd 'gh' beginning-of-line
-    # Remap to go to the end of the line
-    zvm_bindkey vicmd 'gl' end-of-line
-    # Moves me to my left pane in tmux and maximizes it
-    # Bind Alt-t to the tmux_left_pane function in normal and insert mode
-    # To know that alt-t is ^[t I used `/bin/cat -v` and then pressed alt-t
-    zvm_bindkey vicmd '^[t' tmux_left_pane
-    zvm_bindkey viins '^[t' tmux_left_pane
-    # I used ',' to switch to left pane and maximize it  before switching to alt-t
-    # zvm_bindkey vicmd ',' tmux_left_pane
-    # Move to the left tmux pane with escape on normal and insert mode
-    # zvm_bindkey vicmd '^[' tmux_left_pane
-    # zvm_bindkey viins '^[' tmux_left_pane
-  }
-
-  # zvm_bindkey vicmd '\e' tmux_left_pane
-
-  # Disable the cursor style feature
-  # I my cursor above in the cursor section
-  # https://github.com/jeffreytse/zsh-vi-mode?tab=readme-ov-file#custom-cursor-style
-  #
-  # NOTE: My cursor was not blinking when using wezterm with the "wezterm"
-  # terminfo, setting it to a blinking cursor below fixed that
-  # I also set my term to "xterm-kitty" for this to work
-  #
-  # This also specifies the blinking cursor
-  # ZVM_CURSOR_STYLE_ENABLED=false
-  ZVM_INSERT_MODE_CURSOR=$ZVM_CURSOR_BEAM
-  ZVM_NORMAL_MODE_CURSOR=$ZVM_CURSOR_BLOCK
-  ZVM_OPPEND_MODE_CURSOR=$ZVM_CURSOR_UNDERLINE
-
-  # Source .fzf.zsh so that the ctrl+r bindkey is given back fzf
-  zvm_after_init_commands+=('[ -f $HOME/.fzf.zsh ] && source $HOME/.fzf.zsh')
-fi
+# Function to switch to the left tmux pane and maximize it
+function tmux_left_pane() {
+  # This defines if the tmux pane created by neovim is on the right or
+  # bottom, make sure you also configure the neovi keymap to match
+  export TMUX_PANE_DIRECTION="right"
+  if [[ $TMUX_PANE_DIRECTION == "right" ]]; then
+    tmux select-pane -L # Move to the left (opposite of right)
+  elif [[ $TMUX_PANE_DIRECTION == "bottom" ]]; then
+    tmux select-pane -U # Move to the top (opposite of bottom)
+  fi
+  tmux resize-pane -Z
+}
+zle -N tmux_left_pane
+# Moves me to my left pane in tmux and maximizes it
+# To know that alt-t is ^[t I used `/bin/cat -v` and then pressed alt-t
+bindkey '^[t' tmux_left_pane
 
 # https://github.com/zsh-users/zsh-autosuggestions
 # Right arrow to accept suggestion

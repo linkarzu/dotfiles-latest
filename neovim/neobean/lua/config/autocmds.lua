@@ -190,6 +190,19 @@ vim.api.nvim_create_autocmd("FileType", {
   end,
 })
 
+-- No sign column in markdown. The gutter is numberwidth 5 + 2 for signs, and
+-- render-markdown's checkbox icon adds 2 cells Neovim counts when wrapping, so
+-- a task line at prettier's printWidth 70 needs 72 columns. Dropping the
+-- signs frees those 2 columns without breaking checkbox alignment.
+vim.api.nvim_create_autocmd({ "FileType", "BufWinEnter" }, {
+  group = augroup("markdown_no_signcolumn"),
+  callback = function(args)
+    if vim.bo[args.buf].filetype == "markdown" then
+      vim.opt_local.signcolumn = "no"
+    end
+  end,
+})
+
 -- Spanish-only notes default to Spanish spelling.
 local spanish_spell_root = vim.fn.fnamemodify(vim.fn.expand("~/github/obsidian_main/075-umg"), ":p"):gsub("/$", "")
 local function set_spanish_spell_for_path(bufnr)

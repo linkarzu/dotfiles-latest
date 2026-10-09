@@ -603,3 +603,20 @@ vim.api.nvim_create_autocmd("VimLeavePre", {
     end)
   end,
 })
+
+-- Neovim writes ShaDa through main.shada.tmp.a to .tmp.z and never removes
+-- one left by an exit that was killed mid-write. Once all 26 exist every
+-- exit fails with E138, and that error is what made the watchdog above
+-- necessary. Leftovers older than a day are removed at startup, fresh ones
+-- may belong to another Neovim exiting right now
+local shada_dir = vim.fn.stdpath("state") .. "/shada"
+local day_ago = os.time() - 86400
+for name, kind in vim.fs.dir(shada_dir) do
+  if kind == "file" and name:match("%.shada%.tmp%.%a$") then
+    local path = shada_dir .. "/" .. name
+    local stat = vim.uv.fs_stat(path)
+    if stat and stat.mtime.sec < day_ago then
+      os.remove(path)
+    end
+  end
+end

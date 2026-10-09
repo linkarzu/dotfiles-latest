@@ -9,9 +9,10 @@ source "$CONFIG_DIR/colors.sh"
 youtube_banner="$HOME/github/dotfiles-latest/youtube-banner.txt"
 streaming_time_script="$HOME/github/dotfiles-private/scripts/macos/mac/obs/streaming-time/py/streaming-time.py"
 streaming_reminder_state="${TMPDIR:-/tmp}/sketchybar-streaming-16-minute-reminder"
-# Remind from minute 16 every 15 minutes until the reminder's checkbox is
+# Remind from minute 45 every 15 minutes until the reminder's checkbox is
 # ticked or this scene is shown.
 members_scene="youtube-members"
+first_reminder_minute=45
 reminder_interval_minutes=15
 reminder_source="$(dirname "${BASH_SOURCE[0]}")/stream_reminder.swift"
 # Built outside the sketchybar config directory so it doesn't trigger hotload.
@@ -85,13 +86,13 @@ show_streaming_reminder() {
   [[ -f "$streaming_reminder_state" ]] && state=$(<"$streaming_reminder_state")
 
   # The members scene only counts after the first reminder, so an early or
-  # accidental switch never skips the minute-16 thank-you reminder.
+  # accidental switch never skips the first thank-you reminder.
   if [[ "$banner_text" == "$members_scene" && "$state" =~ ^[0-9]+$ ]]; then
     printf 'done\n' >"$streaming_reminder_state"
     return
   fi
 
-  if [[ "$state" == "done" || "$streaming_minutes" -lt 16 ]]; then
+  if [[ "$state" == "done" || "$streaming_minutes" -lt "$first_reminder_minute" ]]; then
     return
   fi
 

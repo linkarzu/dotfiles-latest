@@ -582,3 +582,24 @@ vim.api.nvim_create_autocmd("BufWritePost", {
     )
   end,
 })
+
+-- Watchdog so an exiting Neovim with no UI can never hang. In 0.12 the TUI
+-- spawns an `nvim --embed` server, when kitty closes the server starts its
+-- exit, and if anything raised an error on the way out it stops at a "Press
+-- ENTER" prompt nobody can answer. Those orphans kept up to 6 GB each for
+-- days. Only armed on exit with no UI attached, so `:detach` and a normal
+-- `:qa` with a visible prompt are untouched. Swap files are already
+-- preserved at this point. The libuv timer still fires inside that prompt's
+-- input loop, so the kill gets through
+vim.api.nvim_create_autocmd("VimLeavePre", {
+  group = augroup("exit_watchdog"),
+  callback = function()
+    if #vim.api.nvim_list_uis() > 0 then
+      return
+    end
+    local exit_timer = vim.uv.new_timer()
+    exit_timer:start(10000, 0, function()
+      vim.uv.kill(vim.uv.os_getpid(), "sigkill")
+    end)
+  end,
+})

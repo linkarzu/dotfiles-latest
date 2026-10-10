@@ -338,9 +338,24 @@ def set_and_verify_scene(
         time.sleep(poll_interval)
 
 
+def members_tags_outdated() -> bool:
+    """NEW tags clear once a finished public stream has shown those members."""
+    try:
+        outdated = load_members_capture().overlay_tags_outdated()
+    except Exception as error:
+        print("phase=members-scene step=new-tags status=unavailable "
+              f"error_type={type(error).__name__}", file=sys.stderr)
+        return False
+    if outdated:
+        print("phase=members-scene step=new-tags status=outdated action=regenerate")
+    return outdated
+
+
 def refresh_overlay_if_needed(client) -> bool:
     latest_csv = latest_members_csv()
-    if overlay_needs_regeneration(latest_csv):
+    # Always settle the thank-you ledger first so a CSV regeneration sees it too.
+    tags_outdated = members_tags_outdated()
+    if overlay_needs_regeneration(latest_csv) or tags_outdated:
         regenerate_overlay()
 
     overlay_mtime = MEMBERS_HTML_PATH.stat().st_mtime_ns
@@ -404,22 +419,26 @@ def handle_press(
     return page, switched_scene
 
 
-def record_page_observation(page: int, requested_monotonic_ns: int) -> None:
-    """Keep diagnostics with the event without making page switching depend on them."""
+def load_members_capture():
     root = Path(os.environ.get(
         "OBS_MEETING_MANAGER_ROOT",
         "~/github/dotfiles-private/scripts/macos/mac/obs-meeting-manager",
     )).expanduser()
+    import importlib.util
+    module_path = root / "scripts/macos/mac/obs/members_capture.py"
+    obs_root = str(module_path.parent)
+    if obs_root not in sys.path:
+        sys.path.insert(0, obs_root)
+    spec = importlib.util.spec_from_file_location("members_capture", module_path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def record_page_observation(page: int, requested_monotonic_ns: int) -> None:
+    """Keep diagnostics with the event without making page switching depend on them."""
     try:
-        import importlib.util
-        module_path = root / "scripts/macos/mac/obs/members_capture.py"
-        obs_root = str(module_path.parent)
-        if obs_root not in sys.path:
-            sys.path.insert(0, obs_root)
-        spec = importlib.util.spec_from_file_location("members_capture", module_path)
-        module = importlib.util.module_from_spec(spec)
-        spec.loader.exec_module(module)
-        saved = module.record_page(page, requested_monotonic_ns)
+        saved = load_members_capture().record_page(page, requested_monotonic_ns)
         print("phase=members-scene step=page-evidence status="
               + ("recorded" if saved else "inactive") + " display_verified=false")
     except Exception as error:

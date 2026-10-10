@@ -14,6 +14,7 @@ MODULE_PATH = Path(__file__).with_name("youtube_members_scene.py")
 SPEC = importlib.util.spec_from_file_location("youtube_members_scene", MODULE_PATH)
 youtube_members_scene = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(youtube_members_scene)
+ORIGINAL_TAGS_OUTDATED = youtube_members_scene.members_tags_outdated
 
 
 class Client:
@@ -64,6 +65,52 @@ class LocalFileClient(Client):
 
 
 class YouTubeMembersSceneTests(unittest.TestCase):
+    def setUp(self):
+        # Keep refresh tests off the real thank-you ledger; its own tests below opt back in.
+        patcher = patch.object(youtube_members_scene, "members_tags_outdated", return_value=False)
+        self.tags_outdated = patcher.start()
+        self.addCleanup(patcher.stop)
+
+    def test_outdated_new_tags_regenerate_unchanged_csv(self):
+        client = Client("youtube-members")
+        self.tags_outdated.return_value = True
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            root = Path(temporary_directory)
+            downloads = root / "Downloads"
+            downloads.mkdir()
+            csv_path = downloads / "Your members current.csv"
+            csv_path.write_text("current", encoding="utf-8")
+            members_json = root / "members.json"
+            members_json.write_text(json.dumps({"sourceCsv": str(csv_path)}), encoding="utf-8")
+            html_path = root / "index.html"
+            html_path.write_text("tagged overlay", encoding="utf-8")
+            loaded_mtime_path = root / "loaded-overlay-mtime.txt"
+            loaded_mtime_path.write_text(f"{html_path.stat().st_mtime_ns}\n", encoding="utf-8")
+
+            def regenerate():
+                html_path.write_text("thanked overlay", encoding="utf-8")
+
+            with patch.object(youtube_members_scene, "DOWNLOADS_DIR", downloads), patch.object(
+                youtube_members_scene, "MEMBERS_JSON_PATH", members_json
+            ), patch.object(youtube_members_scene, "MEMBERS_HTML_PATH", html_path), patch.object(
+                youtube_members_scene, "LOADED_OVERLAY_MTIME_PATH", loaded_mtime_path
+            ), patch.object(
+                youtube_members_scene, "regenerate_overlay", side_effect=regenerate
+            ) as regenerate_mock:
+                refreshed = youtube_members_scene.refresh_overlay_if_needed(client)
+
+        self.assertTrue(refreshed)
+        regenerate_mock.assert_called_once_with()
+
+    def test_new_tag_check_failure_keeps_scene_control_working(self):
+        with tempfile.TemporaryDirectory() as directory, contextlib.ExitStack() as stack:
+            stack.enter_context(patch.object(youtube_members_scene, "members_tags_outdated", ORIGINAL_TAGS_OUTDATED))
+            stack.enter_context(patch.dict(youtube_members_scene.os.environ, {"OBS_MEETING_MANAGER_ROOT": directory}))
+            stack.enter_context(patch.object(youtube_members_scene.sys, "path", list(youtube_members_scene.sys.path)))
+            output = stack.enter_context(contextlib.redirect_stderr(io.StringIO()))
+            self.assertFalse(youtube_members_scene.members_tags_outdated())
+        self.assertIn("step=new-tags status=unavailable", output.getvalue())
+
     def test_main_records_page_after_successful_control_and_disconnects(self):
         client = MagicMock()
         with tempfile.TemporaryDirectory() as directory, contextlib.ExitStack() as stack:

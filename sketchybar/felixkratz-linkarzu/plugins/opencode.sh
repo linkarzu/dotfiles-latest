@@ -20,9 +20,9 @@ popup_state_file="/tmp/sketchybar-opencode-popup.json"
 hammerspoon_bin="/opt/homebrew/bin/hs"
 OPENCODE_POPUP_TARGET="${OPENCODE_POPUP_TARGET:-primary}"
 focus_delay=2
-popup_layout_version=8
+popup_layout_version=9
 kitty_name_max=18
-opencode_name_max=22
+opencode_name_max=19
 
 truncate_name() {
   local value="$1"
@@ -82,10 +82,6 @@ publish_pinned_popup() {
     --argjson visible "$visible" \
     --argjson anchors "$anchors" \
     --argjson windows "$windows" '
-      def row_label:
-        if (.session_name // "") == "" then (.opencode_title // "OpenCode")
-        else "\(.session_name) | \(.opencode_title // "OpenCode")"
-        end;
       {
         target: $target,
         visible: $visible,
@@ -103,13 +99,13 @@ publish_pinned_popup() {
         },
         rows: (
           if ($windows | length) == 0 then
-            [{ id: null, status: "idle", icon: "-", label: "No OpenCode tabs" }]
+            [{ id: null, status: "idle", icon: "-", label: "No OpenCode or Claude tabs" }]
           else
             $windows | map({
               id,
               status,
               icon: (if .status == "attention" then "!" elif .status == "running" then ">" else "-" end),
-              label: row_label
+              label: .display_title
             })
           end
         )
@@ -136,6 +132,7 @@ refresh() {
   local status=""
   local session_name=""
   local opencode_title=""
+  local kind_label=""
   local session_label=""
   local window=""
   local row_icon=""
@@ -183,7 +180,7 @@ refresh() {
   if [[ "$phone_mode" == "true" ]]; then
     icon="$phone_mode_icon"
   fi
-  render_state="${popup_layout_version}:$(jq -c '[.[] | {id, status, session_name, opencode_title}]' <<<"$windows")"
+  render_state="${popup_layout_version}:$(jq -c '[.[] | {id, kind, status, session_name, opencode_title}]' <<<"$windows")"
   render_hash="$(printf '%s' "$render_state" | /sbin/md5 -q)"
   previous_hash="$(sketchybar --query opencode.template 2>/dev/null | jq -r '.label.value // empty')"
   opencode_query="$(sketchybar --query opencode 2>/dev/null || printf '{}\n')"
@@ -290,13 +287,14 @@ refresh() {
     status="$(jq -r '.status' <<<"$window")"
     session_name="$(jq -r '.session_name' <<<"$window")"
     opencode_title="$(jq -r '.opencode_title' <<<"$window")"
+    kind_label="$(jq -r '.kind_label' <<<"$window")"
 
     session_name="$(truncate_name "$session_name" "$kitty_name_max")"
     opencode_title="$(truncate_name "$opencode_title" "$opencode_name_max")"
     if [[ -n "$session_name" ]]; then
-      session_label="${session_name} | ${opencode_title}"
+      session_label="${kind_label} ${session_name} | ${opencode_title}"
     else
-      session_label="$opencode_title"
+      session_label="${kind_label} ${opencode_title}"
     fi
 
     case "$status" in
@@ -338,7 +336,7 @@ refresh() {
       drawing=on
       icon="-"
       icon.color="$GREY"
-      label="No OpenCode tabs"
+      label="No OpenCode or Claude tabs"
     )
   fi
 

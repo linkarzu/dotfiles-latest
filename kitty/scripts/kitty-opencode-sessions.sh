@@ -25,7 +25,7 @@ kitty_socket() {
   "$main_socket_script"
 }
 
-opencode_windows() {
+agent_windows() {
   local socket=""
   socket="$(kitty_socket 2>/dev/null || true)"
   if [[ -z "$socket" ]]; then
@@ -33,30 +33,43 @@ opencode_windows() {
     return 0
   fi
 
+  # OpenCode publishes opencode_* user vars from opencode/plugins/sketchybar-status.ts
+  # and Claude Code publishes claude_* user vars from claude/hooks/sketchybar-status.sh
   "$kitty_bin" @ --to "unix:${socket}" ls 2>/dev/null | jq '
     def number: try tonumber catch 0;
+    def agent_kind:
+      [.foreground_processes[]?.cmdline[0]? | select(type == "string") | split("/")[-1]]
+      | if any(. == "opencode") then "opencode" elif any(. == "claude") then "claude" else "" end;
     [
       .[] as $os
       | $os.tabs[] as $tab
       | $tab.windows[]?
-      | select(any(.foreground_processes[]?.cmdline[0]?; type == "string" and split("/")[-1] == "opencode"))
+      | (agent_kind) as $kind
+      | select($kind != "")
+      | (if $kind == "claude" then "claude" else "opencode" end) as $var
       | {
           id,
-          title: (.title // "OpenCode"),
+          kind: $kind,
+          kind_label: (if $kind == "claude" then "CC" else "OC" end),
+          title: (.title // (if $kind == "claude" then "Claude Code" else "OpenCode" end)),
           session_name: (.session_name // ""),
           cwd: (.env.PWD // .cwd // ""),
           focused: (($os.is_focused // false) and ($tab.is_focused // false) and (.is_focused // false)),
           last_focused_at: (.last_focused_at // 0),
-          busy: ((.user_vars.opencode_busy // "0") | number),
-          waiting: ((.user_vars.opencode_waiting // "0") | number),
-          reason: (.user_vars.opencode_reason // "none"),
+          busy: ((.user_vars["\($var)_busy"] // "0") | number),
+          waiting: ((.user_vars["\($var)_waiting"] // "0") | number),
+          reason: (.user_vars["\($var)_reason"] // "none"),
           instance: (.user_vars.opencode_instance // ""),
           generation: ((.user_vars.opencode_generation // "0") | number)
         }
-      | .opencode_title = (.title | sub("^OC[[:space:]]*\\|[[:space:]]*"; ""))
+      | .opencode_title = (
+          if .kind == "claude" then (.title | sub("^[^[:alnum:][:space:]]+[[:space:]]+"; ""))
+          else (.title | sub("^OC[[:space:]]*\\|[[:space:]]*"; ""))
+          end
+        )
       | .display_title = (
-          if .session_name == "" then .opencode_title
-          else "\(.session_name) | \(.opencode_title)"
+          if .session_name == "" then "\(.kind_label) \(.opencode_title)"
+          else "\(.kind_label) \(.session_name) | \(.opencode_title)"
           end
         )
       | .status = (if .waiting > 0 then "attention" elif .busy > 0 then "running" else "idle" end)
@@ -76,17 +89,22 @@ focus_window() {
   local window=""
 
   [[ "$window_id" =~ ^[0-9]+$ ]] || return 1
-  window="$(opencode_windows | jq -c --argjson id "$window_id" '.[] | select(.id == $id)')"
+  window="$(agent_windows | jq -c --argjson id "$window_id" '.[] | select(.id == $id)')"
   if [[ -z "$window" ]]; then
-    printf 'OpenCode window %s is no longer available.\n' "$window_id" >&2
+    printf 'Agent window %s is no longer available.\n' "$window_id" >&2
     return 1
   fi
 
   socket="$(kitty_socket)"
-  acknowledgement="$(jq -r '"\(.instance):\(.generation)"' <<<"$window")"
   session_name="$(jq -r '.session_name' <<<"$window")"
-  "$kitty_bin" @ --to "unix:${socket}" set-user-vars --match "id:${window_id}" \
-    opencode_waiting=0 opencode_reason=none "opencode_ack=${acknowledgement}"
+  if [[ "$(jq -r '.kind' <<<"$window")" == "claude" ]]; then
+    "$kitty_bin" @ --to "unix:${socket}" set-user-vars --match "id:${window_id}" \
+      claude_waiting=0 claude_reason=none
+  else
+    acknowledgement="$(jq -r '"\(.instance):\(.generation)"' <<<"$window")"
+    "$kitty_bin" @ --to "unix:${socket}" set-user-vars --match "id:${window_id}" \
+      opencode_waiting=0 opencode_reason=none "opencode_ack=${acknowledgement}"
+  fi
   /opt/homebrew/bin/sketchybar --trigger opencode_update >/dev/null 2>&1 || true
   if [[ -n "$session_name" ]]; then
     "$kitty_bin" @ --to "unix:${socket}" action goto_session "$session_name"
@@ -133,7 +151,7 @@ menu_lines() {
 
     printf '%s\t%b%s%b %s  %s  %s\n' "$id" "$color" "$marker" "$reset" "$display_title" "$home_display" "$reason"
   done < <(
-    opencode_windows | jq -r '.[] | [.id, .status, .reason, .busy, .display_title, .cwd] | @tsv'
+    agent_windows | jq -r '.[] | [.id, .status, .reason, .busy, .display_title, .cwd] | @tsv'
   )
 }
 
@@ -157,7 +175,7 @@ pick_window() {
     --height=100%
     --reverse
     --header="Attention first | Enter: switch | Esc: close"
-    --prompt="OpenCode tabs > "
+    --prompt="Agent tabs > "
     --no-multi
     --with-nth=2..
     --no-clear
@@ -181,7 +199,7 @@ pick_window() {
 
 case "${1:-}" in
 --json)
-  opencode_windows
+  agent_windows
   ;;
 --list)
   menu_lines

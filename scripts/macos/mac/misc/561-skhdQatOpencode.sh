@@ -41,7 +41,7 @@ if [[ "${1:-}" == "--pick" ]]; then
     exit "$list_rc"
   fi
   if [[ -z "$available" ]]; then
-    printf 'No OpenCode tabs are running.\n'
+    printf 'No OpenCode or Claude tabs are running.\n'
     read -r -p "Press enter to hide. "
     toggle_qat
     exit 0

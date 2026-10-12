@@ -22,6 +22,13 @@ return {
   opts = function(_, opts)
     local ls = require("luasnip")
 
+    -- LazyVim maps <Esc> (i/n/s) to LazyVim.cmp.actions.snippet_stop(), which
+    -- the luasnip extra defines as ls.unlink_current(). That kills the active
+    -- snippet every time I leave insert mode, so <Tab> can't jump to the next
+    -- node when I come back. Make it a no-op so <Esc> only clears hlsearch
+    -- (same thing LazyVim's mini-snippets extra does)
+    LazyVim.cmp.actions.snippet_stop = function() end
+
     -- Add prefix ";" to each one of my snippets using the extend_decorator
     -- I use this in combination with blink.cmp. This way I don't have to use
     -- the transform_items function in blink.cmp that removes the ";" at the

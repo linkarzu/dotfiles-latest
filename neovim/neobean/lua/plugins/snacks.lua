@@ -48,7 +48,10 @@ end
 
 local default_sort_fields = { "score:desc", "mtime:desc", "#text", "idx" }
 local work_sort_fields = { "#text", "mtime:desc", "score:desc", "idx" }
-local modified_sort_fields = { "mtime:desc" }
+-- Newest modified file first, then the file's lines top to bottom. Without the
+-- file and lnum tiebreakers, lines of the same file tie on mtime and come back
+-- in random order
+local modified_sort_fields = { "mtime:desc", "file", "lnum" }
 
 local function add_mtime(item)
   local file = item.file
@@ -58,7 +61,8 @@ local function add_mtime(item)
   local uv = vim.uv or vim.loop
   local path = (type(item.cwd) == "string" and (item.cwd .. "/" .. file)) or file
   local stat = uv.fs_stat(path)
-  item.mtime = (stat and stat.mtime and stat.mtime.sec) or 0
+  item.mtime = stat and stat.mtime and (stat.mtime.sec + stat.mtime.nsec / 1e9) or 0
+  item.lnum = item.pos and item.pos[1] or 0
   return item
 end
 

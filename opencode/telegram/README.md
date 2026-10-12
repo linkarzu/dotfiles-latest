@@ -80,6 +80,15 @@ Check or remove the service with:
 ~/github/dotfiles-latest/opencode/telegram/setup.sh --uninstall
 ```
 
+To pause notifications without removing anything, `--disable` stops the bridge
+and keeps it from starting at login. The LaunchAgent and credentials stay in
+place, and `--install` turns it back on. While disabled, the OpenCode plugin
+skips the bridge silently and right-clicking the SketchyBar item does nothing.
+
+```sh
+~/github/dotfiles-latest/opencode/telegram/setup.sh --disable
+```
+
 The unresolved-attention delay defaults to four minutes. For temporary testing,
 change it and restart the bridge with:
 

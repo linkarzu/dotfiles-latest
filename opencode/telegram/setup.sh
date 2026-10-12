@@ -22,6 +22,7 @@ Usage:
   setup.sh --configure
   setup.sh --set-delay SECONDS
   setup.sh --install
+  setup.sh --disable
   setup.sh --uninstall
   setup.sh --status
 
@@ -29,6 +30,9 @@ Options:
   --configure  Guide bot creation and securely save its token and allowed user ID
   --set-delay  Set unresolved attention delay (5-3600 seconds; default 240)
   --install    Install or replace the macOS LaunchAgent and start the bridge
+               (also re-enables a bridge stopped with --disable)
+  --disable    Stop the bridge and keep it from starting at login; the
+               LaunchAgent and credentials are preserved
   --uninstall  Stop and remove the LaunchAgent (credentials are preserved)
   --status     Show LaunchAgent and local bridge status
   -h, --help   Show this help
@@ -232,6 +236,7 @@ EOF
   trap - EXIT
 
   domain="gui/$(id -u)"
+  launchctl enable "$domain/$LABEL"
   launchctl bootout "$domain/$LABEL" >/dev/null 2>&1 || true
   for attempt in {1..10}; do
     if launchctl bootstrap "$domain" "$PLIST_FILE" >/dev/null 2>&1; then
@@ -245,6 +250,16 @@ EOF
   printf 'Bridge log: %s/bridge.log\n' "$CONFIG_DIR"
 }
 
+disable_agent() {
+  local domain
+
+  domain="gui/$(id -u)"
+  launchctl bootout "$domain/$LABEL" >/dev/null 2>&1 || true
+  launchctl disable "$domain/$LABEL"
+  printf 'Stopped and disabled %s\n' "$LABEL"
+  printf 'Re-enable it with: %s --install\n' "$0"
+}
+
 uninstall_agent() {
   launchctl bootout "gui/$(id -u)/$LABEL" >/dev/null 2>&1 || true
   rm -f "$PLIST_FILE"
@@ -253,7 +268,9 @@ uninstall_agent() {
 }
 
 status_agent() {
-  if launchctl print "gui/$(id -u)/$LABEL" >/dev/null 2>&1; then
+  if launchctl print-disabled "gui/$(id -u)" | grep -q "\"$LABEL\" => disabled"; then
+    printf 'LaunchAgent: disabled\n'
+  elif launchctl print "gui/$(id -u)/$LABEL" >/dev/null 2>&1; then
     printf 'LaunchAgent: running\n'
   else
     printf 'LaunchAgent: not running\n'
@@ -276,6 +293,10 @@ case "${1:-}" in
 --install)
   [[ $# -eq 1 ]] || error '--install does not accept additional arguments.'
   install_agent
+  ;;
+--disable)
+  [[ $# -eq 1 ]] || error '--disable does not accept additional arguments.'
+  disable_agent
   ;;
 --uninstall)
   [[ $# -eq 1 ]] || error '--uninstall does not accept additional arguments.'

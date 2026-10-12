@@ -297,4 +297,109 @@ function M.toggle_done(opts)
   return true
 end
 
+-- Move the task at opts.file/opts.line (or the cursor) to the top of the
+-- "## Daily Note" heading in today's daily note, creating the note if needed.
+-- The newest moved task goes first, right below the heading's blank line, with
+-- no blank lines between tasks. The task is moved as a top level item
+function M.move_to_daily(opts)
+  local context = get_task_context(opts)
+  if not context then
+    return false
+  end
+  local daily_heading = "## Daily Note"
+  local daily_note = require("config.modules.daily_note")
+  local daily_path = daily_note.today_path(daily_note.dir_for_cwd())
+  local buf = context.buf
+  local lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
+  local start_line = context.start_line
+  if start_line >= #lines then
+    restore_view(context.win)
+    return false
+  end
+  -- Move up to the bullet line if the cursor is on a continuation line
+  while start_line > 0 do
+    local line_text = lines[start_line + 1]
+    if line_text == "" or line_text:match("^%s*%-") then
+      break
+    end
+    start_line = start_line - 1
+  end
+  if lines[start_line + 1] == "" and start_line < (#lines - 1) then
+    start_line = start_line + 1
+  end
+  if not lines[start_line + 1]:match("^%s*%- %[[xX ]%]") then
+    print("Not a task bullet: no action taken.")
+    restore_view(context.win)
+    return false
+  end
+  local chunk_start, chunk_end = start_line, start_line
+  while chunk_end + 1 < #lines do
+    local next_line = lines[chunk_end + 2]
+    if next_line == "" or next_line:match("^%s*%-") then
+      break
+    end
+    chunk_end = chunk_end + 1
+  end
+  -- Dedent so a nested task lands as a top level item
+  local indent = #lines[chunk_start + 1]:match("^(%s*)")
+  local chunk = {}
+  for i = chunk_start, chunk_end do
+    local line = lines[i + 1]
+    local own_indent = #line:match("^(%s*)")
+    table.insert(chunk, line:sub(math.min(indent, own_indent) + 1))
+  end
+
+  if not daily_note.ensure(daily_path) then
+    vim.notify("Could not create daily note: " .. daily_path, vim.log.levels.ERROR)
+    restore_view(context.win)
+    return false
+  end
+  local daily_buf = vim.fn.bufadd(daily_path)
+  vim.fn.bufload(daily_buf)
+
+  -- Remove the task from where it was
+  vim.api.nvim_buf_set_lines(buf, chunk_start, chunk_end + 1, false, {})
+
+  -- Insert it below the heading, skipping the blank line after the heading
+  local daily_lines = vim.api.nvim_buf_get_lines(daily_buf, 0, -1, false)
+  local insert_at = nil
+  for i, line in ipairs(daily_lines) do
+    if line:match("^" .. vim.pesc(daily_heading) .. "%s*$") then
+      insert_at = i
+      if daily_lines[i + 1] == "" then
+        insert_at = i + 1
+      end
+      break
+    end
+  end
+  local new_lines = vim.deepcopy(chunk)
+  if not insert_at then
+    -- No heading, add it at the end of the note
+    local prefix = { daily_heading, "" }
+    if #daily_lines > 0 and daily_lines[#daily_lines] ~= "" then
+      table.insert(prefix, 1, "")
+    end
+    new_lines = vim.list_extend(prefix, new_lines)
+    insert_at = #daily_lines
+    if insert_at == 1 and daily_lines[1] == "" then
+      insert_at = 0
+    end
+  else
+    -- Keep a blank line before anything below that is not another list item
+    local below = daily_lines[insert_at + 1]
+    if below and below ~= "" and not below:match("^%s*%-") then
+      table.insert(new_lines, "")
+    end
+  end
+  vim.api.nvim_buf_set_lines(daily_buf, insert_at, insert_at, false, new_lines)
+
+  save_buffer(buf)
+  if daily_buf ~= buf then
+    save_buffer(daily_buf)
+  end
+  restore_view(context.win)
+  vim.notify("Moved to " .. vim.fn.fnamemodify(daily_path, ":t:r"), vim.log.levels.INFO)
+  return true
+end
+
 return M

@@ -3981,55 +3981,9 @@ local function insert_heading_and_date(level)
   -- vim.api.nvim_win_set_cursor(0, { row, #heading })
 end
 
-local personal_daily_note_dir = vim.fn.expand("~/github/notes/250-daily")
-
-local function normalize_daily_note_path(path)
-  if type(path) ~= "string" or path == "" then
-    return nil
-  end
-  local expanded = vim.fn.expand(path)
-  local resolved = vim.uv.fs_realpath(expanded)
-  return (resolved or vim.fs.normalize(expanded)):gsub("/$", "")
-end
-
-local function read_work_env_path(name)
-  if not name:match("^WORK_[A-Z0-9_]+$") then
-    return nil
-  end
-
-  local work_env_file = vim.fn.expand("~/github/dotfiles-private/work/work-env.sh")
-  if vim.fn.filereadable(work_env_file) == 0 then
-    return nil
-  end
-
-  local command =
-    string.format("source %s >/dev/null 2>&1 && print -r -- ${%s}", vim.fn.shellescape(work_env_file), name)
-  local output = vim.fn.systemlist({ "/bin/zsh", "-lc", command })
-  if vim.v.shell_error ~= 0 or not output[1] or output[1] == "" then
-    return nil
-  end
-
-  return normalize_daily_note_path(output[1])
-end
-
-local function is_inside_path(path, root)
-  local normalized_path = normalize_daily_note_path(path)
-  local normalized_root = normalize_daily_note_path(root)
-  if not normalized_path or not normalized_root then
-    return false
-  end
-  return normalized_path == normalized_root or vim.startswith(normalized_path, normalized_root .. "/")
-end
-
-local function daily_note_dir_for_gt()
-  local work_daily_note_dir = read_work_env_path("WORK_DAILY_NOTE_DIR")
-  local work_main_dir = read_work_env_path("WORK_MAIN_DIR")
-  local cwd = vim.fn.getcwd()
-  if work_daily_note_dir and (is_inside_path(cwd, work_daily_note_dir) or is_inside_path(cwd, work_main_dir)) then
-    return work_daily_note_dir
-  end
-  return personal_daily_note_dir
-end
+local daily_note = require("config.modules.daily_note")
+local personal_daily_note_dir = daily_note.personal_dir
+local daily_note_dir_for_gt = daily_note.dir_for_cwd
 
 -- parse date line and generate file path components for the daily note
 local function parse_date_line(date_line, daily_note_dir)

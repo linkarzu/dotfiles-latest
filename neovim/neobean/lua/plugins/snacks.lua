@@ -159,16 +159,37 @@ return {
                   end
                 end)
               end,
+              -- Move the task to the top of today's daily note
+              task_today = function(picker, item)
+                picker:norm(function()
+                  item = item or picker:current()
+                  local path = item and Snacks.picker.util.path(item)
+                  local line = item and item.pos and item.pos[1]
+                  if not path or not line then
+                    vim.notify("No task selected", vim.log.levels.WARN)
+                    return
+                  end
+                  local moved = require("config.modules.markdown_tasks").move_to_daily({
+                    file = path,
+                    line = line,
+                  })
+                  if moved then
+                    picker:refresh()
+                  end
+                end)
+              end,
             },
             win = {
               input = {
                 keys = {
                   ["<M-x>"] = { "task_done", mode = { "n", "i" } },
+                  ["<M-t>"] = { "task_today", mode = { "n", "i" } },
                 },
               },
               list = {
                 keys = {
                   ["<M-x>"] = "task_done",
+                  ["<M-t>"] = "task_today",
                 },
               },
             },

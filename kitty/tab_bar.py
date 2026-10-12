@@ -63,6 +63,15 @@ def draw_tab(
             # otherwise its title gets truncated with … when many tabs are open
             before = screen.cursor.x
 
-    return draw_tab_with_powerline(
+    end = draw_tab_with_powerline(
         draw_data, screen, tab, before, max_tab_length, index, is_last, extra_data
     )
+    # The last tab always closes with a separator drawn in its tab background,
+    # inactive_tab_background matches the transparent window background, so
+    # only the dark arrow glyph shows, blank it out. Keep it on an active last
+    # tab since there it's the visible end of the green tab
+    if is_last and not tab.is_active:
+        screen.cursor.x = end - 1
+        screen.cursor.bg = as_rgb(color_as_int(draw_data.default_bg))
+        screen.draw(" ")
+    return end

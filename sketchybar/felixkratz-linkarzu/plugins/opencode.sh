@@ -352,8 +352,13 @@ mouse.clicked)
   if [[ "${BUTTON:-left}" == "right" ]]; then
     toggle_phone_mode && refresh
   else
+    # Left click toggles the popup, picking a session also hides it
     rm -f "$focus_pending_file"
-    printf 'manual\n' >"$popup_open_file"
+    if [[ -f "$popup_open_file" ]]; then
+      rm -f "$popup_open_file"
+    else
+      printf 'manual\n' >"$popup_open_file"
+    fi
     refresh
   fi
   ;;

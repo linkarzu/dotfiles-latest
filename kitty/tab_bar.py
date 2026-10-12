@@ -3,7 +3,7 @@
 # Requires "tab_bar_style custom" in kitty.conf
 # https://github.com/kovidgoyal/kitty/issues/8911#issuecomment-4806908910
 
-from kitty.fast_data_types import Screen, get_boss
+from kitty.fast_data_types import Screen, get_boss, get_options
 from kitty.tab_bar import (
     DrawData,
     ExtraData,
@@ -41,22 +41,21 @@ def draw_tab(
         if sess_name:
             orig = (screen.cursor.fg, screen.cursor.bg, screen.cursor.bold, screen.cursor.italic)
             tab_bg = orig[1]
-            bar_bg = as_rgb(color_as_int(draw_data.inactive_bg))
-            # active_tab_background (green) as the text color, on the inactive
-            # tab background, active_tab_foreground is the same color as the bg
-            screen.cursor.fg = as_rgb(color_as_int(draw_data.active_bg))
-            screen.cursor.bg = bar_bg
+            # color4 (linkarzu_color04) as the background, with the active
+            # tab's text color (active_tab_foreground) on top
+            sess_bg = as_rgb(color_as_int(get_options().color4))
+            screen.cursor.fg = as_rgb(color_as_int(draw_data.active_fg))
+            screen.cursor.bg = sess_bg
             screen.cursor.bold = True
             screen.cursor.italic = False
             screen.draw(f" {sess_name} ")
             # draw_tab_with_powerline only pads and opens a tab that starts at
             # column 0, so open the first tab here with a powerline arrow and a
             # space, otherwise it starts with a flat edge and no padding
-            separator = powerline_symbols.get(draw_data.powerline_style, ("\ue0b0", "\ue0b1"))[0]
             screen.cursor.bold = False
-            screen.cursor.fg = bar_bg
+            screen.cursor.fg = sess_bg
             screen.cursor.bg = tab_bg
-            screen.draw(separator)
+            screen.draw(powerline_symbols.get(draw_data.powerline_style, ("", ""))[0])
             screen.draw(" ")
             screen.cursor.fg, screen.cursor.bg, screen.cursor.bold, screen.cursor.italic = orig
             # Don't count the session name against the first tab's max length,
@@ -66,12 +65,18 @@ def draw_tab(
     end = draw_tab_with_powerline(
         draw_data, screen, tab, before, max_tab_length, index, is_last, extra_data
     )
-    # The last tab always closes with a separator drawn in its tab background,
+    # An inactive tab closes with a powerline arrow drawn in its tab background
+    # when the next tab is the active one or when it's the last tab.
     # inactive_tab_background matches the transparent window background, so
-    # only the dark arrow glyph shows, blank it out. Keep it on an active last
-    # tab since there it's the visible end of the green tab
-    if is_last and not tab.is_active:
+    # only the dark arrow glyph shows, replace it with a space in the next
+    # tab's background. The active tab's green arrow and the soft separator
+    # between two inactive tabs are visible, so those are kept
+    if extra_data.next_tab:
+        next_tab_bg = as_rgb(draw_data.tab_bg(extra_data.next_tab))
+    else:
+        next_tab_bg = as_rgb(color_as_int(draw_data.default_bg))
+    if not tab.is_active and next_tab_bg != as_rgb(draw_data.tab_bg(tab)):
         screen.cursor.x = end - 1
-        screen.cursor.bg = as_rgb(color_as_int(draw_data.default_bg))
+        screen.cursor.bg = next_tab_bg
         screen.draw(" ")
     return end

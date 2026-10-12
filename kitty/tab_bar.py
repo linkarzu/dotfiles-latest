@@ -68,15 +68,28 @@ def draw_tab(
     # An inactive tab closes with a powerline arrow drawn in its tab background
     # when the next tab is the active one or when it's the last tab.
     # inactive_tab_background matches the transparent window background, so
-    # only the dark arrow glyph shows, replace it with a space in the next
-    # tab's background. The active tab's green arrow and the soft separator
-    # between two inactive tabs are visible, so those are kept
-    if extra_data.next_tab:
-        next_tab_bg = as_rgb(draw_data.tab_bg(extra_data.next_tab))
-    else:
-        next_tab_bg = as_rgb(color_as_int(draw_data.default_bg))
-    if not tab.is_active and next_tab_bg != as_rgb(draw_data.tab_bg(tab)):
+    # only the dark arrow glyph shows. The active tab's green arrow and the
+    # soft separator between two inactive tabs are visible, so those are kept
+    if tab.is_active:
+        return end
+    default_bg = as_rgb(color_as_int(draw_data.default_bg))
+    if extra_data.next_tab is None:
+        # Last tab, blank the arrow out
         screen.cursor.x = end - 1
-        screen.cursor.bg = next_tab_bg
+        screen.cursor.bg = default_bg
         screen.draw(" ")
+    elif extra_data.next_tab.is_active:
+        # Next tab is the active one, draw the inverse of the arrow in the
+        # active tab's background instead (kitty draws U+E0D7 pixel exact),
+        # the green tab then opens with a transparent notch instead of a dark
+        # one, then redraw the space kitty puts after the separator, it pads
+        # the active tab's title and is drawn in its background
+        next_tab_bg = as_rgb(draw_data.tab_bg(extra_data.next_tab))
+        screen.cursor.x = end - 1
+        screen.cursor.fg = next_tab_bg
+        screen.cursor.bg = default_bg
+        screen.draw("")
+        if end < screen.columns:
+            screen.cursor.bg = next_tab_bg
+            screen.draw(" ")
     return end

@@ -134,7 +134,6 @@ HTMX
 HakonHarnes
 Hashimoto
 Healthchecks
-Heisenbug
 Homebrew
 Hyprland
 IDEs
@@ -392,6 +391,7 @@ choco
 chocolatey
 chown
 chromecast
+clanker
 cli
 cli2
 clicky
@@ -500,6 +500,7 @@ hardtime
 harper_ls
 healthcheck
 hedyhli
+heisenbug
 heredoc
 hfs
 hidapitester

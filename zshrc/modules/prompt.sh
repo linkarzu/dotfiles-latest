@@ -4,7 +4,7 @@
 # Native zsh prompt, replaces starship. Same look as my starship config minus
 # the git/language modules, which I never looked at:
 #
-#   linkarzu.@.[26/10/07]<logo>
+#   linkarzu<logo>
 #   ~/github/dotfiles-latest
 #   ❯❯❯❯
 #
@@ -34,13 +34,12 @@ _prompt_load_colors() {
   _prompt_colors_mtime=$mtime[1]
   source $_prompt_colors_file
 
-  # Hostname only shows up over SSH
+  # Hostname only shows up over SSH, as linkarzu@host
   local host=
-  [[ -n $SSH_CONNECTION ]] && host="%B%F{$linkarzu_color02}%m%f%b"
+  [[ -n $SSH_CONNECTION ]] && host="@%B%F{$linkarzu_color02}%m%f%b"
 
   PROMPT=$'\n'
-  PROMPT+="%B%(!.%F{white}.%F{$linkarzu_color04})%n%f%b.@.${host}"
-  PROMPT+="%B%F{$linkarzu_color04}[%D{%y/%m/%d}]%f%b"
+  PROMPT+="%B%(!.%F{white}.%F{$linkarzu_color04})%n%f%b${host}"
   PROMPT+="%F{$linkarzu_color02}"$'\xEE\x80\x80'"%f"$'\n'
   PROMPT+="%B%F{$linkarzu_color03}%~%f%b"$'\n'
   PROMPT+='${_prompt_char} '

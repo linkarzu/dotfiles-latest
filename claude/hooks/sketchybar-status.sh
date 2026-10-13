@@ -61,7 +61,13 @@ Notification)
   esac
   ;;
 Stop)
-  attention done claude_busy=0
+  # A turn that ends while background shells or agents are still running is
+  # not done, Claude resumes on its own when they finish
+  if jq -e '[.background_tasks[]? | select(.status == "running" or .status == "pending")] | length > 0' <<<"$input" >/dev/null 2>&1; then
+    publish claude_busy=1 claude_waiting=0 claude_reason=none
+  else
+    attention done claude_busy=0
+  fi
   ;;
 StopFailure)
   attention error claude_busy=0

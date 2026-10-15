@@ -189,7 +189,8 @@ shift + alt - f13 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/ma
 # lineid_obs_switchscene_guest4
 shift + alt - f16 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py  --no-auth"
 # shift + alt - f17 : 
-# shift + alt - f18 : 
+# Toucan Enter-O-H: raise or lower your hand in a guest show or Open Terminal
+shift + alt - f18 : /bin/zsh -c "mkdir -p $HOME/.cache/obs-meeting-manager && python3 $HOME/github/dotfiles-private/scripts/macos/mac/obs-meeting-manager/scripts/macos/mac/obs/meeting/py/meeting_manager.py --toggle-host-hand >> $HOME/.cache/obs-meeting-manager/host-hand.log 2>&1"
 # shift + alt - f19 : 
 # shift + alt - f19 : 
 # shift + cmd - f16 : 

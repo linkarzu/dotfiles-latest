@@ -95,14 +95,13 @@ export default defineHexConfig({
   //   cancel: ["discard note"],
   // },
   commands: {
-    // "virgin mode on" -> kitty lightning cursor trail
-    // "virgin mode off" -> kitty blaze cursor trail
+    // "virgin mode on|off" -> kitty opacity, announcement and wallpaper
     "virgin-mode": {
       phrases: ["virgin mode {state}"],
       // "off" is usually heard as "of"
       captures: { state: choice({ on: ["on"], off: ["off", "of"] } as const) },
       group: "Modes",
-      description: "Toggle virgin mode (kitty cursor shader)",
+      description: "Toggle virgin mode (kitty opacity, wallpaper)",
       run: async ({ captures }) => {
         await run(`${miscScripts}/570-virginMode.sh`, [captures.state])
       },

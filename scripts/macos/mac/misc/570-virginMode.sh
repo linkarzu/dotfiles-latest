@@ -5,10 +5,12 @@
 #
 #   Both first focus kitty and switch to its home session.
 #
-#   on  -> kitty cursor-trail-lightning, opacity 0.75,
-#          says "virgin mode activated", anime-purple-eyes wallpaper
-#   off -> kitty cursor-trail-blaze, opacity 0.83,
-#          says "virgin mode deactivated", colorscheme's wallpaper
+#   on  -> kitty opacity 0.75, says "virgin mode activated",
+#          anime-purple-eyes wallpaper
+#   off -> kitty opacity 0.83, says "virgin mode deactivated",
+#          colorscheme's wallpaper
+#
+# The kitty cursor trail stays on cursor-trail-blaze either way.
 #
 # Clips live in sounds/virgin-mode/ and were made with gemini-tts.py
 # (voice Zephyr)
@@ -47,27 +49,6 @@ edit_kitty_conf() {
   rm -f "$tmp"
 }
 
-# Comments every `custom_shaders` line in kitty.conf except the requested one.
-set_kitty_shader() {
-  local shader="$1"
-
-  if ! grep -Eq "^#* *custom_shaders +${shader} *$" "$kitty_conf"; then
-    echo "Shader '$shader' is not listed in $kitty_conf" >&2
-    return 1
-  fi
-
-  edit_kitty_conf -v want="$shader" '
-    /^#* *custom_shaders / {
-      name = $0
-      sub(/^#* *custom_shaders +/, "", name)
-      sub(/ +$/, "", name)
-      print (name == want ? "" : "# ") "custom_shaders " name
-      next
-    }
-    { print }
-  '
-}
-
 # Applies only on reload because kitty.conf sets dynamic_background_opacity.
 set_kitty_opacity() {
   edit_kitty_conf -v opacity="$1" '
@@ -104,7 +85,6 @@ announce() {
 case "${1:-}" in
 on)
   show_kitty_home
-  set_kitty_shader cursor-trail-lightning
   set_kitty_opacity 0.75
   reload_kitty
   announce activated
@@ -112,7 +92,6 @@ on)
   ;;
 off)
   show_kitty_home
-  set_kitty_shader cursor-trail-blaze
   set_kitty_opacity 0.83
   reload_kitty
   announce deactivated

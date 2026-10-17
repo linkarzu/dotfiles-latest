@@ -15,6 +15,59 @@ from kitty.tab_bar import (
 )
 
 
+# Claude Code and OpenCode status dots, read from the user vars that
+# claude/hooks/sketchybar-status.sh and opencode/plugins/sketchybar-status.ts
+# set on their kitty window, the same ones the SketchyBar opencode item shows.
+# Colors are palette slots so they follow the active colorscheme and match
+# SketchyBar, red is linkarzu_color11, green 02 and blue 03
+# The most urgent state across the tab's windows wins, with a count when more
+# than one window is in it
+agent_states = (
+    # (state, glyph, palette color)
+    ("needs_you", "●", "color1"),
+    ("error", "✗", "color1"),
+    ("done", "●", "color2"),
+    ("working", "◐", "color6"),
+)
+
+
+def agent_state(user_vars: dict[str, str]) -> str:
+    for prefix in ("claude", "opencode"):
+        waiting = user_vars.get(f"{prefix}_waiting", "0") not in ("", "0")
+        reason = user_vars.get(f"{prefix}_reason", "none")
+        if waiting and reason in ("permission", "question"):
+            return "needs_you"
+        if waiting and reason in ("error", "done"):
+            return reason
+    for prefix in ("claude", "opencode"):
+        if user_vars.get(f"{prefix}_busy", "0") not in ("", "0"):
+            return "working"
+    return ""
+
+
+def agent_dot(tab_id: int, fmt) -> str:
+    tab = get_boss().tab_for_id(tab_id)
+    if tab is None:
+        return ""
+    states = [agent_state(w.user_vars) for w in tab]
+    for state, glyph, color in agent_states:
+        count = states.count(state)
+        if count:
+            label = glyph if count == 1 else f"{glyph}{count}"
+            return f"{getattr(fmt.fg, color)}{label}{fmt.fg.tab} "
+    return ""
+
+
+# Called for {custom} in tab_title_template, shows the running program (nvim,
+# lazygit, btop), or the last dir of the active window's cwd when sitting at
+# the zsh prompt, after the agent status dot
+def draw_title(data: dict) -> str:
+    tab = data["tab"]
+    exe = tab.active_exe
+    name = exe if exe.lstrip("-") != "zsh" else tab.active_wd.rsplit("/", 1)[-1]
+    return agent_dot(data["tab_id"], data["fmt"]) + name
+
+
 def current_session_name(os_window_id: int) -> str:
     tm = get_boss().os_window_map.get(os_window_id)
     if tm is None:
@@ -41,10 +94,10 @@ def draw_tab(
         if sess_name:
             orig = (screen.cursor.fg, screen.cursor.bg, screen.cursor.bold, screen.cursor.italic)
             tab_bg = orig[1]
-            # color4 (linkarzu_color04) as the background, with the active
-            # tab's text color (active_tab_foreground) on top
+            # color4 (linkarzu_color04) as the background, with the terminal
+            # background (linkarzu_color10) as the text color on top
             sess_bg = as_rgb(color_as_int(get_options().color4))
-            screen.cursor.fg = as_rgb(color_as_int(draw_data.active_fg))
+            screen.cursor.fg = as_rgb(color_as_int(draw_data.default_bg))
             screen.cursor.bg = sess_bg
             screen.cursor.bold = True
             screen.cursor.italic = False

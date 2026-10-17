@@ -5,6 +5,9 @@
 # claude/hooks/sketchybar-status.sh raises attention through the
 # claude_waiting user var when a session finishes or needs input while its
 # window is not focused.
+#
+# It also redraws the tab bar when a Claude or OpenCode user var changes, so
+# the status dots drawn by kitty/tab_bar.py update right away.
 
 import subprocess
 from typing import Any
@@ -43,3 +46,11 @@ def on_focus_change(boss: Boss, window: Window, data: dict[str, Any]) -> None:
         return
     window_id = window.id
     add_timer(lambda timer_id: acknowledge(window_id), ack_delay, False)
+
+
+def on_set_user_var(boss: Boss, window: Window, data: dict[str, Any]) -> None:
+    if not data.get("key", "").startswith(("claude_", "opencode_")):
+        return
+    tm = boss.os_window_map.get(window.os_window_id)
+    if tm is not None:
+        tm.mark_tab_bar_dirty()

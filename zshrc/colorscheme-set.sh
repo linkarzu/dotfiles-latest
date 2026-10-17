@@ -138,8 +138,10 @@ color15               $linkarzu_color14
 cursor                $linkarzu_color24
 cursor_text_color     $linkarzu_color10
 # Tab bar colors
-active_tab_foreground  $linkarzu_color10
-active_tab_background   $linkarzu_color02
+# The active tab uses the darker green of the markdown headings so the
+# Claude and OpenCode status dots drawn by kitty/tab_bar.py show on it
+active_tab_foreground  $linkarzu_color14
+active_tab_background   $linkarzu_color19
 inactive_tab_foreground $linkarzu_color03
 inactive_tab_background $linkarzu_color10
 # Marks

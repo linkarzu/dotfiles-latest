@@ -246,4 +246,5 @@ shift + alt + cmd - f13 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/5
 # shift + alt + cmd - f16 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" 'Microsoft Edge'
 # shift + alt + cmd - f17 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" 'Microsoft Edge'
 # shift + alt + cmd - f18 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" 'Microsoft Edge'
-# shift + alt + cmd - f19 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/500-switchApp.sh" 'Microsoft Edge'
+# QAT -> Quotes: show a live quote in OBS (Toucan W+B)
+shift + alt + cmd - f19 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/563-skhdQatQuotes.sh"

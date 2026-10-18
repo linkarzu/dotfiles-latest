@@ -8,6 +8,12 @@
 #
 # It also redraws the tab bar when a Claude or OpenCode user var changes, so
 # the status dots drawn by kitty/tab_bar.py update right away.
+#
+# Claude Code skips its prompt suggestion (the ghost text Tab accepts) when a
+# turn ends while the terminal reports focus out. So when a Claude window loses
+# focus, a focus in report is sent right behind it and Claude Code always
+# thinks it is focused. claude_busy is published for the whole session, so
+# its presence marks a window running Claude Code.
 
 import subprocess
 from typing import Any
@@ -41,8 +47,21 @@ def acknowledge(window_id: int) -> None:
     )
 
 
+def refocus(window_id: int) -> None:
+    window = get_boss().window_id_map.get(window_id)
+    if window is None or "claude_busy" not in window.user_vars:
+        return
+    if window.screen.focus_tracking_enabled:
+        window.write_to_child(b"\x1b[I")
+
+
 def on_focus_change(boss: Boss, window: Window, data: dict[str, Any]) -> None:
-    if not data.get("focused") or not waiting(window):
+    if not data.get("focused"):
+        if "claude_busy" in window.user_vars:
+            window_id = window.id
+            add_timer(lambda timer_id: refocus(window_id), 0.05, False)
+        return
+    if not waiting(window):
         return
     window_id = window.id
     add_timer(lambda timer_id: acknowledge(window_id), ack_delay, False)

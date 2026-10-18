@@ -15,6 +15,17 @@ cd ~/github/dotfiles-latest
 # How to get the title from within kitty:
 # kitten @ ls | jq -r '.[] | select(.is_focused) | .tabs[] | select(.is_focused) | .windows[] | select(.is_focused) | .title'
 # launch --title "dotfiles"
+
+# Everything before the first new_tab goes into the first tab
+# Tab 1: neovim
 launch --title "dotfiles" /bin/zsh -i -c 'v'
+
+# Tab 2: claude
+# cd and layout are per tab, so set them again
+new_tab
+layout tall
+cd ~/github/dotfiles-latest
+launch --title "dotfiles" /bin/zsh -i -c 'c'
+# focus applies to the last launched window, so the claude tab ends up active
 focus
 focus_os_window

@@ -15,6 +15,6 @@ cd ~/github/dotfiles-private/scripts/macos/mac/obs-meeting-manager/
 # How to get the title from within kitty:
 # kitten @ ls | jq -r '.[] | select(.is_focused) | .tabs[] | select(.is_focused) | .windows[] | select(.is_focused) | .title'
 # launch --title "dotfiles"
-launch --title "omm" /bin/zsh -i -c 'v'
+launch --title "omm" /bin/zsh -i -c 'c'
 focus
 focus_os_window

@@ -53,15 +53,25 @@ local work_sort_fields = { "#text", "mtime:desc", "score:desc", "idx" }
 -- in random order
 local modified_sort_fields = { "mtime:desc", "file", "lnum" }
 
-local function add_mtime(item)
+-- Pass a cache table to freeze each file's mtime for the life of a picker, so
+-- editing a file from the picker (like marking a task done) doesn't move all
+-- its lines to the top on refresh
+local function add_mtime(item, cache)
   local file = item.file
   if type(file) ~= "string" then
     return item
   end
   local uv = vim.uv or vim.loop
   local path = (type(item.cwd) == "string" and (item.cwd .. "/" .. file)) or file
-  local stat = uv.fs_stat(path)
-  item.mtime = stat and stat.mtime and (stat.mtime.sec + stat.mtime.nsec / 1e9) or 0
+  local mtime = cache and cache[path]
+  if not mtime then
+    local stat = uv.fs_stat(path)
+    mtime = stat and stat.mtime and (stat.mtime.sec + stat.mtime.nsec / 1e9) or 0
+    if cache then
+      cache[path] = mtime
+    end
+  end
+  item.mtime = mtime
   item.lnum = item.pos and item.pos[1] or 0
   return item
 end
@@ -103,6 +113,7 @@ return {
         -- -- You can confirm in your teminal lamw26wmal with:
         "<leader>tt",
         function()
+          local mtimes = {}
           Snacks.picker.grep({
             prompt = " ",
             -- pass your desired search as a static pattern
@@ -132,7 +143,7 @@ return {
               if item.text and item.text:find("<% tp.file.cursor() %>", 1, true) then
                 return false
               end
-              return add_mtime(item)
+              return add_mtime(item, mtimes)
             end,
             matcher = {
               sort_empty = true,
@@ -141,7 +152,7 @@ return {
             supports_live = false,
             layout = "ivy_split",
             actions = {
-              task_done =function(picker, item)
+              task_done = function(picker, item)
                 picker:norm(function()
                   item = item or picker:current()
                   local path = item and Snacks.picker.util.path(item)

@@ -3,11 +3,22 @@
 # Filename: ~/github/dotfiles-latest/sketchybar/felixkratz-linkarzu/plugins/host_hand.sh
 # Shows my hand state for the prepared or live show and toggles it on click through
 # meeting_manager.py --toggle-host-hand (the same action as Enter-O-H and the QAT).
+# Right click opens the mute menu (host_hand_mute.sh).
 
 source "$CONFIG_DIR/colors.sh"
 
 active="$HOME/.cache/obs-meeting-manager/active-livestream.json"
 manager_dir="$HOME/github/dotfiles-private/scripts/macos/mac/obs-meeting-manager/scripts/macos/mac/obs/meeting/py"
+
+if [[ "$SENDER" == "mouse.exited.global" ]]; then
+  sketchybar --set "$NAME" popup.drawing=off
+  exit 0
+fi
+
+if [[ "$SENDER" == "mouse.clicked" && "$BUTTON" == "right" ]]; then
+  sketchybar --set "$NAME" popup.drawing=toggle
+  exit 0
+fi
 
 if [[ "$SENDER" == "mouse.clicked" ]]; then
   python="$manager_dir/.venv/bin/python"
@@ -33,5 +44,5 @@ fi
 case "$state" in
 up) sketchybar --set "$NAME" drawing=on icon.color="$YELLOW" ;;
 down) sketchybar --set "$NAME" drawing=on icon.color="$GREY" ;;
-*) sketchybar --set "$NAME" drawing=off ;;
+*) sketchybar --set "$NAME" drawing=off popup.drawing=off ;;
 esac

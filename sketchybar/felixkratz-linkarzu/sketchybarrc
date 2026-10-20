@@ -183,6 +183,8 @@ source "$ITEM_DIR/disk.sh"
 
 source "$ITEM_DIR/timer.sh"
 source "$ITEM_DIR/opencode.sh"
+# My raised hand in a show with guests, left of opencode (click toggles)
+source "$ITEM_DIR/host_hand.sh"
 
 ###############################################################################
 #                            Community plugins

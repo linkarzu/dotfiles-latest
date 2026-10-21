@@ -132,6 +132,8 @@ cmd + alt - f2 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/200-micMut
 # any executable *.sh added directly under scripts/macos/mac is discovered and
 # inherits the bridge. Humans still see and operate the unchanged fzf UI.
 cmd + alt - f3 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/555-skhdQatTask.sh"
+# Toucan W+LShift: the same QAT straight into the OBS Meeting Manager (no picker)
+ctrl + alt + cmd - f1 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/555-skhdQatTask.sh" 070-obsMeetingManager.sh
 cmd + alt - f4 : "$HOME/github/dotfiles-latest/scripts/macos/mac/misc/556-skhdQatColor.sh"
 cmd + alt - f5 : open "btt://execute_assigned_actions_for_trigger/?uuid=9A1CFA49-416C-480E-9430-184D2DAEE1CA"
 cmd + alt - f6 : /Applications/kitty.app/Contents/MacOS/kitty @ --to "unix:$($HOME/github/dotfiles-latest/scripts/macos/mac/misc/549-kittyMainSocket.sh)" action launch --type=background kitten quick-access-terminal

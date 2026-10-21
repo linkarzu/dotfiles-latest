@@ -41,4 +41,4 @@ fi
 
 "$KITTY_BIN" @ --to "unix:${KITTY_SOCKET}" \
   launch --type=background "${launch_env[@]}" /usr/bin/env "${unset_env[@]}" kitten quick-access-terminal "${qat_options[@]}" \
-  --instance-group "${QAT_INSTANCE_GROUP:-system-task}" /bin/bash "$DOTFILES_DIR/scripts/macos/mac/misc/240-systemTask.sh"
+  --instance-group "${QAT_INSTANCE_GROUP:-system-task}" /bin/bash "$DOTFILES_DIR/scripts/macos/mac/misc/240-systemTask.sh" "$@"

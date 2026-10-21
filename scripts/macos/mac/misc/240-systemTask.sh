@@ -65,8 +65,19 @@ if [ ${#schemes[@]} -eq 0 ]; then
   exit 1
 fi
 
+# A script name argument (one of the scripts listed above) skips the picker,
+# e.g. Toucan W+LShift opens 070-obsMeetingManager.sh directly
+selected_script="${1:-}"
+if [[ -n "$selected_script" && ! " ${schemes[*]} " =~ " ${selected_script} " ]]; then
+  printf 'Unknown script: %s\n' "$selected_script" >&2
+  read -r -p "Press enter to close. "
+  exit 1
+fi
+
 # Use fzf to select a script
-selected_script=$(printf "%s\n" "${schemes[@]}" | fzf --height=100% --reverse --header="Type or move using arrows" --prompt="Select a script to execute > " ${linkarzu_fzf_colors:+--color="$linkarzu_fzf_colors"})
+if [[ -z "$selected_script" ]]; then
+  selected_script=$(printf "%s\n" "${schemes[@]}" | fzf --height=100% --reverse --header="Type or move using arrows" --prompt="Select a script to execute > " ${linkarzu_fzf_colors:+--color="$linkarzu_fzf_colors"})
+fi
 
 # Check if a selection was made
 if [ -z "$selected_script" ]; then

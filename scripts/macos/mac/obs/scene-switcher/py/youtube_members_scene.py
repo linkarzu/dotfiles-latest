@@ -48,7 +48,11 @@ MEMBERS_OUTPUT_DIR = Path(
         "~/Library/Application Support/obs-meeting-manager/member-overlay",
     )
 ).expanduser()
-MEMBERS_JSON_PATH = MEMBERS_OUTPUT_DIR / "members.json"
+# The generator keeps members.json beside the guest directory (iCloud), not with the page OBS loads.
+MEMBERS_JSON_PATH = Path(
+    os.environ.get("OBS_MEETING_MANAGER_PEOPLE_DIR")
+    or "~/Library/Mobile Documents/com~apple~CloudDocs/obs-meeting-manager"
+).expanduser() / "member-overlay" / "members.json"
 MEMBERS_HTML_PATH = MEMBERS_OUTPUT_DIR / "index.html"
 DOWNLOADS_DIR = Path("~/Downloads").expanduser()
 ONEPASSWORD_SECRET = "op://helixdeeznuts/obs-websocket-password/credential"

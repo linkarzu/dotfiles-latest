@@ -202,7 +202,8 @@ shift + cmd - f19 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/ma
 shift + alt + ctrl - f1 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py screen-capture-live --no-auth"
 # shift + alt + ctrl - f2 : 
 # shift + alt + ctrl - f3 : 
-shift + alt + ctrl - f4 : "$HOME/github/dotfiles-private/scripts/macos/mac/obs/toggle-effect-filter/py/toggle-guest-shaders.sh"
+# Toucan Enter-O-B: the video scene (QAT -> Play video plays there)
+shift + alt + ctrl - f4 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py video-live --no-auth"
 # shift + alt + ctrl - f5 : 
 # lineid_obs_switchscene_main
 shift + alt + ctrl - f6 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py screen-main-live --no-auth"

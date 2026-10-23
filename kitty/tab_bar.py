@@ -3,6 +3,9 @@
 # Requires "tab_bar_style custom" in kitty.conf
 # https://github.com/kovidgoyal/kitty/issues/8911#issuecomment-4806908910
 
+import os
+import traceback
+
 from kitty.fast_data_types import Screen, get_boss, get_options
 from kitty.tab_bar import (
     DrawData,
@@ -61,11 +64,22 @@ def agent_dot(tab_id: int, fmt) -> str:
 # Called for {custom} in tab_title_template, shows the running program (nvim,
 # lazygit, btop), or the last dir of the active window's cwd when sitting at
 # the zsh prompt, after the agent status dot
+# tab.active_exe is the newest foreground process, which is a helper the
+# program spawned (Claude Code runs caffeinate while it works), so the oldest
+# one is used, that's the program that was launched. An empty exe or an error
+# falls back to the dir, so the title is never blank
 def draw_title(data: dict) -> str:
-    tab = data["tab"]
-    exe = tab.active_exe
-    name = exe if exe.lstrip("-") != "zsh" else tab.active_wd.rsplit("/", 1)[-1]
-    return agent_dot(data["tab_id"], data["fmt"]) + name
+    wd = data["tab"].active_wd.rsplit("/", 1)[-1]
+    try:
+        tab = get_boss().tab_for_id(data["tab_id"])
+        exe = os.path.basename((tab and tab.get_exe_of_active_window(oldest=True)) or "")
+        name = wd if exe.lstrip("-") in ("", "zsh") else exe
+        return agent_dot(data["tab_id"], data["fmt"]) + name
+    except Exception:
+        # Logged so the cause can be found
+        with open(os.path.expanduser("~/.cache/kitty-tab-bar.log"), "a") as f:
+            traceback.print_exc(file=f)
+        return wd
 
 
 def current_session_name(os_window_id: int) -> str:

@@ -9,6 +9,13 @@
 # It also redraws the tab bar when a Claude or OpenCode user var changes, so
 # the status dots drawn by kitty/tab_bar.py update right away.
 #
+# Tab titles come from the running program (tab.active_exe in tab_bar.py), and
+# kitty only redraws the tab bar on events like a title change, not when the
+# foreground process changes. A tab opened by a session or by
+# 562-skhdKittyClaude.sh is drawn before nvim or claude starts, so it showed no
+# name or a stale one. When a window loads, the tab bar is redrawn a few times
+# over the next seconds on kitty timers, so nothing waits on it.
+#
 # Claude Code skips its prompt suggestion (the ghost text Tab accepts) when a
 # turn ends while the terminal reports focus out. So when a Claude window loses
 # focus, a focus in report is sent right behind it and Claude Code always
@@ -23,6 +30,8 @@ from kitty.fast_data_types import add_timer, current_focused_os_window_id, get_b
 from kitty.window import Window
 
 ack_delay = 2.0
+# Seconds after a window loads at which its OS window's tab bar is redrawn
+retitle_delays = (0.3, 1.0, 2.5, 5.0)
 sketchybar_bin = "/opt/homebrew/bin/sketchybar"
 
 
@@ -55,6 +64,18 @@ def refocus(window_id: int) -> None:
         window.write_to_child(b"\x1b[I")
 
 
+def redraw_tab_bar(os_window_id: int) -> None:
+    tm = get_boss().os_window_map.get(os_window_id)
+    if tm is not None:
+        tm.mark_tab_bar_dirty()
+
+
+def on_load(boss: Boss, window: Window, data: dict[str, Any]) -> None:
+    os_window_id = window.os_window_id
+    for delay in retitle_delays:
+        add_timer(lambda timer_id: redraw_tab_bar(os_window_id), delay, False)
+
+
 def on_focus_change(boss: Boss, window: Window, data: dict[str, Any]) -> None:
     if not data.get("focused"):
         if "claude_busy" in window.user_vars:
@@ -70,6 +91,4 @@ def on_focus_change(boss: Boss, window: Window, data: dict[str, Any]) -> None:
 def on_set_user_var(boss: Boss, window: Window, data: dict[str, Any]) -> None:
     if not data.get("key", "").startswith(("claude_", "opencode_")):
         return
-    tm = boss.os_window_map.get(window.os_window_id)
-    if tm is not None:
-        tm.mark_tab_bar_dirty()
+    redraw_tab_bar(window.os_window_id)

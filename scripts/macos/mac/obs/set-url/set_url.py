@@ -4,6 +4,7 @@
 # Feel free to modify, distribute it
 # If you find it useful, you can support me at ko-fi https://ko-fi.com/linkarzu
 
+import atexit
 import os
 import sys
 import subprocess
@@ -46,6 +47,7 @@ def set_input_url(input_name, new_url):
     host = "localhost"
     port = 4455
     client = obs.ReqClient(host=host, port=port, password=None)
+    atexit.register(client.disconnect)  # close the socket instead of dropping it on exit
 
     try:
         # Send request to update input settings

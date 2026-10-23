@@ -4,6 +4,7 @@
 # Feel free to modify, distribute it
 # If you find it useful, you can support me at ko-fi https://ko-fi.com/linkarzu
 
+import atexit
 import os
 import sys
 import subprocess
@@ -60,6 +61,7 @@ def get_input_properties(input_name):
     password = get_password() if "--no-auth" not in sys.argv else None
 
     client = obs.ReqClient(host=host, port=port, password=password)
+    atexit.register(client.disconnect)  # close the socket instead of dropping it on exit
 
     try:
         resp = client.get_input_settings(input_name)

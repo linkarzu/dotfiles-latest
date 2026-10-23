@@ -16,6 +16,34 @@ export PATH="/opt/homebrew/bin:$PATH"
 MIC_NAME_FILE="/tmp/${USER}_mic_name"
 MIC_NAME=$(cat "$MIC_NAME_FILE" 2>/dev/null)
 
+# While a livestream is prepared or live, only toggle the Shure, which is much
+# faster than cycling every input device, and update sketchybar right away.
+if [[ -f "$HOME/.cache/obs-meeting-manager/active-livestream.json" ]]; then
+  SHURE_MIC=$(SwitchAudioSource -t input -a | grep -m1 -i "Shure")
+  if [[ -n "$SHURE_MIC" ]]; then
+    if [[ "$(SwitchAudioSource -t input -c)" != "$SHURE_MIC" ]]; then
+      SwitchAudioSource -t input -s "$SHURE_MIC" >/dev/null
+    fi
+    MIC_VOLUME=$(osascript \
+      -e 'set micVolume to input volume of (get volume settings)' \
+      -e 'if micVolume > 0 then' \
+      -e 'set volume input volume 0' \
+      -e 'else' \
+      -e "set volume input volume $MIC_LEVEL" \
+      -e 'end if' \
+      -e 'return micVolume')
+    SHURE_NAME=$(echo "$SHURE_MIC" | awk '{print $1}')
+    if [[ "$MIC_VOLUME" =~ ^[0-9]+$ ]]; then
+      if [ "$MIC_VOLUME" -gt 0 ]; then
+        sketchybar -m --set mic label="$SHURE_NAME-0 " icon= icon.color=$RED label.color=$RED
+      else
+        sketchybar -m --set mic label="$SHURE_NAME-$MIC_LEVEL " icon= icon.color=$BLUE label.color=$BLUE
+      fi
+      exit 0
+    fi
+  fi
+fi
+
 # Capture the current volume and mute the active microphone immediately. The
 # remaining logic still synchronizes every other input device afterward.
 MIC_VOLUME=$(osascript \

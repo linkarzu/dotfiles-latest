@@ -335,6 +335,25 @@ vim.api.nvim_create_autocmd("BufEnter", {
 })
 
 vim.api.nvim_create_autocmd("BufEnter", {
+  desc = "Format forager",
+  group = group,
+  pattern = "*/zmk-keyboard-forager/config/forager.keymap", -- this is a pattern to match the filepath of whatever board you wish to target
+  callback = function()
+    require("qmk").setup({
+      name = "LAYOUT_forager",
+      variant = "zmk",
+      auto_format_pattern = "*/zmk-keyboard-forager/config/forager.keymap",
+      layout = {
+        "x x x x x _ _ _ x x x x x",
+        "x x x x x _ _ _ x x x x x",
+        "x x x x x _ _ _ x x x x x",
+        "_ _ _ x x _ _ _ x x _ _ _",
+      },
+    })
+  end,
+})
+
+vim.api.nvim_create_autocmd("BufEnter", {
   desc = "Format corne-min",
   group = group,
   pattern = "*/zmk-corne-min/config/corne_min.keymap", -- this is a pattern to match the filepath of whatever board you wish to target

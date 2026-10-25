@@ -25,10 +25,9 @@ import studio_mode
 HERE = Path(__file__).resolve().parent
 VENV_PATH = HERE / ".venv"
 SCENE_NAME = "youtube-members"
-PAGE_COUNT = 2
 PAGE_EVENT = "youtube-members-show-page"
 BROWSER_SOURCE_NAME = "members"
-PAGE_NAMES = ("premium", "members")
+MEMBER_PAGE_NAMES = ("premium", "members")
 OBS_REQUEST_TIMEOUT = 2.0
 VERIFY_TIMEOUT = 5.0
 POLL_INTERVAL = 0.1
@@ -90,12 +89,24 @@ def get_password() -> str:
     return result.decode("utf-8").strip()
 
 
+def page_names() -> tuple[str, ...]:
+    """The overlay's pages in order: the members pages, then any supporters pages."""
+    try:
+        pages = json.loads(MEMBERS_JSON_PATH.read_text(encoding="utf-8")).get("pages")
+        names = tuple(page["name"] for page in pages)
+    except (FileNotFoundError, json.JSONDecodeError, OSError, AttributeError, KeyError, TypeError):
+        return MEMBER_PAGE_NAMES
+    if names[: len(MEMBER_PAGE_NAMES)] != MEMBER_PAGE_NAMES or not all(isinstance(name, str) for name in names):
+        return MEMBER_PAGE_NAMES
+    return names
+
+
 def read_page() -> int:
     try:
         page = int(PAGE_STATE_PATH.read_text(encoding="utf-8").strip())
     except (FileNotFoundError, ValueError):
         return 0
-    return page if 0 <= page < PAGE_COUNT else 0
+    return page if 0 <= page < len(page_names()) else 0
 
 
 def write_page(page: int) -> None:
@@ -169,7 +180,7 @@ def browser_url(client) -> str:
 def page_url(url: str, page: int, overlay_mtime: int) -> str:
     parts = urlsplit(url)
     query = dict(parse_qsl(parts.query, keep_blank_values=True))
-    query.update(page=PAGE_NAMES[page], overlay_mtime=str(overlay_mtime))
+    query.update(page=page_names()[page], overlay_mtime=str(overlay_mtime))
     return urlunsplit((parts.scheme, parts.netloc, parts.path, urlencode(query), parts.fragment))
 
 
@@ -416,7 +427,7 @@ def handle_press(
             page = 0
             print(f"[+] Reset {SCENE_NAME} to page 1 after refresh")
         else:
-            page = (read_page() + 1) % PAGE_COUNT
+            page = (read_page() + 1) % len(page_names())
             set_and_verify_browser_page(client, page, overlay_mtime)
             print(f"[+] Set {SCENE_NAME} to page {page + 1}")
     write_page(page)

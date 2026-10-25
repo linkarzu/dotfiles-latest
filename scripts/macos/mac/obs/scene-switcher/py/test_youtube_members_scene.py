@@ -70,6 +70,10 @@ class YouTubeMembersSceneTests(unittest.TestCase):
         patcher = patch.object(youtube_members_scene, "members_tags_outdated", return_value=False)
         self.tags_outdated = patcher.start()
         self.addCleanup(patcher.stop)
+        # Two members pages unless a test writes its own members.json.
+        pages = patch.object(youtube_members_scene, "MEMBERS_JSON_PATH", Path("/nonexistent/members.json"))
+        pages.start()
+        self.addCleanup(pages.stop)
 
     def test_outdated_new_tags_regenerate_unchanged_csv(self):
         client = Client("youtube-members")
@@ -265,6 +269,39 @@ class YouTubeMembersSceneTests(unittest.TestCase):
         self.assertEqual(client.scene_calls, [])
         self.assertIn("page=members", client.input_calls[0]["settings"]["url"])
         self.assertIn("page=premium", client.input_calls[1]["settings"]["url"])
+
+    def test_repeated_press_cycles_supporters_pages_and_wraps(self):
+        client = Client("youtube-members")
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            state_path = Path(temporary_directory) / "page.txt"
+            state_path.write_text("0\n", encoding="utf-8")
+            html_path = Path(temporary_directory) / "index.html"
+            html_path.write_text("overlay", encoding="utf-8")
+            members_path = Path(temporary_directory) / "members.json"
+            members_path.write_text(json.dumps({"pages": [
+                {"name": "premium"}, {"name": "members"},
+                {"name": "supporters", "supporterKeys": ["gift:UC1:t"]},
+                {"name": "supporters-2", "supporterKeys": ["superchat:1"]},
+            ]}), encoding="utf-8")
+            with patch.object(youtube_members_scene, "PAGE_STATE_PATH", state_path), patch.object(
+                youtube_members_scene, "MEMBERS_HTML_PATH", html_path
+            ), patch.object(youtube_members_scene, "MEMBERS_JSON_PATH", members_path):
+                pages = [youtube_members_scene.handle_press(client)[0] for _ in range(4)]
+
+        self.assertEqual(pages, [1, 2, 3, 0])
+        self.assertEqual(
+            [call["settings"]["url"].split("page=")[1].split("&")[0] for call in client.input_calls],
+            ["members", "supporters", "supporters-2", "premium"],
+        )
+
+    def test_malformed_page_list_keeps_the_two_members_pages(self):
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            members_path = Path(temporary_directory) / "members.json"
+            for payload in ({}, {"pages": "x"}, {"pages": [{"name": "supporters"}]}, {"pages": [{}]}):
+                with self.subTest(payload=payload):
+                    members_path.write_text(json.dumps(payload), encoding="utf-8")
+                    with patch.object(youtube_members_scene, "MEMBERS_JSON_PATH", members_path):
+                        self.assertEqual(youtube_members_scene.page_names(), ("premium", "members"))
 
     def test_local_file_source_repeated_press_uses_browser_event(self):
         client = LocalFileClient("youtube-members")

@@ -210,8 +210,9 @@ shift + alt + ctrl - f6 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scri
 shift + alt + ctrl - f7 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py cam-main-chat --no-auth"
 # shift + alt + ctrl - f8 : 
 # shift + alt + ctrl - f9 : 
-# Forager hold-Y: back to the previous OBS scene; again to alternate
-shift + alt + ctrl - f20 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py --previous --no-auth"
+# Forager hold-Y (F20): back to the previous OBS scene; again to alternate. Raw
+# keycode: macOS sends F20 without the fn flag that skhd's f20 expects
+shift + alt + ctrl - 0x5A : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py --previous --no-auth"
 
 # Yabai manage
 shift + alt + ctrl - f10 : yabai -m window --close

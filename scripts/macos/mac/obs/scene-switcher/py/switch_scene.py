@@ -16,6 +16,9 @@
 # --banner-only skips OBS and only publishes the banner for a scene that some
 # other tool already put live.
 
+# NOTE: Each switch remembers the scene it left; --previous switches back to
+# it, so pressing it again alternates between the last two scenes.
+
 import json
 import os
 import sys
@@ -36,6 +39,9 @@ OBS_REQUEST_TIMEOUT = 2.0
 SKETCHYBAR_VERIFY_TIMEOUT = 5.0
 DIAGNOSTIC_LOG_PATH = Path(
     "~/.cache/obs-meeting-manager/scene-switcher.log"
+).expanduser()
+PREVIOUS_SCENE_PATH = Path(
+    "~/.cache/obs-meeting-manager/previous-scene.txt"
 ).expanduser()
 
 
@@ -116,6 +122,24 @@ def create_obs_client(**kwargs):
     return client
 
 
+def remember_previous_scene(left_scene, scene_name):
+    """Best effort: a failure here never fails the switch itself."""
+    if not left_scene or left_scene == scene_name:
+        return
+    try:
+        PREVIOUS_SCENE_PATH.parent.mkdir(parents=True, exist_ok=True)
+        PREVIOUS_SCENE_PATH.write_text(left_scene, encoding="utf-8")
+    except Exception as e:
+        print(f"phase=scene-switch step=remember-previous status=failure error_type={type(e).__name__}")
+
+
+def read_previous_scene():
+    try:
+        return PREVIOUS_SCENE_PATH.read_text(encoding="utf-8").strip() or None
+    except OSError:
+        return None
+
+
 def switch_scene(scene_name, timeout=None, poll_interval=None):
     host = "localhost"
     port = 4455
@@ -139,6 +163,10 @@ def switch_scene(scene_name, timeout=None, poll_interval=None):
         )
         preview = studio_mode.preview_mode(client)
         step = studio_mode.target_name(preview)
+        try:
+            left_scene = studio_mode.current_scene(client, preview)
+        except Exception:
+            left_scene = None
         print(
             f"phase=scene-switch step={step} status=start "
             f"expected={scene_name} timeout_seconds={timeout:g} "
@@ -173,6 +201,7 @@ def switch_scene(scene_name, timeout=None, poll_interval=None):
                     f"attempt={attempt} expected={scene_name} observed={last_observed} "
                     f"request_status={'error-reconciled' if request_error else 'accepted'}"
                 )
+                remember_previous_scene(left_scene, scene_name)
                 break
             if time.monotonic() >= deadline:
                 query_evidence = (
@@ -300,10 +329,15 @@ def write_banner_atomic(banner_file, contents):
 
 def main():
     if len(sys.argv) < 2:
-        print("Usage: python switch_scene.py 'Scene Name'")
+        print("Usage: python switch_scene.py 'Scene Name' | --previous")
         return 1
 
     scene_name = sys.argv[1]
+    if scene_name == "--previous":
+        scene_name = read_previous_scene()
+        if scene_name is None:
+            print("Error: no previous scene remembered yet.", file=sys.stderr)
+            return 1
     if "--banner-only" not in sys.argv:
         try:
             preview = switch_scene(scene_name)

@@ -22,6 +22,14 @@ with patch.dict(sys.modules, {"obsws_python": obs_stub}):
 
 
 class SwitchSceneTests(unittest.TestCase):
+    def setUp(self):
+        temporary_directory = tempfile.TemporaryDirectory()
+        self.addCleanup(temporary_directory.cleanup)
+        self.previous_path = Path(temporary_directory.name) / "previous-scene.txt"
+        patcher = patch.object(switch_scene, "PREVIOUS_SCENE_PATH", self.previous_path)
+        patcher.start()
+        self.addCleanup(patcher.stop)
+
     def run_main(
         self,
         client,
@@ -69,7 +77,8 @@ class SwitchSceneTests(unittest.TestCase):
         self.assertTrue(stdout.endswith("Switched to scene: requested-scene\n"))
         self.assertEqual(stderr, "")
         client.set_current_program_scene.assert_called_once_with("requested-scene")
-        client.get_current_program_scene.assert_called_once_with()
+        # Once for the scene being left, once to verify the switch.
+        self.assertEqual(client.get_current_program_scene.call_count, 2)
         client.disconnect.assert_called_once_with()
 
     def test_delayed_success_polls_until_obs_reports_requested_scene(self):
@@ -78,6 +87,7 @@ class SwitchSceneTests(unittest.TestCase):
             current_program_scene_name="old-scene"
         )
         client.get_current_program_scene.side_effect = [
+            SimpleNamespace(current_program_scene_name="old-scene"),
             SimpleNamespace(current_program_scene_name="old-scene"),
             SimpleNamespace(current_program_scene_name="requested-scene"),
         ]
@@ -90,6 +100,55 @@ class SwitchSceneTests(unittest.TestCase):
         self.assertIn("status=waiting attempt=1", stdout)
         self.assertIn("status=success attempt=2", stdout)
         sleep.assert_called_once_with(switch_scene.SCENE_SWITCH_POLL_INTERVAL)
+
+    def program_client(self, *scenes):
+        client = Mock()
+        client.get_studio_mode_enabled.return_value = SimpleNamespace(
+            studio_mode_enabled=False
+        )
+        client.get_current_program_scene.side_effect = [
+            SimpleNamespace(current_program_scene_name=scene) for scene in scenes
+        ]
+        return client
+
+    def test_switch_remembers_the_scene_it_left(self):
+        client = self.program_client("old-scene", "requested-scene")
+
+        status, _stdout, _stderr = self.run_main(client)
+
+        self.assertEqual(status, 0)
+        self.assertEqual(self.previous_path.read_text(), "old-scene")
+
+    def test_previous_switches_back_and_alternates(self):
+        self.previous_path.write_text("old-scene")
+        client = self.program_client("requested-scene", "old-scene")
+
+        status, stdout, _stderr = self.run_main(client, scene_name="--previous")
+
+        self.assertEqual(status, 0)
+        client.set_current_program_scene.assert_called_once_with("old-scene")
+        self.assertTrue(stdout.endswith("Switched to scene: old-scene\n"))
+        self.assertEqual(self.previous_path.read_text(), "requested-scene")
+
+    def test_previous_without_a_remembered_scene_touches_nothing(self):
+        with patch.object(switch_scene, "create_obs_client") as create:
+            status, _stdout, stderr = self.run_main(Mock(), scene_name="--previous")
+
+        self.assertEqual(status, 1)
+        self.assertIn("no previous scene remembered yet", stderr)
+        create.assert_not_called()
+
+    def test_failing_to_remember_does_not_fail_the_switch(self):
+        client = self.program_client("old-scene", "requested-scene")
+
+        with patch.object(
+            switch_scene, "PREVIOUS_SCENE_PATH", self.previous_path / "not-a-dir" / "x"
+        ), patch.object(Path, "mkdir", side_effect=PermissionError("denied")):
+            status, stdout, _stderr = self.run_main(client)
+
+        self.assertEqual(status, 0)
+        self.assertIn("step=remember-previous status=failure error_type=PermissionError", stdout)
+        self.assertTrue(stdout.endswith("Switched to scene: requested-scene\n"))
 
     def test_persistent_scene_mismatch_times_out(self):
         client = Mock()

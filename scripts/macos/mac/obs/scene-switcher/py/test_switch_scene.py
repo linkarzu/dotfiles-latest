@@ -29,6 +29,10 @@ class SwitchSceneTests(unittest.TestCase):
         patcher = patch.object(switch_scene, "PREVIOUS_SCENE_PATH", self.previous_path)
         patcher.start()
         self.addCleanup(patcher.stop)
+        self.redirects_path = Path(temporary_directory.name) / "scene-redirects.json"
+        patcher = patch.object(switch_scene, "SCENE_REDIRECTS_PATH", self.redirects_path)
+        patcher.start()
+        self.addCleanup(patcher.stop)
 
     def run_main(
         self,
@@ -149,6 +153,26 @@ class SwitchSceneTests(unittest.TestCase):
         self.assertEqual(status, 0)
         self.assertIn("step=remember-previous status=failure error_type=PermissionError", stdout)
         self.assertTrue(stdout.endswith("Switched to scene: requested-scene\n"))
+
+    def test_a_redirected_scene_switches_to_its_stand_in(self):
+        self.redirects_path.write_text('{"requested-scene": "stand-in"}')
+        client = self.program_client("old-scene", "stand-in")
+
+        status, stdout, _stderr = self.run_main(client)
+
+        self.assertEqual(status, 0)
+        client.set_current_program_scene.assert_called_once_with("stand-in")
+        self.assertTrue(stdout.endswith("Switched to scene: stand-in\n"))
+
+    def test_other_scenes_and_unreadable_redirects_switch_as_named(self):
+        for contents in ('{"another-scene": "stand-in"}', "not json", '["requested-scene"]'):
+            self.redirects_path.write_text(contents)
+            client = self.program_client("old-scene", "requested-scene")
+
+            status, _stdout, _stderr = self.run_main(client)
+
+            self.assertEqual(status, 0)
+            client.set_current_program_scene.assert_called_once_with("requested-scene")
 
     def test_persistent_scene_mismatch_times_out(self):
         client = Mock()

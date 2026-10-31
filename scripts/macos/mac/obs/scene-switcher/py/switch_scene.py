@@ -19,6 +19,10 @@
 # NOTE: Each switch remembers the scene it left; --previous switches back to
 # it, so pressing it again alternates between the last two scenes.
 
+# NOTE: Another tool can send a scene's key to a stand-in scene by writing
+# {"scene": "stand-in"} to SCENE_REDIRECTS_PATH (OBS Meeting Manager's reaction
+# mode does this); without that file every key goes to the scene it names.
+
 import json
 import os
 import sys
@@ -42,6 +46,9 @@ DIAGNOSTIC_LOG_PATH = Path(
 ).expanduser()
 PREVIOUS_SCENE_PATH = Path(
     "~/.cache/obs-meeting-manager/previous-scene.txt"
+).expanduser()
+SCENE_REDIRECTS_PATH = Path(
+    "~/.cache/obs-meeting-manager/scene-redirects.json"
 ).expanduser()
 
 
@@ -138,6 +145,16 @@ def read_previous_scene():
         return PREVIOUS_SCENE_PATH.read_text(encoding="utf-8").strip() or None
     except OSError:
         return None
+
+
+def redirected_scene(scene_name):
+    """The stand-in scene another tool asked for, or scene_name itself."""
+    try:
+        redirects = json.loads(SCENE_REDIRECTS_PATH.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return scene_name
+    target = redirects.get(scene_name) if isinstance(redirects, dict) else None
+    return target if isinstance(target, str) and target else scene_name
 
 
 def switch_scene(scene_name, timeout=None, poll_interval=None):
@@ -338,6 +355,7 @@ def main():
         if scene_name is None:
             print("Error: no previous scene remembered yet.", file=sys.stderr)
             return 1
+    scene_name = redirected_scene(scene_name)
     if "--banner-only" not in sys.argv:
         try:
             preview = switch_scene(scene_name)

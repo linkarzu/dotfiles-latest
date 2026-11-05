@@ -18,7 +18,7 @@ FONT="MesloLGM Nerd Font"
 PADDINGS=1
 
 # Set to 100 for the original graph width; 50 makes CPU, RAM and GPU graphs half as wide.
-USAGE_GRAPH_WIDTH_PERCENT=50
+USAGE_GRAPH_WIDTH_PERCENT=40
 USAGE_GRAPH_WIDTH=$(((75 * USAGE_GRAPH_WIDTH_PERCENT + 50) / 100))
 
 # Shared look of the CPU, RAM and GPU widgets. The top line is the name plus a
@@ -28,8 +28,8 @@ USAGE_GRAPH_WIDTH=$(((75 * USAGE_GRAPH_WIDTH_PERCENT + 50) / 100))
 USAGE_GRAPH_COLOR=$MAGENTA
 USAGE_GRAPH_SECONDARY_COLOR=$BLUE
 USAGE_GRAPH_BORDER_COLOR=0xff${linkarzu_color15#\#}
-USAGE_TOP_FONT="$FONT:Heavy:10"
-USAGE_PERCENT_FONT="$FONT:Heavy:11"
+USAGE_TOP_FONT="$FONT:Heavy:8"
+USAGE_PERCENT_FONT="$FONT:Heavy:9"
 
 # Keep the CPU process label within the graph, reserving three characters for "...".
 CPU_TOPPROC_MAX_CHARS=$(((USAGE_GRAPH_WIDTH - 9) / 3))

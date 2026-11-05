@@ -12,11 +12,30 @@ KEYBOARD_CLICK_SCRIPT="$PLUGIN_DIR/usage_click.sh keyboard.frame; sketchybar --t
 # Shift zero-width labels back over the frame. Less than the graphs' overlay: a
 # plain item's right padding already counts, a graph's doesn't.
 keyboard_frame_padding_right=4
-# Wider than the graphs so the keyboard name fits.
-keyboard_width=34
+# Wider than the graphs so the keyboard name and the layer icon fit.
+keyboard_width=44
 keyboard_overlay_padding=$((-keyboard_width + keyboard_frame_padding_right))
 keyboard_title_font="$FONT:Heavy:7"
 keyboard_level_font="$FONT:Heavy:8"
+
+# The plugin starts this again, see plugins/keyboard_battery.sh.
+pkill -f 'keyboard-battery --watch-layer'
+
+# Filled in by that process: the macOS or Windows logo for the keyboard's layer.
+keyboard_mode=(
+  drawing=off
+  label.font="$FONT:Bold:10"
+  label=""
+  label.y_offset=9
+  label.width=$keyboard_width
+  label.align=left
+  label.padding_left=2
+  label.padding_right=0
+  padding_right=$keyboard_overlay_padding
+  width=0
+  icon.drawing=off
+  click_script="$KEYBOARD_CLICK_SCRIPT"
+)
 
 keyboard_frame=(
   width=$keyboard_width
@@ -112,6 +131,9 @@ sketchybar --add event keyboard_battery_update \
   \
   --add item keyboard.title right \
   --set keyboard.title "${keyboard_title[@]}" \
+  \
+  --add item keyboard.mode right \
+  --set keyboard.mode "${keyboard_mode[@]}" \
   \
   --add item keyboard.left right \
   --set keyboard.left "${keyboard_left[@]}" \

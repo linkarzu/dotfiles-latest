@@ -24,7 +24,7 @@ pkill -f '/keyboard-battery --watch-layer$'
 # Filled in by that process: the macOS or Windows logo for the keyboard's layer.
 keyboard_mode=(
   drawing=off
-  label.font="$FONT:Bold:10"
+  label.font="$FONT:Bold:8"
   label=""
   label.y_offset=9
   label.width=$keyboard_width

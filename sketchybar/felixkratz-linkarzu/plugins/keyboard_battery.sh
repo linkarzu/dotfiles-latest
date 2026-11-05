@@ -23,7 +23,7 @@ fi
 
 # Keeps the mac or Windows layer icon up to date. items/keyboard_battery.sh stops
 # it on a sketchybar reload, so it also picks up a rebuilt binary.
-if ! pgrep -f 'keyboard-battery --watch-layer' >/dev/null; then
+if ! pgrep -f '/keyboard-battery --watch-layer$' >/dev/null; then
   "$bin" --watch-layer >/dev/null 2>&1 &
   disown
 fi

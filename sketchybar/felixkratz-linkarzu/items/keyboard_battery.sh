@@ -13,13 +13,13 @@ KEYBOARD_CLICK_SCRIPT="$PLUGIN_DIR/usage_click.sh keyboard.frame; sketchybar --t
 # plain item's right padding already counts, a graph's doesn't.
 keyboard_frame_padding_right=4
 # Wider than the graphs so the keyboard name and the layer icon fit.
-keyboard_width=44
+keyboard_width=38
 keyboard_overlay_padding=$((-keyboard_width + keyboard_frame_padding_right))
 keyboard_title_font="$FONT:Heavy:7"
 keyboard_level_font="$FONT:Heavy:8"
 
 # The plugin starts this again, see plugins/keyboard_battery.sh.
-pkill -f 'keyboard-battery --watch-layer'
+pkill -f '/keyboard-battery --watch-layer$'
 
 # Filled in by that process: the macOS or Windows logo for the keyboard's layer.
 keyboard_mode=(

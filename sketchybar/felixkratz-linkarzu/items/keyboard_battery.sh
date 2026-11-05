@@ -141,8 +141,12 @@ sketchybar --add event keyboard_battery_update \
   --add item keyboard.right right \
   --set keyboard.right "${keyboard_right[@]}"
 
-# Popup rows are filled in by the plugin on every update.
-sketchybar --add item keyboard.popup.header popup.keyboard.frame \
+# Popup rows are filled in by the plugin on every update, the Layer row by the
+# process that fills in keyboard.mode.
+sketchybar --add item keyboard.popup.layer popup.keyboard.frame \
+  --set keyboard.popup.layer "${keyboard_popup_row[@]}" icon="Layer" label="unknown" label.color=$GREY \
+  \
+  --add item keyboard.popup.header popup.keyboard.frame \
   --set keyboard.popup.header "${keyboard_popup_header[@]}" icon="Device" label="Level · time left" \
   \
   --add item keyboard.popup.left popup.keyboard.frame \

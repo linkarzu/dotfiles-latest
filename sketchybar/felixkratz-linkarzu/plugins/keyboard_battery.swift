@@ -8,7 +8,8 @@
 // the sketchybar config directory, because writing there would hotload sketchybar.
 //
 // With --watch-layer it keeps running instead, and shows on the keyboard.mode item
-// whether the keyboard is on its macOS or Windows layer. The keyboard notifies
+// and the popup's Layer row whether the keyboard is on its macOS or Windows layer.
+// The keyboard notifies
 // when that changes (src/layer_report.c in zmk-keyboard-forager and
 // zmk-keyboard-toucan). The item stays blank for firmware without that service.
 //
@@ -110,16 +111,18 @@ final class LayerWatcher: NSObject, CBCentralManagerDelegate, CBPeripheralDelega
     shown = value
     let colors = ProcessInfo.processInfo.environment
     let label: String
+    let layer: String
     let color: String
     switch value {
-    case 0?: (label, color) = ("\u{F179}", colors["WHITE"] ?? "0xffffffff")
-    case 1?: (label, color) = ("\u{F17A}", colors["BLUE"] ?? "0xff04d1f9")
-    default: (label, color) = ("", colors["WHITE"] ?? "0xffffffff")
+    case 0?: (label, layer, color) = ("\u{F179}", "macOS", colors["WHITE"] ?? "0xffffffff")
+    case 1?: (label, layer, color) = ("\u{F17A}", "Windows", colors["BLUE"] ?? "0xff04d1f9")
+    default: (label, layer, color) = ("", "unknown", colors["GREY"] ?? "0xff7f8490")
     }
     let sketchybar = Process()
     sketchybar.executableURL = URL(fileURLWithPath: "/usr/bin/env")
     sketchybar.arguments = [
       "sketchybar", "--set", "keyboard.mode", "label=\(label)", "label.color=\(color)",
+      "--set", "keyboard.popup.layer", "label=\(layer)", "label.color=\(color)",
     ]
     try? sketchybar.run()
   }

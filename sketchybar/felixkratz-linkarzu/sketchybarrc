@@ -181,8 +181,9 @@ source "$ITEM_DIR/gpu.sh"
 # Startup disk used percentage, left of the GPU graph
 source "$ITEM_DIR/disk.sh"
 
-# Battery level of the left and right Forager halves, hidden when not connected
-source "$ITEM_DIR/forager_battery.sh"
+# Battery level of both halves of the connected Forager or Toucan, hidden when
+# neither is connected
+source "$ITEM_DIR/keyboard_battery.sh"
 
 source "$ITEM_DIR/timer.sh"
 source "$ITEM_DIR/opencode.sh"

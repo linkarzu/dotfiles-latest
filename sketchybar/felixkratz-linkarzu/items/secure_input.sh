@@ -6,14 +6,14 @@
 # Hidden the rest of the time. Two lines in a shared column, like the calendar, so it fits on a
 # full bar.
 
-secure_input_width=62
+secure_input_width=50
 
 secure_input=(
   updates=on
   update_freq=2
   drawing=off
   label="Secure Input"
-  label.font="$FONT:Black:10.0"
+  label.font="$FONT:Black:8.0"
   label.color=$RED
   label.width=$secure_input_width
   label.align=center
@@ -36,7 +36,7 @@ secure_input_app=(
   icon.width=$secure_input_icon_width
   icon.padding_left=0
   icon.padding_right=0
-  label.font="$FONT:Black:10.0"
+  label.font="$FONT:Black:8.0"
   label.color=$RED
   label.width=$secure_input_width
   label.align=center

@@ -1,11 +1,9 @@
 import { execFile } from "node:child_process"
-import { homedir } from "node:os"
 import { promisify } from "node:util"
 
-import { choice, defineHexConfig } from "@hex/commands"
+import { defineHexConfig } from "@hex/commands"
 
 const run = promisify(execFile)
-const miscScripts = `${homedir()}/github/dotfiles-latest/scripts/macos/mac/misc`
 
 // Commands said with the regular dictation shortcut. The "dictated-commands"
 // transformation runs the first pattern that matches the whole dictation
@@ -58,7 +56,9 @@ addToggle(
     "deactivated": "off",
     "de activated": "off",
   },
-  (state) => run(`${miscScripts}/570-virginMode.sh`, [state]),
+  // Hex only provides node:child_process and node:util, so no homedir() here.
+  // A literal path also lets the approval prompt name the program.
+  (state) => run("/Users/linkarzu/github/dotfiles-latest/scripts/macos/mac/misc/570-virginMode.sh", [state]),
 )
 
 const normalizeSpoken = (text: string) =>
@@ -94,17 +94,4 @@ export default defineHexConfig({
   //   send: ["send note"],
   //   cancel: ["discard note"],
   // },
-  commands: {
-    // "virgin mode on|off" -> kitty opacity, announcement and wallpaper
-    "virgin-mode": {
-      phrases: ["virgin mode {state}"],
-      // "off" is usually heard as "of"
-      captures: { state: choice({ on: ["on"], off: ["off", "of"] } as const) },
-      group: "Modes",
-      description: "Toggle virgin mode (kitty opacity, wallpaper)",
-      run: async ({ captures }) => {
-        await run(`${miscScripts}/570-virginMode.sh`, [captures.state])
-      },
-    },
-  },
 })

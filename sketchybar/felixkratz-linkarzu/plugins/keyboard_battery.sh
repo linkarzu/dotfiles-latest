@@ -3,8 +3,8 @@
 # Filename: ~/github/dotfiles-latest/sketchybar/felixkratz-linkarzu/plugins/keyboard_battery.sh
 
 # Shows the name and battery level of both halves of the connected Forager or
-# Toucan, colored like battery.sh: green from 80%, yellow from 30%, red below
-# that. Hidden when neither is connected. The right click popup adds the Magic
+# Toucan: green from 50%, yellow from 15%, red below that, it lasts for weeks so
+# it warns later than battery.sh. Hidden when neither is connected. The right click popup adds the Magic
 # Mouse, and estimates from a history of the levels, per device. All of that is
 # kept outside the sketchybar config directory, because writing there would
 # hotload sketchybar.
@@ -30,9 +30,9 @@ fi
 
 color() {
   case "$1" in
-  [8-9][0-9] | 100) echo "$GREEN" ;;
-  [3-7][0-9]) echo "$YELLOW" ;;
-  [0-9] | [1-2][0-9]) echo "$RED" ;;
+  [5-9][0-9] | 100) echo "$GREEN" ;;
+  1[5-9] | [2-4][0-9]) echo "$YELLOW" ;;
+  [0-9] | 1[0-4]) echo "$RED" ;;
   *) echo "$GREY" ;;
   esac
 }

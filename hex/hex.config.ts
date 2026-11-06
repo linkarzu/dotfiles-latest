@@ -57,7 +57,6 @@ addToggle(
     "de activated": "off",
   },
   // Hex only provides node:child_process and node:util, so no homedir() here.
-  // A literal path also lets the approval prompt name the program.
   (state) => run("/Users/linkarzu/github/dotfiles-latest/scripts/macos/mac/misc/570-virginMode.sh", [state]),
 )
 

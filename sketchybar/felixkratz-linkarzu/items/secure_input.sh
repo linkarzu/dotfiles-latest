@@ -43,7 +43,7 @@ secure_input_app=(
   label.y_offset=-5
   label.padding_left=0
   label.padding_right=0
-  padding_left=6
+  padding_left=12
   width=$((secure_input_width + secure_input_icon_width))
 )
 

@@ -15,10 +15,10 @@ keyboard_frame_padding_right=4
 # Wider than the graphs. Under the keyboard name there are three columns: the layer
 # icon, the L and R rows, and the mouse.
 keyboard_levels_indent=16
-keyboard_width=49
+keyboard_width=53
 keyboard_overlay_padding=$((-keyboard_width + keyboard_frame_padding_right))
-keyboard_title_font="$FONT:Heavy:7"
-keyboard_level_font="$FONT:Heavy:8"
+keyboard_title_font="$FONT:Bold:8"
+keyboard_level_font="$FONT:Bold:8"
 
 # The plugin starts this again, see plugins/keyboard_battery.sh.
 pkill -f '/keyboard-battery --watch-layer$'
@@ -113,7 +113,7 @@ keyboard_mouse_icon=(
   label.width=$keyboard_width
   label.align=right
   label.padding_left=0
-  label.padding_right=2
+  label.padding_right=3
   padding_right=$keyboard_overlay_padding
   width=0
   icon.drawing=off

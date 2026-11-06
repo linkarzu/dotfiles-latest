@@ -12,6 +12,7 @@
 // The keyboard notifies
 // when that changes (src/layer_report.c in zmk-keyboard-forager and
 // zmk-keyboard-toucan). The item stays blank for firmware without that service.
+// It also triggers keyboard_battery_update when the keyboard connects or disconnects.
 //
 // ZMK exposes one Bluetooth battery characteristic per half. macOS only shows
 // the first, so this reads them directly. The right half is the split
@@ -62,10 +63,16 @@ final class LayerWatcher: NSObject, CBCentralManagerDelegate, CBPeripheralDelega
     guard found !== keyboard else { return }
     keyboard = found
     show(nil)
+    updateBattery()
     if let found {
       found.delegate = self
       central.connect(found)
     }
+  }
+
+  // The plugin only runs every 5 minutes, this shows or hides its items right away.
+  private func updateBattery() {
+    sketchybar(["--trigger", "keyboard_battery_update"])
   }
 
   func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
@@ -78,6 +85,7 @@ final class LayerWatcher: NSObject, CBCentralManagerDelegate, CBPeripheralDelega
     guard peripheral === keyboard else { return }
     keyboard = nil
     show(nil)
+    updateBattery()
   }
 
   // New firmware adds the service without the keyboard having to be paired again.
@@ -118,13 +126,17 @@ final class LayerWatcher: NSObject, CBCentralManagerDelegate, CBPeripheralDelega
     case 1?: (label, layer, color) = ("\u{F17A}", "Windows", colors["BLUE"] ?? "0xff04d1f9")
     default: (label, layer, color) = ("", "unknown", colors["GREY"] ?? "0xff7f8490")
     }
-    let sketchybar = Process()
-    sketchybar.executableURL = URL(fileURLWithPath: "/usr/bin/env")
-    sketchybar.arguments = [
-      "sketchybar", "--set", "keyboard.mode", "label=\(label)", "label.color=\(color)",
+    sketchybar([
+      "--set", "keyboard.mode", "label=\(label)", "label.color=\(color)",
       "--set", "keyboard.popup.layer", "label=\(layer)", "label.color=\(color)",
-    ]
-    try? sketchybar.run()
+    ])
+  }
+
+  private func sketchybar(_ arguments: [String]) {
+    let process = Process()
+    process.executableURL = URL(fileURLWithPath: "/usr/bin/env")
+    process.arguments = ["sketchybar"] + arguments
+    try? process.run()
   }
 }
 

@@ -25,8 +25,17 @@ secure_input=(
   script="$PLUGIN_DIR/secure_input.sh"
 )
 
+# Carries the lock too, centered on both lines to the left of the column.
+secure_input_icon_width=16
+
 secure_input_app=(
   drawing=off
+  icon="󰌾"
+  icon.font="$FONT:Bold:15.0"
+  icon.color=$RED
+  icon.width=$secure_input_icon_width
+  icon.padding_left=0
+  icon.padding_right=0
   label.font="$FONT:Black:10.0"
   label.color=$RED
   label.width=$secure_input_width
@@ -35,8 +44,7 @@ secure_input_app=(
   label.padding_left=0
   label.padding_right=0
   padding_left=6
-  width=$secure_input_width
-  icon.drawing=off
+  width=$((secure_input_width + secure_input_icon_width))
 )
 
 sketchybar --add item secure_input right \

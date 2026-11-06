@@ -17,4 +17,6 @@ clipboard_feedback=(
 )
 
 sketchybar --add item clipboard.feedback right \
-  --set clipboard.feedback "${clipboard_feedback[@]}"
+  --set clipboard.feedback "${clipboard_feedback[@]}" \
+  --add item clipboard.paste_feedback right \
+  --set clipboard.paste_feedback "${clipboard_feedback[@]}" label="PASTE"

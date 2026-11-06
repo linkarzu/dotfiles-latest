@@ -18,7 +18,7 @@ cpu_top_drawing=on
 # CPU name and the average of the P-core and E-core temperature sensors.
 cpu_top=(
   label.font="$USAGE_TOP_FONT"
-  label="C --°"
+  label="C--°"
   label.drawing=$cpu_top_drawing
   label.y_offset=7
   label.width=$USAGE_GRAPH_WIDTH

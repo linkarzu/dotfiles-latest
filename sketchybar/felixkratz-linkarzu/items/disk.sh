@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# Half as wide as the CPU, RAM and GPU graphs.
-DISK_WIDTH=$((USAGE_GRAPH_WIDTH / 2))
+# Narrower than the CPU, RAM and GPU graphs, there's no % sign and a 100 still fits.
+DISK_WIDTH=20
 
 # Shift zero-width labels back over the graph, including its right padding.
 disk_graph_padding_right=4
@@ -20,7 +20,7 @@ disk_top=(
   icon.drawing=off
 )
 
-# Used percentage, without a % sign so it fits the half-width graph.
+# Used percentage, without a % sign so it fits the narrower graph.
 disk_percent=(
   label.font="$USAGE_PERCENT_FONT"
   label="--"

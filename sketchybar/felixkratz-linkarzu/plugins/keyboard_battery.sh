@@ -152,8 +152,8 @@ mouse_label="not connected"
 
 sketchybar --set '/keyboard\..*/' drawing=on \
   --set keyboard.title label="$name" \
-  --set keyboard.left label="L $left" label.color="$(color "$left")" \
-  --set keyboard.right label="R $right" label.color="$(color "$right")" \
+  --set keyboard.left label="L$left" label.color="$(color "$left")" \
+  --set keyboard.right label="R$right" label.color="$(color "$right")" \
   --set keyboard.mouse_icon label.color="$(color "$mouse")" \
   --set keyboard.mouse label="${mouse:---}" label.color="$(color "$mouse")" \
   --set keyboard.popup.left label="$(level_label "$left" "$left_status")" label.color="$(color "$left")" \

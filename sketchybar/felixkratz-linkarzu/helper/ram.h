@@ -124,7 +124,7 @@ static inline void ram_update(struct ram* ram, struct apps* apps) {
     ram->command, sizeof(ram->command),
     "--push ram.swap %.2f "
     "--push ram.graph %.2f "
-    "--set ram.top label='R %.0fG' label.color=%s "
+    "--set ram.top label='R%.0fG' label.color=%s "
     "--set ram.percent label='%d%%' label.color=%s "
     "--set ram.popup.used label='%.1f / %.0f GB' label.color=%s "
     "--set ram.popup.wired label='%.1f GB' "

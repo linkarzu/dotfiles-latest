@@ -168,7 +168,7 @@ static inline void cpu_update(struct cpu* cpu,
                            "--push cpu.sys %.2f "
                            "--push cpu.graph %.2f "
                            "--set cpu.process label='%s' "
-                           "--set cpu.top label='C %s' label.color=%s "
+                           "--set cpu.top label='C%s' label.color=%s "
                            "--set cpu.percent label='%d%%' label.color=%s "
                            "--set cpu.popup.usage label='%d%%' label.color=%s "
                            "--set cpu.popup.split label='%.0f%% / %.0f%%' "

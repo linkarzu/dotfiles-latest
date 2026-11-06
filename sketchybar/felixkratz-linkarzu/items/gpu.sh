@@ -13,7 +13,7 @@ gpu_overlay_padding=$((-USAGE_GRAPH_WIDTH - PADDINGS))
 # GPU name and the average of the GPU temperature sensors.
 gpu_top=(
   label.font="$USAGE_TOP_FONT"
-  label="G --°"
+  label="G--°"
   label.y_offset=7
   label.width=$USAGE_GRAPH_WIDTH
   label.align=right

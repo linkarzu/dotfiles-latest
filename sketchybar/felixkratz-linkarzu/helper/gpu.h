@@ -292,7 +292,7 @@ static inline void gpu_update(struct gpu* gpu, struct temps* temps) {
   int written = snprintf(
     gpu->command, sizeof(gpu->command),
     "--push gpu.graph %.2f "
-    "--set gpu.top label='G %s' label.color=%s "
+    "--set gpu.top label='G%s' label.color=%s "
     "--set gpu.percent label='%d%%' label.color=%s "
     "--set gpu.popup.util label='%d%%' label.color=%s "
     "--set gpu.popup.stages label='%d%% / %d%%' "

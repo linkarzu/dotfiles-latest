@@ -13,7 +13,7 @@ ram_overlay_padding=$((-USAGE_GRAPH_WIDTH - PADDINGS))
 # RAM name and swap used, the swap color follows memory pressure.
 ram_top=(
   label.font="$USAGE_TOP_FONT"
-  label="R 0G"
+  label="R0G"
   label.y_offset=7
   label.width=$USAGE_GRAPH_WIDTH
   label.align=right

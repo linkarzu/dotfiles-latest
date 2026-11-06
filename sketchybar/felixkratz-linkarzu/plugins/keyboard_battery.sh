@@ -147,6 +147,10 @@ right_status="${right_time:---}"
 right_charged_label="$(charged_label "$right_charged")"
 ((usb_right)) && right_charged_label="now"
 
+# The bar caps it at 99 to fit next to a right half at 100, the popup has the real level.
+mouse_bar="$mouse"
+((mouse == 100)) && mouse_bar=99
+
 mouse_label="not connected"
 [[ -n "$mouse" ]] && mouse_label="$mouse% · ${mouse_time:---}"
 
@@ -155,7 +159,7 @@ sketchybar --set '/keyboard\..*/' drawing=on \
   --set keyboard.left label="$left" label.color="$(color "$left")" icon.color="$(color "$left")" \
   --set keyboard.right label="$right" label.color="$(color "$right")" icon.color="$(color "$right")" \
   --set keyboard.mouse_icon label.color="$(color "$mouse")" \
-  --set keyboard.mouse label="${mouse:---}" label.color="$(color "$mouse")" \
+  --set keyboard.mouse label="${mouse_bar:---}" label.color="$(color "$mouse")" \
   --set keyboard.popup.left label="$(level_label "$left" "$left_status")" label.color="$(color "$left")" \
   --set keyboard.popup.right label="$(level_label "$right" "$right_status")" label.color="$(color "$right")" \
   --set keyboard.popup.mouse label="$mouse_label" label.color="$(color "$mouse")" \

@@ -14,7 +14,7 @@ KEYBOARD_CLICK_SCRIPT="$PLUGIN_DIR/usage_click.sh keyboard.frame; sketchybar --t
 keyboard_frame_padding_right=4
 # Wider than the graphs. Under the keyboard name there are three columns: the layer
 # icon, the L and R rows, and the mouse.
-keyboard_width=55
+keyboard_width=51
 # A fixed width label ends at the right edge of the frame, so this puts the levels 23pt
 # from its left edge, with the L and R just before them.
 keyboard_levels_width=$((keyboard_width - 23))

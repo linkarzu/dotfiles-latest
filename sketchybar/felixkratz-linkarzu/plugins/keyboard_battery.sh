@@ -37,13 +37,14 @@ color() {
   esac
 }
 
-# Appends a row, keeping about a month of them.
+# Appends a row, keeping about a year of them at one row every 5 minutes, so a
+# charge that lasts for months doesn't lose its last charged date.
 record() {
   local file="$1"
   shift
   echo "$(date +%s) $*" >>"$file"
-  if (($(wc -l <"$file") > 12000)); then
-    tail -n 10000 "$file" >"$file.$$" && mv -f "$file.$$" "$file"
+  if (($(wc -l <"$file") > 120000)); then
+    tail -n 105000 "$file" >"$file.$$" && mv -f "$file.$$" "$file"
   fi
 }
 

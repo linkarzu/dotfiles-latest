@@ -8,10 +8,12 @@
 pid="$(ioreg -l -w 0 -d 1 | grep -o '"kCGSSessionSecureInputPID"=[0-9]*' | head -1 | grep -o '[0-9]*$')"
 
 if [[ -z "$pid" ]]; then
-  sketchybar --set "$NAME" drawing=off
+  sketchybar --set "$NAME" drawing=off --set "$NAME.app" drawing=off
   exit 0
 fi
 
 app="$(ps -o comm= -p "$pid")"
 app="${app##*/}"
-sketchybar --set "$NAME" drawing=on label="Secure Input: ${app:-PID $pid}"
+# Capped so a long name stays in the column of the "Secure Input" line above it.
+app="${app:0:11}"
+sketchybar --set "$NAME" drawing=on --set "$NAME.app" drawing=on label="${app:-PID $pid}"

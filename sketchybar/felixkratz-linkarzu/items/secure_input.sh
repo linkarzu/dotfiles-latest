@@ -26,7 +26,7 @@ secure_input=(
 )
 
 # Carries the lock too, centered on both lines to the left of the column.
-secure_input_icon_width=16
+secure_input_icon_width=12
 
 secure_input_app=(
   drawing=off

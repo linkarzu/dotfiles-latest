@@ -33,8 +33,9 @@ set_custom_text() {
   local banner_text="$1"
   local streaming_time="$2"
   local color="$3"
-  local scene_label_width=$((${#banner_text} * 7))
-  local time_label_width=$((${#streaming_time} * 5))
+  # Both rows are 8pt monospace, 4.8pt a character.
+  local scene_label_width=$((${#banner_text} * 48 / 10))
+  local time_label_width=$((${#streaming_time} * 48 / 10))
   local icon_padding_left=$((scene_label_width - time_label_width))
   local icon_padding_right=$((-scene_label_width))
 

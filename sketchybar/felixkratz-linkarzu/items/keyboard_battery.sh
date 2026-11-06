@@ -14,8 +14,10 @@ KEYBOARD_CLICK_SCRIPT="$PLUGIN_DIR/usage_click.sh keyboard.frame; sketchybar --t
 keyboard_frame_padding_right=4
 # Wider than the graphs. Under the keyboard name there are three columns: the layer
 # icon, the L and R rows, and the mouse.
-keyboard_levels_indent=16
-keyboard_width=53
+keyboard_width=55
+# A fixed width label ends at the right edge of the frame, so this puts the levels 23pt
+# from its left edge, with the L and R just before them.
+keyboard_levels_width=$((keyboard_width - 23))
 keyboard_overlay_padding=$((-keyboard_width + keyboard_frame_padding_right))
 keyboard_title_font="$FONT:Bold:8"
 keyboard_level_font="$FONT:Bold:8"
@@ -78,30 +80,38 @@ keyboard_title=(
 keyboard_left=(
   drawing=off
   label.font="$keyboard_level_font"
-  label="L--"
+  label="--"
   label.y_offset=0
-  label.width=$keyboard_width
+  label.width=$keyboard_levels_width
   label.align=left
-  label.padding_left=$keyboard_levels_indent
+  label.padding_left=0
   label.padding_right=0
   padding_right=$keyboard_overlay_padding
   width=0
-  icon.drawing=off
+  icon="L"
+  icon.font="$keyboard_level_font"
+  icon.y_offset=0
+  icon.padding_left=0
+  icon.padding_right=$USAGE_LETTER_GAP
   click_script="$KEYBOARD_CLICK_SCRIPT"
 )
 
 keyboard_right=(
   drawing=off
   label.font="$keyboard_level_font"
-  label="R--"
+  label="--"
   label.y_offset=-9
-  label.width=$keyboard_width
+  label.width=$keyboard_levels_width
   label.align=left
-  label.padding_left=$keyboard_levels_indent
+  label.padding_left=0
   label.padding_right=0
   padding_right=$keyboard_overlay_padding
   width=0
-  icon.drawing=off
+  icon="R"
+  icon.font="$keyboard_level_font"
+  icon.y_offset=-9
+  icon.padding_left=0
+  icon.padding_right=$USAGE_LETTER_GAP
   click_script="$KEYBOARD_CLICK_SCRIPT"
 )
 

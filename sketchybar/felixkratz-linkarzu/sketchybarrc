@@ -31,6 +31,9 @@ USAGE_GRAPH_BORDER_COLOR=0xff${linkarzu_color15#\#}
 # Bold, the font only has Regular and Bold, any other style falls back to Helvetica.
 USAGE_TOP_FONT="$FONT:Bold:8"
 USAGE_PERCENT_FONT="$FONT:Bold:9"
+# Gap after the letter on a graph or a keyboard row. Thinner than a space, which is a
+# full cell in a monospace font: the letter is the item's icon and the value its label.
+USAGE_LETTER_GAP=2
 
 # Keep the CPU process label within the graph, reserving three characters for "...".
 CPU_TOPPROC_MAX_CHARS=$(((USAGE_GRAPH_WIDTH - 9) / 3))

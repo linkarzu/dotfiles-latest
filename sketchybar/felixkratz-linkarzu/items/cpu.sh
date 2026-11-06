@@ -18,16 +18,19 @@ cpu_top_drawing=on
 # CPU name and the average of the P-core and E-core temperature sensors.
 cpu_top=(
   label.font="$USAGE_TOP_FONT"
-  label="C--°"
+  label="--°"
   label.drawing=$cpu_top_drawing
   label.y_offset=7
-  label.width=$USAGE_GRAPH_WIDTH
-  label.align=right
   label.padding_left=0
   label.padding_right=2
   padding_right=$cpu_overlay_padding
   width=0
-  icon.drawing=off
+  icon="C"
+  icon.font="$USAGE_TOP_FONT"
+  icon.drawing=$cpu_top_drawing
+  icon.y_offset=7
+  icon.padding_left=0
+  icon.padding_right=$USAGE_LETTER_GAP
   click_script="$CPU_CLICK_SCRIPT"
 )
 

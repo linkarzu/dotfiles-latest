@@ -50,8 +50,8 @@ record() {
 
 # Prints "<time left>|<last charged epoch>" for a history column, either empty
 # when it can't tell yet. A rise of 5 or more starts a charge, and being on USB
-# (usb_col, only the left half can show it) counts as one too. Last charged is
-# when the level last rose during that charge. Time left extrapolates from the
+# (usb_col) counts as one too. Last charged is when the level last rose during
+# that charge. Time left extrapolates from the
 # highest level since, once it has dropped 3 or more over at least a day, so
 # voltage noise doesn't produce wild estimates.
 estimate() {
@@ -107,15 +107,31 @@ if [[ -z "$name" ]]; then
   exit 0
 fi
 
-# The USB product name is the keyboard name, and only the central half has USB.
-usb=0
-ioreg -p IOUSB -l -w 0 | grep '"USB Product Name"' | grep -qi "$name" && usb=1
+# Either half can be on USB and both report the keyboard name as the product, so
+# only the serial number, unique to each half's chip, tells them apart. A serial
+# not listed here counts as the left half.
+right_half_usb_serials="111284EC2EE7C604"
+usb_left=0 usb_right=0
+while read -r serial; do
+  if [[ " $right_half_usb_serials " == *" $serial "* ]]; then
+    usb_right=1
+  else
+    usb_left=1
+  fi
+done < <(ioreg -p IOUSB -l -w 0 | awk -F'"' -v name="$name" '
+  /"USB Product Name"/ {
+    if (found) print serial
+    found = index(tolower($4), tolower(name)) > 0
+    serial = "none"
+  }
+  /"USB Serial Number"/ { serial = $4 }
+  END { if (found) print serial }')
 
 history="$cache_dir/$name-battery-history"
-record "$history" "$left" "$right" "$usb"
+record "$history" "$left" "$right" "$usb_left" "$usb_right"
 
 IFS='|' read -r left_time left_charged < <(estimate "$history" 2 4)
-IFS='|' read -r right_time right_charged < <(estimate "$history" 3)
+IFS='|' read -r right_time right_charged < <(estimate "$history" 3 5)
 IFS='|' read -r mouse_time mouse_charged < <(estimate "$mouse_history" 2)
 
 # Prints "<level>% · <status>", without the % when the level couldn't be read.
@@ -124,9 +140,13 @@ level_label() {
 }
 
 left_status="${left_time:---}"
-((usb)) && left_status="charging"
+((usb_left)) && left_status="charging"
 left_charged_label="$(charged_label "$left_charged")"
-((usb)) && left_charged_label="now"
+((usb_left)) && left_charged_label="now"
+right_status="${right_time:---}"
+((usb_right)) && right_status="charging"
+right_charged_label="$(charged_label "$right_charged")"
+((usb_right)) && right_charged_label="now"
 
 mouse_label="not connected"
 [[ -n "$mouse" ]] && mouse_label="$mouse% · ${mouse_time:---}"
@@ -136,9 +156,9 @@ sketchybar --set '/keyboard\..*/' drawing=on \
   --set keyboard.left label="L $left" label.color="$(color "$left")" \
   --set keyboard.right label="R $right" label.color="$(color "$right")" \
   --set keyboard.popup.left label="$(level_label "$left" "$left_status")" label.color="$(color "$left")" \
-  --set keyboard.popup.right label="$(level_label "$right" "${right_time:---}")" label.color="$(color "$right")" \
+  --set keyboard.popup.right label="$(level_label "$right" "$right_status")" label.color="$(color "$right")" \
   --set keyboard.popup.mouse label="$mouse_label" label.color="$(color "$mouse")" \
   --set keyboard.popup.left_charged label="$left_charged_label" \
-  --set keyboard.popup.right_charged label="$(charged_label "$right_charged")" \
+  --set keyboard.popup.right_charged label="$right_charged_label" \
   --set keyboard.popup.mouse_charged label="$(charged_label "$mouse_charged")" \
   --set keyboard.popup.updated label="$(date +%H:%M:%S)"

@@ -4,9 +4,9 @@
 
 # Shows the name and battery level of both halves of the connected Forager or
 # Toucan: green from 50%, yellow from 15%, red below that. Hidden when neither is
-# connected. The right click popup adds the Magic Mouse, and estimates from a history of the levels, per device. All of that is
-# kept outside the sketchybar config directory, because writing there would
-# hotload sketchybar.
+# connected. The right click popup adds the Magic Mouse, and estimates from a
+# history of the levels, per device. All of that is kept outside the sketchybar
+# config directory, because writing there would hotload sketchybar.
 source "$CONFIG_DIR/colors.sh"
 
 source_file="$(dirname "${BASH_SOURCE[0]}")/keyboard_battery.swift"

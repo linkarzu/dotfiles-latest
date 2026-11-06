@@ -2,7 +2,7 @@
 
 # Filename: ~/github/dotfiles-latest/sketchybar/felixkratz-linkarzu/items/keyboard_battery.sh
 # Battery level of the left and right halves of the connected Forager or Toucan,
-# left of the disk graph. ZMK updates the levels slowly and reading them is cheap
+# and of the Magic Mouse, left of the disk graph. ZMK updates the levels slowly and reading them is cheap
 # for the keyboard.
 
 # Right click any of these items for the details popup, which also has the Magic
@@ -12,8 +12,10 @@ KEYBOARD_CLICK_SCRIPT="$PLUGIN_DIR/usage_click.sh keyboard.frame; sketchybar --t
 # Shift zero-width labels back over the frame. Less than the graphs' overlay: a
 # plain item's right padding already counts, a graph's doesn't.
 keyboard_frame_padding_right=4
-# Wider than the graphs so the keyboard name and the layer icon fit.
-keyboard_width=34
+# Wider than the graphs. Under the keyboard name there are three columns: the layer
+# icon, the L and R rows, and the mouse.
+keyboard_mouse_column=15
+keyboard_width=49
 keyboard_overlay_padding=$((-keyboard_width + keyboard_frame_padding_right))
 keyboard_title_font="$FONT:Heavy:7"
 keyboard_level_font="$FONT:Heavy:8"
@@ -64,9 +66,9 @@ keyboard_title=(
   label="--"
   label.y_offset=9
   label.width=$keyboard_width
-  label.align=right
+  label.align=center
   label.padding_left=0
-  label.padding_right=2
+  label.padding_right=0
   padding_right=$keyboard_overlay_padding
   width=0
   icon.drawing=off
@@ -81,7 +83,7 @@ keyboard_left=(
   label.width=$keyboard_width
   label.align=right
   label.padding_left=0
-  label.padding_right=2
+  label.padding_right=$((keyboard_mouse_column + 2))
   padding_right=$keyboard_overlay_padding
   width=0
   icon.drawing=off
@@ -92,6 +94,36 @@ keyboard_right=(
   drawing=off
   label.font="$keyboard_level_font"
   label="R --"
+  label.y_offset=-9
+  label.width=$keyboard_width
+  label.align=right
+  label.padding_left=0
+  label.padding_right=$((keyboard_mouse_column + 2))
+  padding_right=$keyboard_overlay_padding
+  width=0
+  icon.drawing=off
+  click_script="$KEYBOARD_CLICK_SCRIPT"
+)
+
+keyboard_mouse_icon=(
+  drawing=off
+  label.font="$FONT:Bold:9"
+  label="󰍽"
+  label.y_offset=0
+  label.width=$keyboard_width
+  label.align=right
+  label.padding_left=0
+  label.padding_right=2
+  padding_right=$keyboard_overlay_padding
+  width=0
+  icon.drawing=off
+  click_script="$KEYBOARD_CLICK_SCRIPT"
+)
+
+keyboard_mouse=(
+  drawing=off
+  label.font="$keyboard_level_font"
+  label="--"
   label.y_offset=-9
   label.width=$keyboard_width
   label.align=right
@@ -140,7 +172,13 @@ sketchybar --add event keyboard_battery_update \
   --set keyboard.left "${keyboard_left[@]}" \
   \
   --add item keyboard.right right \
-  --set keyboard.right "${keyboard_right[@]}"
+  --set keyboard.right "${keyboard_right[@]}" \
+  \
+  --add item keyboard.mouse_icon right \
+  --set keyboard.mouse_icon "${keyboard_mouse_icon[@]}" \
+  \
+  --add item keyboard.mouse right \
+  --set keyboard.mouse "${keyboard_mouse[@]}"
 
 # Popup rows are filled in by the plugin on every update, the Layer row by the
 # process that fills in keyboard.mode.

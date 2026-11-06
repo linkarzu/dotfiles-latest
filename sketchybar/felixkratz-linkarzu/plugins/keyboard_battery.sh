@@ -3,9 +3,9 @@
 # Filename: ~/github/dotfiles-latest/sketchybar/felixkratz-linkarzu/plugins/keyboard_battery.sh
 
 # Shows the name and battery level of both halves of the connected Forager or
-# Toucan: green from 50%, yellow from 15%, red below that. Hidden when neither is
-# connected. The right click popup adds the Magic Mouse, and estimates from a
-# history of the levels, per device. All of that is kept outside the sketchybar
+# Toucan, and of the Magic Mouse: green from 50%, yellow from 15%, red below that.
+# Hidden when neither keyboard is connected. The right click popup adds estimates
+# from a history of the levels, per device. All of that is kept outside the sketchybar
 # config directory, because writing there would hotload sketchybar.
 source "$CONFIG_DIR/colors.sh"
 
@@ -154,6 +154,8 @@ sketchybar --set '/keyboard\..*/' drawing=on \
   --set keyboard.title label="$name" \
   --set keyboard.left label="L $left" label.color="$(color "$left")" \
   --set keyboard.right label="R $right" label.color="$(color "$right")" \
+  --set keyboard.mouse_icon label.color="$(color "$mouse")" \
+  --set keyboard.mouse label="${mouse:---}" label.color="$(color "$mouse")" \
   --set keyboard.popup.left label="$(level_label "$left" "$left_status")" label.color="$(color "$left")" \
   --set keyboard.popup.right label="$(level_label "$right" "$right_status")" label.color="$(color "$right")" \
   --set keyboard.popup.mouse label="$mouse_label" label.color="$(color "$mouse")" \

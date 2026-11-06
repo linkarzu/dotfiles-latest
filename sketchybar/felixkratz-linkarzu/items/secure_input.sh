@@ -22,6 +22,7 @@ secure_input=(
   label.padding_right=0
   width=0
   icon.drawing=off
+  click_script="$PLUGIN_DIR/secure_input_click.sh"
   script="$PLUGIN_DIR/secure_input.sh"
 )
 
@@ -45,6 +46,7 @@ secure_input_app=(
   label.padding_right=0
   padding_left=12
   width=$((secure_input_width + secure_input_icon_width))
+  click_script="$PLUGIN_DIR/secure_input_click.sh"
 )
 
 sketchybar --add item secure_input right \

@@ -7,3 +7,4 @@ node_modules
 AGENTS.md
 .agents
 bun.lock
+hex.d.ts

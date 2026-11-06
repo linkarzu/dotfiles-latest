@@ -21,15 +21,16 @@ keyboard_level_font="$FONT:Heavy:8"
 # The plugin starts this again, see plugins/keyboard_battery.sh.
 pkill -f '/keyboard-battery --watch-layer$'
 
-# Filled in by that process: the macOS or Windows logo for the keyboard's layer.
+# Filled in by that process: the macOS or Windows logo for the keyboard's layer,
+# in the free space left of the L and R rows, centered on both.
 keyboard_mode=(
   drawing=off
-  label.font="$FONT:Bold:8"
+  label.font="$FONT:Bold:13"
   label=""
-  label.y_offset=9
+  label.y_offset=-4
   label.width=$keyboard_width
   label.align=left
-  label.padding_left=2
+  label.padding_left=3
   label.padding_right=0
   padding_right=$keyboard_overlay_padding
   width=0

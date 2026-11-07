@@ -331,7 +331,7 @@ class YouTubeMembersSceneTests(unittest.TestCase):
         members_path = Path(directory) / "members.json"
         members_path.write_text(json.dumps({
             "pages": [{"name": "premium"}, {"name": "members"}],
-            "ceoSpotlight": {"seconds": 5, "ceos": [{"channelId": f"UC{index}"} for index in range(ceo_count)]},
+            "ceoSpotlight": {"ceos": [{"channelId": f"UC{index}", "seconds": 5} for index in range(ceo_count)]},
         }), encoding="utf-8")
         return members_path
 
@@ -423,12 +423,15 @@ class YouTubeMembersSceneTests(unittest.TestCase):
     def test_malformed_spotlight_data_plays_nothing(self):
         with tempfile.TemporaryDirectory() as temporary_directory:
             members_path = Path(temporary_directory) / "members.json"
-            for spotlight in (None, "x", {"seconds": "5", "ceos": [{}]}, {"seconds": True, "ceos": [{}]},
-                              {"seconds": 5, "ceos": "x"}, {"seconds": -1, "ceos": [{}]}):
+            for spotlight in (None, "x", {"ceos": [{}]}, {"ceos": [{"seconds": "5"}]}, {"ceos": [{"seconds": True}]},
+                              {"ceos": "x"}, {"ceos": [{"seconds": 7}, {"seconds": -1}]}):
                 with self.subTest(spotlight=spotlight):
                     members_path.write_text(json.dumps({"ceoSpotlight": spotlight}), encoding="utf-8")
                     with patch.object(youtube_members_scene, "MEMBERS_JSON_PATH", members_path):
                         self.assertEqual(youtube_members_scene.spotlight_seconds(), 0.0)
+            members_path.write_text(json.dumps({"ceoSpotlight": {"ceos": [{"seconds": 7}, {"seconds": 5}]}}), encoding="utf-8")
+            with patch.object(youtube_members_scene, "MEMBERS_JSON_PATH", members_path):
+                self.assertEqual(youtube_members_scene.spotlight_seconds(), 12.0)
 
     def test_refresh_resets_active_scene_to_page_one(self):
         client = Client("youtube-members")

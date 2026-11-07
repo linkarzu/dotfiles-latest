@@ -106,13 +106,12 @@ def page_names() -> tuple[str, ...]:
 def spotlight_seconds() -> float:
     """How long the CEO spotlights play between the premium and members pages; 0 when there are none."""
     try:
-        spotlight = json.loads(MEMBERS_JSON_PATH.read_text(encoding="utf-8")).get("ceoSpotlight")
-        seconds, ceos = spotlight["seconds"], spotlight["ceos"]
+        seconds = [ceo["seconds"] for ceo in json.loads(MEMBERS_JSON_PATH.read_text(encoding="utf-8"))["ceoSpotlight"]["ceos"]]
     except (FileNotFoundError, json.JSONDecodeError, OSError, AttributeError, KeyError, TypeError):
         return 0.0
-    if not isinstance(seconds, (int, float)) or isinstance(seconds, bool) or seconds <= 0 or not isinstance(ceos, list):
+    if not all(isinstance(value, (int, float)) and not isinstance(value, bool) and value > 0 for value in seconds):
         return 0.0
-    return float(seconds) * len(ceos)
+    return float(sum(seconds))
 
 
 def spotlight_playing() -> bool:

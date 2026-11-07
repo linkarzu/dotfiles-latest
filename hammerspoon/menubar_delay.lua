@@ -3,7 +3,7 @@
 -- the top edge, and only lets it touch the edge after it has rested there for
 -- M.delay seconds.
 local M = {}
-M.delay = 0.7
+M.delay = 2
 -- The cursor has to go this far down before the menu bar counts as hidden again.
 M.releaseDistance = 50
 -- Left free so the top hot corners still work.

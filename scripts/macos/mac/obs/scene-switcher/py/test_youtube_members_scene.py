@@ -74,6 +74,14 @@ class YouTubeMembersSceneTests(unittest.TestCase):
         pages = patch.object(youtube_members_scene, "MEMBERS_JSON_PATH", Path("/nonexistent/members.json"))
         pages.start()
         self.addCleanup(pages.stop)
+        # Keep the CEO spotlight timer off the real cache.
+        spotlight_directory = tempfile.TemporaryDirectory()
+        self.addCleanup(spotlight_directory.cleanup)
+        spotlight_state = patch.object(
+            youtube_members_scene, "SPOTLIGHT_STATE_PATH", Path(spotlight_directory.name) / "spotlight-until.txt"
+        )
+        spotlight_state.start()
+        self.addCleanup(spotlight_state.stop)
 
     def test_outdated_new_tags_regenerate_unchanged_csv(self):
         client = Client("youtube-members")
@@ -318,6 +326,109 @@ class YouTubeMembersSceneTests(unittest.TestCase):
         self.assertFalse(switched)
         self.assertEqual(page, 1)
         self.assertEqual(client.vendor_calls[0][2]["event_data"]["page"], 1)
+
+    def spotlight_members_json(self, directory, ceo_count=2):
+        members_path = Path(directory) / "members.json"
+        members_path.write_text(json.dumps({
+            "pages": [{"name": "premium"}, {"name": "members"}],
+            "ceoSpotlight": {"seconds": 5, "ceos": [{"channelId": f"UC{index}"} for index in range(ceo_count)]},
+        }), encoding="utf-8")
+        return members_path
+
+    def test_second_press_plays_ceo_spotlights_and_a_press_during_them_skips_to_members(self):
+        client = LocalFileClient("youtube-members")
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            state_path = Path(temporary_directory) / "page.txt"
+            state_path.write_text("0\n", encoding="utf-8")
+            html_path = Path(temporary_directory) / "index.html"
+            html_path.write_text("overlay", encoding="utf-8")
+            members_path = self.spotlight_members_json(temporary_directory)
+            with patch.object(youtube_members_scene, "PAGE_STATE_PATH", state_path), patch.object(
+                youtube_members_scene, "MEMBERS_HTML_PATH", html_path
+            ), patch.object(youtube_members_scene, "MEMBERS_JSON_PATH", members_path), patch.object(
+                youtube_members_scene.time, "time", return_value=1000.0
+            ):
+                played = youtube_members_scene.handle_press(client)[0]
+                until = float(youtube_members_scene.SPOTLIGHT_STATE_PATH.read_text(encoding="utf-8"))
+                skipped = youtube_members_scene.handle_press(client)[0]
+                skipped_state = youtube_members_scene.SPOTLIGHT_STATE_PATH.exists()
+                wrapped = youtube_members_scene.handle_press(client)[0]
+
+        self.assertEqual((played, skipped, wrapped), (1, 1, 0))
+        self.assertEqual(until, 1010.0)
+        self.assertFalse(skipped_state)
+        self.assertEqual(
+            [(call[2]["event_data"]["page"], call[2]["event_data"]["spotlight"]) for call in client.vendor_calls],
+            [(1, True), (1, False), (0, False)],
+        )
+
+    def test_press_after_spotlights_end_advances_normally(self):
+        client = LocalFileClient("youtube-members")
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            state_path = Path(temporary_directory) / "page.txt"
+            state_path.write_text("1\n", encoding="utf-8")
+            html_path = Path(temporary_directory) / "index.html"
+            html_path.write_text("overlay", encoding="utf-8")
+            members_path = self.spotlight_members_json(temporary_directory)
+            youtube_members_scene.SPOTLIGHT_STATE_PATH.write_text("999.0\n", encoding="utf-8")
+            with patch.object(youtube_members_scene, "PAGE_STATE_PATH", state_path), patch.object(
+                youtube_members_scene, "MEMBERS_HTML_PATH", html_path
+            ), patch.object(youtube_members_scene, "MEMBERS_JSON_PATH", members_path), patch.object(
+                youtube_members_scene.time, "time", return_value=1000.0
+            ):
+                page = youtube_members_scene.handle_press(client)[0]
+
+        self.assertEqual(page, 0)
+        self.assertEqual(client.vendor_calls[0][2]["event_data"]["spotlight"], False)
+
+    def test_spotlights_stay_off_without_ceos_and_in_the_studio_mode_preview(self):
+        for ceo_count, preview in ((0, False), (2, True)):
+            with self.subTest(ceo_count=ceo_count, preview=preview):
+                client = Client("youtube-members")
+                with tempfile.TemporaryDirectory() as temporary_directory:
+                    state_path = Path(temporary_directory) / "page.txt"
+                    state_path.write_text("0\n", encoding="utf-8")
+                    html_path = Path(temporary_directory) / "index.html"
+                    html_path.write_text("overlay", encoding="utf-8")
+                    members_path = self.spotlight_members_json(temporary_directory, ceo_count)
+                    with patch.object(youtube_members_scene, "PAGE_STATE_PATH", state_path), patch.object(
+                        youtube_members_scene, "MEMBERS_HTML_PATH", html_path
+                    ), patch.object(youtube_members_scene, "MEMBERS_JSON_PATH", members_path), patch.object(
+                        youtube_members_scene.studio_mode, "current_scene", return_value="youtube-members"
+                    ), patch.object(youtube_members_scene.studio_mode, "request_scene"):
+                        page = youtube_members_scene.handle_press(client, preview=preview)[0]
+
+                self.assertEqual(page, 1)
+                self.assertNotIn("spotlight=", client.input_calls[0]["settings"]["url"])
+                self.assertFalse(youtube_members_scene.SPOTLIGHT_STATE_PATH.exists())
+
+    def test_url_source_plays_spotlights_through_the_page_query(self):
+        client = Client("youtube-members")
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            state_path = Path(temporary_directory) / "page.txt"
+            state_path.write_text("0\n", encoding="utf-8")
+            html_path = Path(temporary_directory) / "index.html"
+            html_path.write_text("overlay", encoding="utf-8")
+            members_path = self.spotlight_members_json(temporary_directory)
+            with patch.object(youtube_members_scene, "PAGE_STATE_PATH", state_path), patch.object(
+                youtube_members_scene, "MEMBERS_HTML_PATH", html_path
+            ), patch.object(youtube_members_scene, "MEMBERS_JSON_PATH", members_path):
+                youtube_members_scene.handle_press(client)
+                youtube_members_scene.handle_press(client)
+
+        self.assertIn("spotlight=play", client.input_calls[0]["settings"]["url"])
+        self.assertIn("page=members", client.input_calls[0]["settings"]["url"])
+        self.assertNotIn("spotlight=", client.input_calls[1]["settings"]["url"])
+
+    def test_malformed_spotlight_data_plays_nothing(self):
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            members_path = Path(temporary_directory) / "members.json"
+            for spotlight in (None, "x", {"seconds": "5", "ceos": [{}]}, {"seconds": True, "ceos": [{}]},
+                              {"seconds": 5, "ceos": "x"}, {"seconds": -1, "ceos": [{}]}):
+                with self.subTest(spotlight=spotlight):
+                    members_path.write_text(json.dumps({"ceoSpotlight": spotlight}), encoding="utf-8")
+                    with patch.object(youtube_members_scene, "MEMBERS_JSON_PATH", members_path):
+                        self.assertEqual(youtube_members_scene.spotlight_seconds(), 0.0)
 
     def test_refresh_resets_active_scene_to_page_one(self):
         client = Client("youtube-members")

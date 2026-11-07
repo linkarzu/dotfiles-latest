@@ -34,6 +34,8 @@ POLL_INTERVAL = 0.1
 SKETCHYBAR_VERIFY_TIMEOUT = 5.0
 CACHE_DIR = Path("~/.cache/obs-youtube-members").expanduser()
 PAGE_STATE_PATH = CACHE_DIR / "page.txt"
+# Wall-clock time the CEO spotlights end; a press before then skips to the members page.
+SPOTLIGHT_STATE_PATH = CACHE_DIR / "spotlight-until.txt"
 LOADED_OVERLAY_MTIME_PATH = CACHE_DIR / "loaded-overlay-mtime.txt"
 LOCK_PATH = CACHE_DIR / "page.lock"
 BANNER_PATH = Path("~/github/dotfiles-latest/youtube-banner.txt").expanduser()
@@ -99,6 +101,34 @@ def page_names() -> tuple[str, ...]:
     if names[: len(MEMBER_PAGE_NAMES)] != MEMBER_PAGE_NAMES or not all(isinstance(name, str) for name in names):
         return MEMBER_PAGE_NAMES
     return names
+
+
+def spotlight_seconds() -> float:
+    """How long the CEO spotlights play between the premium and members pages; 0 when there are none."""
+    try:
+        spotlight = json.loads(MEMBERS_JSON_PATH.read_text(encoding="utf-8")).get("ceoSpotlight")
+        seconds, ceos = spotlight["seconds"], spotlight["ceos"]
+    except (FileNotFoundError, json.JSONDecodeError, OSError, AttributeError, KeyError, TypeError):
+        return 0.0
+    if not isinstance(seconds, (int, float)) or isinstance(seconds, bool) or seconds <= 0 or not isinstance(ceos, list):
+        return 0.0
+    return float(seconds) * len(ceos)
+
+
+def spotlight_playing() -> bool:
+    try:
+        return time.time() < float(SPOTLIGHT_STATE_PATH.read_text(encoding="utf-8").strip())
+    except (FileNotFoundError, ValueError, OSError):
+        return False
+
+
+def write_spotlight_until(until: Optional[float]) -> None:
+    if until is None:
+        SPOTLIGHT_STATE_PATH.unlink(missing_ok=True)
+        return
+    temporary_path = SPOTLIGHT_STATE_PATH.with_suffix(".tmp")
+    temporary_path.write_text(f"{until}\n", encoding="utf-8")
+    temporary_path.replace(SPOTLIGHT_STATE_PATH)
 
 
 def read_page() -> int:
@@ -177,10 +207,13 @@ def browser_url(client) -> str:
     return url
 
 
-def page_url(url: str, page: int, overlay_mtime: int) -> str:
+def page_url(url: str, page: int, overlay_mtime: int, spotlight: bool = False) -> str:
     parts = urlsplit(url)
     query = dict(parse_qsl(parts.query, keep_blank_values=True))
     query.update(page=page_names()[page], overlay_mtime=str(overlay_mtime))
+    query.pop("spotlight", None)
+    if spotlight:
+        query["spotlight"] = "play"
     return urlunsplit((parts.scheme, parts.netloc, parts.path, urlencode(query), parts.fragment))
 
 
@@ -189,6 +222,7 @@ def set_and_verify_browser_page(
     page: int,
     overlay_mtime: int,
     *,
+    spotlight: bool = False,
     timeout: Optional[float] = None,
     poll_interval: Optional[float] = None,
 ) -> None:
@@ -206,7 +240,7 @@ def set_and_verify_browser_page(
                 "emit_event",
                 {
                     "event_name": PAGE_EVENT,
-                    "event_data": {"scene_name": SCENE_NAME, "page": page},
+                    "event_data": {"scene_name": SCENE_NAME, "page": page, "spotlight": spotlight},
                 },
             )
         except Exception as error:
@@ -223,7 +257,7 @@ def set_and_verify_browser_page(
     url = settings.get("url")
     if not isinstance(url, str) or not url:
         raise RuntimeError("OBS members browser input URL is unavailable.")
-    target_url = page_url(url, page, overlay_mtime)
+    target_url = page_url(url, page, overlay_mtime, spotlight)
     print(
         "phase=members-scene step=browser-page status=start "
         f"expected_page={page} overlay_mtime={overlay_mtime} timeout_seconds={timeout:g}"
@@ -426,10 +460,22 @@ def handle_press(
         if overlay_refreshed:
             page = 0
             print(f"[+] Reset {SCENE_NAME} to page 1 after refresh")
+        elif read_page() == 1 and spotlight_playing():
+            page = 1
+            set_and_verify_browser_page(client, page, overlay_mtime)
+            print(f"[+] Skipped the CEO spotlights to page {page + 1}")
         else:
             page = (read_page() + 1) % len(page_names())
-            set_and_verify_browser_page(client, page, overlay_mtime)
+            # On air, the premium page leads into each CEO's spotlight before the members page.
+            seconds = spotlight_seconds() if page == 1 and not preview else 0.0
+            set_and_verify_browser_page(client, page, overlay_mtime, spotlight=seconds > 0)
+            if seconds:
+                write_spotlight_until(time.time() + seconds)
+                print(f"[+] Playing the CEO spotlights ({seconds:g} s), then page {page + 1}")
+                write_page(page)
+                return page, switched_scene
             print(f"[+] Set {SCENE_NAME} to page {page + 1}")
+    write_spotlight_until(None)
     write_page(page)
     return page, switched_scene
 

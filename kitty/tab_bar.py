@@ -154,10 +154,10 @@ def draw_tab(
                 screen.draw(sess_name)
             # Digits are as tall as capitals, so at full size the zoom level
             # looks bigger than the lowercase session name, draw it smaller.
-            # The spaces around it are drawn small too, a full cell gap looks
-            # too wide next to the small text
+            # It goes right after the session name, the glyphs' own spacing
+            # is enough of a gap, and the space after it is drawn small too
             if zoom:
-                draw_small(screen, f" {zoom} " if sess_name else f"{zoom} ")
+                draw_small(screen, f"{zoom} ")
             else:
                 screen.draw(" ")
             # draw_tab_with_powerline only pads and opens a tab that starts at

@@ -111,12 +111,13 @@ def zoom_label(os_window_id: int) -> str:
 # through the screen's parser. Without w every character gets a full cell and
 # the smaller glyphs end up spaced out, so the whole text goes in one block
 # just wide enough for it, w maxes out at 7 cells, plenty for a zoom level.
-# Aligned to the bottom of the cell, centered it floats above the line the
-# full size text sits on, the protocol has no baseline alignment
+# Vertically centered, the protocol has no baseline alignment, so it floats
+# a bit above the line the full size text sits on, at the bottom of the cell
+# it sank below it instead
 # https://sw.kovidgoyal.net/kitty/text-sizing-protocol/
 def draw_small(screen: Screen, text: str, num: int = 1, den: int = 2) -> None:
     width = min(7, math.ceil(len(text) * num / den))
-    data = memoryview(f"\x1b]66;n={num}:d={den}:w={width}:v=1;{text}\x07".encode())
+    data = memoryview(f"\x1b]66;n={num}:d={den}:w={width}:v=2;{text}\x07".encode())
     while data:
         dest = screen.test_create_write_buffer()
         data = data[screen.test_commit_write_buffer(data, dest):]

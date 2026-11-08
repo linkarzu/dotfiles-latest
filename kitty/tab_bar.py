@@ -105,6 +105,18 @@ def zoom_label(os_window_id: int) -> str:
     return "" if zoom == 100 else f"{zoom}%"
 
 
+# Draws text at a fraction of the font size with the text sizing protocol
+# (OSC 66), one cell per character, vertically centered. screen.draw has no
+# way to set the size, so the escape code is fed through the screen's parser
+# https://sw.kovidgoyal.net/kitty/text-sizing-protocol/
+def draw_small(screen: Screen, text: str, num: int = 3, den: int = 4) -> None:
+    data = memoryview(f"\x1b]66;n={num}:d={den}:v=2;{text}\x07".encode())
+    while data:
+        dest = screen.test_create_write_buffer()
+        data = data[screen.test_commit_write_buffer(data, dest):]
+        screen.test_parse_written_data()
+
+
 def draw_tab(
     draw_data: DrawData,
     screen: Screen,
@@ -118,15 +130,9 @@ def draw_tab(
     # Draw the session name once, before the first tab, with the zoom level
     # next to it when it isn't 100%
     if index == 1:
-        sess_name = " ".join(
-            part
-            for part in (
-                current_session_name(draw_data.os_window_id),
-                zoom_label(draw_data.os_window_id),
-            )
-            if part
-        )
-        if sess_name:
+        sess_name = current_session_name(draw_data.os_window_id)
+        zoom = zoom_label(draw_data.os_window_id)
+        if sess_name or zoom:
             orig = (screen.cursor.fg, screen.cursor.bg, screen.cursor.bold, screen.cursor.italic)
             tab_bg = orig[1]
             # color4 (linkarzu_color04) as the background, with the terminal
@@ -136,7 +142,14 @@ def draw_tab(
             screen.cursor.bg = sess_bg
             screen.cursor.bold = True
             screen.cursor.italic = False
-            screen.draw(f" {sess_name} ")
+            screen.draw(" ")
+            if sess_name:
+                screen.draw(f"{sess_name} ")
+            # Digits are as tall as capitals, so at full size the zoom level
+            # looks bigger than the lowercase session name, draw it smaller
+            if zoom:
+                draw_small(screen, zoom)
+                screen.draw(" ")
             # draw_tab_with_powerline only pads and opens a tab that starts at
             # column 0, so open the first tab here with a powerline arrow and a
             # space, otherwise it starts with a flat edge and no padding

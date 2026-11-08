@@ -115,7 +115,7 @@ def zoom_label(os_window_id: int) -> str:
 # baseline alignment, centered it floated just above the line the full size
 # text sits on and at the bottom it sank below it
 # https://sw.kovidgoyal.net/kitty/text-sizing-protocol/
-def draw_small(screen: Screen, text: str, num: int = 1, den: int = 2) -> None:
+def draw_small(screen: Screen, text: str, num: int = 3, den: int = 4) -> None:
     width = min(7, math.ceil(len(text) * num / den))
     data = memoryview(f"\x1b]66;n={num}:d={den}:w={width}:v=0;{text}\x07".encode())
     while data:

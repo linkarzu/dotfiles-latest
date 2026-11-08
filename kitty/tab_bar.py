@@ -6,7 +6,7 @@
 import os
 import traceback
 
-from kitty.fast_data_types import Screen, get_boss, get_options
+from kitty.fast_data_types import Screen, get_boss, get_options, os_window_font_size
 from kitty.tab_bar import (
     DrawData,
     ExtraData,
@@ -92,6 +92,19 @@ def current_session_name(os_window_id: int) -> str:
     return tab.active_session_name or tab.created_in_session_name
 
 
+# Zoom level of the OS window, its current font size against font_size in
+# kitty.conf, empty at 100% so it only shows after zooming with
+# change_font_size. Changing the font size resizes the window, which redraws
+# the tab bar, so this stays up to date
+def zoom_label(os_window_id: int) -> str:
+    default = get_options().font_size
+    current = os_window_font_size(os_window_id)
+    if not default or not current:
+        return ""
+    zoom = round(current / default * 100)
+    return "" if zoom == 100 else f"{zoom}%"
+
+
 def draw_tab(
     draw_data: DrawData,
     screen: Screen,
@@ -102,9 +115,17 @@ def draw_tab(
     is_last: bool,
     extra_data: ExtraData,
 ) -> int:
-    # Draw the session name once, before the first tab
+    # Draw the session name once, before the first tab, with the zoom level
+    # next to it when it isn't 100%
     if index == 1:
-        sess_name = current_session_name(draw_data.os_window_id)
+        sess_name = " ".join(
+            part
+            for part in (
+                current_session_name(draw_data.os_window_id),
+                zoom_label(draw_data.os_window_id),
+            )
+            if part
+        )
         if sess_name:
             orig = (screen.cursor.fg, screen.cursor.bg, screen.cursor.bold, screen.cursor.italic)
             tab_bg = orig[1]

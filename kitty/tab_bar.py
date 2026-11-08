@@ -118,9 +118,15 @@ def draw_tab(
     # Draw the session name once, before the first tab, with the zoom level
     # next to it when it isn't 100%
     if index == 1:
-        sess_name = current_session_name(draw_data.os_window_id)
-        zoom = zoom_label(draw_data.os_window_id)
-        if sess_name or zoom:
+        sess_name = " ".join(
+            part
+            for part in (
+                current_session_name(draw_data.os_window_id),
+                zoom_label(draw_data.os_window_id),
+            )
+            if part
+        )
+        if sess_name:
             orig = (screen.cursor.fg, screen.cursor.bg, screen.cursor.bold, screen.cursor.italic)
             tab_bg = orig[1]
             # color4 (linkarzu_color04) as the background, with the terminal
@@ -130,14 +136,7 @@ def draw_tab(
             screen.cursor.bg = sess_bg
             screen.cursor.bold = True
             screen.cursor.italic = False
-            screen.draw(" ")
-            if sess_name:
-                screen.draw(f"{sess_name} ")
-            # Digits are as tall as capitals, so a bold zoom level next to the
-            # lowercase session name looks bigger, regular weight evens it out
-            if zoom:
-                screen.cursor.bold = False
-                screen.draw(f"{zoom} ")
+            screen.draw(f" {sess_name} ")
             # draw_tab_with_powerline only pads and opens a tab that starts at
             # column 0, so open the first tab here with a powerline arrow and a
             # space, otherwise it starts with a flat edge and no padding

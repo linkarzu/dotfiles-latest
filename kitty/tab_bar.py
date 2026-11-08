@@ -150,11 +150,14 @@ def draw_tab(
             screen.cursor.italic = False
             screen.draw(" ")
             if sess_name:
-                screen.draw(f"{sess_name} ")
+                screen.draw(sess_name)
             # Digits are as tall as capitals, so at full size the zoom level
-            # looks bigger than the lowercase session name, draw it smaller
+            # looks bigger than the lowercase session name, draw it smaller.
+            # The spaces around it are drawn small too, a full cell gap looks
+            # too wide next to the small text
             if zoom:
-                draw_small(screen, zoom)
+                draw_small(screen, f" {zoom} " if sess_name else f"{zoom} ")
+            else:
                 screen.draw(" ")
             # draw_tab_with_powerline only pads and opens a tab that starts at
             # column 0, so open the first tab here with a powerline arrow and a

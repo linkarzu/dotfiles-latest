@@ -3,6 +3,7 @@
 # Requires "tab_bar_style custom" in kitty.conf
 # https://github.com/kovidgoyal/kitty/issues/8911#issuecomment-4806908910
 
+import math
 import os
 import traceback
 
@@ -106,11 +107,15 @@ def zoom_label(os_window_id: int) -> str:
 
 
 # Draws text at a fraction of the font size with the text sizing protocol
-# (OSC 66), one cell per character, vertically centered. screen.draw has no
-# way to set the size, so the escape code is fed through the screen's parser
+# (OSC 66), vertically centered. screen.draw has no way to set the size, so the
+# escape code is fed through the screen's parser. Without w every character
+# gets a full cell and the smaller glyphs end up spaced out, so the whole text
+# goes in one block just wide enough for it, w maxes out at 7 cells, plenty
+# for a zoom level
 # https://sw.kovidgoyal.net/kitty/text-sizing-protocol/
 def draw_small(screen: Screen, text: str, num: int = 3, den: int = 4) -> None:
-    data = memoryview(f"\x1b]66;n={num}:d={den}:v=2;{text}\x07".encode())
+    width = min(7, math.ceil(len(text) * num / den))
+    data = memoryview(f"\x1b]66;n={num}:d={den}:w={width}:v=2;{text}\x07".encode())
     while data:
         dest = screen.test_create_write_buffer()
         data = data[screen.test_commit_write_buffer(data, dest):]

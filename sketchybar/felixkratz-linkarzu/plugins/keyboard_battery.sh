@@ -79,12 +79,12 @@ estimate() {
     }' "$1"
 }
 
-# Prints a last charged epoch as "Nov 2 09:14 · 3d ago".
+# Prints a last charged epoch as "Nov 2 09:14 · 3d 11h ago".
 charged_label() {
   [[ -z "$1" ]] && echo "--" && return
   local ago=$(($(date +%s) - $1))
   if ((ago >= 86400)); then
-    ago="$((ago / 86400))d"
+    ago="$((ago / 86400))d $((ago % 86400 / 3600))h"
   elif ((ago >= 3600)); then
     ago="$((ago / 3600))h"
   else

@@ -9,7 +9,7 @@ set -euo pipefail
 qat_config="$HOME/github/dotfiles-latest/kitty/quick-access-terminal-center.conf"
 kitty_bin="/Applications/kitty.app/Contents/MacOS/kitty"
 zoxide_script="$HOME/github/dotfiles-latest/kitty/scripts/kitty-zoxide-session.sh"
-rex_session_script="$HOME/github/dotfiles-latest/scripts/macos/mac/misc/551-skhdRexSession.sh"
+rex_session_script="$HOME/github/dotfiles-latest/scripts/macos/mac/misc/554-skhdRexSession.sh"
 fzf_colors_file="$HOME/github/dotfiles-latest/colorscheme/active/active-fzf-colors.sh"
 script_path="$HOME/github/dotfiles-latest/scripts/macos/mac/misc/559-skhdRexZoxide.sh"
 

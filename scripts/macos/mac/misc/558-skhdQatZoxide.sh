@@ -53,8 +53,10 @@ launch_zoxide_qat() {
     exit 1
   }
 
+  # A background launch otherwise gets the Kitty server's PATH, which lacks
+  # Homebrew (fzf) when macOS opened Kitty, so pass skhd's PATH along.
   "$kitty_bin" @ --to "unix:${sock}" \
-    action launch --type=background kitten quick-access-terminal \
+    action launch --type=background --env "PATH=$PATH" kitten quick-access-terminal \
     --config "$qat_config" \
     --instance-group "$zoxide_group" \
     /bin/bash "$qat_script" --pick

@@ -108,6 +108,7 @@ create_symlink ~/github/dotfiles-latest/opencode ~/.config/opencode
 create_symlink ~/github/dotfiles-latest/hex ~/.config/hex
 create_symlink ~/github/dotfiles-latest/skhd ~/.config/skhd
 create_symlink ~/github/dotfiles-latest/emacs ~/.config/emacs
+create_symlink ~/github/dotfiles-latest/rex ~/.config/rex
 
 # # This is on the other repo where I keep my ssh config files
 # I commented this as I don't have access to this repo in all the hosts

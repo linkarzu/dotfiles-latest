@@ -1,0 +1,6 @@
+-- Rex config, read by the Rex server
+-- Docs: https://www.superlogical.com/rex/docs/customize/config
+-- Reload after changes: rex config reload (check first: rex config check)
+--
+-- The font (JetBrainsMono Nerd Font Mono, 20, same as kitty) is set in
+-- Settings > Terminal > Typography; app settings can't go in this file yet

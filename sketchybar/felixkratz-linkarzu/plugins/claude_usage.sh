@@ -4,11 +4,13 @@
 
 # Shows the Claude session (5 hour) and weekly usage, the same numbers as /usage
 # in Claude Code, and the hours:minutes left until each resets: white, yellow
-# above 65%, red above 90%. Runs every minute so the countdown moves, but only
-# asks the API again every 5 minutes, after a reset, or on a click. Uses the
-# OAuth token Claude Code keeps in the keychain; when it has expired the old
-# numbers stay until Claude Code refreshes it. The response is kept outside the
-# sketchybar config directory, because writing there would hotload sketchybar.
+# above 65%, red above 90%. The popup has every limit, including the per model
+# weekly ones, with the local time each resets. Runs every minute so the
+# countdown moves, but only asks the API again every 5 minutes, after a reset,
+# or on a click. Uses the OAuth token Claude Code keeps in the keychain; when it
+# has expired the old numbers stay until Claude Code refreshes it. The response
+# is kept outside the sketchybar config directory, because writing there would
+# hotload sketchybar.
 source "$CONFIG_DIR/colors.sh"
 
 cache_dir="${XDG_CACHE_HOME:-$HOME/.cache}/sketchybar"
@@ -44,28 +46,36 @@ if [[ -f "$cache" ]]; then
     | select(. <= $now)' "$cache" 2>/dev/null | wc -l | tr -d ' ')"
 fi
 
-if [[ "$SENDER" == "mouse.clicked" || "$SENDER" == "system_woke" ]] || ((age >= max_age || passed > 0)); then
+if [[ "$SENDER" == "claude_usage_update" || "$SENDER" == "system_woke" ]] || ((age >= max_age || passed > 0)); then
   fetch
 fi
 
 [[ -f "$cache" ]] || exit 0
 
-# Prints "<percent> <hours:minutes left>" for a window, "-- --" when it isn't in
-# the response, and the time as "--" when nothing has started it yet.
-row() {
-  jq -r --arg key "$1" --argjson now "$now" '
-    .[$key] as $w
-    | if $w == null then "-- --"
-      else
-        ($w.utilization // 0 | round | tostring) + " " +
-        (if $w.resets_at == null then "--"
-         else ($w.resets_at | sub("\\.[0-9]+"; "") | sub("\\+00:00$"; "Z") | fromdateiso8601) - $now
-           | if . < 0 then 0 else . end
-           | (. / 60 | ceil) as $m
-           | "\($m / 60 | floor):\($m % 60 | tostring | if length < 2 then "0" + . else . end)"
-         end)
-      end' "$cache"
-}
+# One tab separated row per limit: name, percent, reset time, hours:minutes left.
+# The reset time is the clock time when it's within a day, with the weekday
+# otherwise. Uses .limits, which has the per model weekly limits, and falls back
+# to the session and week when the response doesn't have it.
+limits="$(jq -r --argjson now "$now" '
+  def epoch: sub("\\.[0-9]+"; "") | sub("\\+00:00$"; "Z") | fromdateiso8601;
+  def pad: tostring | if length < 2 then "0" + . else . end;
+  (.limits // [
+    {kind: "session", percent: .five_hour.utilization, resets_at: .five_hour.resets_at},
+    {kind: "weekly_all", percent: .seven_day.utilization, resets_at: .seven_day.resets_at}
+  ])[]
+  | [
+      (if .kind == "session" then "Session"
+       elif .kind == "weekly_all" then "Week"
+       else "Week " + (.scope.model.display_name // .scope.surface // .kind | tostring) end),
+      (.percent // 0 | round | tostring),
+      (if .resets_at == null then "--" else (.resets_at | epoch) as $t
+        | if $t - $now < 86400 then $t | localtime | strftime("%H:%M")
+          else $t | localtime | strftime("%a %H:%M") end end),
+      (if .resets_at == null then "--" else ((.resets_at | epoch) - $now)
+        | if . < 0 then 0 else . end
+        | (. / 60 | ceil) as $m | "\($m / 60 | floor):\($m % 60 | pad)" end)
+    ]
+  | @tsv' "$cache" 2>/dev/null)"
 
 color() {
   if [[ "$1" =~ ^[0-9]+$ ]] && (($1 > 90)); then
@@ -77,12 +87,41 @@ color() {
   fi
 }
 
-read -r session_pct session_left < <(row five_hour)
-read -r week_pct week_left < <(row seven_day)
+session_pct="--" session_left="--" week_pct="--" week_left="--"
+count="$(grep -c . <<<"$limits")"
+existing="$(sketchybar --query claude_usage.frame 2>/dev/null |
+  jq '[.popup.items[]? | select(startswith("claude_usage.popup.limit."))] | length')"
 
-sketchybar --set claude_usage.session \
-  label="$(printf 'S %3s %6s' "$session_pct" "$session_left")" \
-  label.color="$(color "$session_pct")" \
-  --set claude_usage.week \
-  label="$(printf 'W %3s %6s' "$week_pct" "$week_left")" \
-  label.color="$(color "$week_pct")"
+# Header, a row per limit, Updated and Refresh, in that order.
+args=()
+if [[ "$count" != "$existing" ]]; then
+  args+=(--remove '/claude_usage\.popup\.(header|limit\..*|updated|refresh)/')
+  for row in header $(seq -f 'limit.%g' 0 $((count - 1))) updated refresh; do
+    args+=(--clone "claude_usage.popup.$row" claude_usage.popup.template
+      --set "claude_usage.popup.$row" position=popup.claude_usage.frame drawing=on)
+  done
+  args+=(--set claude_usage.popup.header icon="Limit" label="Used · resets · left"
+    icon.color="$GREY" label.color="$GREY"
+    --set claude_usage.popup.updated icon="Updated" icon.color="$GREY" label.color="$GREY"
+    --set claude_usage.popup.refresh icon="Refresh" label="󰑓"
+    click_script="sketchybar --trigger claude_usage_update")
+fi
+
+i=0
+while IFS=$'\t' read -r name pct resets left; do
+  [[ -n "$name" ]] || continue
+  case "$name" in
+  Session) session_pct="$pct" session_left="$left" ;;
+  Week) week_pct="$pct" week_left="$left" ;;
+  esac
+  args+=(--set "claude_usage.popup.limit.$i" icon="$name"
+    label="$pct% · $resets · $left" label.color="$(color "$pct")")
+  i=$((i + 1))
+done <<<"$limits"
+
+sketchybar "${args[@]}" \
+  --set claude_usage.session label="$(printf 'S %2s%%' "$session_pct")" label.color="$(color "$session_pct")" \
+  --set claude_usage.session_left label="$session_left" \
+  --set claude_usage.week label="$(printf 'W %2s%%' "$week_pct")" label.color="$(color "$week_pct")" \
+  --set claude_usage.week_left label="$week_left" \
+  --set claude_usage.popup.updated label="$(date -r "$(stat -f %m "$cache")" +%H:%M:%S)"

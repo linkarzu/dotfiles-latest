@@ -15,5 +15,7 @@ if [[ "${1:-}" == "--pick" ]]; then
 fi
 
 sock="$($HOME/github/dotfiles-latest/scripts/macos/mac/misc/549-kittyMainSocket.sh)"
+# A background launch otherwise gets the Kitty server's PATH, which can lack
+# Homebrew (fzf), so pass skhd's PATH along like 555-skhdQatTask.sh does.
 /Applications/kitty.app/Contents/MacOS/kitty @ --to "unix:${sock}" \
-  action launch --type=background kitten quick-access-terminal --config "$HOME/github/dotfiles-latest/kitty/quick-access-terminal-center.conf" --instance-group live-quotes /bin/bash "$script" --pick
+  action launch --type=background --env "PATH=$PATH" kitten quick-access-terminal --config "$HOME/github/dotfiles-latest/kitty/quick-access-terminal-center.conf" --instance-group live-quotes /bin/bash "$script" --pick

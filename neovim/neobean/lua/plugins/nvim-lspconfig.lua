@@ -112,6 +112,7 @@ return {
               UseTitleCase = false,
               UnclosedQuotes = false,
               AvoidCurses = false,
+              SentenceCapitalization = false,
             },
             isolateEnglish = true,
             markdown = {

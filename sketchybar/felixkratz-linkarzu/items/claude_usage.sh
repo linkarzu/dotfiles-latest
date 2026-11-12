@@ -3,7 +3,7 @@
 # Filename: ~/github/dotfiles-latest/sketchybar/felixkratz-linkarzu/items/claude_usage.sh
 # Claude plan usage in a frame like the keyboard one: "claude" on top, then the
 # 5 hour session and the week below it, each with the used percentage on the
-# left and the time left until it resets on the right.
+# left and the time left until it resets on the right, like 2h58m or 1d17h.
 
 # Right click for the popup with every limit and when it resets. Any click fetches
 # the usage again.

@@ -54,8 +54,8 @@ fi
 
 # One tab separated row per limit: name, percent, reset time, time left for the
 # popup and for the bar. The reset time is the clock time when it's within a day,
-# with the weekday otherwise. Time left is hours:minutes, with days in front past
-# a day, "1d 17:21" in the popup and only "1d17h" on the bar so it fits. Uses .limits, which has the per model weekly limits, and falls back
+# with the weekday otherwise. Time left is "2h58m", with days in front past a
+# day, "1d 17h 21m" in the popup and only "1d17h" on the bar so it fits. Uses .limits, which has the per model weekly limits, and falls back
 # to the session and week when the response doesn't have it.
 limits="$(jq -r --argjson now "$now" '
   def epoch: sub("\\.[0-9]+"; "") | sub("\\+00:00$"; "Z") | fromdateiso8601;
@@ -76,8 +76,8 @@ limits="$(jq -r --argjson now "$now" '
         | if . < 0 then 0 else . end
         | (. / 60 | ceil) as $m
         | ($m / 1440 | floor) as $d | ($m % 1440 / 60 | floor) as $h
-        | if $d > 0 then ["\($d)d \($h):\($m % 60 | pad)", "\($d)d\($h)h"]
-          else ["\($h):\($m % 60 | pad)", "\($h):\($m % 60 | pad)"] end end)[]
+        | if $d > 0 then ["\($d)d \($h)h \($m % 60)m", "\($d)d\($h)h"]
+          else ["\($h)h \($m % 60)m", "\($h)h\($m % 60 | pad)m"] end end)[]
     ]
   | @tsv' "$cache" 2>/dev/null)"
 

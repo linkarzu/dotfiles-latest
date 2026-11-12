@@ -53,20 +53,22 @@ claude_usage_overlay=(
 # "claude", centered together. A fixed width label ignores its padding, so the
 # logo's width and padding and the label's width add up to the frame width. The
 # glyph draws past the right edge of its width, the padding keeps it off the text.
+claude_usage_logo_padding_left=2
 claude_usage_logo_width=11
-claude_usage_logo_gap=6
+claude_usage_logo_gap=3
 claude_usage_title=(
   "${claude_usage_overlay[@]}"
   y_offset=9
   icon.drawing=on
   icon=""
-  icon.font="$FONT:Bold:9.0"
+  icon.font="$FONT:Bold:7.0"
+  icon.y_offset=1
   icon.color=0xffd97757
   icon.width=$claude_usage_logo_width
-  icon.padding_left=0
+  icon.padding_left=$claude_usage_logo_padding_left
   icon.padding_right=$claude_usage_logo_gap
   label="claude"
-  label.width=$((claude_usage_width - claude_usage_logo_width - claude_usage_logo_gap))
+  label.width=$((claude_usage_width - claude_usage_logo_padding_left - claude_usage_logo_width - claude_usage_logo_gap))
   label.align=left
 )
 

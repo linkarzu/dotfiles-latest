@@ -11,7 +11,7 @@ kitty_bin="/Applications/kitty.app/Contents/MacOS/kitty"
 zoxide_script="$HOME/github/dotfiles-latest/kitty/scripts/kitty-zoxide-session.sh"
 rex_session_script="$HOME/github/dotfiles-latest/scripts/macos/mac/misc/554-skhdRexSession.sh"
 fzf_colors_file="$HOME/github/dotfiles-latest/colorscheme/active/active-fzf-colors.sh"
-script_path="$HOME/github/dotfiles-latest/scripts/macos/mac/misc/559-skhdRexZoxide.sh"
+script_path="$HOME/github/dotfiles-latest/scripts/macos/mac/misc/564-skhdRexZoxide.sh"
 
 rex_bin() {
   ls -d "$HOME/Library/Application Support/com.superlogical.rex/RexServer/Versions/"*/"Rex Server.app/Contents/MacOS/rex" | sort -V | tail -1

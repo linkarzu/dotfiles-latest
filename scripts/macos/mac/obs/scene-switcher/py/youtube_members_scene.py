@@ -647,7 +647,13 @@ def main() -> None:
 
     CACHE_DIR.mkdir(parents=True, exist_ok=True)
     with LOCK_PATH.open("w", encoding="utf-8") as lock_file:
-        fcntl.flock(lock_file, fcntl.LOCK_EX)
+        try:
+            fcntl.flock(lock_file, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except BlockingIOError:
+            # A press made while the last one still works (a regeneration took ~6 s on 2026-11-11) is a
+            # repeat, not a request for the next page: queued, it started the CEO spotlights instead.
+            print("phase=members-scene step=press status=ignored observed=previous-press-running")
+            return
         password = None if args.no_auth else get_password()
         client = obs.ReqClient(
             host="localhost",

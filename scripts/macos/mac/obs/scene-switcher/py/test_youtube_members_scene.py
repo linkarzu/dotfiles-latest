@@ -140,6 +140,24 @@ class YouTubeMembersSceneTests(unittest.TestCase):
         record.assert_called_once_with(1, 42)
         client.disconnect.assert_called_once()
 
+    def test_a_press_while_the_last_one_still_runs_is_ignored(self):
+        import fcntl
+
+        with tempfile.TemporaryDirectory() as directory, contextlib.ExitStack() as stack:
+            lock = Path(directory) / "page.lock"
+            stack.enter_context(patch.object(youtube_members_scene.sys, "argv", ["members", "--no-auth"]))
+            stack.enter_context(patch.object(youtube_members_scene, "CACHE_DIR", Path(directory)))
+            stack.enter_context(patch.object(youtube_members_scene, "LOCK_PATH", lock))
+            connect = stack.enter_context(patch.object(youtube_members_scene.obs, "ReqClient"))
+            handle = stack.enter_context(patch.object(youtube_members_scene, "handle_press"))
+            output = stack.enter_context(contextlib.redirect_stdout(io.StringIO()))
+            with lock.open("w") as running:  # the earlier press holds the lock
+                fcntl.flock(running, fcntl.LOCK_EX)
+                youtube_members_scene.main()
+        connect.assert_not_called()
+        handle.assert_not_called()
+        self.assertIn("step=press status=ignored observed=previous-press-running", output.getvalue())
+
     def test_main_in_studio_mode_loads_preview_without_evidence_or_banner(self):
         client = MagicMock()
         client.get_studio_mode_enabled.return_value = SimpleNamespace(studio_mode_enabled=True)

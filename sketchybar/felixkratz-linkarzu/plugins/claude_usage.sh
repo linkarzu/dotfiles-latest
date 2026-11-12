@@ -52,9 +52,10 @@ fi
 
 [[ -f "$cache" ]] || exit 0
 
-# One tab separated row per limit: name, percent, reset time, hours:minutes left.
-# The reset time is the clock time when it's within a day, with the weekday
-# otherwise. Uses .limits, which has the per model weekly limits, and falls back
+# One tab separated row per limit: name, percent, reset time, time left for the
+# popup and for the bar. The reset time is the clock time when it's within a day,
+# with the weekday otherwise. Time left is hours:minutes, with days in front past
+# a day, "1d 17:21" in the popup and only "1d17h" on the bar so it fits. Uses .limits, which has the per model weekly limits, and falls back
 # to the session and week when the response doesn't have it.
 limits="$(jq -r --argjson now "$now" '
   def epoch: sub("\\.[0-9]+"; "") | sub("\\+00:00$"; "Z") | fromdateiso8601;
@@ -71,9 +72,12 @@ limits="$(jq -r --argjson now "$now" '
       (if .resets_at == null then "--" else (.resets_at | epoch) as $t
         | if $t - $now < 86400 then $t | localtime | strftime("%H:%M")
           else $t | localtime | strftime("%a %H:%M") end end),
-      (if .resets_at == null then "--" else ((.resets_at | epoch) - $now)
+      (if .resets_at == null then ["--", "--"] else ((.resets_at | epoch) - $now)
         | if . < 0 then 0 else . end
-        | (. / 60 | ceil) as $m | "\($m / 60 | floor):\($m % 60 | pad)" end)
+        | (. / 60 | ceil) as $m
+        | ($m / 1440 | floor) as $d | ($m % 1440 / 60 | floor) as $h
+        | if $d > 0 then ["\($d)d \($h):\($m % 60 | pad)", "\($d)d\($h)h"]
+          else ["\($h):\($m % 60 | pad)", "\($h):\($m % 60 | pad)"] end end)[]
     ]
   | @tsv' "$cache" 2>/dev/null)"
 
@@ -108,11 +112,11 @@ if [[ "$count" != "$existing" ]]; then
 fi
 
 i=0
-while IFS=$'\t' read -r name pct resets left; do
+while IFS=$'\t' read -r name pct resets left bar_left; do
   [[ -n "$name" ]] || continue
   case "$name" in
-  Session) session_pct="$pct" session_left="$left" ;;
-  Week) week_pct="$pct" week_left="$left" ;;
+  Session) session_pct="$pct" session_left="$bar_left" ;;
+  Week) week_pct="$pct" week_left="$bar_left" ;;
   esac
   args+=(--set "claude_usage.popup.limit.$i" icon="$name"
     label="$pct% · $resets · $left" label.color="$(color "$pct")")
@@ -120,8 +124,8 @@ while IFS=$'\t' read -r name pct resets left; do
 done <<<"$limits"
 
 sketchybar "${args[@]}" \
-  --set claude_usage.session label="$(printf 'S %2s%%' "$session_pct")" label.color="$(color "$session_pct")" \
+  --set claude_usage.session label="$session_pct%" label.color="$(color "$session_pct")" \
   --set claude_usage.session_left label="$session_left" \
-  --set claude_usage.week label="$(printf 'W %2s%%' "$week_pct")" label.color="$(color "$week_pct")" \
+  --set claude_usage.week label="$week_pct%" label.color="$(color "$week_pct")" \
   --set claude_usage.week_left label="$week_left" \
   --set claude_usage.popup.updated label="$(date -r "$(stat -f %m "$cache")" +%H:%M:%S)"

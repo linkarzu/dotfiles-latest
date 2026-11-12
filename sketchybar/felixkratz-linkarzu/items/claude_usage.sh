@@ -2,8 +2,8 @@
 
 # Filename: ~/github/dotfiles-latest/sketchybar/felixkratz-linkarzu/items/claude_usage.sh
 # Claude plan usage in a frame like the keyboard one: "claude" on top, then the
-# 5 hour session (S) and the week (W), each with the used percentage on the
-# left and the hours:minutes left until it resets on the right.
+# 5 hour session and the week below it, each with the used percentage on the
+# left and the time left until it resets on the right.
 
 # Right click for the popup with every limit and when it resets. Any click fetches
 # the usage again.
@@ -13,7 +13,7 @@ CLAUDE_USAGE_CLICK_SCRIPT="$PLUGIN_DIR/usage_click.sh claude_usage.frame; sketch
 # right padding doesn't count, this one next to the keyboard's overlays, so it
 # takes the same 5pt gap between the frames.
 claude_usage_frame_padding_right=9
-claude_usage_width=62
+claude_usage_width=51
 claude_usage_overlay_padding=$((-claude_usage_width + claude_usage_frame_padding_right))
 claude_usage_font="$FONT:Bold:8"
 
@@ -55,7 +55,7 @@ claude_usage_title=(
   label.align=center
 )
 
-# Percentages on the left, after the S or W.
+# Percentages on the left.
 claude_usage_used=(
   "${claude_usage_overlay[@]}"
   label.align=left

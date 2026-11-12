@@ -49,26 +49,24 @@ claude_usage_overlay=(
   click_script="$CLAUDE_USAGE_CLICK_SCRIPT"
 )
 
-# The Claude app icon before "claude", centered together. A fixed width label
-# ignores its padding, so the logo's padding, its width and the label's width add
-# up to the frame width. The whole item moves up, the image ignores icon.y_offset.
-claude_usage_logo_size=10
-claude_usage_logo_padding_left=4
-claude_usage_logo_gap=2
+# The Claude glyph from the Nerd Font (cod-claude) in Claude's orange before
+# "claude", centered together. A fixed width label ignores its padding, so the
+# logo's width and padding and the label's width add up to the frame width. The
+# glyph draws past the right edge of its width, the padding keeps it off the text.
+claude_usage_logo_width=11
+claude_usage_logo_gap=6
 claude_usage_title=(
   "${claude_usage_overlay[@]}"
   y_offset=9
   icon.drawing=on
-  icon=""
-  icon.width=$claude_usage_logo_size
-  icon.padding_left=$claude_usage_logo_padding_left
+  icon=""
+  icon.font="$FONT:Bold:9.0"
+  icon.color=0xffd97757
+  icon.width=$claude_usage_logo_width
+  icon.padding_left=0
   icon.padding_right=$claude_usage_logo_gap
-  icon.background.drawing=on
-  icon.background.height=$claude_usage_logo_size
-  icon.background.image=app.com.anthropic.claudefordesktop
-  icon.background.image.scale=0.3
   label="claude"
-  label.width=$((claude_usage_width - claude_usage_logo_padding_left - claude_usage_logo_size - claude_usage_logo_gap))
+  label.width=$((claude_usage_width - claude_usage_logo_width - claude_usage_logo_gap))
   label.align=left
 )
 

@@ -48,14 +48,16 @@ record() {
 }
 
 # Prints "<time left>|<last charged epoch>" for a history column, either empty
-# when it can't tell yet. A rise of 5 or more starts a charge, and being on USB
+# when it can't tell yet. A 0 is skipped, the left half reports the right half
+# as 0 while their link drops, and the jump back up would look like a charge
+# otherwise. A rise of 5 or more starts a charge, and being on USB
 # (usb_col) counts as one too. Last charged is when the level last rose during
 # that charge. Time left extrapolates from the
 # highest level since, once it has dropped 3 or more over at least a day, so
 # voltage noise doesn't produce wild estimates.
 estimate() {
   awk -v col="$2" -v usb_col="${3:-0}" '
-    $col ~ /^[0-9]+$/ {
+    $col ~ /^[0-9]+$/ && $col > 0 {
       level = $col + 0
       if (!seen) { seen = 1; peak = low = level; peak_time = $1 }
       if (level >= low + 5 || (usb_col && $usb_col == 1)) {

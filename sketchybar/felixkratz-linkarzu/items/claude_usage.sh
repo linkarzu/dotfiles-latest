@@ -6,8 +6,8 @@
 # percentage on the left and the time left until it resets on the right, like
 # 2h58m or 1d17h.
 
-# Right click for the popup with every limit and when it resets. Any click fetches
-# the usage again.
+# Right click for the popup with every Claude and Codex limit and when it resets.
+# Any click fetches the usage again.
 CLAUDE_USAGE_CLICK_SCRIPT="$PLUGIN_DIR/usage_click.sh claude_usage.frame; sketchybar --trigger claude_usage_update"
 
 # Wider than the keyboard frame's padding: that one sits next to a graph, whose
@@ -107,9 +107,10 @@ sketchybar --add event claude_usage_update \
   --set claude_usage.week_left "${claude_usage_left[@]}" label.y_offset=-9 \
   padding_left=1
 
-# The plugin fills the popup from this template, a row per limit, then Updated
-# and Refresh. It builds every row again when a limit shows up or goes away,
-# because sketchybar can't move a new row above existing ones in a popup.
+# The plugin fills the popup from this template: a column header, a heading and
+# a row per limit for Claude and for Codex, then Refresh. It makes every row again
+# when their number changes, because sketchybar can't move a new row above
+# existing ones in a popup.
 claude_usage_popup_template=(
   drawing=off
   icon.font="$FONT:Bold:12"

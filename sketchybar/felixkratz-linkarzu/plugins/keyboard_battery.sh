@@ -81,6 +81,20 @@ estimate() {
     }' "$1"
 }
 
+# Prints 1 once a half has stayed at 85 or more for an hour on USB (usb_col), else
+# 0. ZMK reads a full battery as about 89 to 94, never 100, and the level can't
+# tell a full battery from one still topping off, so an hour there counts as full.
+# A reading below 85 starts over, like the jumping levels of a half charging with
+# its power switch off, which never charges.
+full() {
+  awk -v col="$2" -v usb_col="$3" '
+    $col ~ /^[0-9]+$/ && $col > 0 {
+      if ($usb_col == 1 && $col >= 85) { if (!since) since = $1 } else since = 0
+      last = $1
+    }
+    END { print (since && last - since >= 3600) ? 1 : 0 }' "$1"
+}
+
 # Prints a last charged epoch as "Nov 2 09:14 · 3d 11h ago".
 charged_label() {
   [[ -z "$1" ]] && echo "--" && return
@@ -148,6 +162,10 @@ right_status="${right_time:---}"
 ((usb_right)) && right_status="charging"
 right_charged_label="$(charged_label "$right_charged")"
 ((usb_right)) && right_charged_label="now"
+
+# A full half shows 99 so it's clear it can be unplugged, the history keeps the real level.
+(($(full "$history" 2 4))) && left=99 left_status="full"
+(($(full "$history" 3 5))) && right=99 right_status="full"
 
 # The bar caps it at 99 to fit next to a right half at 100, the popup has the real level.
 mouse_bar="$mouse"

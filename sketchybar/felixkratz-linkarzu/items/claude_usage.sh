@@ -1,9 +1,10 @@
 #!/bin/bash
 
 # Filename: ~/github/dotfiles-latest/sketchybar/felixkratz-linkarzu/items/claude_usage.sh
-# Claude plan usage in a frame like the keyboard one: "claude" on top, then the
-# 5 hour session and the week below it, each with the used percentage on the
-# left and the time left until it resets on the right, like 2h58m or 1d17h.
+# Claude plan usage in a frame like the keyboard one: the Claude logo and "claude"
+# on top, then the 5 hour session and the week below it, each with the used
+# percentage on the left and the time left until it resets on the right, like
+# 2h58m or 1d17h.
 
 # Right click for the popup with every limit and when it resets. Any click fetches
 # the usage again.
@@ -48,11 +49,27 @@ claude_usage_overlay=(
   click_script="$CLAUDE_USAGE_CLICK_SCRIPT"
 )
 
+# The Claude app icon before "claude", centered together. A fixed width label
+# ignores its padding, so the logo's padding, its width and the label's width add
+# up to the frame width. The whole item moves up, the image ignores icon.y_offset.
+claude_usage_logo_size=10
+claude_usage_logo_padding_left=4
+claude_usage_logo_gap=2
 claude_usage_title=(
   "${claude_usage_overlay[@]}"
+  y_offset=9
+  icon.drawing=on
+  icon=""
+  icon.width=$claude_usage_logo_size
+  icon.padding_left=$claude_usage_logo_padding_left
+  icon.padding_right=$claude_usage_logo_gap
+  icon.background.drawing=on
+  icon.background.height=$claude_usage_logo_size
+  icon.background.image=app.com.anthropic.claudefordesktop
+  icon.background.image.scale=0.3
   label="claude"
-  label.y_offset=9
-  label.align=center
+  label.width=$((claude_usage_width - claude_usage_logo_padding_left - claude_usage_logo_size - claude_usage_logo_gap))
+  label.align=left
 )
 
 # Percentages on the left.

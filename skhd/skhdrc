@@ -205,8 +205,11 @@ shift + alt + ctrl - f1 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scri
 # Toucan Enter-O-B: the video scene (QAT -> Play video plays there)
 shift + alt + ctrl - f4 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py video-live --no-auth"
 # shift + alt + ctrl - f5 : 
+# Toucan Enter-O-M: on screen-main-live with a slide up, swap the slide and my screen (the slide waits on
+# its finished frame, nothing replays); otherwise switch to screen-main-live as before. The marker below
+# must stay right above the binding: 260-obsRecordingType.sh rewrites the scene on the line after it.
 # lineid_obs_switchscene_main
-shift + alt + ctrl - f6 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py screen-main-live --no-auth"
+shift + alt + ctrl - f6 : /bin/zsh -c "mkdir -p $HOME/.cache/obs-meeting-manager && $HOME/github/dotfiles-private/scripts/macos/mac/obs-meeting-manager/scripts/macos/mac/obs/meeting/py/.venv/bin/python $HOME/github/dotfiles-private/scripts/macos/mac/obs-meeting-manager/scripts/macos/mac/obs/meeting/py/live_slides.py screen >> $HOME/.cache/obs-meeting-manager/slide-screen.log 2>&1 || python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py screen-main-live --no-auth"
 shift + alt + ctrl - f7 : /bin/zsh -c "python3 $HOME/github/dotfiles-latest/scripts/macos/mac/obs/scene-switcher/py/switch_scene.py cam-main-chat --no-auth"
 # shift + alt + ctrl - f8 : 
 # shift + alt + ctrl - f9 : 

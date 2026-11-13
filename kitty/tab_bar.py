@@ -65,11 +65,13 @@ def agent_dot(tab_id: int, fmt) -> str:
 # Logo drawn after the title of a tab running one of these programs, the
 # agent status dot goes on the left so the logo goes on the right. The Claude
 # glyph (cod-claude) and its orange are the ones the SketchyBar Claude usage
-# item uses, the Neovim one is nf-linux-neovim in Neovim's green
+# item uses, the Neovim one is nf-linux-neovim in Neovim's green, ssh gets
+# nf-fa-server in grey
 program_glyphs = {
     # exe: (glyph, color)
     "claude": ("", "_d97757"),
     "nvim": ("", "_57a143"),
+    "ssh": ("", "_a0a0a0"),
 }
 
 

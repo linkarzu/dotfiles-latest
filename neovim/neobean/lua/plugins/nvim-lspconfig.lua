@@ -113,6 +113,8 @@ return {
               UnclosedQuotes = false,
               AvoidCurses = false,
               SentenceCapitalization = false,
+              -- "config" is the word I use, and slide ids like config-is-a-table must stay
+              ExpandConfiguration = false,
             },
             isolateEnglish = true,
             markdown = {

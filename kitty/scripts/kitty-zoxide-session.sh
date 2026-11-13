@@ -561,7 +561,9 @@ selected_path=""
 if [[ -n "${sel:-}" ]]; then
   selected_path="$(printf "%s" "$sel" | awk -F'\t' '{print $1}')"
 elif [[ "$query" == /* || "$query" == "~" || "$query" == "~/"* ]]; then
-  selected_path="$query"
+  # A path pasted from a shell escapes spaces as "\ "; kitty and mkdir would
+  # keep the backslash and create a new folder with it in the name.
+  selected_path="$(printf "%s" "$query" | sed -E 's/\\(.)/\1/g')"
 fi
 
 if [[ -z "${selected_path:-}" ]]; then

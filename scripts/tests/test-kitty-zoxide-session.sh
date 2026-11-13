@@ -41,12 +41,17 @@ fi
 printf '%s\n' "${TEST_GH_JSON:-{\"number\":21,\"state\":\"OPEN\",\"title\":\"Automate issue handoff\"}}"
 EOF
 
-for command in fzf tmux; do
-  cat >"$TEMP/bin/$command" <<'EOF'
+cat >"$TEMP/bin/tmux" <<'EOF'
 #!/usr/bin/env bash
 exit 0
 EOF
-done
+
+cat >"$TEMP/bin/fzf" <<'EOF'
+#!/usr/bin/env bash
+if [[ -n "${TEST_FZF_OUT:-}" ]]; then
+  printf '%s\n' "$TEST_FZF_OUT"
+fi
+EOF
 chmod +x "$TEMP/bin/kitty" "$TEMP/bin/zoxide" "$TEMP/bin/gh" \
   "$TEMP/bin/fzf" "$TEMP/bin/tmux"
 
@@ -123,5 +128,17 @@ if "$SCRIPT" --issue-opencode 21 "$WORKTREE" fix-audio >/dev/null 2>&1; then
   echo "closed issue unexpectedly launched" >&2
   exit 1
 fi
+
+unset TEST_GH_JSON
+printf '%s\n' '[]' >"$TEST_KITTY_LS_FILE"
+mkdir -p "$HOME/Mobile Docs/lesson-1"
+: >"$TEST_KITTY_LOG"
+TEST_FZF_OUT=$'~/Mobile\\ Docs/lesson-1\nenter' "$SCRIPT" >/dev/null
+if [[ -e "$HOME/Mobile\\ Docs" ]]; then
+  echo "a typed shell-escaped path created a folder with a backslash" >&2
+  exit 1
+fi
+LESSON="$(cd -- "$HOME/Mobile Docs/lesson-1" && pwd -P)"
+grep -Fx "cd $LESSON" "$TEMP/sessions/z-lesson-1.kitty-session" >/dev/null
 
 printf '%s\n' "kitty zoxide issue handoff tests passed"

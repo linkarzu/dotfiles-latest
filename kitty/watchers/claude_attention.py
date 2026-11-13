@@ -13,8 +13,13 @@
 # kitty only redraws the tab bar on events like a title change, not when the
 # foreground process changes. A tab opened by a session or by
 # 562-skhdKittyClaude.sh is drawn before nvim or claude starts, so it showed no
-# name or a stale one. When a window loads, the tab bar is redrawn a few times
-# over the next seconds on kitty timers, so nothing waits on it.
+# name or a stale one. When a window is created, the tab bar is redrawn a few
+# times over the next seconds on kitty timers, so nothing waits on it. kitty
+# has no window created event, on_load runs once when this module loads, so
+# the first on_resize of a window, when it gets its size, stands in for it.
+# mark_tab_bar_dirty alone only flags the tab bar, kitty doesn't draw it until
+# something else redraws the OS window, so the tab bar data is updated right
+# away too.
 #
 # Claude Code skips its prompt suggestion (the ghost text Tab accepts) when a
 # turn ends while the terminal reports focus out. So when a Claude window loses
@@ -68,12 +73,24 @@ def redraw_tab_bar(os_window_id: int) -> None:
     tm = get_boss().os_window_map.get(os_window_id)
     if tm is not None:
         tm.mark_tab_bar_dirty()
+        tm.update_tab_bar_data()
 
 
-def on_load(boss: Boss, window: Window, data: dict[str, Any]) -> None:
+# Windows already given their redraw timers
+retitled: set[int] = set()
+
+
+def on_resize(boss: Boss, window: Window, data: dict[str, Any]) -> None:
+    if window.id in retitled:
+        return
+    retitled.add(window.id)
     os_window_id = window.os_window_id
     for delay in retitle_delays:
         add_timer(lambda timer_id: redraw_tab_bar(os_window_id), delay, False)
+
+
+def on_close(boss: Boss, window: Window, data: dict[str, Any]) -> None:
+    retitled.discard(window.id)
 
 
 def on_focus_change(boss: Boss, window: Window, data: dict[str, Any]) -> None:

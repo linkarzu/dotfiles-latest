@@ -62,9 +62,27 @@ def agent_dot(tab_id: int, fmt) -> str:
     return ""
 
 
+# Logo drawn after the title of a tab running one of these programs, the
+# agent status dot goes on the left so the logo goes on the right. The Claude
+# glyph (cod-claude) and its orange are the ones the SketchyBar Claude usage
+# item uses, the Neovim one is nf-linux-neovim in Neovim's green
+program_glyphs = {
+    # exe: (glyph, color)
+    "claude": ("", "_d97757"),
+    "nvim": ("", "_57a143"),
+}
+
+
+def program_glyph(exe: str, fmt) -> str:
+    if exe not in program_glyphs:
+        return ""
+    glyph, color = program_glyphs[exe]
+    return f" {getattr(fmt.fg, color)}{glyph}{fmt.fg.tab}"
+
+
 # Called for {custom} in tab_title_template, shows the running program (nvim,
 # lazygit, btop), or the last dir of the active window's cwd when sitting at
-# the zsh prompt, after the agent status dot
+# the zsh prompt, after the agent status dot and before the program's logo
 # tab.active_exe is the newest foreground process, which is a helper the
 # program spawned (Claude Code runs caffeinate while it works), so the oldest
 # one is used, that's the program that was launched. An empty exe or an error
@@ -75,7 +93,7 @@ def draw_title(data: dict) -> str:
         tab = get_boss().tab_for_id(data["tab_id"])
         exe = os.path.basename((tab and tab.get_exe_of_active_window(oldest=True)) or "")
         name = wd if exe.lstrip("-") in ("", "zsh") else exe
-        return agent_dot(data["tab_id"], data["fmt"]) + name
+        return agent_dot(data["tab_id"], data["fmt"]) + name + program_glyph(exe, data["fmt"])
     except Exception:
         # Logged so the cause can be found
         with open(os.path.expanduser("~/.cache/kitty-tab-bar.log"), "a") as f:

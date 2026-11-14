@@ -84,6 +84,12 @@ fi
 if command -v lazygit &>/dev/null; then
   create_symlink ~/github/dotfiles-latest/lazygit/config.yml "$HOME/Library/Application Support/lazygit/config.yml"
 fi
+# Claude Code settings live in the private repo because the autoMode section
+# describes private projects, so only link them on hosts that have that repo
+if [[ -f ~/github/dotfiles-private/claude/settings.json ]]; then
+  [[ -d ~/.claude ]] || mkdir -p ~/.claude
+  create_symlink ~/github/dotfiles-private/claude/settings.json ~/.claude/settings.json
+fi
 # create_symlink ~/github/dotfiles-latest/mouseless/config.yaml "$HOME/Library/Containers/net.sonuscape.mouseless/Data/.mouseless/configs/config.yaml"
 
 # Creating symlinks for directories

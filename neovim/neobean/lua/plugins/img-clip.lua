@@ -11,6 +11,14 @@ return {
     -- or leave it empty to use the default settings
     default = {
 
+      -- img-clip overrides vim.paste, so every single-line text paste (like a
+      -- command pasted in the cmdline) is checked for an image path or URL,
+      -- and plain text showed "Content is not an image." each time
+      -- verbose = false only for pastes, my paste image keymaps still warn
+      drag_and_drop = {
+        verbose = false, ---@type boolean
+      },
+
       -- file and directory options
       -- expands dir_path to an absolute path
       -- When you paste a new image, and you hover over its path, instead of:

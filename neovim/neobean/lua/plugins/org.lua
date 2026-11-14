@@ -17,6 +17,16 @@ return {
     org_directory = "~/github/org-notes",
     agenda_files = { "~/github/org-notes/**/*.org" },
     default_notes_file = "~/github/org-notes/refile.org",
+    babel = {
+      -- <C-c><C-c> asks "Evaluate this lua code block on your system?"
+      -- before every block. My Lua lesson files are mine and I run dozens of
+      -- blocks on stream, so those run without asking; every other org file
+      -- still asks
+      confirm_evaluate = function()
+        local lessons = vim.fn.expand("~/github/notes/010-newNotes/lua-lessons/")
+        return not vim.startswith(vim.api.nvim_buf_get_name(0), lessons)
+      end,
+    },
   },
   config = function(_, opts)
     require("org").setup(opts)

@@ -50,7 +50,9 @@ record() {
 # Prints "<time left>|<last charged epoch>" for a history column, either empty
 # when it can't tell yet. A 0 is skipped, the left half reports the right half
 # as 0 while their link drops, and the jump back up would look like a charge
-# otherwise. A rise of 5 or more starts a charge, and being on USB
+# otherwise. The level is the highest of the last 3 readings, because the right
+# half sometimes reads up to 10 too low for one reading, and the reading after it
+# would look like a charge. A rise of 5 or more starts a charge, and being on USB
 # (usb_col) counts as one too. Last charged is when the level last rose during
 # that charge. Time left extrapolates from the
 # highest level since, once it has dropped 3 or more over at least a day, so
@@ -58,7 +60,9 @@ record() {
 estimate() {
   awk -v col="$2" -v usb_col="${3:-0}" '
     $col ~ /^[0-9]+$/ && $col > 0 {
-      level = $col + 0
+      recent[readings++ % 3] = $col + 0
+      level = 0
+      for (i in recent) if (recent[i] > level) level = recent[i]
       if (!seen) { seen = 1; peak = low = level; peak_time = $1 }
       if (level >= low + 5 || (usb_col && $usb_col == 1)) {
         charging = 1; charged = $1
@@ -178,14 +182,17 @@ mouse_label="not connected"
 mouse_status="${mouse_time:---}"
 ((mouse_usb)) && mouse_status="charging"
 [[ -n "$mouse" ]] && mouse_label="$mouse% · $mouse_status"
-mouse_charged_label="$mouse_charged_label"
+mouse_charged_label="$(charged_label "$mouse_charged")"
 ((mouse_usb)) && mouse_charged_label="now"
+# In the bar the mouse icon becomes the same bolt as the Mac battery's while it charges.
+mouse_icon="󰍽"
+((mouse_usb)) && mouse_icon=""
 
 sketchybar --set '/keyboard\..*/' drawing=on \
   --set keyboard.title label="$name" \
   --set keyboard.left label="$left" label.color="$(color "$left")" icon.color="$(color "$left")" \
   --set keyboard.right label="$right" label.color="$(color "$right")" icon.color="$(color "$right")" \
-  --set keyboard.mouse_icon label.color="$(color "$mouse")" \
+  --set keyboard.mouse_icon label="$mouse_icon" label.color="$(color "$mouse")" \
   --set keyboard.mouse label="${mouse_bar:---}" label.color="$(color "$mouse")" \
   --set keyboard.popup.left label="$(level_label "$left" "$left_status")" label.color="$(color "$left")" \
   --set keyboard.popup.right label="$(level_label "$right" "$right_status")" label.color="$(color "$right")" \

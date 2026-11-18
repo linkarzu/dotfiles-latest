@@ -112,7 +112,10 @@ charged_label() {
 mouse="$(ioreg -r -c AppleDeviceManagementHIDEventService -l -w 0 | awk -F' = ' '
   /"Product"/ { product = $2 }
   /"BatteryPercent"/ && product ~ /Magic Mouse/ { print $2; exit }')"
-[[ -n "$mouse" ]] && record "$mouse_history" "$mouse"
+# It shows up on USB while its cable is plugged in, which is the only time it charges.
+mouse_usb=0
+ioreg -p IOUSB -l -w 0 | grep -q '"USB Product Name" = "Magic Mouse"' && mouse_usb=1
+[[ -n "$mouse" ]] && record "$mouse_history" "$mouse" "$mouse_usb"
 
 name="" left="" right=""
 read -r name left right < <("$bin" 2>/dev/null)
@@ -147,7 +150,7 @@ record "$history" "$left" "$right" "$usb_left" "$usb_right"
 
 IFS='|' read -r left_time left_charged < <(estimate "$history" 2 4)
 IFS='|' read -r right_time right_charged < <(estimate "$history" 3 5)
-IFS='|' read -r mouse_time mouse_charged < <(estimate "$mouse_history" 2)
+IFS='|' read -r mouse_time mouse_charged < <(estimate "$mouse_history" 2 3)
 
 # Prints "<level>% · <status>", without the % when the level couldn't be read.
 level_label() {
@@ -172,7 +175,11 @@ mouse_bar="$mouse"
 ((mouse == 100)) && mouse_bar=99
 
 mouse_label="not connected"
-[[ -n "$mouse" ]] && mouse_label="$mouse% · ${mouse_time:---}"
+mouse_status="${mouse_time:---}"
+((mouse_usb)) && mouse_status="charging"
+[[ -n "$mouse" ]] && mouse_label="$mouse% · $mouse_status"
+mouse_charged_label="$mouse_charged_label"
+((mouse_usb)) && mouse_charged_label="now"
 
 sketchybar --set '/keyboard\..*/' drawing=on \
   --set keyboard.title label="$name" \
@@ -185,5 +192,5 @@ sketchybar --set '/keyboard\..*/' drawing=on \
   --set keyboard.popup.mouse label="$mouse_label" label.color="$(color "$mouse")" \
   --set keyboard.popup.left_charged label="$left_charged_label" \
   --set keyboard.popup.right_charged label="$right_charged_label" \
-  --set keyboard.popup.mouse_charged label="$(charged_label "$mouse_charged")" \
+  --set keyboard.popup.mouse_charged label="$mouse_charged_label" \
   --set keyboard.popup.updated label="$(date +%H:%M:%S)"

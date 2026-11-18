@@ -249,6 +249,11 @@ end, { desc = "[P]Inspect plugin merge config" })
 
 vim.keymap.set("n", "<leader>uk", '<cmd>lua require("kubectl").toggle()<cr>', { noremap = true, silent = true })
 
+-- Stream lessons: : commands show themselves and their result in a popup
+vim.keymap.set("n", "<leader>uR", function()
+  require("config.modules.lesson_output").toggle()
+end, { desc = "[P]Toggle result popup" })
+
 -- -- use kj to exit insert mode
 -- -- I auto save with
 -- --  ~/github/dotfiles-latest/neovim/neobean/lua/plugins/auto-save.lua

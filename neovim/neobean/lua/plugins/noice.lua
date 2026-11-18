@@ -68,8 +68,8 @@ return {
     },
   },
   {
-    -- Stream lessons: a : command's result shows in a popup with the command
-    -- while the cursor is in a slides guide (config/modules/lesson_output.lua).
+    -- Stream lessons: with <leader>uR on, a : command's result shows in a popup
+    -- with the command (config/modules/lesson_output.lua).
     -- A function, so the route goes in front of LazyVim's instead of replacing them
     "folke/noice.nvim",
     opts = function(_, opts)

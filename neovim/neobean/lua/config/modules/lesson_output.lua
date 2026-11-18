@@ -1,16 +1,14 @@
 -- Filename: ~/github/dotfiles-latest/neovim/neobean/lua/config/modules/lesson_output.lua
 -- ~/github/dotfiles-latest/neovim/neobean/lua/config/modules/lesson_output.lua
 --
--- Stream lessons: a : command run with the cursor in a guide (below an
--- `<!-- obs-meeting-manager:slides:<deck> -->` line) shows itself and its result
--- in a popup at the top right, so viewers can read it. It stays until the next
--- command replaces it, Esc closes it, or I leave the buffer. Below an
--- `<!-- obs-meeting-manager:results:off -->` line, and everywhere else, messages
--- go to noice's mini view as usual. noice.lua routes the messages here.
+-- Stream lessons: with the result popup on (<leader>uR), a : command shows
+-- itself and its result in a popup at the top right, so viewers can read it.
+-- It stays until the next command replaces it, Esc closes it, or I leave the
+-- buffer. Off (the default), messages go to noice's mini view as usual.
+-- noice.lua routes the messages here.
 
 local M = {}
 
-local marker = "<!%-%- obs%-meeting%-manager:slides:[%w._-]+ %-%->"
 -- Prompts wait for an answer, so noice keeps them
 local skipped_kinds =
   { confirm = true, confirm_sub = true, number_prompt = true, return_prompt = true, search_count = true }
@@ -18,29 +16,10 @@ local error_kinds = { emsg = true, echoerr = true, lua_error = true, rpc_error =
 -- Messages from the command arrive after it runs (noice batches them)
 local window_ms = 500
 
+local enabled = false
 local capture -- { cmd, buf, until_ms, messages = { { id, text, error } } }
-local popup -- { win, buf, guide }
+local popup -- { win, buf, owner }
 local ns = vim.api.nvim_create_namespace("lesson_output")
-
--- The nearest tag above the cursor decides: a slides tag turns the popup on,
--- this one turns it off (normal messages, to show what they look like)
-local off_marker = "<!%-%- obs%-meeting%-manager:results:off %-%->"
-
-local function in_guide()
-  if vim.bo.filetype ~= "markdown" then
-    return false
-  end
-  local row = vim.api.nvim_win_get_cursor(0)[1]
-  local lines = vim.api.nvim_buf_get_lines(0, 0, row, false)
-  for index = #lines, 1, -1 do
-    if lines[index]:match(marker) then
-      return true
-    elseif lines[index]:match(off_marker) then
-      return false
-    end
-  end
-  return false
-end
 
 function M.close()
   if not popup then
@@ -49,14 +28,19 @@ function M.close()
   if vim.api.nvim_win_is_valid(popup.win) then
     vim.api.nvim_win_close(popup.win, true)
   end
-  if vim.api.nvim_buf_is_valid(popup.guide) then
-    pcall(vim.keymap.del, "n", "<Esc>", { buffer = popup.guide })
+  if vim.api.nvim_buf_is_valid(popup.owner) then
+    pcall(vim.keymap.del, "n", "<Esc>", { buffer = popup.owner })
   end
   popup = nil
 end
 
 local function show()
   if not capture then
+    return
+  end
+  -- Nothing printed and another buffer is up (:e, :h): that buffer is the result
+  if #capture.messages == 0 and vim.api.nvim_get_current_buf() ~= capture.buf then
+    M.close()
     return
   end
   local lines, errors = { ":" .. capture.cmd }, {}
@@ -79,8 +63,11 @@ local function show()
   width = math.min(width + 2, math.floor(vim.o.columns * 0.6))
   local height = math.min(#lines, math.floor(vim.o.lines * 0.6))
 
-  if not popup or not vim.api.nvim_win_is_valid(popup.win) then
+  local owner = vim.api.nvim_get_current_buf()
+  if popup and (popup.owner ~= owner or not vim.api.nvim_win_is_valid(popup.win)) then
     M.close()
+  end
+  if not popup then
     local buf = vim.api.nvim_create_buf(false, true)
     vim.bo[buf].bufhidden = "wipe"
     local win = vim.api.nvim_open_win(buf, false, {
@@ -98,11 +85,11 @@ local function show()
       zindex = 60,
     })
     vim.wo[win].wrap = true
-    popup = { win = win, buf = buf, guide = capture.buf }
+    popup = { win = win, buf = buf, owner = owner }
     vim.keymap.set("n", "<Esc>", function()
       M.close()
       vim.cmd.nohlsearch()
-    end, { buffer = capture.buf, desc = "Close the lesson result" })
+    end, { buffer = owner, desc = "Close the lesson result" })
   else
     vim.api.nvim_win_set_config(popup.win, { width = width, height = height })
   end
@@ -137,23 +124,27 @@ function M.takes(message)
   return true
 end
 
+function M.toggle()
+  enabled = not enabled
+  if not enabled then
+    capture = nil
+    M.close()
+  end
+  vim.notify(enabled and "Result popup on" or "Result popup off")
+end
+
 function M.setup()
   local group = vim.api.nvim_create_augroup("lesson_output", { clear = true })
   vim.api.nvim_create_autocmd("CmdlineLeave", {
     group = group,
     pattern = ":",
     callback = function()
-      if vim.v.event.abort then
+      if not enabled or vim.v.event.abort then
         return
       end
       local cmd = vim.fn.getcmdline()
-      -- :13 only moves the cursor, maybe out of the guide
+      -- :13 only moves the cursor
       if cmd:match("^%s*%d*%s*$") then
-        return
-      end
-      if not in_guide() then
-        capture = nil
-        M.close()
         return
       end
       capture = { cmd = cmd, buf = vim.api.nvim_get_current_buf(), messages = {} }

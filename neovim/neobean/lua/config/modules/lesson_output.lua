@@ -30,6 +30,15 @@ local capture -- { title, code, buf, until_ms, error, messages = { { id, text, e
 local popup -- { win, buf, owner }
 local ns = vim.api.nvim_create_namespace("lesson_output")
 
+-- noice drops a message that is the same as the last one it showed, so running
+-- print(answer) again would show (no output): forget the last one first
+local function start(mine)
+  pcall(function()
+    require("noice.ui.state").clear("msg_show")
+  end)
+  capture = mine
+end
+
 function M.close()
   if not popup then
     return
@@ -178,7 +187,7 @@ function M.run(first, last)
   end
   local mine = { title = code, code = true, buf = vim.api.nvim_get_current_buf(), messages = {} }
   mine.until_ms = vim.uv.now() + window_ms
-  capture = mine
+  start(mine)
   -- load() instead of :first,lastlua: the same globals and locals, but what the
   -- block printed before an error still shows (:lua drops it)
   local chunk, err = load(table.concat(lines, "\n"), "=lesson", "t")
@@ -287,7 +296,7 @@ function M.setup()
       end
       local mine = { title = { ":" .. cmd }, buf = vim.api.nvim_get_current_buf(), messages = {} }
       mine.until_ms = vim.uv.now() + window_ms
-      capture = mine
+      start(mine)
       -- After the command ran: a popup even when it printed nothing
       vim.schedule(function()
         if capture == mine then

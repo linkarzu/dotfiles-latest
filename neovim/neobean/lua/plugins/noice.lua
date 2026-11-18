@@ -67,4 +67,19 @@ return {
       },
     },
   },
+  {
+    -- Stream lessons: a : command's result shows in a popup with the command
+    -- while the cursor is in a slides guide (config/modules/lesson_output.lua).
+    -- A function, so the route goes in front of LazyVim's instead of replacing them
+    "folke/noice.nvim",
+    opts = function(_, opts)
+      local lesson_output = require("config.modules.lesson_output")
+      lesson_output.setup()
+      opts.routes = opts.routes or {}
+      table.insert(opts.routes, 1, {
+        filter = { event = "msg_show", cond = lesson_output.takes },
+        opts = { skip = true },
+      })
+    end,
+  },
 }

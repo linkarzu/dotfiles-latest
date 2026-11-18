@@ -186,7 +186,7 @@ mouse_charged_label="$(charged_label "$mouse_charged")"
 ((mouse_usb)) && mouse_charged_label="now"
 # In the bar the mouse icon becomes the same bolt as the Mac battery's while it charges.
 mouse_icon="󰍽"
-((mouse_usb)) && mouse_icon=""
+((mouse_usb)) && mouse_icon=""
 
 sketchybar --set '/keyboard\..*/' drawing=on \
   --set keyboard.title label="$name" \

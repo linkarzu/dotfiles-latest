@@ -82,4 +82,21 @@ return {
       })
     end,
   },
+  {
+    -- noice drops a message that is the same as the last one it showed (Neovim
+    -- sends some again on redraw), so :=answer a second time showed nothing.
+    -- Every : command I run forgets that last message, so its answer shows again
+    "folke/noice.nvim",
+    init = function()
+      vim.api.nvim_create_autocmd("CmdlineLeave", {
+        group = vim.api.nvim_create_augroup("noice_repeat_answers", { clear = true }),
+        pattern = ":",
+        callback = function()
+          pcall(function()
+            require("noice.ui.state").clear("msg_show")
+          end)
+        end,
+      })
+    end,
+  },
 }

@@ -52,21 +52,22 @@ record() {
 # as 0 while their link drops, and the jump back up would look like a charge
 # otherwise. The level is the highest of the last 3 readings, because the right
 # half sometimes reads up to 10 too low for one reading, and the reading after it
-# would look like a charge. A rise of 5 or more starts a charge, and being on USB
-# (usb_col) counts as one too. Last charged is when the level last rose during
+# would look like a charge. A rise of 5 or more starts a charge (rise, 10 for the
+# halves: after a night's rest the right half reads up to 7 higher than the evening
+# before), and being on USB (usb_col) counts as one too. Last charged is when the level last rose during
 # that charge. Time left extrapolates from the
 # highest level since, once it has dropped 3 or more over at least a day, so
 # voltage noise doesn't produce wild estimates.
 estimate() {
-  awk -v col="$2" -v usb_col="${3:-0}" '
+  awk -v col="$2" -v usb_col="${3:-0}" -v rise="${4:-5}" '
     $col ~ /^[0-9]+$/ && $col > 0 {
       recent[readings++ % 3] = $col + 0
       level = 0
       for (i in recent) if (recent[i] > level) level = recent[i]
       if (!seen) { seen = 1; peak = low = level; peak_time = $1 }
-      if (level >= low + 5 || (usb_col && $usb_col == 1)) {
+      if (level >= low + rise || (usb_col && $usb_col == 1)) {
         charging = 1; charged = $1
-        if (level >= low + 5) { peak = low = level; peak_time = $1 }
+        if (level >= low + rise) { peak = low = level; peak_time = $1 }
       }
       if (level < low) low = level
       if (level > peak) {
@@ -152,8 +153,8 @@ done < <(ioreg -p IOUSB -l -w 0 | awk -F'"' -v name="$name" '
 history="$cache_dir/$name-battery-history"
 record "$history" "$left" "$right" "$usb_left" "$usb_right"
 
-IFS='|' read -r left_time left_charged < <(estimate "$history" 2 4)
-IFS='|' read -r right_time right_charged < <(estimate "$history" 3 5)
+IFS='|' read -r left_time left_charged < <(estimate "$history" 2 4 10)
+IFS='|' read -r right_time right_charged < <(estimate "$history" 3 5 10)
 IFS='|' read -r mouse_time mouse_charged < <(estimate "$mouse_history" 2 3)
 
 # Prints "<level>% · <status>", without the % when the level couldn't be read.

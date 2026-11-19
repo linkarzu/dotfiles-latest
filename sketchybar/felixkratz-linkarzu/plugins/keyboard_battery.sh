@@ -54,8 +54,9 @@ record() {
 # half sometimes reads up to 10 too low for one reading, and the reading after it
 # would look like a charge. A rise of 5 or more starts a charge (rise, 10 for the
 # halves: after a night's rest the right half reads up to 7 higher than the evening
-# before), and being on USB (usb_col) counts as one too. Last charged is when the level last rose during
-# that charge. Time left extrapolates from the
+# before), and being on USB (usb_col) for 10 minutes straight counts as one too,
+# so plugging a half in for a minute to flash its firmware doesn't. Last charged
+# is when the level last rose during that charge. Time left extrapolates from the
 # highest level since, once it has dropped 3 or more over at least a day, so
 # voltage noise doesn't produce wild estimates.
 estimate() {
@@ -65,7 +66,8 @@ estimate() {
       level = 0
       for (i in recent) if (recent[i] > level) level = recent[i]
       if (!seen) { seen = 1; peak = low = level; peak_time = $1 }
-      if (level >= low + rise || (usb_col && $usb_col == 1)) {
+      if (usb_col && $usb_col == 1) { if (!usb_since) usb_since = $1 } else usb_since = 0
+      if (level >= low + rise || (usb_since && $1 - usb_since >= 600)) {
         charging = 1; charged = $1
         if (level >= low + rise) { peak = low = level; peak_time = $1 }
       }

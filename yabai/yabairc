@@ -148,14 +148,14 @@ if command -v sketchybar &>/dev/null; then
     yabai -m config right_padding 3
   elif [[ "$display_resolution" == *"3024 x 1964"* ]]; then
     # # This matches my macbook 14 inch
-    # # yabai -m config top_padding 39
-    yabai -m config top_padding 10
-    # lineid_asus_monitor_bottom_pad
-    yabai -m config bottom_padding 3
-    # lineid_asus_monitor_left_pad
-    yabai -m config left_padding 3
-    # lineid_asus_monitor_right_pad
-    yabai -m config right_padding 3
+    # JankyBorders draws its 5pt border fully outside the window, so every
+    # padding has to be at least 5 or part of the border is off screen. The top
+    # one also has to clear sketchybar, which ends 11pt below the menu bar area
+    # yabai already leaves out and is drawn above the border
+    yabai -m config top_padding 16
+    yabai -m config bottom_padding 5
+    yabai -m config left_padding 5
+    yabai -m config right_padding 5
   fi
 else
   yabai -m config top_padding 02
@@ -344,6 +344,8 @@ socialstream_preview_space="desk5"
 if [ "$display_count" -eq 1 ]; then
   non_stream_space="desk1"
   bkp_terminal_space="desk2"
+  # Keep the OBS projector out of kitty's desk3
+  projector_preview_space="desk1"
 elif [ "$display_count" -eq 2 ]; then
   # With 2 displays, use the non-main display (the one with fewer spaces)
   secondary_display_spaces="$(

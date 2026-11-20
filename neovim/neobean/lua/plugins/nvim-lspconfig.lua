@@ -58,6 +58,25 @@ return {
       marksman = {
         enabled = false,
       },
+      -- My Lua lesson files break rules on purpose (2editor = "Vim") and sit in
+      -- my notes, which lua_ls would check as one big project. No root there, so
+      -- lua_ls never starts for them and no toggle can bring its warnings back
+      -- ~/github/dotfiles-latest/neovim/neobean/lua/config/modules/lesson_output.lua
+      lua_ls = {
+        root_dir = function(bufnr, on_dir)
+          local lessons = vim.fs.normalize(vim.fn.expand("~/github/notes/010-newNotes/lua-lessons"))
+          local path = vim.fs.normalize(vim.api.nvim_buf_get_name(bufnr))
+          if vim.startswith(path, lessons .. "/") then
+            return
+          end
+          -- The same markers nvim-lspconfig's lua_ls uses
+          on_dir(vim.fs.root(bufnr, {
+            { ".emmyrc.json", ".luarc.json", ".luarc.jsonc" },
+            { ".luacheckrc", ".stylua.toml", "stylua.toml", "selene.toml", "selene.yml" },
+            { ".git" },
+          }))
+        end,
+      },
       -- markdown-oxide
       markdown_oxide = {
         -- markdown-oxide reports routine vault activity as warnings and errors,
